@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCrbQgjz_RBlG2-96NPBFF2E8nxgplq4OE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>641699868357</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.dazzify.app</string>
+	<key>PROJECT_ID</key>
+	<string>dazzify-1ce5a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dazzify-1ce5a.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:641699868357:ios:5702ccfcc63a42b1190aac</string>
+</dict>
+</plist>

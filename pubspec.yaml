@@ -1,0 +1,140 @@
+name: dazzify
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+8
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  auto_route: ^9.2.2
+  bloc: ^8.1.4
+  cached_network_image: ^3.4.1
+  carousel_slider: ^5.0.0
+  dropdown_button2: ^2.3.9
+  equatable: ^2.0.7
+  flutter_bloc: ^8.1.6
+  flutter_cache_manager: ^3.4.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_rating_bar: ^4.0.1
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.0.16
+  font_awesome_flutter: ^10.8.0
+  google_maps_flutter: ^2.10.0
+  google_maps_flutter_android: ^2.14.11
+  google_maps_flutter_platform_interface: ^2.9.5
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  intl: ^0.19.0
+  intl_utils: ^2.8.8
+  lottie: ^3.1.3
+  percent_indicator: ^4.2.4
+  pinput: ^5.0.0
+  solar_icons: ^0.0.5
+  video_player: ^2.9.2
+  visibility_detector: ^0.4.0+2
+  syncfusion_flutter_datepicker: ^27.2.4
+  dio: ^5.7.0
+  internet_connection_checker_plus: ^2.5.2
+  dartz: ^0.10.1
+  get_it: ^8.0.2
+  image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  http: ^1.2.2
+  shimmer: ^3.0.0
+  bloc_concurrency: ^0.2.5
+  injectable: ^2.5.0
+  json_annotation: ^4.9.0
+  http_parser: any
+  photo_view: ^0.15.0
+  firebase_core: ^3.8.1
+  firebase_messaging: ^15.1.6
+  firebase_analytics: ^11.3.6
+  flutter_local_notifications: ^18.0.1
+  fcm_config: ^3.6.5
+  rxdart: ^0.28.0
+  url_launcher: ^6.3.1
+  flutter_staggered_grid_view: ^0.7.0
+  permission_handler: ^11.3.1
+  socket_io_client: ^3.0.2
+  flutter_swipe_button: ^2.1.3
+  image_cropper: ^8.0.2
+  device_info_plus: 11.1.1
+  restart: ^1.0.0+1
+  chewie: ^1.8.5
+  webview_flutter: ^4.10.0
+  app_links: ^6.3.2
+  share_plus: ^10.1.2
+  mwidgets: ^1.0.9
+  pretty_dio_logger: ^1.4.0
+  crypto: ^3.0.6
+  flutter_dotenv: ^5.2.1
+  geolocator: ^13.0.2
+  skeletonizer: ^1.4.3
+  flash: ^3.1.1
+  responsive_framework: ^1.5.1
+  auto_size_text: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  auto_route_generator: ^9.0.0
+  build_runner: ^2.4.13
+  hive_generator: ^2.0.1
+  flutter_lints: ^5.0.0
+  json_serializable: ^6.9.0
+  injectable_generator: ^2.6.2
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - lib/.env
+    - assets/images/
+    - assets/icons/
+    - assets/json/
+
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-ExtraLight.ttf
+          weight: 100
+        - asset: assets/fonts/Cairo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Cairo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Cairo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Cairo-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Cairo-Black.ttf
+          weight: 900
+flutter_intl:
+  enabled: true
+
+#  rm pubspec.lock && \
+#  flutter clean && \
+#  cd ios && \
+#  pod cache clean --all && \
+#  cd .. && \
+#  flutter pub get && \
+#  cd ios && \
+#  pod update && \
+#  cd ..
+# dart run build_runner --delete-conflicting-outputs
+
+# flutter run --flavor=dev --dart-define=env=dev --split-per-abi
+# flutter build ipa --flavor=prod --dart-define=env=prod
+#
+# flutter build apk --flavor=dev --dart-define=env=dev --split-per-abi
+# flutter build apk --flavor=prod --dart-define=env=prod --split-per-abi

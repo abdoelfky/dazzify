@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "641699868357",
+    "project_id": "dazzify-1ce5a",
+    "storage_bucket": "dazzify-1ce5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641699868357:android:8541342edd289b17190aac",
+        "android_client_info": {
+          "package_name": "com.dazzify.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVwp_etm35s7ujzxZcYkRyRHXVnWKpZJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
