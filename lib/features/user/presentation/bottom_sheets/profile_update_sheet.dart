@@ -2,6 +2,7 @@ import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
+import 'package:dazzify/features/shared/widgets/dazzify_birthdate_picker.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_drop_down_button_field.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_svg_icon.dart';
@@ -84,25 +85,45 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                   },
                 ),
                 SizedBox(height: 8.h),
-                DazzifyTextFormField(
-                  textInputType: TextInputType.number,
-                  maxLength: 2,
+                // DazzifyTextFormField(
+                //   textInputType: TextInputType.number,
+                //   maxLength: 2,
+                //   prefixIconData: SolarIconsOutline.confetti,
+                //   controller: ageController,
+                //   validator: ValidationManager.ageValidator(
+                //     context: context,
+                //     label: context.tr.age,
+                //   ),
+                //   onSaved: (value) {
+                //     if (value != null) {
+                //       age = int.parse(value);
+                //     }
+                //   },
+                //   onChanged: (value) {
+                //     age = int.parse(value);
+                //     checkActivity();
+                //   },
+                // ),
+                DazzifyBirthdatePicker(
+                  hintText: context.tr.birthDate,
+                  // label: context.localizedText.birthDate,
                   prefixIconData: SolarIconsOutline.confetti,
-                  controller: ageController,
+
                   validator: ValidationManager.ageValidator(
                     context: context,
-                    label: context.tr.age,
+                    label: context.tr.birthDate,
                   ),
+
                   onSaved: (value) {
+
                     if (value != null) {
-                      age = int.parse(value);
+                      birthDay = value;
+
+                      // age = int.parse(value);
                     }
                   },
-                  onChanged: (value) {
-                    age = int.parse(value);
-                    checkActivity();
-                  },
                 ),
+
                 SizedBox(height: 8.r),
                 DazzifyDropDownButtonField(
                   hintText: selectedGender == AppConstants.male

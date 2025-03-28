@@ -5,13 +5,14 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/fcm_notifications.dart';
 import 'package:dazzify/core/services/hive_service.dart';
 import 'package:dazzify/dazzify_app.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
-// import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+
+import 'firebase_options.dart';
 
 late GlobalKey<NavigatorState> navRootKey;
 
@@ -19,6 +20,9 @@ Future<void> main() async {
   // runZonedGuarded(
   //   () async {
   WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Bloc.observer = MyBlocObserver();
   await Future.wait([
     HiveService.init(),

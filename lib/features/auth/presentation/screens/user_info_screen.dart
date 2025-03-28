@@ -96,6 +96,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       },
                     ),
                     SizedBox(height: 8.h),
+
                     // DazzifyTextFormField(
                     //   textInputType: TextInputType.number,
                     //   label: context.tr.age,
