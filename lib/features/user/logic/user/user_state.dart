@@ -35,12 +35,13 @@ class UserState extends Equatable {
       profile: UserProfileModel(
         gender: '',
         email: '',
+        birthDay: '',
         wallet: 0,
         location: LocationModel(
           longitude: 0,
           latitude: 0,
         ),
-        age: 0,
+        // age: 0,
       ),
     ),
     this.photoPermissions = PermissionsState.initial,

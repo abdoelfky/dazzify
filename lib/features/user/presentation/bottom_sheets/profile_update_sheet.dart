@@ -22,9 +22,12 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
+  // final TextEditingController ageController = TextEditingController();
+  final TextEditingController birthDayController = TextEditingController();
   late String selectedGender;
-  late int age;
+  late String birthDay;
+  // late int age;
+
   bool isLoading = false;
   late final profileCubit = context.read<UserCubit>();
   late ValueNotifier isActive;
@@ -35,7 +38,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
     fullNameController.text = profileCubit.state.userModel.fullName;
     emailController.text = profileCubit.state.userModel.profile.email;
     selectedGender = profileCubit.state.userModel.profile.gender;
-    ageController.text = profileCubit.state.userModel.profile.age.toString();
+    birthDayController.text = profileCubit.state.userModel.profile.birthDay;
     isActive = ValueNotifier(false);
     super.initState();
   }
@@ -114,14 +117,22 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                     label: context.tr.birthDate,
                   ),
 
-                  onSaved: (value) {
+                  // onSaved: (value) {
+                  //
+                  //   if (value != null) {
+                  //     birthDay = value;
+                  //     checkActivity();
+                  //
+                  //     // age = int.parse(value);
+                  //   }
+                  // },
+                  onChanged: (value) {
 
-                    if (value != null) {
-                      birthDay = value;
-
-                      // age = int.parse(value);
-                    }
-                  },
+                  if (value != null) {
+                    birthDay = value;
+                    checkActivity();
+                  }
+                },
                 ),
 
                 SizedBox(height: 8.r),
@@ -195,10 +206,12 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                             }
                             if (emailChanged() ||
                                 genderChanged() ||
-                                ageChanged()) {
+                                birthDayChanged()) {
                               profileCubit.updateProfileInfo(
                                 email: emailController.text,
-                                age: age,
+
+                                birthDay: TimeManager.reformatDateToDDMMYYYY(birthDay),
+                                // age: age,
                                 gender: selectedGender,
                               );
                             }
@@ -229,12 +242,15 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
         selectedGender.toLowerCase();
   }
 
-  bool ageChanged() {
-    return profileCubit.state.userModel.profile.age != age;
+  // bool ageChanged() {
+  //   return profileCubit.state.userModel.profile.age != age;
+  // }
+  bool birthDayChanged() {
+    return profileCubit.state.userModel.profile.birthDay != birthDay;
   }
 
   void checkActivity() {
     isActive.value =
-        nameChanged() || emailChanged() || genderChanged() || ageChanged();
+        nameChanged() || emailChanged() || genderChanged() || birthDayChanged();
   }
 }

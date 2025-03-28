@@ -114,7 +114,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     // ),
                     DazzifyBirthdatePicker(
                       hintText: context.tr.birthDate,
-                      // label: context.localizedText.birthDate,
                       prefixIconData: SolarIconsOutline.confetti,
 
                       validator: ValidationManager.ageValidator(

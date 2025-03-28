@@ -47,10 +47,36 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
     DateTime lastDate = DateTime.now();
 
     final DateTime? picked = await showDatePicker(
+
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+      builder: (context, child) {
+        // Customizing the dialog and text style
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: Colors.blue, // Change the primary color of the picker
+            // accentColor: Colors.blue, // Change accent color
+            textTheme: TextTheme(
+              headlineLarge: TextStyle(
+                fontSize: 20, // Change font size of the date text
+                fontWeight: FontWeight.bold, // Change the font weight
+                color: Colors.black, // Change text color
+              ),
+              bodyLarge: TextStyle(
+                fontSize: 18, // Change font size of the day text
+                color: Colors.black, // Change text color
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null && picked != initialDate) {
@@ -114,7 +140,7 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
           ),
           suffixIcon: Icon(
             SolarIconsOutline.altArrowDown,
-            size: 20.sp,
+            size: 20.r,
           )
           // Icon(
           //   Icons.arrow_drop_down, // Dropdown arrow

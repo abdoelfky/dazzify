@@ -10,13 +10,17 @@ class UpdateProfileInfoRequest {
   @JsonKey(name: "gender", includeIfNull: false)
   final String? gender;
 
-  @JsonKey(name: "age", includeIfNull: false)
-  final int? age;
+  @JsonKey(name: "birthDay", includeIfNull: false)
+  final String? birthDay;
+
+  // @JsonKey(name: "age", includeIfNull: false)
+  // final int? age;
 
   const UpdateProfileInfoRequest({
     this.email,
     this.gender,
-    this.age,
+    this.birthDay,
+    // this.age,
   });
 
   factory UpdateProfileInfoRequest.fromJson(Map<String, dynamic> json) =>

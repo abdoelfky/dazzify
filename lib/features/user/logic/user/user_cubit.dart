@@ -123,14 +123,16 @@ class UserCubit extends Cubit<UserState> {
   Future<void> updateProfileInfo({
     required String email,
     required String gender,
-    required int age,
+    required String birthDay,
+    // required int age,
   }) async {
     emit(state.copyWith(updateProfileState: UiState.loading));
     final result = await _profileRepository.updateProfileInfo(
       request: UpdateProfileInfoRequest(
         email: email,
         gender: gender,
-        age: age,
+        birthDay: birthDay,
+        // age: age,
       ),
     );
 
@@ -145,7 +147,8 @@ class UserCubit extends Cubit<UserState> {
         final profile = state.userModel.profile.copyWith(
           email: email,
           gender: gender,
-          age: age,
+          birthDay: birthDay,
+          // age: age,
         );
         final user = state.userModel.copyWith(profile: profile);
         emit(
