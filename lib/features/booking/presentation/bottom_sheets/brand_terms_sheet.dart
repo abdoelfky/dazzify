@@ -183,40 +183,50 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                PrimaryButton(
-                                  textColor: context.colorScheme.primary,
-                                  color: context.colorScheme.primary,
-                                  isOutLined: true,
-                                  width: 155.w,
-                                  onTap: () {
-                                    context.maybePop();
-                                  },
-                                  title: context.tr.cancel,
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                    child: PrimaryButton(
+                                      textColor: context.colorScheme.primary,
+                                      color: context.colorScheme.primary,
+                                      isOutLined: true,
+                                      width: 155.w,
+                                      onTap: () {
+                                        context.maybePop();
+                                      },
+                                      title: context.tr.cancel,
+                                    ),
+                                  ),
                                 ),
-                                ValueListenableBuilder(
-                                  valueListenable: _hasReachedTheEnd,
-                                  builder: (context, value, child) =>
-                                      PrimaryButton(
-                                    isActive: value,
-                                    title: context.tr.agree,
-                                    width: 155.w,
-                                    height: 42.h,
-                                    onTap: () {
-                                      context.maybePop();
-                                      context.pushRoute(ServiceInvoiceRoute(
-                                        service: widget.service,
-                                        branchId: widget.branchId,
-                                        branchName: widget.branchName,
-                                        branchLocation: widget.branchLocation,
-                                        selectedDate: widget.selectedDate,
-                                        selectedStartTimeStamp:
-                                            widget.selectedStartTimeStamp,
-                                        selectedFromTime:
-                                            widget.selectedFromTime,
-                                        selectedToTime: widget.selectedToTime,
-                                      ));
-                                      context.maybePop();
-                                    },
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                    child: ValueListenableBuilder(
+                                      valueListenable: _hasReachedTheEnd,
+                                      builder: (context, value, child) =>
+                                          PrimaryButton(
+                                        isActive: value,
+                                        title: context.tr.agree,
+                                        width: 155.w,
+                                        height: 42.h,
+                                        onTap: () {
+                                          context.maybePop();
+                                          context.pushRoute(ServiceInvoiceRoute(
+                                            service: widget.service,
+                                            branchId: widget.branchId,
+                                            branchName: widget.branchName,
+                                            branchLocation: widget.branchLocation,
+                                            selectedDate: widget.selectedDate,
+                                            selectedStartTimeStamp:
+                                                widget.selectedStartTimeStamp,
+                                            selectedFromTime:
+                                                widget.selectedFromTime,
+                                            selectedToTime: widget.selectedToTime,
+                                          ));
+                                          context.maybePop();
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],

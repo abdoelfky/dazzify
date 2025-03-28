@@ -44,7 +44,7 @@ class _MultipleBookingTimeSelectionWidgetState
             return CustomFadeAnimation(
               duration: const Duration(milliseconds: 750),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16).r,
+                padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 5).r,
                 child: Column(
                   children: [
                     Row(
@@ -96,7 +96,7 @@ class _MultipleBookingTimeSelectionWidgetState
                               )
                             ]),
                         MultipleBookingAnalogClock(
-                          diameter: 150.w,
+                          diameter: 150.r,
                         )
                       ],
                     ),

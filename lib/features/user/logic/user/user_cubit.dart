@@ -336,9 +336,9 @@ class UserCubit extends Cubit<UserState> {
   }
 
   Future<void> iosGalleryPermissions() async {
-    final PermissionStatus galleryPermissions =
-        await Permission.photosAddOnly.status;
-    debugPrint("PERMISSIONS : $galleryPermissions");
+    PermissionStatus galleryPermissions = await Permission.photos.status;  // Use Permission.photos for full access
+    debugPrint("Initial PERMISSIONS : $galleryPermissions");
+
     switch (galleryPermissions) {
       case PermissionStatus.granted:
         emit(
@@ -347,21 +347,38 @@ class UserCubit extends Cubit<UserState> {
           ),
         );
         updateProfileImage();
+        break;  // Adding break here to prevent fall-through behavior
+
       case PermissionStatus.denied:
         emit(
           state.copyWith(
             photoPermissions: PermissionsState.denied,
           ),
         );
-        await Permission.photosAddOnly.request();
-        if (await Permission.photosAddOnly.isGranted) {
+        // Request permission (for full access)
+        await Permission.photos.request();  // Re-request the general photos permission
+
+        // Recheck the status immediately after the request
+        galleryPermissions = await Permission.photos.status;
+        debugPrint("PERMISSIONS AFTER REQUEST: $galleryPermissions");
+
+        // Update the state accordingly
+        if (galleryPermissions == PermissionStatus.granted) {
           emit(
             state.copyWith(
               photoPermissions: PermissionsState.granted,
             ),
           );
           updateProfileImage();
+        } else {
+          emit(
+            state.copyWith(
+              photoPermissions: PermissionsState.denied,
+            ),
+          );
         }
+        break;  // Adding break to prevent fall-through behavior
+
       case PermissionStatus.permanentlyDenied:
       case PermissionStatus.limited:
       case PermissionStatus.provisional:
@@ -371,6 +388,7 @@ class UserCubit extends Cubit<UserState> {
             photoPermissions: PermissionsState.permanentlyDenied,
           ),
         );
+        break;  // Adding break here to prevent fall-through behavior
     }
   }
 }

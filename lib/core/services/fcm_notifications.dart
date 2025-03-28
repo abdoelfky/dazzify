@@ -42,14 +42,18 @@ class FCMNotificationImpl extends FCMNotification {
     String? token = '';
     token = await FCMConfig.instance.messaging.getToken();
     kPrint('FCMToken : $token');
+    print('object');
+    print(token);
     return token ?? '';
   }
 
   @override
   Future<void> init() async {
-    await FCMConfig.instance.init(
+
+      await FCMConfig.instance.init(
       options: DefaultFirebaseOptions.currentPlatform,
       onBackgroundMessage: onMessagingBackground,
+
       defaultAndroidChannel: const AndroidNotificationChannel(
         'Dazzify Notifications',
         'Dazzify Notifications',
@@ -58,12 +62,14 @@ class FCMNotificationImpl extends FCMNotification {
         importance: Importance.high,
         sound: RawResourceAndroidNotificationSound('sound_alert'),
       ),
+
       // options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onMessageOpenedApp.listen((event) async {
       onDataReceive(event.data);
       kPrint(event.data);
     });
+    getFCMToken();
   }
 
   @override

@@ -126,7 +126,7 @@ class _MultipleServiceAvailabilityScreenState
           services: servicesIds,
           branchId: widget.branchId,
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 10.h),
         state.availableSessions.isEmpty
             ? SizedBox(
                 height: context.screenHeight * 0.4,
