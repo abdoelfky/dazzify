@@ -3,6 +3,7 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/dazzify_app.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/booking_from_media/booking_from_media_cubit.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
 import 'package:dazzify/features/brand/presentation/bottom_sheets/chat_branches_sheet.dart';
@@ -15,6 +16,7 @@ import 'package:dazzify/features/shared/logic/likes/likes_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/media_comments_sheet/media_comment_sheet.dart';
 import 'package:dazzify/features/shared/widgets/media_post_card.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
@@ -209,10 +211,30 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                           likesCubit.addOrRemoveLike(mediaId: brandMedia.id);
                         },
                         onCommentTap: () {
-                          handelCommentsTap(brandMedia);
+                          if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: false,
+                              builder: (context) {
+                                return GuestModeBottomSheet();
+                              },
+                            );
+                          }else {
+                            handelCommentsTap(brandMedia);
+                          }
                         },
                         onSendServiceTap: () {
-                          handelSendServiceTap(brandMedia);
+                          if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: false,
+                              builder: (context) {
+                                return GuestModeBottomSheet();
+                              },
+                            );
+                          }else {
+                            handelSendServiceTap(brandMedia);
+                          }
                         },
                         onBookingTap: () {
                           _bookingFromMediaCubit.getSingleServiceDetails(

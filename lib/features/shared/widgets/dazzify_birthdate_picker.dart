@@ -52,6 +52,7 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+
       builder: (context, child) {
         // Customizing the dialog and text style
         return Theme(
@@ -92,7 +93,7 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _controller,
       readOnly: true,
       // Make it read-only so the user can't type manually

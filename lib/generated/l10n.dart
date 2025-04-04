@@ -3610,6 +3610,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Continue as Guest`
+  String get guestMode {
+    return Intl.message(
+      'Continue as Guest',
+      name: 'guestMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go To Login`
+  String get goToLogin {
+    return Intl.message(
+      'Go To Login',
+      name: 'goToLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please log in to freely access app features.`
+  String get pleaseLoginToFreelyAccessAppFeatures {
+    return Intl.message(
+      'Please log in to freely access app features.',
+      name: 'pleaseLoginToFreelyAccessAppFeatures',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

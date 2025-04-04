@@ -1,4 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
 import 'package:dazzify/features/home/presentation/bottom-sheets/booking_branches_sheet.dart';
@@ -7,6 +8,7 @@ import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/logic/favorite/favorite_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/favorite_icon_button.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 
 class DetailsHeaderComponent extends StatefulWidget {
@@ -268,7 +270,16 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
                   location: widget.branch!.location,
                 ));
               } else {
-                showModalBottomSheet(
+                if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: false,
+                    builder: (context) {
+                      return GuestModeBottomSheet();
+                    },
+                  );
+                }else {
+                  showModalBottomSheet(
                   context: context,
                   useRootNavigator: true,
                   isScrollControlled: true,
@@ -278,6 +289,7 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
                     service: widget.service,
                   ),
                 );
+                }
               }
             },
             prefixWidget: Icon(

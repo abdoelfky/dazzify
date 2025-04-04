@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
+import 'package:dazzify/features/auth/logic/auth_cubit.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dazzify/settings/theme/colors_scheme_manager.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late final AuthCubit authCubit;
 
   @override
   void initState() {
@@ -27,7 +29,10 @@ class _SplashScreenState extends State<SplashScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
+
     );
+    authCubit = context.read<AuthCubit>();
+    authCubit.guestMode();
 
     // Use a Tween to animate between 0 and 0.7 (70% of the container height)
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);

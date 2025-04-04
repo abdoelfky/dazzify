@@ -6,6 +6,7 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mwidgets/mwidgets.dart';
 
 part 'tokens_state.dart';
 
@@ -17,6 +18,7 @@ class TokensCubit extends Cubit<TokensState> {
 
   Future<void> isUserAuthenticated() async {
     emit(TokensLoadingState());
+
     debugPrint(state.toString());
     final isAuthenticated = _authRepository.isUserAuthenticated();
     if (isAuthenticated) {
@@ -45,7 +47,6 @@ class TokensCubit extends Cubit<TokensState> {
     );
     return _userAccessToken;
   }
-
   Future<void> deleteUserTokens() async {
     emit(TokensLoadingState());
     debugPrint(state.toString());

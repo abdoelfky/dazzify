@@ -1,5 +1,6 @@
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
 import 'package:dazzify/features/brand/presentation/bottom_sheets/chat_branches_sheet.dart';
 import 'package:dazzify/features/reels/logic/reels_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:dazzify/features/reels/presentation/components/reel_info_compone
 import 'package:dazzify/features/reels/presentation/widgets/play_button.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -152,7 +154,16 @@ class _ReelPlayerState extends State<ReelPlayer>
                           widget.reel.brand.id,
                         ),
                       );
-                      showModalBottomSheet(
+                      if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: false,
+                          builder: (context) {
+                            return GuestModeBottomSheet();
+                          },
+                        );
+                      }else {
+                        showModalBottomSheet(
                         context: context,
                         useRootNavigator: true,
                         isScrollControlled: true,
@@ -168,6 +179,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                           ),
                         ),
                       );
+                      }
                     },
                   ),
                 ),

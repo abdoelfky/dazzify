@@ -2,6 +2,8 @@ import Flutter
 import UIKit
 import GoogleMaps
 import flutter_local_notifications
+import app_links
+import Firebase
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,6 +11,7 @@ import flutter_local_notifications
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+  FirebaseApp.configure()
   if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
       }

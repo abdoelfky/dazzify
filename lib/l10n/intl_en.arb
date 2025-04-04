@@ -380,5 +380,9 @@
   "inOrOutBranch": "In/Out Branch",
   "share": "Share",
   "birthDate": "Birth Date",
-  "invalidDateFormat": "Invalid date format"
+  "invalidDateFormat": "Invalid date format",
+  "guestMode": "Continue as Guest",
+  "goToLogin": "Go To Login",
+  "pleaseLoginToFreelyAccessAppFeatures": "Please log in to freely access app features."
+
 }

@@ -200,8 +200,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "\"Get Ready! This Button Will Unlock\n1 Hour Before We Start.\""),
         "gharbia": MessageLookupByLibrary.simpleMessage("Gharbia"),
         "giza": MessageLookupByLibrary.simpleMessage("Giza"),
+        "goToLogin": MessageLookupByLibrary.simpleMessage("Go To Login"),
         "googleMapsLocation":
             MessageLookupByLibrary.simpleMessage("Google Maps Location"),
+        "guestMode": MessageLookupByLibrary.simpleMessage("Continue as Guest"),
         "halanInstallment": MessageLookupByLibrary.simpleMessage("Halan"),
         "hereWeGo": MessageLookupByLibrary.simpleMessage("Here We Go"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
@@ -351,6 +353,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Phone Number Changed Successfully"),
         "pickTime":
             MessageLookupByLibrary.simpleMessage("Click to pick your time"),
+        "pleaseLoginToFreelyAccessAppFeatures":
+            MessageLookupByLibrary.simpleMessage(
+                "Please log in to freely access app features."),
         "point": MessageLookupByLibrary.simpleMessage(" Points"),
         "pointsStatement": MessageLookupByLibrary.simpleMessage(
             "\"Use your points towards exclusive offers and limited-edition services.\""),

@@ -3,6 +3,8 @@ import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/framework/dazzify_text.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
 import 'package:dazzify/features/auth/presentation/widgets/auth_header.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_text_form_field.dart';
@@ -16,6 +18,7 @@ import 'package:solar_icons/solar_icons.dart';
 
 @RoutePage()
 class AuthScreen extends StatefulWidget {
+
   const AuthScreen({super.key});
 
   @override
@@ -28,6 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   late final ValueNotifier<bool> isFieldValid;
   bool isLoading = false;
+  bool isGuestLoading = false;
   late final AuthCubit authCubit;
   late String phoneNumber;
 
@@ -91,6 +95,8 @@ class _AuthScreenState extends State<AuthScreen> {
               listener: (context, state) {
                 if (state is AuthLoadingState) {
                   isLoading = true;
+                }else if (state is GuestModeLoadingState) {
+                  isGuestLoading = true;
                 } else if (state is AuthVerifyNumberSuccessState) {
                   DazzifyToastBar.showSuccess(
                     message: context.tr.sendOtpSuccess,
@@ -99,7 +105,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     context.pushRoute(const OtpVerifyRoute());
                   }
                   isLoading = false;
-                } else if (state is AuthVerifyNumberFailureState) {
+                } else if (state is GuestModeSuccessState) {
+                  context.pushRoute(const AuthenticatedRoute());
+
+                  isGuestLoading = false;
+                }else if (state is AuthVerifyNumberFailureState) {
                   DazzifyToastBar.showError(
                     message: context.tr.sendOtpError,
                   );
@@ -107,16 +117,35 @@ class _AuthScreenState extends State<AuthScreen> {
                 }
               },
               builder: (context, state) {
-                return PrimaryButton(
-                  isLoading: isLoading,
-                  onTap: () async {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState?.save();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      await authCubit.sendOtp(phoneNumber: phoneNumber);
-                    }
-                  },
-                  title: context.tr.authVerifyButtonTitle,
+
+                return Column(
+                  children: [
+                    PrimaryButton(
+                      isLoading: isLoading,
+                      onTap: () async {
+                        if (formKey.currentState!.validate()) {
+                          formKey.currentState?.save();
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          await authCubit.sendOtp(phoneNumber: phoneNumber);
+                        }
+                      },
+                      title: context.tr.authVerifyButtonTitle,
+                    ),
+                    const SizedBox(height: 10,),
+                    if (AuthLocalDatasourceImpl().checkGuestModeSession())
+                    PrimaryButton(
+                      isLoading: isGuestLoading,
+                      onTap: () async {
+                        // if (formKey.currentState!.validate()) {
+                        //   formKey.currentState?.save();
+                          // FocusManager.instance.primaryFocus?.unfocus();
+                        // context.pushRoute(const BottomNavBarRoute());
+                          await authCubit.guestMode(isClicked:true);
+                        // }
+                      },
+                      title: context.tr.guestMode,
+                    ),
+                  ],
                 );
               },
             ),

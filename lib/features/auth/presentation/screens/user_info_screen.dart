@@ -25,6 +25,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   late String userName;
   late String emailAddress;
   late String gender;
+
   // late int age;
   late String birthDay;
 
@@ -115,14 +116,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     DazzifyBirthdatePicker(
                       hintText: context.tr.birthDate,
                       prefixIconData: SolarIconsOutline.confetti,
-
                       validator: ValidationManager.ageValidator(
                         context: context,
                         label: context.tr.birthDate,
                       ),
-
                       onSaved: (value) {
-
                         if (value != null) {
                           birthDay = value;
 
@@ -178,7 +176,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                     authCubit.addUserInfo(
                                       fullName: userName,
                                       gender: gender,
-                                      birthDay: TimeManager.reformatDateToDDMMYYYY(birthDay),
+                                      birthDay:
+                                          TimeManager.reformatDateToDDMMYYYY(
+                                              birthDay),
                                       email: emailAddress,
                                     );
                                   }

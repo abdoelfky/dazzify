@@ -380,5 +380,9 @@
   "inOrOutBranch": "داخل/خارج الفرع",
   "share": "مشاركة",
   "birthDate": "تاريخ الميلاد",
-  "invalidDateFormat": "تنسيق التاريخ غير صالح"
+  "invalidDateFormat": "تنسيق التاريخ غير صالح",
+  "guestMode": "تابع كزائر",
+  "goToLogin": "الذهاب إلى تسجيل الدخول",
+  "pleaseLoginToFreelyAccessAppFeatures": "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية."
+
 }

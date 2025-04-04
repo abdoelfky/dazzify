@@ -3,6 +3,7 @@ import 'package:chewie/chewie.dart';
 import 'package:dazzify/core/framework/dazzify_drop_down.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/home/presentation/widgets/animated_indicator.dart';
 import 'package:dazzify/features/reels/data/repositories/reels_repository.dart';
 import 'package:dazzify/features/shared/bottom_sheets/report_bottom_sheet.dart';
@@ -10,6 +11,7 @@ import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/widgets/animated_read_more_text.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/favorite_icon_button.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -121,11 +123,21 @@ class _MediaPostCardState extends State<MediaPostCard> {
                 MenuOption(
                   icon: SolarIconsOutline.dangerCircle,
                   onTap: () {
-                    showReportBottomSheet(
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    }else {
+                      showReportBottomSheet(
                       context: context,
                       id: widget.brandMedia.id,
                       type: "media",
                     );
+                    }
                   },
                 )
               ],

@@ -1,4 +1,6 @@
 class ApiConstants {
+  static const String guestMode = "/guest-mode";
+
   static const String success = "success";
   static const String sendOtpPath = "/auth/send-otp";
   static const String validateNonExistUserOtpPath =

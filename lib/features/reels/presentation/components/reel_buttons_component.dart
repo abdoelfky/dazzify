@@ -1,8 +1,10 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/logic/comments/comments_bloc.dart';
 import 'package:dazzify/features/shared/logic/likes/likes_cubit.dart';
 import 'package:dazzify/features/shared/widgets/favorite_icon_button.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/media_comments_sheet/media_comment_sheet.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:video_player/video_player.dart';
@@ -99,7 +101,16 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
                       widget.hasTheUserOpenedComments.value = true;
                       final commentsBloc = context.read<CommentsBloc>();
                       final userCubit = context.read<UserCubit>();
-                      showModalBottomSheet(
+                      if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: false,
+                          builder: (context) {
+                            return GuestModeBottomSheet();
+                          },
+                        );
+                      }else {
+                        showModalBottomSheet(
                         context: context,
                         useRootNavigator: true,
                         isScrollControlled: true,
@@ -118,6 +129,7 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
                         }
                         widget.hasTheUserOpenedComments.value = false;
                       });
+                      }
                     },
                     icon: Icon(
                       SolarIconsOutline.chatRound,

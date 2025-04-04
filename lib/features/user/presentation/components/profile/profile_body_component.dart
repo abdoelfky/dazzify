@@ -1,9 +1,11 @@
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_dialog.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/permission_dialog.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
@@ -52,20 +54,30 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.phone,
                   title: context.tr.phoneNumber,
                   onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      useRootNavigator: true,
-                      isScrollControlled: true,
-                      routeSettings: const RouteSettings(
-                        name: "UpdatePhoneSheetRoute",
-                      ),
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: _userCubit,
-                          child: const UpdatePhoneNumberSheet(),
-                        );
-                      },
-                    );
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    } else {
+                      showModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        isScrollControlled: true,
+                        routeSettings: const RouteSettings(
+                          name: "UpdatePhoneSheetRoute",
+                        ),
+                        builder: (context) {
+                          return BlocProvider.value(
+                            value: _userCubit,
+                            child: const UpdatePhoneNumberSheet(),
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
                 ProfileCustomListTile(
@@ -97,21 +109,51 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.history,
                   title: "  ${context.tr.bookingsHistory}",
                   onTap: () {
-                    context.pushRoute(const BookingsHistoryRoute());
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    } else {
+                      context.pushRoute(const BookingsHistoryRoute());
+                    }
                   },
                 ),
                 ProfileCustomListTile(
                   iconData: SolarIconsOutline.chatSquare,
                   title: context.tr.issue,
                   onTap: () {
-                    context.pushRoute(const IssueRoute());
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    } else {
+                      context.pushRoute(const IssueRoute());
+                    }
                   },
                 ),
                 ProfileCustomListTile(
                   iconData: SolarIconsOutline.wallet,
                   title: context.tr.payment,
                   onTap: () {
-                    context.pushRoute(const TransactionRoute());
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    } else {
+                      context.pushRoute(const TransactionRoute());
+                    }
                   },
                 ),
               ],
@@ -145,7 +187,16 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                     },
                   ),
                   onTap: () {
-                    showDialog(
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    }else {
+                      showDialog(
                       context: context,
                       builder: (context) {
                         return BlocProvider.value(
@@ -154,6 +205,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         );
                       },
                     );
+                    }
                   },
                 ),
                 ProfileCustomListTile(
@@ -189,10 +241,20 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                             disabledTrackColor: ColorsManager.successColor,
                             loadingState: state.subscriptionState,
                             onChanged: (switched) async {
-                              notificationsControl(
+                              if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: false,
+                                  builder: (context) {
+                                    return GuestModeBottomSheet();
+                                  },
+                                );
+                              }else {
+                                notificationsControl(
                                 isActive: switched,
                                 permissions: state.permissionsState,
                               );
+                              }
                             },
                             activeIcon: SolarIconsOutline.bellOff,
                             disabledIcon: SolarIconsOutline.bell,
@@ -226,26 +288,36 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
           SizedBox(height: 16.h),
           PrimaryButton(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return BlocProvider.value(
-                    value: _userCubit,
-                    child: BlocListener<UserCubit, UserState>(
-                      listener: (context, state) {
-                        if (state.deleteUserAccountState == UiState.success) {
-                          _tokensCubit.deleteUserTokens();
-                        }
-                      },
-                      child: DazzifyDialog(
-                        buttonTitle: context.tr.delete,
-                        message: context.tr.deleteAccountMessage,
-                        onTap: () => _userCubit.deleteUser(),
+              if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: false,
+                  builder: (context) {
+                    return GuestModeBottomSheet();
+                  },
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: _userCubit,
+                      child: BlocListener<UserCubit, UserState>(
+                        listener: (context, state) {
+                          if (state.deleteUserAccountState == UiState.success) {
+                            _tokensCubit.deleteUserTokens();
+                          }
+                        },
+                        child: DazzifyDialog(
+                          buttonTitle: context.tr.delete,
+                          message: context.tr.deleteAccountMessage,
+                          onTap: () => _userCubit.deleteUser(),
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              }
             },
             isOutLined: true,
             title: context.tr.deleteAccount,

@@ -7,6 +7,7 @@ import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/functions.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
 import 'package:dazzify/features/brand/presentation/components/brand_profile_header.dart';
 import 'package:dazzify/features/brand/presentation/tabs/brand_photos_tab.dart';
@@ -17,6 +18,7 @@ import 'package:dazzify/features/shared/bottom_sheets/report_bottom_sheet.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/glass_icon_button.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/widget_direction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -219,11 +221,21 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                         MenuOption(
                           icon: SolarIconsOutline.dangerCircle,
                           onTap: () {
-                            showReportBottomSheet(
+                            if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: false,
+                                builder: (context) {
+                                  return GuestModeBottomSheet();
+                                },
+                              );
+                            }else {
+                              showReportBottomSheet(
                               context: context,
                               id: state.brandDetails.id,
                               type: "brand",
                             );
+                            }
                           },
                         )
                       ],

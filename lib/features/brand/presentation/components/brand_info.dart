@@ -1,11 +1,13 @@
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
 import 'package:dazzify/features/brand/presentation/bottom_sheets/branch_selection_bottom_sheet.dart';
 import 'package:dazzify/features/brand/presentation/bottom_sheets/chat_branches_sheet.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/logic/favorite/favorite_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 
 class BrandInfo extends StatelessWidget {
@@ -154,12 +156,22 @@ class BrandInfo extends StatelessWidget {
       width: 252.w,
       height: 45.h,
       onTap: () {
-        showBranchSelectionBottomSheet(
-          context: context,
-          brandId: brand.id,
-          favoriteCubit: context.read<FavoriteCubit>(),
-          isMultipleBooking: brand.allowMultipleServicesBook,
-        );
+        if (AuthLocalDatasourceImpl().checkGuestMode()) {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: false,
+            builder: (context) {
+              return GuestModeBottomSheet();
+            },
+          );
+        } else {
+          showBranchSelectionBottomSheet(
+            context: context,
+            brandId: brand.id,
+            favoriteCubit: context.read<FavoriteCubit>(),
+            isMultipleBooking: brand.allowMultipleServicesBook,
+          );
+        }
       },
       flexBetweenTextAndPrefix: 1,
       title: context.tr.book,
@@ -174,27 +186,37 @@ class BrandInfo extends StatelessWidget {
   IconButton messageBrand(BuildContext context) {
     return IconButton(
       onPressed: () {
-        final BrandBloc brandBloc = context.read<BrandBloc>();
-        brandBloc.add(
-          GetBrandBranchesEvent(
-            brand.id,
-          ),
-        );
-        showModalBottomSheet(
-          context: context,
-          useRootNavigator: true,
-          isScrollControlled: true,
-          routeSettings: const RouteSettings(
-            name: "BrandBranchesChat",
-          ),
-          builder: (context) => BlocProvider.value(
-            value: brandBloc,
-            child: ChatBranchesSheet(
-              sheetType: BranchesSheetType.chat,
-              brand: brand,
+        if (AuthLocalDatasourceImpl().checkGuestMode()) {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: false,
+            builder: (context) {
+              return GuestModeBottomSheet();
+            },
+          );
+        } else {
+          final BrandBloc brandBloc = context.read<BrandBloc>();
+          brandBloc.add(
+            GetBrandBranchesEvent(
+              brand.id,
             ),
-          ),
-        );
+          );
+          showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            routeSettings: const RouteSettings(
+              name: "BrandBranchesChat",
+            ),
+            builder: (context) => BlocProvider.value(
+              value: brandBloc,
+              child: ChatBranchesSheet(
+                sheetType: BranchesSheetType.chat,
+                brand: brand,
+              ),
+            ),
+          );
+        }
       },
       icon: Icon(
         SolarIconsOutline.plain,

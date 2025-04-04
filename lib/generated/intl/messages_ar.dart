@@ -193,8 +193,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "\"استعد! هذا الزر سيفتح قبل ساعة من البدء.\""),
         "gharbia": MessageLookupByLibrary.simpleMessage("الغربية"),
         "giza": MessageLookupByLibrary.simpleMessage("الجيزة"),
+        "goToLogin":
+            MessageLookupByLibrary.simpleMessage("الذهاب إلى تسجيل الدخول"),
         "googleMapsLocation":
             MessageLookupByLibrary.simpleMessage("الموقع على خرائط جوجل"),
+        "guestMode": MessageLookupByLibrary.simpleMessage("تابع كزائر"),
         "halanInstallment": MessageLookupByLibrary.simpleMessage("Halan"),
         "hereWeGo": MessageLookupByLibrary.simpleMessage("هيا بنا"),
         "history": MessageLookupByLibrary.simpleMessage("التاريخ"),
@@ -348,6 +351,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "تم تغيير رقم الهاتف الخاص بك"),
         "pickTime": MessageLookupByLibrary.simpleMessage(
             "انقر لاختيار الوقت المناسب لك"),
+        "pleaseLoginToFreelyAccessAppFeatures":
+            MessageLookupByLibrary.simpleMessage(
+                "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية."),
         "point": MessageLookupByLibrary.simpleMessage("نقطة"),
         "pointsStatement": MessageLookupByLibrary.simpleMessage(
             "\"استخدم نقاطك في العروض الحصرية والخدمات ذات الإصدار المحدود.\""),

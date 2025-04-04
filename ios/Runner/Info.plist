@@ -36,7 +36,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need access to save photos to your gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo gallery to upload pictures.</string>
+    <string>This app needs access to your photo library to allow you to upload images for your profile or share photos with others through the app.</string>
 	<key>NSUserNotificationUsageDescription</key>
 	<string>The app requires access to send notifications to be updated.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

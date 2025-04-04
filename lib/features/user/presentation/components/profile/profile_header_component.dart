@@ -3,7 +3,9 @@ import 'dart:ui';
 
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_rounded_picture.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/permission_dialog.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/profile_update_sheet.dart';
@@ -50,12 +52,14 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
             listener: (context, state) {
               if (state.photoPermissions ==
                   PermissionsState.permanentlyDenied) {
+
                 showDialog(
                   routeSettings: const RouteSettings(
                     name: 'PermissionsDialogRoute',
                   ),
                   context: context,
                   builder: (context) {
+
                     return PermissionsDialog(
                       icon: Icons.photo_outlined,
                       description: context.tr.galleryPermissionDialog,
@@ -84,8 +88,19 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                           return DazzifyRoundedPicture(
                             imageUrl: state.userModel.picture ?? "",
                             hasEditButton: state.userModel.picture != null,
-                            onEditButtonTap: () =>
-                                context.read<UserCubit>()..updateProfileImage(),
+                            onEditButtonTap: () {
+                              if (AuthLocalDatasourceImpl().checkGuestMode()){
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: false,
+                                  builder: (context) {
+
+                                    return  GuestModeBottomSheet();
+                                  },
+                                );
+                              }else {
+                                context.read<UserCubit>()..updateProfileImage();
+                              }},
                           );
                         },
                       ),
@@ -106,20 +121,31 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
           end: 16.w,
           child: GestureDetector(
             onTap: () {
-              showModalBottomSheet(
-                context: context,
-                useRootNavigator: true,
-                isScrollControlled: true,
-                routeSettings: const RouteSettings(
-                  name: "ProfileUpdateSheet",
-                ),
-                builder: (context) {
-                  return BlocProvider.value(
-                    value: _profileCubit,
-                    child: const ProfileUpdateSheet(),
-                  );
-                },
-              );
+              if (AuthLocalDatasourceImpl().checkGuestMode()){
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: false,
+                  builder: (context) {
+
+                    return  GuestModeBottomSheet();
+                  },
+                );
+              }else {
+                showModalBottomSheet(
+                  context: context,
+                  useRootNavigator: true,
+                  isScrollControlled: true,
+                  routeSettings: const RouteSettings(
+                    name: "ProfileUpdateSheet",
+                  ),
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: _profileCubit,
+                      child: const ProfileUpdateSheet(),
+                    );
+                  },
+                );
+              }
             },
             child: Transform.rotate(
               angle: (90 * math.pi) / 180,

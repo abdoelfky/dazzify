@@ -136,6 +136,7 @@ class DioTokenInterceptor extends Interceptor {
         path == ApiConstants.validateExistUserOtpPath ||
         path == ApiConstants.addInformationPath ||
         path == ApiConstants.refreshUserAccessTokenPath ||
+        path == ApiConstants.guestMode ||
         path == ApiConstants.appTerms;
   }
 }

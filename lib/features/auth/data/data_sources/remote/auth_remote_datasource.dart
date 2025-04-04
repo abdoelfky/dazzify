@@ -1,4 +1,5 @@
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
+import 'package:dazzify/features/auth/data/models/guest_model.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
 import 'package:dazzify/features/auth/data/requests/send_otp_request.dart';
@@ -16,6 +17,8 @@ abstract class AuthRemoteDatasource {
   Future<TokensModel> validateExistUserOtpCode({
     required ValidateOtpRequest request,
   });
+
+  Future<GuestModel> guestMode();
 
   Future<TokensModel> addUserInformation({
     required AddUserInfoRequest request,

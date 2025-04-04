@@ -6,6 +6,7 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/functions.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
 import 'package:dazzify/features/home/presentation/components/details_header_component.dart';
@@ -18,6 +19,7 @@ import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/logic/favorite/favorite_cubit.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/glass_icon_button.dart';
+import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/widget_direction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -165,11 +167,21 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       MenuOption(
                         icon: SolarIconsOutline.dangerCircle,
                         onTap: () {
-                          showReportBottomSheet(
+                          if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: false,
+                              builder: (context) {
+                                return GuestModeBottomSheet();
+                              },
+                            );
+                          }else {
+                            showReportBottomSheet(
                             context: context,
                             id: state.service.id,
                             type: "service",
                           );
+                          }
                         },
                       )
                     ],

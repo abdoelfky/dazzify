@@ -34,12 +34,26 @@ final class AuthValidateUserOtpFailure extends AuthState {
   const AuthValidateUserOtpFailure(this.error);
 }
 
+/// guest mode
+
+
+
 final class AuthAddUserInfoSuccessState extends AuthState {}
 
 final class AuthAddUserInfoFailureState extends AuthState {
   final String error;
 
   const AuthAddUserInfoFailureState(this.error);
+}
+
+final class GuestModeLoadingState extends AuthState {}
+
+final class GuestModeSuccessState extends AuthState {}
+
+final class GuestModeFailureState extends AuthState {
+  final String error;
+
+  const GuestModeFailureState(this.error);
 }
 
 final class AppTermsLoadingState extends AuthState {}

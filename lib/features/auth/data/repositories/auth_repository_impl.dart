@@ -4,6 +4,7 @@ import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
+import 'package:dazzify/features/auth/data/models/guest_model.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
@@ -23,6 +24,7 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either<Failure, AuthModel>> sendOtp(SendOtpRequest request) async {
     try {
       AuthModel response = await _remoteDatasource.sendOtp(request: request);
+
       return Right(response);
     } on ServerException catch (exception) {
       return Left(ApiFailure(message: exception.message!));
@@ -34,9 +36,12 @@ class AuthRepositoryImpl extends AuthRepository {
     required ValidateOtpRequest request,
   }) async {
     try {
+      _localDatasource.storeGuestMode(false);
+
       String response = await _remoteDatasource.validateNonExistUserOtpCode(
         request: request,
       );
+
       return Right(response);
     } on ServerException catch (exception) {
       return Left(ApiFailure(message: exception.message!));
@@ -48,10 +53,35 @@ class AuthRepositoryImpl extends AuthRepository {
     required ValidateOtpRequest request,
   }) async {
     try {
+      _localDatasource.storeGuestMode(false);
+
       TokensModel response = await _remoteDatasource.validateExistUserOtpCode(
         request: request,
       );
       _localDatasource.storeUserTokens(response);
+      return Right(response);
+    } on ServerException catch (exception) {
+      return Left(ApiFailure(message: exception.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GuestModel>> guestMode({bool isClicked = false}) async {
+    try {
+      GuestModel response = await _remoteDatasource.guestMode();
+
+      ///from API
+      _localDatasource.storeGuestModeSession(response.guestMode);
+
+      if(isClicked) {
+        _localDatasource.storeUserTokens(TokensModel(
+          accessToken: response.guestToken!,
+          accessTokenExpireTime: response.guestTokenExpireTime!,
+          refreshTokenExpireTime: response.guestTokenExpireTime!));
+
+        _localDatasource.storeGuestMode(true);
+
+      }
       return Right(response);
     } on ServerException catch (exception) {
       return Left(ApiFailure(message: exception.message!));
@@ -116,6 +146,7 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<void> deleteUserTokens() async {
+    _localDatasource.checkGuestMode();
     await _localDatasource.deleteAuthTokens();
   }
 

@@ -14,6 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'features/auth/logic/auth_cubit.dart';
+
 class DazzifyApp extends StatefulWidget {
   const DazzifyApp({super.key});
 
@@ -41,8 +43,13 @@ class _DazzifyAppState extends State<DazzifyApp> {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            lazy: false,
+            create: (context) => getIt<AuthCubit>()..guestMode(),
+          ),
+          BlocProvider(
             create: (context) => getIt<TokensCubit>()..isUserAuthenticated(),
           ),
+
           BlocProvider(
             create: (context) => settingsCubit
               ..checkAppTheme()

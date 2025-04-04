@@ -13,6 +13,8 @@ class AppConstants {
   static const String appThemeKey = 'AppThemeKey';
   static const String localeKey = 'LocaleKey';
   static const String userTokensKey = 'UserTokensKey';
+  static const String checkGuestMode = 'checkGuestMode';
+  static const String checkGuestModeSession = 'checkGuestModeSession';
   static const String arCode = 'ar';
   static const String enCode = 'en';
   static const int phoneNumberLength = 11;

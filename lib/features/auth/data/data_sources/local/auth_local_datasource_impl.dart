@@ -1,9 +1,11 @@
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
+import 'package:dazzify/features/auth/data/models/guest_model.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mwidgets/mwidgets.dart';
 
 class AuthLocalDatasourceImpl extends AuthLocalDatasource {
   final Box<dynamic> settingsDatabase = Hive.box(
@@ -27,6 +29,45 @@ class AuthLocalDatasourceImpl extends AuthLocalDatasource {
   @override
   Future<void> storeUserTokens(TokensModel tokens) async {
     await settingsDatabase.put(AppConstants.userTokensKey, tokens);
+  }
+
+  @override
+  Future<void> storeGuestMode(bool guestMode) async {
+    await settingsDatabase.put(AppConstants.checkGuestMode, guestMode);
+  }
+
+  @override
+  bool checkGuestMode() {
+    if (settingsDatabase.containsKey(AppConstants.checkGuestMode)) {
+      final bool guestMode =
+      settingsDatabase.get(AppConstants.checkGuestMode)!;
+      kPrint("Check Guest Mode: $guestMode");
+      return guestMode;
+    } else {
+      kPrint("Check Guest Mode: false}");
+
+      return false;
+    }
+  }
+
+
+  ///if  guest mode is from API true
+  @override
+  Future<void> storeGuestModeSession(bool guestMode) async {
+    await settingsDatabase.put(AppConstants.checkGuestModeSession, guestMode);
+  }
+
+  @override
+  bool checkGuestModeSession() {
+    if (settingsDatabase.containsKey(AppConstants.checkGuestModeSession)) {
+      final bool guestMode =
+      settingsDatabase.get(AppConstants.checkGuestModeSession)!;
+      kPrint("Check Guest Mode Session: $guestMode");
+      return guestMode;
+    } else {
+      kPrint("Check Guest Mode Session: false}");
+      return false;
+    }
   }
 
   @override

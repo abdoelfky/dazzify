@@ -8,6 +8,7 @@ import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mwidgets/mwidgets.dart';
 
 part 'auth_state.dart';
 
@@ -82,6 +83,21 @@ class AuthCubit extends Cubit<AuthState> {
         },
       );
     }
+  }
+
+  Future<void> guestMode({bool isClicked = false}) async {
+    emit(GuestModeLoadingState());
+
+    final result = await _authRepository.guestMode(isClicked:isClicked );
+    result.fold(
+      (failure) {
+        emit(GuestModeFailureState(failure.message));
+      },
+      (success) {
+        emit(GuestModeSuccessState());
+        _appNotificationsCubit.subscribeToNotifications();
+      },
+    );
   }
 
   void addUserInfo({
