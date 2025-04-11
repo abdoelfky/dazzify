@@ -2,6 +2,7 @@ import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
 import 'package:dazzify/features/booking/presentation/bottom_sheets/brand_terms_sheet.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
+import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,13 @@ class MultipleBookingProceedButton extends StatelessWidget {
   final String branchId;
   final String branchName;
   final LocationModel? location;
+  final ServiceSelectionCubit? serviceSelectionCubit;
 
   const MultipleBookingProceedButton({
     required this.services,
     required this.branchId,
     required this.branchName,
+    this.serviceSelectionCubit,
     this.location,
     super.key,
   });
@@ -40,6 +43,8 @@ class MultipleBookingProceedButton extends StatelessWidget {
                 builder: (context) {
                   return BrandTermsSheet(
                     service: services.first,
+                    services: services,
+                    serviceSelectionCubit: serviceSelectionCubit,
                     branchId: branchId,
                     branchName: branchName,
                     branchLocation: location,

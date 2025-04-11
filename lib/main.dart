@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:dazzify/bloc_observer.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/fcm_notifications.dart';
@@ -11,9 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'firebase_options.dart';
-
 late GlobalKey<NavigatorState> navRootKey;
 
 Future<void> main() async {

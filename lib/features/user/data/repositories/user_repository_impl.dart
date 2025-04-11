@@ -51,6 +51,7 @@ class UserRepositoryImpl implements UserRepository {
     required String lang,
   }) async {
     try {
+
       await _remoteDataSource.updateProfileLang(lang: lang);
       return const Right(unit);
     } on ServerException catch (e) {

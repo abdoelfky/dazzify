@@ -2,10 +2,9 @@ import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
-import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 
-class ServiceInformation extends StatelessWidget {
-  final ServiceDetailsModel service;
+class MultiServiceInformation extends StatelessWidget {
+  final List<ServiceDetailsModel> services;  // Assuming services is a List
   final LocationModel? branchLocation;
   final ServiceInvoiceCubit invoiceCubit;
   final String selectedButton;
@@ -13,8 +12,8 @@ class ServiceInformation extends StatelessWidget {
   final String fromTime;
   final String toTime;
 
-  const ServiceInformation({
-    required this.service,
+  const MultiServiceInformation({
+    required this.services,
     required this.branchLocation,
     required this.invoiceCubit,
     required this.selectedButton,
@@ -26,52 +25,14 @@ class ServiceInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate total duration by summing up the duration of all services
+    final totalDuration = services.fold<int>(
+      0,
+          (sum, service) => sum + service.duration, // Assuming `duration` is in minutes
+    );
+
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 80.h,
-              width: 80.w,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8).r,
-                child: DazzifyCachedNetworkImage(
-                  imageUrl: service.image,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16.w,
-            ),
-            Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DText(
-                  service.title,
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                DText(
-                  service.description,
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ))
-          ],
-        ),
-        SizedBox(
-          height: 24.h,
-        ),
         BlocBuilder<ServiceInvoiceCubit, ServiceInvoiceState>(
           builder: (context, state) {
             return Column(
@@ -93,14 +54,13 @@ class ServiceInformation extends StatelessWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        // print(branchLocation!.latitude);
                         LocationModel? locationModel =
-                            selectedButton == ServiceLocationOptions.inBranch
-                                ? branchLocation
-                                : state.selectedLocationName ==
-                                        context.tr.NotSelectedYet
-                                    ? null
-                                    : state.selectedLocation;
+                        selectedButton == ServiceLocationOptions.inBranch
+                            ? branchLocation
+                            : state.selectedLocationName ==
+                            context.tr.NotSelectedYet
+                            ? null
+                            : state.selectedLocation;
 
                         context.pushRoute(
                           ViewLocationRoute(
@@ -175,7 +135,7 @@ class ServiceInformation extends StatelessWidget {
                 DText(
                   context.tr.duration,
                   style: context.textTheme.bodyLarge,
-                )
+                ),
               ],
             ),
             Row(
@@ -186,13 +146,11 @@ class ServiceInformation extends StatelessWidget {
                 SizedBox(
                   width: 250.w,
                   child: DText(
-                    '${service.duration.toString()} ${context.tr.minutes}, ${context.tr.serviceSelectionConfirmation(
+                    '${totalDuration.toString()} ${context.tr.minutes}, ${context.tr.serviceSelectionConfirmation(
                       fromTime,
                       toTime,
                       selectedDate,
                     )}',
-
-                    //from $fromTime to $toTime on $selectedDate.',
                     style: context.textTheme.bodyMedium!.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
                     ),

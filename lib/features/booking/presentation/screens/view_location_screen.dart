@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 @RoutePage()
@@ -52,19 +53,28 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
   late LatLng _selectedLatLng;
   bool _isButtonActive = false;
   late String _buttonTitle;
-  bool _isLoading = false;
+  bool _isLoading = true; // Initially loading
   late ViewLocationCubit _viewLocationCubit;
 
   @override
   void initState() {
-    _viewLocationCubit = context.read<ViewLocationCubit>();
-    _initialization();
-    _loadMapDarkTheme();
     super.initState();
+    _viewLocationCubit = context.read<ViewLocationCubit>();
+    _initializeLocation();
+    _loadMapDarkTheme();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Display loading indicator while the location is being initialized
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         body: BlocConsumer<ViewLocationCubit, ViewLocationState>(
@@ -124,15 +134,15 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                       ).r,
                       child: state.showButton
                           ? CustomFadeAnimation(
-                              duration: const Duration(milliseconds: 300),
-                              child: PrimaryButton(
-                                title: _buttonTitle,
-                                width: context.screenWidth,
-                                isLoading: _isLoading,
-                                isActive: _isButtonActive,
-                                onTap: _buttonOnTap,
-                              ),
-                            )
+                        duration: const Duration(milliseconds: 300),
+                        child: PrimaryButton(
+                          title: _buttonTitle,
+                          width: context.screenWidth,
+                          isLoading: _isLoading,
+                          isActive: _isButtonActive,
+                          onTap: _buttonOnTap,
+                        ),
+                      )
                           : Container()),
                 ),
               ],
@@ -147,16 +157,17 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
     _darkMapStyle = await rootBundle.loadString(AssetsManager.mapDarkThemeJson);
   }
 
-  void _initialization() {
+  void _initializeLocation() async {
+    // If locationModel is provided, use it to center the map
     if (widget.locationModel != null) {
+      _selectedLatLng = LatLng(
+        widget.locationModel!.latitude,
+        widget.locationModel!.longitude,
+      );
       initialCameraPosition = CameraPosition(
-        target: LatLng(
-          widget.locationModel!.latitude,
-          widget.locationModel!.longitude,
-        ),
+        target: _selectedLatLng,
         zoom: 14,
       );
-
       _viewLocationCubit.addMarker(
         widget.locationModel!.latitude,
         widget.locationModel!.longitude,
@@ -170,18 +181,62 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
           _buttonTitle = context.tr.updateLocation;
         }
       });
+
+      setState(() {
+        _isLoading = false; // Once initialized, stop loading
+      });
+
     } else {
-      initialCameraPosition = const CameraPosition(
-        target: LatLng(
+      // If no location is provided, get the current location of the user
+      Position? position = await _getCurrentLocation();
+      if (position != null) {
+        _selectedLatLng = LatLng(position.latitude, position.longitude);
+        initialCameraPosition = CameraPosition(
+          target: _selectedLatLng,
+          zoom: 14,
+        );
+        _viewLocationCubit.addMarker(
+          position.latitude,
+          position.longitude,
+        );
+        _isButtonActive = true;
+      } else {
+        // If current location is unavailable, fallback to Cairo coordinates
+        _selectedLatLng = LatLng(
           AppConstants.cairoLatitude,
           AppConstants.cairoLongitude,
-        ),
-        zoom: 11,
-      );
+        );
+        initialCameraPosition = CameraPosition(
+          target: _selectedLatLng,
+          zoom: 14,
+        );
+      }
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _buttonTitle = context.tr.confirmLocation;
       });
+
+      setState(() {
+        _isLoading = false; // Once initialized, stop loading
+      });
     }
+  }
+
+  Future<Position?> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return null; // Location services are disabled
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+        return null; // Location permission denied
+      }
+    }
+
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
   void _buttonOnTap() {

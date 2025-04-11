@@ -114,6 +114,7 @@ class MultipleServiceAvailabilityCubit
       selectedDate: selectedDateTime,
       isAnySessionSelected: isAnySessionSelected,
       blocState: UiState.success,
+      isSessionConfirmed: false,
       selectedDayTime: selectedDayTime, // Set the first available slot
       selectedSession: selectedSession,
     ));

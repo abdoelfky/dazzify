@@ -8,6 +8,7 @@ import 'package:dazzify/features/brand/presentation/widgets/service_widget.dart'
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
+import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
@@ -124,6 +125,9 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                         name: category.name,
                         isSelected: category.id == state.selectedCategoryId,
                         onTap: () {
+                          print("category${category.id}");
+                          print("category${state.selectedCategoryId}");
+
                           _serviceSelectionCubit.selectCategory(
                               brandCategory: category);
                         },
@@ -141,8 +145,8 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
 
   Widget buildServiceBookingList() {
     return BlocBuilder<ServiceSelectionCubit, ServiceSelectionState>(
-      buildWhen: (previous, current) =>
-          previous.brandServicesState != current.brandServicesState,
+      // buildWhen: (previous, current) =>
+      //     previous.brandServicesState != current.brandServicesState,
       builder: (context, state) {
         switch (state.brandServicesState) {
           case UiState.initial:
@@ -207,10 +211,10 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                   );
                                 },
                                 onBookingSelectTap: () {
-                                {
+                                  {
                                     _serviceSelectionCubit.selectBookingService(
-                                    service: service,
-                                  );
+                                      service: service,
+                                    );
                                   }
                                 },
                                 isBooked: state.selectedBrandServicesIds
@@ -277,10 +281,25 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                   bottomStart: Radius.circular(38),
                 ),
                 onTap: () {
-                  _goToMultipleBookingDateSelectionScreen(
-                    services: state.selectedBrandServices,
-                    branch: state.selectedBranch,
-                  );
+                  // Get all service locations from the selected services
+                  final selectedServiceLocations = state.selectedBrandServices
+                      .map((service) => service.serviceLocation)
+                      .toList();
+
+                  // Check if both 'out' and 'in' are selected
+                  if (selectedServiceLocations.contains('out') &&
+                      selectedServiceLocations.contains('in')) {
+                    // Show an error message
+                    DazzifyToastBar.showError(
+                      message: context.tr.chooseServiceLocationError,
+                    );
+                  } else {
+                    // Proceed with the navigation to the multiple booking date selection screen
+                    _goToMultipleBookingDateSelectionScreen(
+                      services: state.selectedBrandServices,
+                      branch: state.selectedBranch,
+                    );
+                  }
                 },
                 title: context.tr.selectDate,
               ),
@@ -325,6 +344,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
     context.pushRoute(
       MultipleServiceAvailabilityRoute(
         services: services,
+        serviceSelectionCubit: _serviceSelectionCubit,
         branchId: branch.id,
         branchName: branch.name,
         location: branch.location,

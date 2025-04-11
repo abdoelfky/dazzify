@@ -7,6 +7,7 @@ import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/brand_terms_cubit/brand_terms_cubit.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
+import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BrandTermsSheet extends StatefulWidget {
   final ServiceDetailsModel service;
+  final List<ServiceDetailsModel> services;
   final String branchId;
   final String branchName;
   final String selectedDate;
@@ -27,9 +29,12 @@ class BrandTermsSheet extends StatefulWidget {
   final String selectedFromTime;
   final String selectedStartTimeStamp;
   final LocationModel? branchLocation;
+  final ServiceSelectionCubit? serviceSelectionCubit;
 
   const BrandTermsSheet({
     required this.service,
+    this.serviceSelectionCubit,
+    required this.services,
     required this.branchId,
     required this.branchName,
     required this.selectedDate,
@@ -213,6 +218,8 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                           context.maybePop();
                                           context.pushRoute(ServiceInvoiceRoute(
                                             service: widget.service,
+                                            serviceSelectionCubit: widget.serviceSelectionCubit!,
+                                            services: widget.services,
                                             branchId: widget.branchId,
                                             branchName: widget.branchName,
                                             branchLocation: widget.branchLocation,

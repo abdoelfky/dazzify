@@ -8,8 +8,8 @@ class CreateBookingRequest {
   final String brandId;
   @JsonKey(name: "branchId")
   final String branchId;
-  @JsonKey(name: "serviceId")
-  final String serviceId;
+  @JsonKey(name: "services")
+  final List<String> services;
   @JsonKey(name: "startTime")
   final String startTime;
   @JsonKey(name: "isHasCoupon")
@@ -26,7 +26,7 @@ class CreateBookingRequest {
   const CreateBookingRequest({
     required this.brandId,
     required this.branchId,
-    required this.serviceId,
+    required this.services,
     required this.startTime,
     required this.isHasCoupon,
     this.couponId,

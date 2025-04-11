@@ -56,6 +56,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
   Future<void> validateCouponAndUpdateInvoice({
     required ServiceDetailsModel service,
     required String code,
+    required num price,
   }) async {
     emit(state.copyWith(couponValidationState: UiState.loading));
 
@@ -63,7 +64,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
       brandId: service.brand.id,
       request: ValidateCouponRequest(
         code: code,
-        purchaseAmount: service.price,
+        purchaseAmount: price,
       ),
     );
 
@@ -89,10 +90,10 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
   }
 
   void updateInvoice({
-    num? price,
+    List<num>? price,
     num? deliveryFees,
     num? discountAmount,
-    num? appFees,
+    List<num>? appFees,
   }) {
     emit(
       state.copyWith(
@@ -125,7 +126,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
   Future<void> bookService({
     required String brandId,
     required String branchId,
-    required String serviceId,
+    required List<String> services,
     required String date,
     required String startTimeStamp,
     required bool isHasCoupon,
@@ -148,7 +149,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
 
     debugPrint('---brandId: $brandId');
     debugPrint('---branchId: $branchId');
-    debugPrint('---serviceId: $serviceId');
+    debugPrint('---serviceId: ${services.first}');
     debugPrint('---startTime: $startTimeStamp');
     debugPrint('---isHasCoupon: $isHasCoupon');
 
@@ -172,7 +173,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
       request: CreateBookingRequest(
         brandId: brandId,
         branchId: branchId,
-        serviceId: serviceId,
+        services: services,
         startTime: startTimeStamp,
         bookingLocation: bookingLocation,
         isHasCoupon: isHasCoupon,

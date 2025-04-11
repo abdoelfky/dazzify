@@ -3640,6 +3640,16 @@ class S {
       args: [],
     );
   }
+
+  /// `You cannot select both in-branch and out-of-branch services Together.`
+  String get chooseServiceLocationError {
+    return Intl.message(
+      'You cannot select both in-branch and out-of-branch services Together.',
+      name: 'chooseServiceLocationError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

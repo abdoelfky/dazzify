@@ -108,6 +108,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "chooseLanguage":
             MessageLookupByLibrary.simpleMessage("إختر لغتك المفضلة"),
         "choosePeriod": MessageLookupByLibrary.simpleMessage("اختر مدة القسط"),
+        "chooseServiceLocationError": MessageLookupByLibrary.simpleMessage(
+            "لا يمكنك اختيار خدمات من داخل الفرع ومن خارجه معًا."),
         "clients": MessageLookupByLibrary.simpleMessage("عميل"),
         "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
         "collectionsTab": MessageLookupByLibrary.simpleMessage("المجموعات"),

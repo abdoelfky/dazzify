@@ -7,6 +7,7 @@ import 'package:dazzify/features/brand/data/requests/get_brand_services_request.
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mwidgets/mwidgets.dart';
 
 part 'service_selection_state.dart';
 
@@ -94,6 +95,29 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
     );
   }
 
+  void removeServicesSelected({required int index}) {
+
+    // Ensure the index is within bounds
+    if (index >= 0 && index < state.selectedBrandServices.length) {
+      List<ServiceDetailsModel> selectedServices = List.from(state.selectedBrandServices);  // Create a copy of the list
+      List<String> selectedServicesIds = List.from(state.selectedBrandServicesIds);  // Create a copy of the IDs list
+
+      // Remove the service at the given index
+      selectedServices.removeAt(index);
+      selectedServicesIds.removeAt(index);
+
+      // Emit the updated state with the modified lists
+      emit(state.copyWith(
+        selectedBrandServices: selectedServices,
+        selectedBrandServicesIds: selectedServicesIds,
+      ));
+    } else {
+      // Handle the case where the index is out of range
+      kPrint("Invalid index: $index");
+    }
+  }
+
+
   void selectCategory({
     required BrandCategoriesModel brandCategory,
   }) {
@@ -107,6 +131,7 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
   void selectBookingService({
     required ServiceDetailsModel service,
   }) {
+
     List<ServiceDetailsModel> selectedServices =
         state.selectedBrandServices.toList();
     List<String> selectedServicesIds = state.selectedBrandServicesIds.toList();

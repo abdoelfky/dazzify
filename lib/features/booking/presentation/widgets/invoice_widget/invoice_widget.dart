@@ -7,12 +7,11 @@ import 'package:dazzify/features/shared/widgets/dazzify_text_form_field.dart';
 
 class InvoiceWidget extends StatelessWidget {
   final TextEditingController textContorller;
-  final ServiceDetailsModel service;
-
+  final List<ServiceDetailsModel> services;
   const InvoiceWidget({
     super.key,
     required this.textContorller,
-    required this.service,
+    required this.services,
   });
 
   @override
@@ -35,8 +34,12 @@ class InvoiceWidget extends StatelessWidget {
               validator: (value) => null,
               suffixIcon: getSuffixIcon(
                 context: context,
+                price: services
+                    .map((service) => service.price)
+                    .toList()
+                    .fold<num>(0, (sum, item) => sum + item),
                 couponValidationState: state.couponValidationState,
-                service: service,
+                service: services.first,
                 textContorller: textContorller,
               ),
             ),
@@ -44,8 +47,14 @@ class InvoiceWidget extends StatelessWidget {
               height: 24.h,
             ),
             InvoiceLine(
-              title: context.tr.servicePrice,
-              amount: service.price.toString(),
+              title: '${context.tr.servicePrice} (${services
+                  .map((service) => service.price)
+                  .toList().length} ${context.tr.services})',
+              amount: services
+                  .map((service) => service.price)
+                  .toList()
+                  .fold<num>(0, (sum, item) => sum + item)
+                  .toString(),
             ),
             InvoiceLine(
               title: context.tr.couponDisc,
@@ -58,7 +67,11 @@ class InvoiceWidget extends StatelessWidget {
             ),
             InvoiceLine(
               title: context.tr.appFees,
-              amount: state.invoice.appFees.toString(),
+              amount: services
+                  .map((service) => service.fees)
+                  .toList()
+                  .fold<num>(0, (sum, item) => sum + item)
+                  .toString(),
             ),
             DottedLine(
               lineWidth: context.screenWidth,
@@ -90,11 +103,12 @@ BorderSide getBorderSide({
       : BorderSide(color: context.colorScheme.primary);
 }
 
-Widget? getSuffixIcon({
+Widget?  getSuffixIcon({
   required BuildContext context,
   required UiState couponValidationState,
   required TextEditingController textContorller,
   required ServiceDetailsModel service,
+  required num price,
 }) {
   return couponValidationState == UiState.success
       ? null
@@ -106,6 +120,7 @@ Widget? getSuffixIcon({
                   .read<ServiceInvoiceCubit>()
                   .validateCouponAndUpdateInvoice(
                     service: service,
+                    price: price,
                     code: textContorller.text,
                   );
 

@@ -111,6 +111,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Choose Your Preferred Language"),
         "choosePeriod":
             MessageLookupByLibrary.simpleMessage("Choose installment period"),
+        "chooseServiceLocationError": MessageLookupByLibrary.simpleMessage(
+            "You cannot select both in-branch and out-of-branch services Together."),
         "clients": MessageLookupByLibrary.simpleMessage("Clients"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "collectionsTab": MessageLookupByLibrary.simpleMessage("Collections"),

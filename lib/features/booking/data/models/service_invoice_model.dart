@@ -1,36 +1,37 @@
 import 'package:equatable/equatable.dart';
 
 class ServiceInvoiceModel extends Equatable {
-  final num price;
+  final List<num> price;
   final num deliveryFees;
-  final num appFees;
+  final List<num> appFees;
   final num discountAmount;
   final num totalPrice;
 
-  const ServiceInvoiceModel({
+  // Removed const from constructor to allow runtime calculations
+  ServiceInvoiceModel({
     required this.price,
     required this.deliveryFees,
     required this.appFees,
     required this.discountAmount,
-  }) : totalPrice = price + deliveryFees + appFees - discountAmount;
+  }) : totalPrice = price.fold<num>(0, (sum, item) => sum + item) + deliveryFees + appFees.fold<num>(0, (sum, item) => sum + item) - discountAmount;
 
-  const ServiceInvoiceModel.empty([
-    this.price = 0,
-    this.deliveryFees = 0,
-    this.appFees = 0,
-    this.discountAmount = 0,
-    this.totalPrice = 0,
-  ]);
+  // Non-constant constructor for empty values
+  const ServiceInvoiceModel.empty(this.price,this.appFees)
+      :
+        deliveryFees = 0,
+        discountAmount = 0,
+        totalPrice = 0;
 
+  // Update method
   ServiceInvoiceModel updateInvoice({
-    num? price,
+    List<num>? price,
     num? deliveryFees,
-    num? appFees,
+    List<num>? appFees,
     num? discountAmount,
   }) {
-    num newPrice = price ?? this.price;
+    List<num> newPrice = price ?? this.price;
     num newDeliveryFees = deliveryFees ?? this.deliveryFees;
-    num newAppFees = appFees ?? this.appFees;
+    List<num> newAppFees = appFees ?? this.appFees;
     num newDiscountAmount = discountAmount ?? this.discountAmount;
 
     return ServiceInvoiceModel(
@@ -43,10 +44,10 @@ class ServiceInvoiceModel extends Equatable {
 
   @override
   List<Object> get props => [
-        price,
-        deliveryFees,
-        appFees,
-        discountAmount,
-        totalPrice,
-      ];
+    price,
+    deliveryFees,
+    appFees,
+    discountAmount,
+    totalPrice,
+  ];
 }

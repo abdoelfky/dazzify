@@ -19,6 +19,7 @@ import 'package:dazzify/features/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
+import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/brand/presentation/screens/brand_posts_screen.dart';
 import 'package:dazzify/features/brand/presentation/screens/brand_profile_screen.dart';
 import 'package:dazzify/features/brand/presentation/screens/brand_reels_screen.dart';

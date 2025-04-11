@@ -8,8 +8,10 @@ import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_inv
 import 'package:dazzify/features/booking/presentation/bottom_sheets/governorate_bottom_sheet.dart';
 import 'package:dazzify/features/booking/presentation/widgets/branch_button.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/invoice_widget.dart';
+import 'package:dazzify/features/booking/presentation/widgets/multi_service_widget.dart';
 import 'package:dazzify/features/booking/presentation/widgets/service_information.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
+import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
@@ -20,9 +22,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../widgets/multi_service_information.dart';
+
 @RoutePage()
 class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
   final ServiceDetailsModel service;
+  final List<ServiceDetailsModel> services;
   final String branchId;
   final String branchName;
   final String selectedDate;
@@ -30,9 +35,12 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
   final String selectedToTime;
   final String selectedStartTimeStamp;
   final LocationModel? branchLocation;
+  final ServiceSelectionCubit serviceSelectionCubit;
 
   const ServiceInvoiceScreen({
     required this.service,
+    required this.serviceSelectionCubit,
+    required this.services,
     required this.branchId,
     required this.branchName,
     required this.selectedDate,
@@ -45,13 +53,19 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<ServiceInvoiceCubit>()
-        ..updateInvoice(
-          price: service.price,
-          appFees: service.fees,
+    return MultiBlocProvider(
+      providers: [
+        // Ensure that ServiceSelectionCubit is provided here
+        // BlocProvider<ServiceSelectionCubit>(create: (context) => getIt<ServiceSelectionCubit>()),
+        BlocProvider(
+          create: (context) => getIt<ServiceInvoiceCubit>()
+            ..updateInvoice(
+              price: services.map((service) => service.price).toList(),
+              appFees: services.map((service) => service.fees).toList(),
+            ),
         ),
-      child: this,
+      ],
+      child: this,  // The widget itself
     );
   }
 
@@ -65,11 +79,14 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   late ServiceInvoiceCubit _invoiceCubit;
   final ValueNotifier<bool> _isCodeValidatingLoading = ValueNotifier(false);
   final TextEditingController _textController = TextEditingController();
-
+  // late ServiceSelectionCubit _serviceSelectionCubit;
   @override
   void initState() {
     _invoiceCubit = context.read<ServiceInvoiceCubit>();
     _initialization();
+    // _services= widget.services;
+    // print(_services.length);
+    // _serviceSelectionCubit = context.read<ServiceSelectionCubit>();
 
     if (widget.service.serviceLocation == ServiceLocationOptions.outBranch) {
       _openGovernoratesSheet();
@@ -77,8 +94,22 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     super.initState();
   }
 
+  // Method to remove service by index
+  void removeService(int index) {
+    // widget.serviceSelectionCubit.selectBookingService(service: widget.services[index]);
+    widget.serviceSelectionCubit.removeServicesSelected(index: index);
+    setState(() {
+      widget.services.removeAt(index);
+    });
+    _invoiceCubit.updateInvoice(
+      price: widget.services.map((service) => service.price).toList(),
+      appFees: widget.services.map((service) => service.fees).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         body: ValueListenableBuilder(
@@ -112,6 +143,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           title: context.tr.confirmation,
           verticalPadding: 10.h,
         ),
+
+
         Expanded(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16).w,
@@ -120,6 +153,35 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               SizedBox(
                 height: 24.h,
               ),
+              if(widget.services.length>1)
+                SizedBox(
+                  height: 140,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,  // Change to horizontal scrolling
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.services.length,
+                    itemBuilder: (context, index) => MultiServiceWidget(
+                      service: widget.services[index],
+                      index: index,
+                      branchLocation: widget.branchLocation,
+                      invoiceCubit: _invoiceCubit,
+                      removeService: removeService, // Pass the remove callback
+
+                    ),
+                  ),
+                ),
+              if(widget.services.length>1)
+                MultiServiceInformation(
+                  services: widget.services,
+                  branchLocation: widget.branchLocation,
+                  invoiceCubit: _invoiceCubit,
+                  selectedButton: selectedButton,
+                  selectedDate: selectedDate,
+                  fromTime: fromTime,
+                  toTime: toTime,
+                ),
+              if(widget.services.length==1)
               ServiceInformation(
                 service: widget.service,
                 branchLocation: widget.branchLocation,
@@ -159,7 +221,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 },
                 child: InvoiceWidget(
                   textContorller: _textController,
-                  service: widget.service,
+                  services: widget.services,
                 ),
               ),
             ],
@@ -184,12 +246,15 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         } else if (state.creatingBookingState == UiState.success) {
           _isBookingLoading = false;
           context.replaceRoute(const ServiceBookingConfirmationRoute());
-        } else if (state.creatingBookingState == UiState.failure) {
+        }
+        else if (state.creatingBookingState == UiState.failure) {
           _isBookingLoading = false;
           DazzifyToastBar.showError(
             message: state.errorMessage,
           );
         }
+
+
       },
       builder: (context, state) {
         return PrimaryButton(
@@ -329,6 +394,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
 
     if (isInBranch == false &&
         selectedLocationName == context.tr.NotSelectedYet) {
+      _openGovernoratesSheet();
       DazzifyToastBar.showError(
         message: context.tr.selectYourLocation,
       );
@@ -336,7 +402,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       _invoiceCubit.bookService(
         brandId: widget.service.brand.id,
         branchId: widget.branchId,
-        serviceId: widget.service.id,
+        services: widget.services.map((service) => service.id).toList(),
         date: widget.selectedDate,
         startTimeStamp: widget.selectedStartTimeStamp,
         isHasCoupon: couponId == '' ? false : true,

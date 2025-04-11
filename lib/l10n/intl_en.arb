@@ -383,6 +383,8 @@
   "invalidDateFormat": "Invalid date format",
   "guestMode": "Continue as Guest",
   "goToLogin": "Go To Login",
-  "pleaseLoginToFreelyAccessAppFeatures": "Please log in to freely access app features."
+  "pleaseLoginToFreelyAccessAppFeatures": "Please log in to freely access app features.",
+  "chooseServiceLocationError": "You cannot select both in-branch and out-of-branch services Together."
+
 
 }

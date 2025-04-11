@@ -23,7 +23,7 @@ class ServiceInvoiceState extends Equatable {
     this.deliveryInfo = const DeliveryInfoModel.empty(),
     this.selectedLocationName = '',
     this.selectedLocation = const LocationModel.empty(),
-    this.invoice = const ServiceInvoiceModel.empty(),
+    this.invoice =  const ServiceInvoiceModel.empty([],[]),
     this.appFees = 0,
   });
 

@@ -8,6 +8,7 @@ import 'package:dazzify/features/booking/presentation/widgets/proceed_button/mul
 import 'package:dazzify/features/booking/presentation/widgets/selection_confirmation/multiple_booking_selection_confirmation.dart';
 import 'package:dazzify/features/booking/presentation/widgets/time_selection_widget/multiple_booking_time_selection_widget.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
+import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
@@ -25,12 +26,14 @@ class MultipleServiceAvailabilityScreen extends StatefulWidget
   final String branchName;
   final LocationModel? location;
   final String brandId;
+  final ServiceSelectionCubit? serviceSelectionCubit;
 
   const MultipleServiceAvailabilityScreen({
     required this.services,
     required this.branchId,
     required this.branchName,
     this.location,
+    this.serviceSelectionCubit,
     super.key,
     required this.brandId,
   });
@@ -149,6 +152,7 @@ class _MultipleServiceAvailabilityScreenState
                   ),
                   MultipleBookingProceedButton(
                     services: widget.services,
+                    serviceSelectionCubit: widget.serviceSelectionCubit,
                     branchId: widget.branchId,
                     branchName: widget.branchName,
                     location: widget.location,

@@ -52,7 +52,7 @@ class DazzifyToastBar {
                 dismissDirections: const [FlashDismissDirection.endToStart],
                 controller: controller,
                 child: Container(
-                  height: 40.0.h,
+                  // height: 40.0.h,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: boxColor,
@@ -69,6 +69,7 @@ class DazzifyToastBar {
                       Expanded(
                         child: DText(
                           message,
+                          maxLines: 3,
                           style: context.textTheme.bodyMedium!.copyWith(
                             color: Colors.white,
                           ),

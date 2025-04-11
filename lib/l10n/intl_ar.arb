@@ -383,6 +383,7 @@
   "invalidDateFormat": "تنسيق التاريخ غير صالح",
   "guestMode": "تابع كزائر",
   "goToLogin": "الذهاب إلى تسجيل الدخول",
-  "pleaseLoginToFreelyAccessAppFeatures": "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية."
+  "pleaseLoginToFreelyAccessAppFeatures": "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية.",
+  "chooseServiceLocationError": "لا يمكنك اختيار خدمات من داخل الفرع ومن خارجه معًا."
 
 }

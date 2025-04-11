@@ -35,7 +35,9 @@ class ApiConstants {
   static const String getBrandServiceAvailableSlots = "/brand/available-slots";
   static const String getBrandMultipleServicesAvailableSlots =
       "/brand/multiple-services/available-slots";
-  static const String createBooking = "/booking/create";
+  ///multiple-services - multiple-services/available-slots
+  static const String createBooking = "/booking/multiple-services/create";
+  // static const String createBooking = "/booking/create";
   static const brandMedia = "/media/list";
   static const String getUserLikes = "/user/media-likes";
   static const String issue = "/issue/";

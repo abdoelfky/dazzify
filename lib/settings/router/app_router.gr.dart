@@ -751,6 +751,8 @@ class MultipleServiceAvailabilityRoute
   MultipleServiceAvailabilityRoute({
     required List<ServiceDetailsModel> services,
     required String branchId,
+    required ServiceSelectionCubit serviceSelectionCubit,
+
     required String branchName,
     LocationModel? location,
     Key? key,
@@ -760,6 +762,7 @@ class MultipleServiceAvailabilityRoute
           MultipleServiceAvailabilityRoute.name,
           args: MultipleServiceAvailabilityRouteArgs(
             services: services,
+            serviceSelectionCubit: serviceSelectionCubit,
             branchId: branchId,
             branchName: branchName,
             location: location,
@@ -777,7 +780,8 @@ class MultipleServiceAvailabilityRoute
       final args = data.argsAs<MultipleServiceAvailabilityRouteArgs>();
       return WrappedRoute(
           child: MultipleServiceAvailabilityScreen(
-        services: args.services,
+            services: args.services,
+            serviceSelectionCubit: args.serviceSelectionCubit,
         branchId: args.branchId,
         branchName: args.branchName,
         location: args.location,
@@ -791,6 +795,7 @@ class MultipleServiceAvailabilityRoute
 class MultipleServiceAvailabilityRouteArgs {
   const MultipleServiceAvailabilityRouteArgs({
     required this.services,
+    required this.serviceSelectionCubit,
     required this.branchId,
     required this.branchName,
     this.location,
@@ -799,6 +804,8 @@ class MultipleServiceAvailabilityRouteArgs {
   });
 
   final List<ServiceDetailsModel> services;
+
+  final ServiceSelectionCubit serviceSelectionCubit;
 
   final String branchId;
 
@@ -1451,7 +1458,9 @@ class ServiceDetailsRouteArgs {
 class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
   ServiceInvoiceRoute({
     required ServiceDetailsModel service,
+    required List<ServiceDetailsModel> services,
     required String branchId,
+    required ServiceSelectionCubit serviceSelectionCubit,
     required String branchName,
     required String selectedDate,
     required String selectedStartTimeStamp,
@@ -1463,7 +1472,9 @@ class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
   }) : super(
           ServiceInvoiceRoute.name,
           args: ServiceInvoiceRouteArgs(
+            serviceSelectionCubit: serviceSelectionCubit,
             service: service,
+            services: services,
             branchId: branchId,
             branchName: branchName,
             selectedDate: selectedDate,
@@ -1484,7 +1495,9 @@ class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
       final args = data.argsAs<ServiceInvoiceRouteArgs>();
       return WrappedRoute(
           child: ServiceInvoiceScreen(
+        serviceSelectionCubit: args.serviceSelectionCubit!,
         service: args.service,
+        services: args.services,
         branchId: args.branchId,
         branchName: args.branchName,
         selectedDate: args.selectedDate,
@@ -1501,17 +1514,23 @@ class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
 class ServiceInvoiceRouteArgs {
   const ServiceInvoiceRouteArgs({
     required this.service,
+    required this.services,
     required this.branchId,
     required this.branchName,
     required this.selectedDate,
     required this.selectedStartTimeStamp,
     required this.selectedFromTime,
     required this.selectedToTime,
+    required this.serviceSelectionCubit,
     this.branchLocation,
     this.key,
   });
 
   final ServiceDetailsModel service;
+
+  final List<ServiceDetailsModel> services;
+
+  final ServiceSelectionCubit? serviceSelectionCubit;
 
   final String branchId;
 

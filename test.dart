@@ -28,45 +28,105 @@ class ServiceInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Column(
           children: [
-            SizedBox(
-              height: 80.h,
-              width: 80.w,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8).r,
-                child: DazzifyCachedNetworkImage(
-                  imageUrl: service.image,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16.w,
-            ),
-            Expanded(
-                child: Column(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DText(
-                  service.title,
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    overflow: TextOverflow.ellipsis,
+                SizedBox(
+                  height: 80.h,
+                  width: 80.w,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8).r,
+                    child: DazzifyCachedNetworkImage(
+                      imageUrl: service.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 SizedBox(
-                  height: 8.h,
+                  width: 16.w,
                 ),
-                DText(
-                  service.description,
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DText(
+                              service.title,
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8.h,
+                            ),
+                            DText(
+                              service.description,
+                              style: context.textTheme.bodySmall!.copyWith(
+                                color: context.colorScheme.onSurfaceVariant,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  SolarIconsOutline.alarm,
+                                  size: 18.r,
+                                  color: context.colorScheme.onSurface,
+                                ),
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                DText(
+                                  context.tr.duration,
+                                  style: context.textTheme.bodyLarge,
+                                ),
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                DText(
+                                  '${service.duration.toString()} ${context.tr.minutes}',
+
+                                  //from $fromTime to $toTime on $selectedDate.',
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+
+                              ],
+
+                            ),
+                            Row(
+                              children: [
+                                DText(
+                                  '${context.tr.serviceSelectionConfirmation(
+                                    fromTime,
+                                    toTime,
+                                    selectedDate,
+                                  )}',
+
+                                  //from $fromTime to $toTime on $selectedDate.',
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                          ],
+                        ),
+
+                      ],
+                    ))
               ],
-            ))
+            ),
+
           ],
         ),
         SizedBox(
@@ -95,12 +155,12 @@ class ServiceInformation extends StatelessWidget {
                       onTap: () {
                         // print(branchLocation!.latitude);
                         LocationModel? locationModel =
-                            selectedButton == ServiceLocationOptions.inBranch
-                                ? branchLocation
-                                : state.selectedLocationName ==
-                                        context.tr.NotSelectedYet
-                                    ? null
-                                    : state.selectedLocation;
+                        selectedButton == ServiceLocationOptions.inBranch
+                            ? branchLocation
+                            : state.selectedLocationName ==
+                            context.tr.NotSelectedYet
+                            ? null
+                            : state.selectedLocation;
 
                         context.pushRoute(
                           ViewLocationRoute(
@@ -160,48 +220,7 @@ class ServiceInformation extends StatelessWidget {
         SizedBox(
           height: 16.r,
         ),
-        Column(
-          children: [
-            Row(
-              children: [
-                Icon(
-                  SolarIconsOutline.alarm,
-                  size: 18.r,
-                  color: context.colorScheme.onSurface,
-                ),
-                SizedBox(
-                  width: 8.w,
-                ),
-                DText(
-                  context.tr.duration,
-                  style: context.textTheme.bodyLarge,
-                )
-              ],
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 26.w,
-                ),
-                SizedBox(
-                  width: 250.w,
-                  child: DText(
-                    '${service.duration.toString()} ${context.tr.minutes}, ${context.tr.serviceSelectionConfirmation(
-                      fromTime,
-                      toTime,
-                      selectedDate,
-                    )}',
 
-                    //from $fromTime to $toTime on $selectedDate.',
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
         SizedBox(
           height: 16.h,
         ),

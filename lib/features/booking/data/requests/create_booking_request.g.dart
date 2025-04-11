@@ -11,7 +11,7 @@ CreateBookingRequest _$CreateBookingRequestFromJson(
     CreateBookingRequest(
       brandId: json['brandId'] as String,
       branchId: json['branchId'] as String,
-      serviceId: json['serviceId'] as String,
+      services: json['services'] as List<String>,
       startTime: json['startTime'] as String,
       isHasCoupon: json['isHasCoupon'] as bool,
       couponId: json['couponId'] as String?,
@@ -27,7 +27,7 @@ Map<String, dynamic> _$CreateBookingRequestToJson(
     <String, dynamic>{
       'brandId': instance.brandId,
       'branchId': instance.branchId,
-      'serviceId': instance.serviceId,
+      'services': instance.services,
       'startTime': instance.startTime,
       'isHasCoupon': instance.isHasCoupon,
       if (instance.couponId case final value?) 'couponId': value,
