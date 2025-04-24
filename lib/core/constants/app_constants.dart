@@ -117,9 +117,9 @@ class AppConstants {
     return "https://share.dazzifyapp.com/service/$serviceId";
   }
 
-  static String generateLocationHash(double latitude, double longitude) {
+  static String generateLocationHash(double latitude, double longitude,int timestamp) {
     const String flavor = String.fromEnvironment('env', defaultValue: 'dev');
-    final payload = '$latitude|$longitude';
+    final payload = '$latitude|$longitude|$timestamp';
     late Uint8List key;
     if (flavor == 'prod') {
       key = utf8.encode(dotenv.env['PRODUCTION_ENCRYPTION_KEY']!);

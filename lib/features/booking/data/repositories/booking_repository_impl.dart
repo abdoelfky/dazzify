@@ -233,4 +233,5 @@ class BookingRepositoryImpl extends BookingRepository {
       return Left(ApiFailure(message: failure.message!));
     }
   }
+
 }

@@ -122,6 +122,7 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
                                 );
                               },
                               child: BookingCard(
+                                services: booking.services,
                                 imageUrl: booking.services.first.image,
                                 title: booking.services.first.title,
                                 price: booking.services.first.price,

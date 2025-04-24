@@ -39,6 +39,7 @@ class DazzifyPickAndCropImageImpl extends DazzifyPickAndCropImage {
     if (image != null) {
       final croppedFile = await imageCropper.cropImage(
         sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: DazzifyApp.tr.cropImage,

@@ -8,8 +8,6 @@ import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:mwidgets/mwidgets.dart';
-
 part 'auth_state.dart';
 
 @injectable

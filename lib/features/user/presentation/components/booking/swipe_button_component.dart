@@ -59,8 +59,29 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
         bookingStatus == BookingStatus.confirmed &&
         !widget.isArrived) {
       return swipeButton();
-    } else {
-      if (widget.isFinished == false) {
+    }
+    else {
+      if(bookingStatus == BookingStatus.pending)
+      {
+        return normalButton(
+          context.tr.bookingPending,
+          widget.isArrived,
+        );
+      }
+      else  if(bookingStatus == BookingStatus.cancelled)
+      {
+        return normalButton(
+          context.tr.bookingCanceled,
+          widget.isArrived,
+        );
+      }
+      else if (bookingStatus == BookingStatus.confirmed) {
+        return normalButton(
+          context.tr.bookingConfirmed,
+          widget.isArrived,
+        );
+      }
+      else if (widget.isFinished == false) {
         return normalButton(
           context.tr.readyForService,
           widget.isArrived,
@@ -93,10 +114,14 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
                 color: ColorsManager.successColor,
               ),
             SizedBox(width: 5.w),
-            DText(
-              title,
-              style: context.textTheme.titleMedium!.copyWith(
-                color: context.colorScheme.outlineVariant,
+            Expanded(
+              child: DText(
+                textAlign: TextAlign.center,
+                title,
+                maxLines: 3,
+                style: context.textTheme.titleMedium!.copyWith(
+                  color: context.colorScheme.outlineVariant,
+                ),
               ),
             ),
           ],
@@ -124,11 +149,14 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
           );
         }
       },
-      child: DazzifySwipeButton(
-        onSwipe: bookingCubit.userArrived,
-        title: context.tr.swipe,
-        swipedTitle: context.tr.arrived,
-        dazzifySwipeButtonController: dazzifySwipeButtonController,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: DazzifySwipeButton(
+          onSwipe: bookingCubit.userArrived,
+          title: context.tr.swipe,
+          swipedTitle: context.tr.arrived,
+          dazzifySwipeButtonController: dazzifySwipeButtonController,
+        ),
       ),
     );
   }

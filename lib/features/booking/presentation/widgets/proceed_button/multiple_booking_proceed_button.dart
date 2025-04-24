@@ -44,7 +44,7 @@ class MultipleBookingProceedButton extends StatelessWidget {
                   return BrandTermsSheet(
                     service: services.first,
                     services: services,
-                    serviceSelectionCubit: serviceSelectionCubit,
+                    serviceSelectionCubit: serviceSelectionCubit!,
                     branchId: branchId,
                     branchName: branchName,
                     branchLocation: location,

@@ -1,6 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
-import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/brand/presentation/widgets/brand_category_item.dart';
@@ -11,7 +10,6 @@ import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
-import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 
 @RoutePage()
@@ -247,9 +245,9 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
 
   Widget buildMultipleServiceBooking() {
     return BlocBuilder<ServiceSelectionCubit, ServiceSelectionState>(
-      buildWhen: (previous, current) =>
-          previous.selectedBrandServices.length !=
-          current.selectedBrandServices.length,
+      // buildWhen: (previous, current) =>
+      //     previous.selectedBrandServices.length !=
+      //     current.selectedBrandServices.length,
       builder: (context, state) {
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),

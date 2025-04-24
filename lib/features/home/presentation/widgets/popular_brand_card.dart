@@ -43,20 +43,28 @@ class PopularBrandCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      DText(
-                        brand.name,
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(width: 8.w),
-                      if (brand.verified)
-                        Icon(
-                          SolarIconsBold.verifiedCheck,
-                          color: context.colorScheme.primary,
-                          size: 14.r,
+                  SizedBox(
+                    width:170.w,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: DText(
+                            brand.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.bodyMedium,
+                          ),
                         ),
-                    ],
+                        SizedBox(width: 8.w),
+                        if (brand.verified)
+                          Icon(
+                            SolarIconsBold.verifiedCheck,
+                            color: context.colorScheme.primary,
+                            size: 14.r,
+                          ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     width: 175.w,

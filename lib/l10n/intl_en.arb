@@ -297,6 +297,7 @@
   "minShortcut": "M",
   "and": "And",
   "serviceStartTime": "This Service Will Start After ",
+  "serviceStartNow": "This Service Will Start Now",
   "from": "From",
   "to": "To",
   "readyForService": "Ready For This Service",
@@ -384,7 +385,9 @@
   "guestMode": "Continue as Guest",
   "goToLogin": "Go To Login",
   "pleaseLoginToFreelyAccessAppFeatures": "Please log in to freely access app features.",
-  "chooseServiceLocationError": "You cannot select both in-branch and out-of-branch services Together."
-
-
+  "chooseServiceLocationError": "You cannot select both in-branch and out-of-branch services Together.",
+  "bookingPending": "Your booking is currently under review.",
+  "bookingCanceled": "Your booking has been cancelled. We hope to serve you again soon.",
+  "bookingConfirmed": "Your booking is confirmed! Get ready for your service.",
+  "bookingCompleted": "Your service is complete. We hope you enjoyed it!"
 }

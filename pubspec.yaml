@@ -74,6 +74,8 @@ dependencies:
   crypto: ^3.0.6
   flutter_dotenv: ^5.2.1
   geolocator: ^13.0.2
+  smooth_page_indicator:
+
   skeletonizer: ^1.4.3
   flash: ^3.1.1
   responsive_framework: ^1.5.1

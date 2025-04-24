@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
+import 'package:dazzify/features/auth/presentation/bottom_sheets/app_terms_bottom_sheet.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/shared/enums/booking_status_enum.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
@@ -9,6 +10,7 @@ import 'package:dazzify/features/shared/widgets/dazzify_dialog.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/add_review_sheet.dart';
+import 'package:dazzify/features/user/presentation/bottom_sheets/cancel_terms_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,12 +21,14 @@ class BookingStatusHeaderComponent extends StatefulWidget {
   final bool isBookingFinished;
   final bool isRate;
   final String status;
+  final List<String> refundConditions;
 
   const BookingStatusHeaderComponent({
     super.key,
     required this.isBookingFinished,
     required this.isRate,
     required this.status,
+    required this.refundConditions,
   });
 
   @override
@@ -149,23 +153,42 @@ class _BookingStatusHeaderComponentState
         height: 35.h,
         onTap: () {
           if (!isCanceled) {
-            showDialog(
+            showModalBottomSheet(
               context: context,
+              useRootNavigator: true,
+              isScrollControlled: true,
+              routeSettings: const RouteSettings(name: "cancelTermsSheet"),
               builder: (context) {
-                return BlocProvider.value(
-                  value: bookingCubit,
-                  child: DazzifyDialog(
-                    message: context.tr.cancelBookingValidation,
-                    buttonTitle: context.tr.yes,
-                    onTap: () async {
-                      FocusManager.instance.primaryFocus?.unfocus();
+                return CancelTermsBottomSheet(
+                  refundConditions: widget.refundConditions,
+                  onAgreeTap: (hasAgreed) {
+                    if (hasAgreed) {
+                      // FocusManager.instance.primaryFocus?.unfocus();
                       bookingCubit.cancelBooking();
-                      context.maybePop();
-                    },
-                  ),
+                      // context.maybePop();
+                    }
+                  },
                 );
               },
             );
+            // showDialog(
+            //   context: context,
+            //   builder: (context) {
+            //     return BlocProvider.value(
+            //       value: bookingCubit,
+            //       child:
+            // DazzifyDialog(
+            //   message: context.tr.cancelBookingValidation,
+            //   buttonTitle: context.tr.yes,
+            //   onTap: () async {
+            //     FocusManager.instance.primaryFocus?.unfocus();
+            //     bookingCubit.cancelBooking();
+            //     context.maybePop();
+            //   },
+            // ),
+            //     );
+            //   },
+            // );
           }
         },
         title: isCanceled ? context.tr.canceled : context.tr.cancelBooking,

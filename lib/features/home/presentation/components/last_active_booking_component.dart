@@ -36,7 +36,7 @@ class LastActiveBookingComponent extends StatelessWidget {
                   SectionWidget(sectionTitle: context.tr.bookingStatus),
                   SizedBox(height: 16.h),
                   SizedBox(
-                    height: 125.h,
+                    height: 130.h,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.lastActiveBookings.length,

@@ -21,6 +21,7 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../widgets/multi_service_information.dart';
 
@@ -64,8 +65,16 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
               appFees: services.map((service) => service.fees).toList(),
             ),
         ),
+        if (services.isEmpty)
+          BlocProvider(
+            create: (context) => getIt<ServiceInvoiceCubit>()
+              ..updateInvoice(
+                price: [service.price],
+                appFees: [service.fees],
+              ),
+          ),
       ],
-      child: this,  // The widget itself
+      child: this, // The widget itself
     );
   }
 
@@ -77,13 +86,18 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   bool _isBookingLoading = false;
   late final ValueNotifier<String> _selectedButton;
   late ServiceInvoiceCubit _invoiceCubit;
+  late PageController _pageController;
+
   final ValueNotifier<bool> _isCodeValidatingLoading = ValueNotifier(false);
   final TextEditingController _textController = TextEditingController();
+
   // late ServiceSelectionCubit _serviceSelectionCubit;
   @override
   void initState() {
     _invoiceCubit = context.read<ServiceInvoiceCubit>();
     _initialization();
+    _pageController = PageController();
+
     // _services= widget.services;
     // print(_services.length);
     // _serviceSelectionCubit = context.read<ServiceSelectionCubit>();
@@ -109,7 +123,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         body: ValueListenableBuilder(
@@ -143,8 +156,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           title: context.tr.confirmation,
           verticalPadding: 10.h,
         ),
-
-
         Expanded(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16).w,
@@ -153,26 +164,68 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               SizedBox(
                 height: 24.h,
               ),
-              if(widget.services.length>1)
+              // if(widget.services.length>1)
+              //   SizedBox(
+              //     height: 140,
+              //     child: ListView.builder(
+              //       scrollDirection: Axis.horizontal,  // Change to horizontal scrolling
+              //       physics: BouncingScrollPhysics(),
+              //       shrinkWrap: true,
+              //       itemCount: widget.services.length,
+              //       itemBuilder: (context, index) => MultiServiceWidget(
+              //         service: widget.services[index],
+              //         index: index,
+              //         branchLocation: widget.branchLocation,
+              //         invoiceCubit: _invoiceCubit,
+              //         removeService: removeService, // Pass the remove callback
+              //
+              //       ),
+              //     ),
+              //   ),
+
+              if (widget.services.length > 1)
+                // This ensures the carousel with the dot indicator is only shown when there are more than 1 item
                 SizedBox(
-                  height: 140,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,  // Change to horizontal scrolling
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
+                  height: 140.h,
+                  child: PageView.builder(
+                    controller: _pageController,
                     itemCount: widget.services.length,
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) => MultiServiceWidget(
                       service: widget.services[index],
                       index: index,
                       branchLocation: widget.branchLocation,
                       invoiceCubit: _invoiceCubit,
                       removeService: removeService, // Pass the remove callback
-
                     ),
                   ),
                 ),
-              if(widget.services.length>1)
+              if (widget.services.length > 1)
+                Center(
+                  child: SmoothPageIndicator(
+                    controller: _pageController, // Connect the page controller
+                    count: widget.services.length, // The number of dots
+                    effect: ScrollingDotsEffect(
+                      // You can customize the dot effect here
+                      activeDotColor: context.colorScheme.primary,
+                      // Active dot color
+                      dotColor: Colors.grey,
+                      // Inactive dot color
+                      dotHeight: 8.0.h,
+                      // Height of the dot
+                      dotWidth: 8.0.h,
+                      // Width of the dot
+                      spacing: 8.0.w, // Space between dots
+                    ),
+                  ),
+                ),
+
+              if (widget.services.length > 1)
                 MultiServiceInformation(
+                  onSelectLocationTap: () {
+                    _openGovernoratesSheet();
+                  },
                   services: widget.services,
                   branchLocation: widget.branchLocation,
                   invoiceCubit: _invoiceCubit,
@@ -181,16 +234,19 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                   fromTime: fromTime,
                   toTime: toTime,
                 ),
-              if(widget.services.length==1)
-              ServiceInformation(
-                service: widget.service,
-                branchLocation: widget.branchLocation,
-                invoiceCubit: _invoiceCubit,
-                selectedButton: selectedButton,
-                selectedDate: selectedDate,
-                fromTime: fromTime,
-                toTime: toTime,
-              ),
+              if (widget.services.isEmpty || widget.services.length == 1)
+                ServiceInformation(
+                  onSelectLocationTap: () {
+                    _openGovernoratesSheet();
+                  },
+                  service: widget.service,
+                  branchLocation: widget.branchLocation,
+                  invoiceCubit: _invoiceCubit,
+                  selectedButton: selectedButton,
+                  selectedDate: selectedDate,
+                  fromTime: fromTime,
+                  toTime: toTime,
+                ),
               Divider(
                 color: context.colorScheme.outlineVariant,
                 endIndent: 16.w,
@@ -222,6 +278,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 child: InvoiceWidget(
                   textContorller: _textController,
                   services: widget.services,
+                  service: widget.service,
                 ),
               ),
             ],
@@ -246,15 +303,12 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         } else if (state.creatingBookingState == UiState.success) {
           _isBookingLoading = false;
           context.replaceRoute(const ServiceBookingConfirmationRoute());
-        }
-        else if (state.creatingBookingState == UiState.failure) {
+        } else if (state.creatingBookingState == UiState.failure) {
           _isBookingLoading = false;
           DazzifyToastBar.showError(
             message: state.errorMessage,
           );
         }
-
-
       },
       builder: (context, state) {
         return PrimaryButton(
@@ -402,7 +456,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       _invoiceCubit.bookService(
         brandId: widget.service.brand.id,
         branchId: widget.branchId,
-        services: widget.services.map((service) => service.id).toList(),
+        services: widget.services.isEmpty
+            ? [widget.service.id]
+            : widget.services.map((service) => service.id).toList(),
         date: widget.selectedDate,
         startTimeStamp: widget.selectedStartTimeStamp,
         isHasCoupon: couponId == '' ? false : true,

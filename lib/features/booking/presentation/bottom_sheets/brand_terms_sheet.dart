@@ -7,6 +7,7 @@ import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/brand_terms_cubit/brand_terms_cubit.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
+import 'package:dazzify/features/brand/data/repositories/brand_repository.dart';
 import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
@@ -53,6 +54,7 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
   late final ScrollController _scrollController;
   late final ValueNotifier<bool> _hasReachedTheEnd;
   late final BrandTermsCubit _brandTermsCubit = getIt<BrandTermsCubit>();
+  late final ServiceSelectionCubit _serviceSelectionCubit = getIt<ServiceSelectionCubit>();
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -72,6 +74,8 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
 
   @override
   void initState() {
+    // _serviceSelectionCubit = context.read<ServiceSelectionCubit>();
+
     _brandTermsCubit.getBrandTerms(brandId: widget.service.brand.id);
     _scrollController = ScrollController()..addListener(_scrollListener);
     _hasReachedTheEnd = ValueNotifier(false);
@@ -190,7 +194,9 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                               children: [
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                    padding: const EdgeInsets.symmetric(
+                                            horizontal: 10)
+                                        .r,
                                     child: PrimaryButton(
                                       textColor: context.colorScheme.primary,
                                       color: context.colorScheme.primary,
@@ -205,7 +211,9 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                    padding: const EdgeInsets.symmetric(
+                                            horizontal: 10)
+                                        .r,
                                     child: ValueListenableBuilder(
                                       valueListenable: _hasReachedTheEnd,
                                       builder: (context, value, child) =>
@@ -218,17 +226,21 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                           context.maybePop();
                                           context.pushRoute(ServiceInvoiceRoute(
                                             service: widget.service,
-                                            serviceSelectionCubit: widget.serviceSelectionCubit!,
+                                            serviceSelectionCubit:
+                                                widget.serviceSelectionCubit ??
+                                                    _serviceSelectionCubit,
                                             services: widget.services,
                                             branchId: widget.branchId,
                                             branchName: widget.branchName,
-                                            branchLocation: widget.branchLocation,
+                                            branchLocation:
+                                                widget.branchLocation,
                                             selectedDate: widget.selectedDate,
                                             selectedStartTimeStamp:
                                                 widget.selectedStartTimeStamp,
                                             selectedFromTime:
                                                 widget.selectedFromTime,
-                                            selectedToTime: widget.selectedToTime,
+                                            selectedToTime:
+                                                widget.selectedToTime,
                                           ));
                                           context.maybePop();
                                         },

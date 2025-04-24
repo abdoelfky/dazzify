@@ -79,9 +79,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "book": MessageLookupByLibrary.simpleMessage("Book"),
         "bookService": MessageLookupByLibrary.simpleMessage("Book Service"),
         "booking": MessageLookupByLibrary.simpleMessage("Booking"),
+        "bookingCanceled": MessageLookupByLibrary.simpleMessage(
+            "Your booking has been cancelled. We hope to serve you again soon."),
         "bookingCancelled":
             MessageLookupByLibrary.simpleMessage("Booking Cancelled"),
+        "bookingCompleted": MessageLookupByLibrary.simpleMessage(
+            "Your service is complete. We hope you enjoyed it!"),
+        "bookingConfirmed": MessageLookupByLibrary.simpleMessage(
+            "Your booking is confirmed! Get ready for your service."),
         "bookingDate": MessageLookupByLibrary.simpleMessage("Booking Date"),
+        "bookingPending": MessageLookupByLibrary.simpleMessage(
+            "Your booking is currently under review."),
         "bookingStatus": MessageLookupByLibrary.simpleMessage("Booking status"),
         "bookingSuccess": MessageLookupByLibrary.simpleMessage(
             "\"The provider will process your request and send a response within 12 hours.\""),
@@ -445,6 +453,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "serviceProvider":
             MessageLookupByLibrary.simpleMessage("Service Provider"),
         "serviceSelectionConfirmation": m1,
+        "serviceStartNow":
+            MessageLookupByLibrary.simpleMessage("This Service Will Start Now"),
         "serviceStartTime": MessageLookupByLibrary.simpleMessage(
             "This Service Will Start After "),
         "services": MessageLookupByLibrary.simpleMessage("Services"),

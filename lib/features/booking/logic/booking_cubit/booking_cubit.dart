@@ -13,6 +13,7 @@ import 'package:dazzify/features/booking/data/repositories/booking_repository.da
 import 'package:dazzify/features/booking/data/requests/create_booking_review_request.dart';
 import 'package:dazzify/features/booking/data/requests/user_arrived_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
+import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
@@ -217,4 +218,7 @@ class BookingCubit extends Cubit<BookingState> {
       },
     );
   }
+
+
+
 }

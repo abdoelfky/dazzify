@@ -1337,6 +1337,7 @@ class ServiceAvailabilityRoute
         branchId: args.branchId,
         branchName: args.branchName,
         location: args.location,
+
         key: args.key,
       ));
     },

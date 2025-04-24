@@ -12,9 +12,11 @@ class ServiceInformation extends StatelessWidget {
   final String selectedDate;
   final String fromTime;
   final String toTime;
+  final Function onSelectLocationTap; // Define a variable to hold the method
 
   const ServiceInformation({
     required this.service,
+    required this.onSelectLocationTap,
     required this.branchLocation,
     required this.invoiceCubit,
     required this.selectedButton,
@@ -93,24 +95,27 @@ class ServiceInformation extends StatelessWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        // print(branchLocation!.latitude);
-                        LocationModel? locationModel =
-                            selectedButton == ServiceLocationOptions.inBranch
-                                ? branchLocation
-                                : state.selectedLocationName ==
-                                        context.tr.NotSelectedYet
-                                    ? null
-                                    : state.selectedLocation;
-
-                        context.pushRoute(
-                          ViewLocationRoute(
-                            invoiceCubit: invoiceCubit,
-                            locationModel: locationModel,
-                            isDisplayOnly: selectedButton ==
-                                ServiceLocationOptions.inBranch,
-                          ),
-                        );
-                      },
+                        onSelectLocationTap();
+                      } //   () {
+                      // // print(branchLocation!.latitude);
+                      // LocationModel? locationModel =
+                      //     selectedButton == ServiceLocationOptions.inBranch
+                      //         ? branchLocation
+                      //         : state.selectedLocationName ==
+                      //                 context.tr.NotSelectedYet
+                      //             ? null
+                      //             : state.selectedLocation;
+                      //
+                      // context.pushRoute(
+                      //   ViewLocationRoute(
+                      //     invoiceCubit: invoiceCubit,
+                      //     locationModel: locationModel,
+                      //     isDisplayOnly: selectedButton ==
+                      //         ServiceLocationOptions.inBranch,
+                      //   ),
+                      // );
+                      // }
+                      ,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0).r,
                         child: Row(

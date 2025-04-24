@@ -41,6 +41,7 @@ class DazzifyDialog extends StatelessWidget {
                   width: 221.w,
                   child: DText(
                     message,
+                    maxLines: 5,
                     textAlign: TextAlign.center,
                     style: context.textTheme.bodyLarge,
                   ),

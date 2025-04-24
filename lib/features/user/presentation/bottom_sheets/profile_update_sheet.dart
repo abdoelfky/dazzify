@@ -22,10 +22,12 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+
   // final TextEditingController ageController = TextEditingController();
   final TextEditingController birthDayController = TextEditingController();
   late String selectedGender;
   late String birthDay;
+
   // late int age;
 
   bool isLoading = false;
@@ -108,7 +110,10 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                 //   },
                 // ),
                 DazzifyBirthdatePicker(
-                  hintText: context.tr.birthDate,
+                  hintText: birthDayController.text != ''
+                      ? birthDayController.text
+                          .replaceAll(RegExp(r'[^0-9]'), '/')
+                      : context.tr.birthDate,
                   // label: context.localizedText.birthDate,
                   prefixIconData: SolarIconsOutline.confetti,
 
@@ -127,12 +132,11 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                   //   }
                   // },
                   onChanged: (value) {
-
-                  if (value != null) {
-                    birthDay = value;
-                    checkActivity();
-                  }
-                },
+                    if (value != null) {
+                      birthDay = value;
+                      checkActivity();
+                    }
+                  },
                 ),
 
                 SizedBox(height: 8.r),
@@ -210,7 +214,8 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                               profileCubit.updateProfileInfo(
                                 email: emailController.text,
 
-                                birthDay: TimeManager.reformatDateToDDMMYYYY(birthDay),
+                                birthDay: TimeManager.reformatDateToDDMMYYYY(
+                                    birthDay),
                                 // age: age,
                                 gender: selectedGender,
                               );

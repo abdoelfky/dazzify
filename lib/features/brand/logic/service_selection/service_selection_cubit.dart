@@ -96,27 +96,29 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
   }
 
   void removeServicesSelected({required int index}) {
+    // emit(state.copyWith(brandServicesState: UiState.loading));
 
     // Ensure the index is within bounds
     if (index >= 0 && index < state.selectedBrandServices.length) {
-      List<ServiceDetailsModel> selectedServices = List.from(state.selectedBrandServices);  // Create a copy of the list
-      List<String> selectedServicesIds = List.from(state.selectedBrandServicesIds);  // Create a copy of the IDs list
+      List<ServiceDetailsModel> selectedServices =
+          List.from(state.selectedBrandServices); // Create a copy of the list
+      List<String> selectedServicesIds = List.from(
+          state.selectedBrandServicesIds); // Create a copy of the IDs list
 
       // Remove the service at the given index
       selectedServices.removeAt(index);
       selectedServicesIds.removeAt(index);
-
       // Emit the updated state with the modified lists
       emit(state.copyWith(
+        // brandServicesState: UiState.success,
         selectedBrandServices: selectedServices,
         selectedBrandServicesIds: selectedServicesIds,
       ));
     } else {
       // Handle the case where the index is out of range
-      kPrint("Invalid index: $index");
+      // kPrint("Invalid index: $index");
     }
   }
-
 
   void selectCategory({
     required BrandCategoriesModel brandCategory,
@@ -131,7 +133,6 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
   void selectBookingService({
     required ServiceDetailsModel service,
   }) {
-
     List<ServiceDetailsModel> selectedServices =
         state.selectedBrandServices.toList();
     List<String> selectedServicesIds = state.selectedBrandServicesIds.toList();

@@ -9,6 +9,7 @@ import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/permission_dialog.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/profile_update_sheet.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileHeaderComponent extends StatefulWidget {
   const ProfileHeaderComponent({super.key});
@@ -52,14 +53,12 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
             listener: (context, state) {
               if (state.photoPermissions ==
                   PermissionsState.permanentlyDenied) {
-
                 showDialog(
                   routeSettings: const RouteSettings(
                     name: 'PermissionsDialogRoute',
                   ),
                   context: context,
                   builder: (context) {
-
                     return PermissionsDialog(
                       icon: Icons.photo_outlined,
                       description: context.tr.galleryPermissionDialog,
@@ -78,6 +77,39 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                     ),
                   );
                 case UiState.loading:
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        width: 110.r,
+                        height: 110.r,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Shimmer.fromColors(
+                            baseColor: context.isDarkTheme
+                                ? ColorsManager.baseShimmerDark
+                                : ColorsManager.baseShimmerLight,
+                            highlightColor: context.isDarkTheme
+                                ? ColorsManager.highlightShimmerDark
+                                : ColorsManager.highlightShimmerLight,
+                            child: Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.r),
+                      DText(
+                        state.userModel.fullName,
+                        style: context.textTheme.bodyLarge,
+                      ),
+                    ],
+                  );
                 case UiState.initial:
                 case UiState.success:
                   return Column(
@@ -89,18 +121,18 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                             imageUrl: state.userModel.picture ?? "",
                             hasEditButton: state.userModel.picture != null,
                             onEditButtonTap: () {
-                              if (AuthLocalDatasourceImpl().checkGuestMode()){
+                              if (AuthLocalDatasourceImpl().checkGuestMode()) {
                                 showModalBottomSheet(
                                   context: context,
                                   isScrollControlled: false,
                                   builder: (context) {
-
-                                    return  GuestModeBottomSheet();
+                                    return GuestModeBottomSheet();
                                   },
                                 );
-                              }else {
+                              } else {
                                 context.read<UserCubit>()..updateProfileImage();
-                              }},
+                              }
+                            },
                           );
                         },
                       ),
@@ -121,16 +153,15 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
           end: 16.w,
           child: GestureDetector(
             onTap: () {
-              if (AuthLocalDatasourceImpl().checkGuestMode()){
+              if (AuthLocalDatasourceImpl().checkGuestMode()) {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: false,
                   builder: (context) {
-
-                    return  GuestModeBottomSheet();
+                    return GuestModeBottomSheet();
                   },
                 );
-              }else {
+              } else {
                 showModalBottomSheet(
                   context: context,
                   useRootNavigator: true,

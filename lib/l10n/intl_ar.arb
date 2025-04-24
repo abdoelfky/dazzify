@@ -297,6 +297,7 @@
   "minShortcut": "د",
   "and": "و",
   "serviceStartTime": "هذة الخدمة سوف تبدأ بعد ",
+  "serviceStartNow": "هذة الخدمة سوف تبدأ الآن",
   "from": "من",
   "to": "الي",
   "readyForService": "استعد للخدمة",
@@ -384,6 +385,9 @@
   "guestMode": "تابع كزائر",
   "goToLogin": "الذهاب إلى تسجيل الدخول",
   "pleaseLoginToFreelyAccessAppFeatures": "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية.",
-  "chooseServiceLocationError": "لا يمكنك اختيار خدمات من داخل الفرع ومن خارجه معًا."
-
+  "chooseServiceLocationError": "لا يمكنك اختيار خدمات من داخل الفرع ومن خارجه معًا.",
+  "bookingPending": "حجزك قيد المراجعة حاليًا.",
+  "bookingCanceled": "تم إلغاء حجزك. نأمل في خدمتكم مرة أخرى قريبًا.",
+  "bookingConfirmed": "تم تأكيد حجزك! استعد لخدمتك.",
+  "bookingCompleted": "تمت خدمتك بنجاح. نأمل أن تكون قد استمتعت بها!"
 }

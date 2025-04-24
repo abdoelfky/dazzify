@@ -13,8 +13,8 @@ BrandModel _$BrandModelFromJson(Map<String, dynamic> json) => BrandModel(
       verified: json['verified'] as bool? ?? false,
       allowMultipleServicesBook:
           json['allowMultipleServicesBook'] as bool? ?? false,
-      refundConditions: (json['refundConditions'] as List<dynamic>?)
-              ?.map((e) => e as String)
+      refundConditions: (json['refundConditions'] as List?)
+              ?.map((e) => e.toString())
               .toList() ??
           [],
       username: json['slug'] as String? ?? '',

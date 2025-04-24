@@ -29,6 +29,7 @@ class ApiConstants {
   static const String updateUserInfo = "/user/me/profile";
   static const String getReels = "/media/reels";
   static const String appTerms = "/terms";
+  static const String cancelTerms = "/refundConditions";
   static const String userNotifications = "/notification/list";
   static const String getUserFavorites = "/user/favorites";
   static const String getMediaList = "/media/list";

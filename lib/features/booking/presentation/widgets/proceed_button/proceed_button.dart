@@ -14,11 +14,13 @@ class ProceedButton extends StatelessWidget {
   final String branchId;
   final String branchName;
   final LocationModel? location;
+  final ServiceSelectionCubit? serviceSelectionCubit;
 
   const ProceedButton({
     required this.service,
     required this.branchId,
     required this.branchName,
+    this.serviceSelectionCubit,
     this.location,
     super.key,
   });
@@ -42,6 +44,7 @@ class ProceedButton extends StatelessWidget {
                     service: service,
                     services: [],
                     branchId: branchId,
+                    serviceSelectionCubit: serviceSelectionCubit,
                     branchName: branchName,
                     branchLocation: location,
                     selectedDate: state.selectedDate,

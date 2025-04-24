@@ -27,18 +27,18 @@ class MultiServiceWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Container(
-        width: 300,
+        // width: 300.w,
         decoration: BoxDecoration(
             color: context.colorScheme.inversePrimary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(25).r),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(10.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 90,
-                width: 90,
+                height: 90.h,
+                width: 90.w,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8).r,
                   child: DazzifyCachedNetworkImage(
@@ -56,10 +56,12 @@ class MultiServiceWidget extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        DText(
-                          service.title,
-                          style: context.textTheme.bodyLarge!.copyWith(
-                            overflow: TextOverflow.ellipsis,
+                        Expanded(
+                          child: DText(
+                            service.title,
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -82,10 +84,9 @@ class MultiServiceWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        // Spacer(),
                         GestureDetector(
                           onTap: () {
-                            print(index);
                             removeService(index);
                           },
                           child: Icon(

@@ -4,6 +4,7 @@ import 'package:dazzify/features/payment/presentation/widgets/transaction_bar.da
 import 'package:dazzify/features/payment/presentation/widgets/transaction_button.dart';
 import 'package:dazzify/features/shared/enums/transaction_enum.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class TransactionItem extends StatefulWidget {
   final TransactionModel transaction;
@@ -20,6 +21,14 @@ class TransactionItem extends StatefulWidget {
 class _TransactionItemState extends State<TransactionItem> {
   late TransactionType transactionType;
   late PaymentStatus paymentStatus;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pageController = PageController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +62,8 @@ class _TransactionItemState extends State<TransactionItem> {
                     SizedBox(
                       height: 90.h,
                       child: ListView.separated(
-                        itemCount: 10,
+                        controller: _pageController,
+                        itemCount: widget.transaction.services.length,
                         scrollDirection: Axis.horizontal,
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 6.w),
@@ -73,8 +83,8 @@ class _TransactionItemState extends State<TransactionItem> {
                                     child: DazzifyCachedNetworkImage(
                                       height: 70.h,
                                       width: 65.w,
-                                      imageUrl:
-                                          widget.transaction.services[0].image,
+                                      imageUrl: widget
+                                          .transaction.services[index].image,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -85,13 +95,13 @@ class _TransactionItemState extends State<TransactionItem> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     DText(
-                                      widget.transaction.services[0].title,
+                                      widget.transaction.services[index].title,
                                       style: context.textTheme.bodyMedium,
                                     ),
                                     SizedBox(
                                       width: 165.w,
                                       child: DText(
-                                        widget.transaction.services[0]
+                                        widget.transaction.services[index]
                                             .description,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
@@ -108,6 +118,27 @@ class _TransactionItemState extends State<TransactionItem> {
                             ),
                           );
                         },
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+
+                    Center(
+                      child: SmoothPageIndicator(
+                        controller:
+                            _pageController, // Connect the page controller
+                        count: widget.transaction.services.length, // The number of dots
+                        effect: ScrollingDotsEffect(
+                          // You can customize the dot effect here
+                          activeDotColor: context.colorScheme.primary,
+                          // Active dot color
+                          dotColor: Colors.grey,
+                          // Inactive dot color
+                          dotHeight: 8.0.h,
+                          // Height of the dot
+                          dotWidth: 8.0.h,
+                          // Width of the dot
+                          spacing: 8.0.w, // Space between dots
+                        ),
                       ),
                     ),
                     SizedBox(height: 6.h),
@@ -172,7 +203,7 @@ class _TransactionItemState extends State<TransactionItem> {
                     ),
                   ],
                 ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
           paymentStatusWidget(),
         ],
       ),

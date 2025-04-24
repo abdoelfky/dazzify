@@ -148,10 +148,9 @@ class BookingRemoteDatasourceImpl extends BookingRemoteDatasource {
       responseReturnType: ResponseReturnType.unit,
       body: {
         "location": request.toJson(),
-        "hash": AppConstants.generateLocationHash(
-          request.latitude,
-          request.longitude,
-        )
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "hash": AppConstants.generateLocationHash(request.latitude,
+            request.longitude, DateTime.now().millisecondsSinceEpoch)
       },
     );
     return unit;

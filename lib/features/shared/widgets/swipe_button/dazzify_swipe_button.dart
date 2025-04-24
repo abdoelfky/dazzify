@@ -101,7 +101,7 @@ class _DazzifySwipeButtonState extends State<DazzifySwipeButton> {
           left: _controller.value > 0 ? context.screenWidth : 130.w,
           top: 0,
           bottom: 0,
-          duration: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
           child: Center(
             child: DText(
@@ -128,7 +128,7 @@ class _DazzifySwipeButtonState extends State<DazzifySwipeButton> {
 
   Widget _buildSwipedContainer() {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 400),
       height: widget.height ?? 52.h,
       width: _controller.value > 0
           ? widget.width ?? context.screenWidth * 0.95
@@ -138,7 +138,7 @@ class _DazzifySwipeButtonState extends State<DazzifySwipeButton> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 250),
         child: _showSlideText
             ? SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

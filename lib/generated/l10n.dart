@@ -2771,6 +2771,16 @@ class S {
     );
   }
 
+  /// `This Service Will Start Now`
+  String get serviceStartNow {
+    return Intl.message(
+      'This Service Will Start Now',
+      name: 'serviceStartNow',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `From`
   String get from {
     return Intl.message(
@@ -3646,6 +3656,46 @@ class S {
     return Intl.message(
       'You cannot select both in-branch and out-of-branch services Together.',
       name: 'chooseServiceLocationError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your booking is currently under review.`
+  String get bookingPending {
+    return Intl.message(
+      'Your booking is currently under review.',
+      name: 'bookingPending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your booking has been cancelled. We hope to serve you again soon.`
+  String get bookingCanceled {
+    return Intl.message(
+      'Your booking has been cancelled. We hope to serve you again soon.',
+      name: 'bookingCanceled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your booking is confirmed! Get ready for your service.`
+  String get bookingConfirmed {
+    return Intl.message(
+      'Your booking is confirmed! Get ready for your service.',
+      name: 'bookingConfirmed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your service is complete. We hope you enjoyed it!`
+  String get bookingCompleted {
+    return Intl.message(
+      'Your service is complete. We hope you enjoyed it!',
+      name: 'bookingCompleted',
       desc: '',
       args: [],
     );

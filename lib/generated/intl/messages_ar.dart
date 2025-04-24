@@ -78,9 +78,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "book": MessageLookupByLibrary.simpleMessage("أحجز"),
         "bookService": MessageLookupByLibrary.simpleMessage("احجز الخدمة"),
         "booking": MessageLookupByLibrary.simpleMessage("حجز"),
+        "bookingCanceled": MessageLookupByLibrary.simpleMessage(
+            "تم إلغاء حجزك. نأمل في خدمتكم مرة أخرى قريبًا."),
         "bookingCancelled":
             MessageLookupByLibrary.simpleMessage("تم إلغاء الحجز"),
+        "bookingCompleted": MessageLookupByLibrary.simpleMessage(
+            "تمت خدمتك بنجاح. نأمل أن تكون قد استمتعت بها!"),
+        "bookingConfirmed": MessageLookupByLibrary.simpleMessage(
+            "تم تأكيد حجزك! استعد لخدمتك."),
         "bookingDate": MessageLookupByLibrary.simpleMessage("تاريخ الحجز"),
+        "bookingPending":
+            MessageLookupByLibrary.simpleMessage("حجزك قيد المراجعة حاليًا."),
         "bookingStatus": MessageLookupByLibrary.simpleMessage("حالة الحجز"),
         "bookingSuccess": MessageLookupByLibrary.simpleMessage(
             "سيقوم مزود الخدمة بمعالجة طلبك وإرسال الرد خلال 12 ساعة."),
@@ -440,6 +448,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "servicePrice": MessageLookupByLibrary.simpleMessage("سعر الخدمة"),
         "serviceProvider": MessageLookupByLibrary.simpleMessage("مقدم الخدمة"),
         "serviceSelectionConfirmation": m1,
+        "serviceStartNow":
+            MessageLookupByLibrary.simpleMessage("هذة الخدمة سوف تبدأ الآن"),
         "serviceStartTime":
             MessageLookupByLibrary.simpleMessage("هذة الخدمة سوف تبدأ بعد "),
         "services": MessageLookupByLibrary.simpleMessage("الخدمات"),

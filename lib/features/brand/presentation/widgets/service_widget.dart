@@ -74,13 +74,15 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                 ),
                               ),
                               SizedBox(height: 5.h),
-                              DText(
-                                widget.description,
-                                maxLines: 3,
-                                style: context.textTheme.bodySmall!.copyWith(
-                                  color: context.colorScheme.onSurfaceVariant,
-                                  height: 0.9.h,
-                                  overflow: TextOverflow.ellipsis,
+                              Expanded(
+                                child: DText(
+                                  widget.description,
+                                  maxLines: 3,
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                    height: 1.h,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                             ],

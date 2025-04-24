@@ -72,4 +72,5 @@ abstract class BookingRemoteDatasource {
   Future<Unit> setNotInterestedToReview({required String bookingId});
 
   Future<List<LastActiveBookingModel>> getLastActiveBookings();
+
 }

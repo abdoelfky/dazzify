@@ -5,6 +5,8 @@ import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart'
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:intl/intl.dart';
 
+import '../framework/export.dart';
+
 class TimeManager {
   static SettingsCubit settingsCubit = getIt<SettingsCubit>();
 
@@ -254,16 +256,45 @@ class TimeManager {
     return remainingTime.inMinutes / totalDuration.inMinutes;
   }
 
+  // static String getTimeRemaining(String dateTimeString) {
+  //   /*
+  //   This Method Calculate the remaining time of booking start time and show up.
+  //   - This Service Will Start After 10 days and 6 hours
+  //   * */
+  //   DateTime serviceDateTime = DateTime.parse(dateTimeString).toLocal();
+  //   DateTime now = DateTime.now().toLocal();
+  //   Duration difference = serviceDateTime.difference(now);
+  //   int days = difference.inDays;
+  //   int hours = difference.inHours.remainder(24);
+  //
+  //   String timeRemaining = "";
+  //
+  //   if (days > 0) {
+  //     timeRemaining = "$days ${DazzifyApp.tr.days} ${DazzifyApp.tr.and} ";
+  //   }
+  //   if (hours > 0) {
+  //     timeRemaining += "$hours ${DazzifyApp.tr.hours}";
+  //   }
+  //
+  //   return timeRemaining.trim();
+  // }
+
+
   static String getTimeRemaining(String dateTimeString) {
     /*
-    This Method Calculate the remaining time of booking start time and show up.
-    - This Service Will Start After 10 days and 6 hours
-    * */
+  This Method Calculate the remaining time of booking start time and show up.
+  - This Service Will Start After 10 days and 6 hours
+  */
     DateTime serviceDateTime = DateTime.parse(dateTimeString).toLocal();
     DateTime now = DateTime.now().toLocal();
     Duration difference = serviceDateTime.difference(now);
     int days = difference.inDays;
     int hours = difference.inHours.remainder(24);
+
+    // Check if the service time is now
+    if (difference.isNegative || difference.inMinutes == 0) {
+      return "";
+    }
 
     String timeRemaining = "";
 
@@ -276,4 +307,23 @@ class TimeManager {
 
     return timeRemaining.trim();
   }
+
+  static String formatServiceDuration(int totalDurationInMinutes, BuildContext context) {
+    if (totalDurationInMinutes >= 60) {
+      int hours = totalDurationInMinutes ~/ 60;  // Get the whole number of hours
+      int minutes = totalDurationInMinutes % 60;  // Get the remaining minutes
+
+      if (minutes > 0) {
+        return "$hours ${context.tr.hours} ${minutes} ${context.tr.min}";  // Display hours and minutes
+      } else {
+        return "$hours ${context.tr.hours}";  // Display only hours if no remaining minutes
+      }
+    } else {
+      return "$totalDurationInMinutes ${context.tr.min}";  // Display in minutes if less than 60 minutes
+    }
+  }
+
+
+
+
 }

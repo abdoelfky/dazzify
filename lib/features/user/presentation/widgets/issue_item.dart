@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/features/shared/enums/issue_status_enum.dart';
@@ -44,7 +45,30 @@ class _IssueItemState extends State<IssueItem> {
             width: context.screenWidth,
             child: Row(
               children: [
-                cardImage(widget.issue.services.first.image),
+                if (widget.issue.services.length > 1)
+                  SizedBox(
+                    width: 80.w,
+                    height: 110.h,
+                    child: CarouselSlider.builder(
+                      itemCount: widget.issue.services.length,
+                      itemBuilder: (context, index, realIndex) =>
+                          cardImage(widget.issue.services[index].image),
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        // Enable auto-play
+                        autoPlayInterval: const Duration(seconds: 3),
+                        // Set auto-play interval
+                        enlargeCenterPage: true,
+                        // Enlarge the center page for focus
+                        enlargeFactor: 0.65.r,
+                        // Increase the size of the central item
+                        viewportFraction: 1.1
+                            .r, // Set the portion of the screen occupied by the current item
+                      ),
+                    ),
+                  ),
+                if (widget.issue.services.length == 1)
+                  cardImage(widget.issue.services.first.image),
                 SizedBox(width: 16.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,9 +145,12 @@ Widget serviceInfo({
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      DText(
-        title,
-        style: context.textTheme.bodyLarge,
+      SizedBox(
+        width: 200.w,
+        child: DText(
+          title,
+          style: context.textTheme.bodyLarge,
+        ),
       ),
       SizedBox(height: 2.h),
       SizedBox(

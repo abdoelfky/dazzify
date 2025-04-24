@@ -74,6 +74,7 @@ abstract class BookingRepository {
 
   Future<Either<Failure, BookingReviewRequestModel>> getMissedReview();
 
-  Future<Either<Failure, Unit>> setNotInterestedToReview(
-      {required String bookingId});
+  Future<Either<Failure, Unit>> setNotInterestedToReview({required String bookingId});
+
+
 }
