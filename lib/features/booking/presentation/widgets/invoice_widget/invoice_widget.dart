@@ -29,7 +29,10 @@ class InvoiceWidget extends StatelessWidget {
           totalPrice = services
               .map((service) => service.price)
               .toList()
-              .fold<num>(0, (sum, item) => sum + item); // sum prices if services are not empty
+              .fold<num>(
+                  0,
+                  (sum, item) =>
+                      sum + item); // sum prices if services are not empty
         }
 
         return Column(
@@ -37,7 +40,7 @@ class InvoiceWidget extends StatelessWidget {
             DazzifyTextFormField(
               controller: textContorller,
               fillColor:
-              context.colorScheme.inversePrimary.withValues(alpha: 0.1),
+                  context.colorScheme.inversePrimary.withValues(alpha: 0.1),
               textStyle: context.textTheme.bodyMedium,
               textInputType: TextInputType.text,
               borderSide: getBorderSide(
@@ -50,7 +53,8 @@ class InvoiceWidget extends StatelessWidget {
                 context: context,
                 price: totalPrice,
                 couponValidationState: state.couponValidationState,
-                service: services.isEmpty ? service : services.first, // select the first service if available or use the service data when empty
+                service: services.isEmpty ? service : services.first,
+                // select the first service if available or use the service data when empty
                 textContorller: textContorller,
               ),
             ),
@@ -59,7 +63,8 @@ class InvoiceWidget extends StatelessWidget {
             ),
             InvoiceLine(
               title:
-              '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})', // Update services count accordingly
+                  '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
+              // Update services count accordingly
               amount: totalPrice.toString(),
             ),
             InvoiceLine(
@@ -105,8 +110,10 @@ BorderSide getBorderSide({
   required UiState couponValidationState,
 }) {
   return couponValidationState == UiState.success
-      ? const BorderSide(color: Colors.transparent)
-      : BorderSide(color: context.colorScheme.primary);
+      ? const BorderSide(color: Colors.green)
+      : couponValidationState == UiState.failure
+          ? const BorderSide(color: Colors.red)
+          : BorderSide(color: context.colorScheme.primary);
 }
 
 Widget? getSuffixIcon({
@@ -117,24 +124,27 @@ Widget? getSuffixIcon({
   required num price,
 }) {
   return couponValidationState == UiState.success
-      ? null
+      ? Icon(
+          SolarIconsOutline.checkCircle,
+          color: Colors.green,
+        )
       : TextButton(
-    onPressed: () {
-      if (textContorller.text.isNotEmpty) {
-        FocusManager.instance.primaryFocus?.unfocus();
-        context
-            .read<ServiceInvoiceCubit>()
-            .validateCouponAndUpdateInvoice(
-          service: service,
-          price: price,
-          code: textContorller.text,
-        );
+          onPressed: () {
+            if (textContorller.text.isNotEmpty) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context
+                  .read<ServiceInvoiceCubit>()
+                  .validateCouponAndUpdateInvoice(
+                    service: service,
+                    price: price,
+                    code: textContorller.text,
+                  );
 
-        textContorller.clear();
-      }
-    },
-    child: DText(
-      context.tr.apply,
-    ),
-  );
+              // textContorller.clear();
+            }
+          },
+          child: DText(
+            context.tr.apply,
+          ),
+        );
 }

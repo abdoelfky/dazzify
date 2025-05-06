@@ -112,37 +112,38 @@ class BookingCubit extends Cubit<BookingState> {
   }
 
   Future<void> userArrived() async {
-    await checkLocationPermission();
-    if (state.locationPermissionsState == PermissionsState.granted) {
-      emit(state.copyWith(userArrivedState: UiState.loading));
-      final location = await Geolocator.getCurrentPosition();
-      final userArrived = await _bookingRepository.userArrived(
-        bookingId: state.singleBooking.id,
-        request: UserArrivedRequest(
-          longitude: location.longitude,
-          latitude: location.latitude,
-        ),
-      );
-      userArrived.fold(
-        (failure) => emit(
-          state.copyWith(
-            userArrivedState: UiState.failure,
-            errorMessage: failure.message,
+    await checkLocationPermission().then((onValue) async {
+      if (state.locationPermissionsState == PermissionsState.granted) {
+        emit(state.copyWith(userArrivedState: UiState.loading));
+        final location = await Geolocator.getCurrentPosition();
+        final userArrived = await _bookingRepository.userArrived(
+          bookingId: state.singleBooking.id,
+          request: UserArrivedRequest(
+            longitude: location.longitude,
+            latitude: location.latitude,
           ),
-        ),
-        (success) {
-          final updatedBooking = state.singleBooking.copyWith(
-            isArrived: true,
-          );
-          emit(
+        );
+        userArrived.fold(
+          (failure) => emit(
             state.copyWith(
-              singleBooking: updatedBooking,
-              userArrivedState: UiState.success,
+              userArrivedState: UiState.failure,
+              errorMessage: failure.message,
             ),
-          );
-        },
-      );
-    }
+          ),
+          (success) {
+            final updatedBooking = state.singleBooking.copyWith(
+              isArrived: true,
+            );
+            emit(
+              state.copyWith(
+                singleBooking: updatedBooking,
+                userArrivedState: UiState.success,
+              ),
+            );
+          },
+        );
+      }
+    });
   }
 
   Future<void> createReview({
@@ -218,7 +219,4 @@ class BookingCubit extends Cubit<BookingState> {
       },
     );
   }
-
-
-
 }

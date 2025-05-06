@@ -120,7 +120,7 @@ class BrandInfo extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 12,
-                vertical: 12,
+                vertical: 2,
               ).r,
               child: SizedBox(
                 height: 120.h,
@@ -128,6 +128,7 @@ class BrandInfo extends StatelessWidget {
                   children: [
                     DText(
                       brand.description!,
+                      maxLines: 4,
                       style: context.textTheme.bodySmall!.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
                       ),
@@ -245,7 +246,7 @@ class BrandInfo extends StatelessWidget {
             width: 100.r,
             height: 100.r,
             borderRadius: 80,
-            memCacheWidth: 1000,
+            memCacheWidth: 100000,
           ),
         ),
         SizedBox(height: 10.h),

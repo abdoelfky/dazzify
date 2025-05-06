@@ -57,7 +57,47 @@ class MultiServiceInformation extends StatelessWidget {
                     GestureDetector(
                       onTap: ()
                       {
-                        onSelectLocationTap();
+                        if (selectedButton != ServiceLocationOptions.inBranch.toString()) {
+                          onSelectLocationTap();
+                        } else {
+                          // print(branchLocation!.latitude);
+                          LocationModel? locationModel =
+                          selectedButton == ServiceLocationOptions.inBranch
+                              ? branchLocation
+                              : state.selectedLocationName ==
+                              context.tr.NotSelectedYet
+                              ? null
+                              : state.selectedLocation;
+
+                          context.pushRoute(
+                            ViewLocationRoute(
+                              invoiceCubit: invoiceCubit,
+                              locationModel: locationModel,
+                              isDisplayOnly: selectedButton ==
+                                  ServiceLocationOptions.inBranch,
+                            ),
+                          );
+                        }
+                        // onSelectLocationTap();
+                        //
+                        //
+                        //
+                        //   LocationModel? locationModel =
+                        //   selectedButton == ServiceLocationOptions.inBranch
+                        //       ? branchLocation
+                        //       : state.selectedLocationName ==
+                        //       context.tr.NotSelectedYet
+                        //       ? null
+                        //       : state.selectedLocation;
+                        //
+                        //   context.pushRoute(
+                        //     ViewLocationRoute(
+                        //       invoiceCubit: invoiceCubit,
+                        //       locationModel: locationModel,
+                        //       isDisplayOnly: selectedButton ==
+                        //           ServiceLocationOptions.inBranch,
+                        //     ),
+                        //   );
                       }
                       //     () {
                       //   LocationModel? locationModel =
@@ -158,6 +198,7 @@ class MultiServiceInformation extends StatelessWidget {
                       toTime,
                       selectedDate,
                     )}',
+                    maxLines: 2,
                     style: context.textTheme.bodyMedium!.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
                     ),

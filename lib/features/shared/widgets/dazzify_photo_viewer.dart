@@ -7,6 +7,7 @@ import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/logic/comments/comments_bloc.dart';
 import 'package:dazzify/features/shared/logic/likes/likes_cubit.dart';
+import 'package:dazzify/features/shared/widgets/comments_closed_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
@@ -354,27 +355,37 @@ class _DazzifyPhotoViewerState extends State<DazzifyPhotoViewer> {
   }
 
   void onCommentsTap() {
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      routeSettings: const RouteSettings(
-        name: "ViewerCommentsSheet",
-      ),
-      builder: (context) => MultiBlocProvider(
-        providers: [
-          BlocProvider.value(
-            value: commentsBloc,
-          ),
-          BlocProvider.value(
-            value: userCubit,
-          ),
-        ],
-        child: MediaCommentsSheet(
-          media: widget.media!,
+    if (widget.media!.commentsCount == null) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: false,
+        builder: (context) {
+          return CommentsClosedBottomSheet();
+        },
+      );
+    } else {
+      showModalBottomSheet(
+        context: context,
+        useRootNavigator: true,
+        isScrollControlled: true,
+        routeSettings: const RouteSettings(
+          name: "ViewerCommentsSheet",
         ),
-      ),
-    );
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: commentsBloc,
+            ),
+            BlocProvider.value(
+              value: userCubit,
+            ),
+          ],
+          child: MediaCommentsSheet(
+            media: widget.media!,
+          ),
+        ),
+      );
+    }
   }
 
   void onChatTap() {

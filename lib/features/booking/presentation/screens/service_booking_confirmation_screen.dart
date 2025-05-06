@@ -44,6 +44,7 @@ class _ServiceBookingConfirmationScreenState
                     SizedBox(
                       width: 283.r,
                       child: DText(
+                        maxLines: 3,
                         context.tr.bookingSuccess,
                         textAlign: TextAlign.center,
                       ),

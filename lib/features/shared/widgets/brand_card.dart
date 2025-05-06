@@ -34,9 +34,14 @@ class BrandCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    DText(
-                      brand.name,
-                      style: context.textTheme.bodyMedium,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 180.w),
+                      child: IntrinsicWidth(
+                          child: DText(
+                        maxLines: 1,
+                        brand.name,
+                        style: context.textTheme.bodyMedium,
+                      )),
                     ),
                     SizedBox(width: 8.w),
                     if (brand.verified)

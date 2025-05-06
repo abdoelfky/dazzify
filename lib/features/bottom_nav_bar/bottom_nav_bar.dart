@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
@@ -86,6 +85,7 @@ class _BottomNavBarState extends State<BottomNavBar>
     socketCubit.disconnectWebSocket();
     super.dispose();
   }
+
   //
   // void _handleNotificationClick(NotificationResponse event) {
   //   final notificationType = getNotificationType(event.payload);
@@ -235,7 +235,9 @@ class _BottomNavBarState extends State<BottomNavBar>
   }
 
   handleNavbarItemTap({required int value, required TabsRouter tabsRouter}) {
-    if (tabsRouter.activeIndex == value) {
+    if (value == routes.length-1) {
+      tabsRouter.current.router.navigate(routes[value]);
+    } else if (tabsRouter.activeIndex == value) {
       tabsRouter.current.router.navigate(routes[value]);
     } else {
       tabsRouter.setActiveIndex(value);

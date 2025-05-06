@@ -12,7 +12,6 @@ AddUserInfoRequest _$AddUserInfoRequestFromJson(Map<String, dynamic> json) =>
       gender: json['gender'] as String,
       email: json['email'] as String,
       birthDay: json['birthday'] as String,
-      // age: (json['age'] as num).toInt(),
       lang: json['languagePreference'] as String,
     );
 
@@ -22,6 +21,5 @@ Map<String, dynamic> _$AddUserInfoRequestToJson(AddUserInfoRequest instance) =>
       'gender': instance.gender,
       'email': instance.email,
       'birthday': instance.birthDay,
-      // 'age': instance.age,
       'languagePreference': instance.lang,
     };

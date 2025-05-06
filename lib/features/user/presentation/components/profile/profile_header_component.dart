@@ -130,7 +130,7 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                                   },
                                 );
                               } else {
-                                context.read<UserCubit>()..updateProfileImage();
+                                context.read<UserCubit>().updateProfileImage();
                               }
                             },
                           );
@@ -138,7 +138,10 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                       ),
                       SizedBox(height: 8.r),
                       DText(
-                        state.userModel.fullName,
+                        state.userModel.fullName.length > 40
+                            ? '${state.userModel.fullName.substring(0, 40)}...'
+                            : state.userModel.fullName,
+                        maxLines: 2,
                         style: context.textTheme.bodyLarge,
                       ),
                     ],

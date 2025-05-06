@@ -11,8 +11,7 @@ UpdateProfileInfoRequest _$UpdateProfileInfoRequestFromJson(
     UpdateProfileInfoRequest(
       email: json['email'] as String?,
       gender: json['gender'] as String?,
-      birthDay: json['birthday'] as String?,
-      // age: (json['age'] as num?)?.toInt(),
+      birthDay: json['birthDay'] as String?,
     );
 
 Map<String, dynamic> _$UpdateProfileInfoRequestToJson(
@@ -20,6 +19,5 @@ Map<String, dynamic> _$UpdateProfileInfoRequestToJson(
     <String, dynamic>{
       if (instance.email case final value?) 'email': value,
       if (instance.gender case final value?) 'gender': value,
-      if (instance.birthDay case final value?) 'birthday': value,
-      // if (instance.age case final value?) 'age': value,
+      if (instance.birthDay case final value?) 'birthDay': value,
     };

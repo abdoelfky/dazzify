@@ -32,7 +32,7 @@ class BrandPhotosTab extends StatefulWidget {
 
 class _BrandPhotosTabState extends State<BrandPhotosTab>
     with AutomaticKeepAliveClientMixin {
-  final ScrollController _scrollController = ScrollController();
+  // final ScrollController _scrollController = ScrollController();
   late final BrandBloc brandBloc;
 
   @override
@@ -83,7 +83,7 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
               );
             } else {
               return GridView.builder(
-                controller: _scrollController,
+                // controller: _scrollController,
                 itemCount: state.photos.length + 1,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16).r,

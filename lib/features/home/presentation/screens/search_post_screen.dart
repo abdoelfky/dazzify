@@ -20,6 +20,8 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../shared/widgets/comments_closed_bottom_sheet.dart';
+
 @RoutePage()
 class SearchPostScreen extends StatefulWidget implements AutoRouteWrapper {
   final MediaModel photo;
@@ -123,7 +125,17 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
                     _likesCubit.addOrRemoveLike(mediaId: widget.photo.id);
                   },
                   onCommentTap: () {
-                    handelCommentsTap(widget.photo);
+                    if (widget.photo.commentsCount == null) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return CommentsClosedBottomSheet();
+                        },
+                      );
+                    }else {
+                      handelCommentsTap(widget.photo);
+                    }
                   },
                   onSendServiceTap: () {
                     handelSendServiceTap(widget.photo);
@@ -156,7 +168,8 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
 
   void handelCommentsTap(MediaModel media) {
     final commentsBloc = getIt<CommentsBloc>();
-    showModalBottomSheet(
+
+      showModalBottomSheet(
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
@@ -169,6 +182,7 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
         child: MediaCommentsSheet(media: media),
       ),
     );
+
   }
 
   void handelSendServiceTap(MediaModel brandMedia) {

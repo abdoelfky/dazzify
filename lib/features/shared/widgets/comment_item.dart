@@ -101,15 +101,18 @@ class _CommentItemState extends State<CommentItem> {
                                     : 110.w,
                                 child: Row(
                                   children: [
-                                    DText(
-                                      widget.comment.author.name,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: context.textTheme.bodyMedium,
-                                    ),
+                                    ConstrainedBox(
+                                        constraints:
+                                            BoxConstraints(maxWidth: 80.w),
+                                        child: IntrinsicWidth(
+                                            child: DText(
+                                          widget.comment.author.name,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: context.textTheme.bodyMedium,
+                                        ))),
                                     if (widget.comment.author.verified)
-
-                                      SizedBox(width: 8.w),
-
+                                      SizedBox(width: 4.w),
                                     if (widget.comment.author.verified)
                                       Icon(
                                         SolarIconsBold.verifiedCheck,
@@ -144,11 +147,15 @@ class _CommentItemState extends State<CommentItem> {
                           SizedBox(height: 4.w),
                           DText(
                             widget.comment.content,
+                            maxLines: 10,
                             style: context.textTheme.bodySmall,
                           ),
+                          SizedBox(height: 4.w),
+
                         ],
                       ),
                     ),
+
                     const Spacer(),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,

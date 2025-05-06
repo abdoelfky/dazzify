@@ -54,7 +54,8 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
   late final ScrollController _scrollController;
   late final ValueNotifier<bool> _hasReachedTheEnd;
   late final BrandTermsCubit _brandTermsCubit = getIt<BrandTermsCubit>();
-  late final ServiceSelectionCubit _serviceSelectionCubit = getIt<ServiceSelectionCubit>();
+  late final ServiceSelectionCubit _serviceSelectionCubit =
+      getIt<ServiceSelectionCubit>();
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -157,15 +158,24 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                     ).r,
                                     child: Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                          CrossAxisAlignment.start,
+                                      // mainAxisAlignment:
+                                      //     MainAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: 8.r,
-                                          height: 8.r,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                context.colorScheme.onSurface,
-                                            shape: BoxShape.circle,
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 4.0,
+                                            // left: 16.0,
+                                            // right: 16.0,
+                                          ).r,
+                                          child: Container(
+                                            width: 8.r,
+                                            height: 8.r,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  context.colorScheme.onSurface,
+                                              shape: BoxShape.circle,
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: 3.w),
@@ -173,6 +183,7 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                           child: DText(
                                             state.brandTerms[index],
                                             softWrap: true,
+                                            maxLines: 8,
                                             style: context.textTheme.bodySmall!
                                                 .copyWith(
                                               color: context

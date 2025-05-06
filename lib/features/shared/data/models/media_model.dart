@@ -9,6 +9,8 @@ class MediaModel {
   @JsonKey(defaultValue: "")
   final String id;
   @JsonKey(defaultValue: "")
+  String? aspectRatio;
+  @JsonKey(defaultValue: "")
   final String caption;
   @JsonKey(defaultValue: "")
   final String type;
@@ -18,8 +20,10 @@ class MediaModel {
   final String serviceId;
   int? likesCount;
   int? commentsCount;
+
   // @JsonKey(defaultValue: 0)
   int? viewsCount;
+
   // @JsonKey(defaultValue: 0)
   int? bookingsCount;
   @JsonKey(defaultValue: "")
@@ -30,6 +34,7 @@ class MediaModel {
 
   MediaModel({
     required this.id,
+    this.aspectRatio,
     required this.caption,
     required this.type,
     required this.thumbnail,
@@ -45,6 +50,7 @@ class MediaModel {
 
   MediaModel.empty({
     this.id = "",
+    this.aspectRatio = "",
     this.caption = "",
     this.type = "",
     this.thumbnail = "",

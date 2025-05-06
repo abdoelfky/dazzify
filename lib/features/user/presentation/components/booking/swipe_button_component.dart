@@ -7,7 +7,7 @@ import 'package:dazzify/features/shared/widgets/swipe_button/dazzify_swipe_butto
 import 'package:dazzify/features/shared/widgets/swipe_button/dazzify_swipe_button_controller.dart';
 
 class SwipeButtonComponent extends StatefulWidget {
-  final String status;
+  final BookingStatus status;
   final bool isFinished;
   final bool isArrived;
   final String startTime;
@@ -35,7 +35,7 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
     super.initState();
     dazzifySwipeButtonController = DazzifySwipeButtonController();
     bookingCubit = context.read<BookingCubit>();
-    bookingStatus = getBookingStatus(widget.status);
+    // bookingStatus = getBookingStatus(widget.status);
   }
 
   @override
@@ -55,41 +55,41 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
   @override
   Widget build(BuildContext context) {
     if (getTimeInMinute() <= 60 &&
-        getTimeInMinute() > 0 &&
-        bookingStatus == BookingStatus.confirmed &&
+        // getTimeInMinute() < 0 &&
+        widget.status == BookingStatus.confirmed &&
         !widget.isArrived) {
       return swipeButton();
-    }
-    else {
-      if(bookingStatus == BookingStatus.pending)
-      {
+    } else {
+      if (widget.status == BookingStatus.pending) {
         return normalButton(
           context.tr.bookingPending,
-          widget.isArrived,
+          false,
         );
-      }
-      else  if(bookingStatus == BookingStatus.cancelled)
-      {
+      } else if (widget.status == BookingStatus.cancelled) {
         return normalButton(
           context.tr.bookingCanceled,
-          widget.isArrived,
+          false,
         );
-      }
-      else if (bookingStatus == BookingStatus.confirmed) {
+      } else if (widget.status == BookingStatus.confirmed &&
+          getTimeInMinute() > 60) {
         return normalButton(
           context.tr.bookingConfirmed,
+          false,
+        );
+      } else if (widget.isFinished == false && widget.isArrived) {
+        return normalButton(
+          context.tr.hereWeGo,
           widget.isArrived,
         );
-      }
-      else if (widget.isFinished == false) {
+      } else if (widget.isFinished == false) {
         return normalButton(
           context.tr.readyForService,
-          widget.isArrived,
+          false,
         );
       } else {
         return normalButton(
           context.tr.serviceDone,
-          widget.isArrived,
+          false,
         );
       }
     }
@@ -104,28 +104,56 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
         borderRadius: BorderRadius.circular(5).r,
       ),
       child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isArrived)
-              Icon(
-                SolarIconsOutline.checkCircle,
-                size: 18.r,
-                color: ColorsManager.successColor,
+        child: isArrived
+            ? Row(
+                // mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (isArrived)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        SolarIconsOutline.checkCircle,
+                        size: 18.r,
+                        color: ColorsManager.successColor,
+                      ),
+                    ),
+                  SizedBox(width: 2.w),
+                  DText(
+                    // textAlign: TextAlign.center,
+                    title,
+                    // maxLines: 3,
+                    style: context.textTheme.titleMedium!.copyWith(
+                      color: context.colorScheme.outlineVariant,
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isArrived)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        SolarIconsOutline.checkCircle,
+                        size: 18.r,
+                        color: ColorsManager.successColor,
+                      ),
+                    ),
+                  // SizedBox(width: 5.w),
+                  Expanded(
+                    child: DText(
+                      textAlign: TextAlign.center,
+                      title,
+                      maxLines: 3,
+                      style: context.textTheme.titleMedium!.copyWith(
+                        color: context.colorScheme.outlineVariant,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            SizedBox(width: 5.w),
-            Expanded(
-              child: DText(
-                textAlign: TextAlign.center,
-                title,
-                maxLines: 3,
-                style: context.textTheme.titleMedium!.copyWith(
-                  color: context.colorScheme.outlineVariant,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

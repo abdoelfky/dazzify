@@ -95,26 +95,29 @@ class ServiceInformation extends StatelessWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        onSelectLocationTap();
-                      } //   () {
-                      // // print(branchLocation!.latitude);
-                      // LocationModel? locationModel =
-                      //     selectedButton == ServiceLocationOptions.inBranch
-                      //         ? branchLocation
-                      //         : state.selectedLocationName ==
-                      //                 context.tr.NotSelectedYet
-                      //             ? null
-                      //             : state.selectedLocation;
-                      //
-                      // context.pushRoute(
-                      //   ViewLocationRoute(
-                      //     invoiceCubit: invoiceCubit,
-                      //     locationModel: locationModel,
-                      //     isDisplayOnly: selectedButton ==
-                      //         ServiceLocationOptions.inBranch,
-                      //   ),
-                      // );
-                      // }
+                        if (selectedButton != ServiceLocationOptions.inBranch.toString()) {
+                          onSelectLocationTap();
+                        } else {
+                          // print(branchLocation!.latitude);
+                          LocationModel? locationModel =
+                              selectedButton == ServiceLocationOptions.inBranch
+                                  ? branchLocation
+                                  : state.selectedLocationName ==
+                                          context.tr.NotSelectedYet
+                                      ? null
+                                      : state.selectedLocation;
+
+                          context.pushRoute(
+                            ViewLocationRoute(
+                              invoiceCubit: invoiceCubit,
+                              locationModel: locationModel,
+                              isDisplayOnly: selectedButton ==
+                                  ServiceLocationOptions.inBranch,
+                            ),
+                          );
+                        }
+                      }
+
                       ,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0).r,
@@ -191,6 +194,7 @@ class ServiceInformation extends StatelessWidget {
                 SizedBox(
                   width: 250.w,
                   child: DText(
+                    maxLines: 2,
                     '${service.duration.toString()} ${context.tr.minutes}, ${context.tr.serviceSelectionConfirmation(
                       fromTime,
                       toTime,

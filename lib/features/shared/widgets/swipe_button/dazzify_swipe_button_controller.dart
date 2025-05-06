@@ -22,7 +22,7 @@ class DazzifySwipeButtonController extends ChangeNotifier {
   }
 
   bool markAsExecuted() {
-    if (!_hasExecutedOnSwipe && _value >= 0.9) {
+    if (!_hasExecutedOnSwipe && _value >= 0.7) {
       _hasExecutedOnSwipe = true;
       notifyListeners();
       return true;

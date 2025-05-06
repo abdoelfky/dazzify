@@ -211,6 +211,7 @@ class _TransactionItemState extends State<TransactionItem> {
   }
 
   Widget paymentStatusWidget() {
+
     if (paymentStatus == PaymentStatus.cancelled) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,

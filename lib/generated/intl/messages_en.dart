@@ -100,12 +100,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "brandCategories": MessageLookupByLibrary.simpleMessage("Categories"),
         "brandServices": MessageLookupByLibrary.simpleMessage("Services"),
         "brandTermsSheetTitle":
-            MessageLookupByLibrary.simpleMessage("Brand Terms & conditions"),
+            MessageLookupByLibrary.simpleMessage("Brand Terms & Conditions"),
         "cairo": MessageLookupByLibrary.simpleMessage("Cairo"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cancelBooking": MessageLookupByLibrary.simpleMessage("Cancel Booking"),
         "cancelBookingValidation": MessageLookupByLibrary.simpleMessage(
             "Are You Sure You Want To Cancel This Booking?"),
+        "cancelTermsSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Refund Terms & Conditions"),
         "canceled": MessageLookupByLibrary.simpleMessage("Canceled"),
         "cancelled": MessageLookupByLibrary.simpleMessage("Cancelled"),
         "card": MessageLookupByLibrary.simpleMessage("Card"),
@@ -126,6 +128,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "collectionsTab": MessageLookupByLibrary.simpleMessage("Collections"),
         "comment": MessageLookupByLibrary.simpleMessage("Comment"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
+        "commentsClosedByProvider":
+            MessageLookupByLibrary.simpleMessage("Comments Closed By Provider"),
         "commentsEmpty":
             MessageLookupByLibrary.simpleMessage("There is no comments yet."),
         "commentsTextFieldHint":
@@ -221,6 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hoursShortcut": MessageLookupByLibrary.simpleMessage("H"),
         "inBranch": MessageLookupByLibrary.simpleMessage("In branch"),
         "inOrOutBranch": MessageLookupByLibrary.simpleMessage("In/Out Branch"),
+        "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
         "includes": MessageLookupByLibrary.simpleMessage("Includes"),
         "infoUpdate": MessageLookupByLibrary.simpleMessage("Info Update"),
         "installment": MessageLookupByLibrary.simpleMessage("Installment"),
@@ -340,6 +345,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Notifications"),
         "nowPayInstallment": MessageLookupByLibrary.simpleMessage("NowPay"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+        "on": MessageLookupByLibrary.simpleMessage("On"),
         "oops": MessageLookupByLibrary.simpleMessage("Oooops"),
         "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
         "orangeCash": MessageLookupByLibrary.simpleMessage("Orange Cash"),
@@ -434,6 +440,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Couldn\'t Send OTP Code."),
         "sendOtpSuccess":
             MessageLookupByLibrary.simpleMessage("OTP Code Sent Successfully."),
+        "service": MessageLookupByLibrary.simpleMessage("Service "),
         "serviceAdded": MessageLookupByLibrary.simpleMessage(
             "Service added to your wallet"),
         "serviceBooked": MessageLookupByLibrary.simpleMessage("Service Booked"),
@@ -442,7 +449,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "serviceDetails":
             MessageLookupByLibrary.simpleMessage("Service Details"),
         "serviceDone": MessageLookupByLibrary.simpleMessage(
-            "Service is Done, Hope you liked it"),
+            "Your service is complete. We hope you enjoyed it!"),
         "serviceFavoriteAdding": MessageLookupByLibrary.simpleMessage(
             "Service added to your favorites"),
         "serviceFavoriteRemoving": MessageLookupByLibrary.simpleMessage(

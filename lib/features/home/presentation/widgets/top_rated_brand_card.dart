@@ -89,14 +89,17 @@ class TopRatedBrandCard extends StatelessWidget {
                     Row(
                       children: [
                         DText(
-                          brand.name,
+                          brand.name.length > 15
+                              ? '${brand.name.substring(0, 15)}...'
+                              : brand.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: nameStyle ??
                               context.textTheme.bodyMedium!.copyWith(
-                                color: context.colorScheme.onPrimary,
+                                color: Colors.white,
                               ),
                         ),
                         SizedBox(width: 8.w),
-
                         if (brand.verified)
                           Icon(
                             SolarIconsBold.verifiedCheck,

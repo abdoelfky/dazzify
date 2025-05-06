@@ -70,14 +70,18 @@ class PopularServiceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DText(
-                    service.title,
+                    service.title.length > 15
+                        ? '${service.title.substring(0, 15)}...'
+                        : service.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: nameStyle ??
                         context.textTheme.bodyMedium!.copyWith(
                           color: Colors.white,
                         ),
                   ),
                   DText(
-                    "${service.price.toString()} \$",
+                    '${service.price.toString()} ${context.tr.egp}',
                     style: context.textTheme.bodySmall!.copyWith(
                       color: Colors.white,
                     ),

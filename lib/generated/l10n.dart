@@ -2240,11 +2240,21 @@ class S {
     );
   }
 
-  /// `Brand Terms & conditions`
+  /// `Brand Terms & Conditions`
   String get brandTermsSheetTitle {
     return Intl.message(
-      'Brand Terms & conditions',
+      'Brand Terms & Conditions',
       name: 'brandTermsSheetTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refund Terms & Conditions`
+  String get cancelTermsSheetTitle {
+    return Intl.message(
+      'Refund Terms & Conditions',
+      name: 'cancelTermsSheetTitle',
       desc: '',
       args: [],
     );
@@ -2851,10 +2861,10 @@ class S {
     );
   }
 
-  /// `Service is Done, Hope you liked it`
+  /// `Your service is complete. We hope you enjoyed it!`
   String get serviceDone {
     return Intl.message(
-      'Service is Done, Hope you liked it',
+      'Your service is complete. We hope you enjoyed it!',
       name: 'serviceDone',
       desc: '',
       args: [],
@@ -3696,6 +3706,46 @@ class S {
     return Intl.message(
       'Your service is complete. We hope you enjoyed it!',
       name: 'bookingCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comments Closed By Provider`
+  String get commentsClosedByProvider {
+    return Intl.message(
+      'Comments Closed By Provider',
+      name: 'commentsClosedByProvider',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In Progress`
+  String get inProgress {
+    return Intl.message(
+      'In Progress',
+      name: 'inProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service `
+  String get service {
+    return Intl.message(
+      'Service ',
+      name: 'service',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On`
+  String get on {
+    return Intl.message(
+      'On',
+      name: 'on',
       desc: '',
       args: [],
     );

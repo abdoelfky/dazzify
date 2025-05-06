@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/framework/dazzify_text.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/time_manager.dart';
@@ -57,10 +58,12 @@ class ConversationCard extends StatelessWidget {
                         Expanded(
                           child: Row(
                             children: [
-                              Text(
-                                conversation.brand.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.textTheme.bodyLarge,
+                              Flexible(
+                                child: DText(
+                                  conversation.brand.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: context.textTheme.bodyLarge,
+                                ),
                               ),
                               if (conversation.brand.verified)
                                 Padding(
@@ -75,7 +78,7 @@ class ConversationCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Text(
+                        DText(
                           TimeManager.dateOrTime(TimeManager.toLocal(
                               conversation.lastMessage.createdAt)),
                           style: context.textTheme.bodySmall!.copyWith(
@@ -96,7 +99,7 @@ class ConversationCard extends StatelessWidget {
                           width: 8.w,
                         ),
                         Expanded(
-                          child: Text(
+                          child: DText(
                             conversation.branch.branchName,
                             overflow: TextOverflow.ellipsis,
                             style: context.textTheme.bodySmall!.copyWith(
@@ -106,7 +109,8 @@ class ConversationCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Text(
+                    DText(
+                      maxLines: 3,
                       conversation.lastMessage.messageType ==
                               MessageType.txt.name
                           ? conversation.lastMessage.content.message!

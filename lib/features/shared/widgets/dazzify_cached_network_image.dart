@@ -31,14 +31,16 @@ class DazzifyCachedNetworkImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(borderRadius),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final adjustedWidth =
-              (constraints.maxWidth.isFinite ? constraints.maxWidth : width)
-                  ?.toInt();
+          final adjustedWidth = (constraints.maxWidth.isFinite
+                  ? constraints.maxWidth
+                  : width )
+              ?.toInt();
           return CachedNetworkImage(
             imageUrl: imageUrl,
             cacheKey: CustomCacheManager.getCacheKey(imageUrl),
             cacheManager: CustomCacheManager.instance,
-            memCacheWidth: memCacheWidth ?? adjustedWidth,
+            filterQuality: FilterQuality.high,
+            memCacheWidth: memCacheWidth ?? (adjustedWidth!*10),
             placeholder: (context, url) => Shimmer.fromColors(
               baseColor: context.isDarkTheme
                   ? ColorsManager.baseShimmerDark

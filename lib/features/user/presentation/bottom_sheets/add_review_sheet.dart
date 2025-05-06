@@ -33,9 +33,11 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
     return DazzifySheetBody(
       title: context.tr.writeReview,
       textStyle: context.textTheme.titleLarge,
+      enableBottomInsets: true,
       children: [
         Expanded(
           child: ListView(
+            shrinkWrap: true,
             children: [
               SizedBox(height: 28.h),
               serviceInfo(context, bookingCubit),
@@ -63,10 +65,12 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                         textInputType: TextInputType.text,
                         borderRadius: 12,
                         hintText: context.tr.reviewComment,
-                        maxLength: 500,
+                        maxLength: 200,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return context.tr.textIsRequired;
+                          } else if (value.length < 3) {
+                            return context.tr.textIsTooShort;
                           }
                           return null;
                         },
@@ -143,12 +147,16 @@ Widget serviceInfo(BuildContext context, BookingCubit bookingCubit) {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DText(
-              bookingCubit.state.singleBooking.services.first.title,
-              style: context.textTheme.bodyLarge,
+            SizedBox(
+              width: 200.r,
+              child: DText(
+                maxLines: 4,
+                bookingCubit.state.singleBooking.services.first.title,
+                style: context.textTheme.bodyLarge,
+              ),
             ),
             DText(
-              "\$ ${bookingCubit.state.singleBooking.price}",
+              "${bookingCubit.state.singleBooking.price} ${context.tr.egp}",
               style: context.textTheme.bodyMedium!.copyWith(
                 color: context.colorScheme.onSurfaceVariant,
               ),
@@ -186,6 +194,7 @@ Widget brandInfo(BuildContext context, BookingCubit bookingCubit) {
             SizedBox(
               width: 220.w,
               child: DText(
+                maxLines: 3,
                 context.tr.reviewConditions,
                 style: context.textTheme.bodySmall!.copyWith(
                   color: context.colorScheme.onSurfaceVariant,

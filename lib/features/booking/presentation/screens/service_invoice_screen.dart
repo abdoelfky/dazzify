@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:dazzify/features/booking/data/models/delivery_info_model.dart';
+import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/bottom_sheets/governorate_bottom_sheet.dart';
 import 'package:dazzify/features/booking/presentation/widgets/branch_button.dart';
@@ -21,6 +24,7 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mwidgets/mwidgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../widgets/multi_service_information.dart';
@@ -32,13 +36,13 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
   final String branchId;
   final String branchName;
   final String selectedDate;
-  final String selectedFromTime;
-  final String selectedToTime;
+  String? selectedFromTime;
+  String? selectedToTime;
   final String selectedStartTimeStamp;
   final LocationModel? branchLocation;
   final ServiceSelectionCubit serviceSelectionCubit;
 
-  const ServiceInvoiceScreen({
+  ServiceInvoiceScreen({
     required this.service,
     required this.serviceSelectionCubit,
     required this.services,
@@ -46,8 +50,8 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
     required this.branchName,
     required this.selectedDate,
     required this.selectedStartTimeStamp,
-    required this.selectedFromTime,
-    required this.selectedToTime,
+    this.selectedFromTime,
+    this.selectedToTime,
     this.branchLocation,
     super.key,
   });
@@ -95,6 +99,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   @override
   void initState() {
     _invoiceCubit = context.read<ServiceInvoiceCubit>();
+
     _initialization();
     _pageController = PageController();
 
@@ -108,17 +113,73 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     super.initState();
   }
 
+  String _calculateToTimeFromSelectedFromTime(
+      String fromTime, int totalMinutes) {
+    final timeParts = fromTime.split(' ');
+    final hourMinute = timeParts[0].split(':');
+    int hour = int.parse(hourMinute[0]);
+    int minute = int.parse(hourMinute[1]);
+    final isPM = timeParts[1].toUpperCase() == 'PM';
+
+    if (isPM && hour != 12) hour += 12;
+    if (!isPM && hour == 12) hour = 0;
+
+    final fromDateTime = DateTime(0, 1, 1, hour, minute);
+    final toDateTime = fromDateTime.add(Duration(minutes: totalMinutes));
+
+    final newHour = toDateTime.hour > 12
+        ? toDateTime.hour - 12
+        : (toDateTime.hour == 0 ? 12 : toDateTime.hour);
+    final newMinute = toDateTime.minute.toString().padLeft(2, '0');
+    final newPeriod = toDateTime.hour >= 12 ? 'PM' : 'AM';
+
+    return '$newHour:$newMinute $newPeriod';
+  }
+
   // Method to remove service by index
   void removeService(int index) {
+
+
     // widget.serviceSelectionCubit.selectBookingService(service: widget.services[index]);
     widget.serviceSelectionCubit.removeServicesSelected(index: index);
     setState(() {
       widget.services.removeAt(index);
+
+      int totalDuration =
+          widget.services.fold(0, (sum, service) => sum + service.duration);
+
+      widget.selectedToTime = _calculateToTimeFromSelectedFromTime(
+          widget.selectedFromTime!, totalDuration);
     });
     _invoiceCubit.updateInvoice(
       price: widget.services.map((service) => service.price).toList(),
       appFees: widget.services.map((service) => service.fees).toList(),
     );
+    //Coupon Code reset
+    if (_textController.text.isNotEmpty) {
+      // Calculate total price if services are empty or not
+      num totalPrice = 0;
+      if (widget.services.isEmpty) {
+        totalPrice =
+            widget.service.price; // use service price if services is empty
+      } else {
+        totalPrice = widget.services
+            .map((service) => service.price)
+            .toList()
+            .fold<num>(
+            0,
+                (sum, item) =>
+            sum + item); // sum prices if services are not empty
+      }
+      FocusManager.instance.primaryFocus?.unfocus();
+      context.read<ServiceInvoiceCubit>().validateCouponAndUpdateInvoice(
+        service: widget.services.first,
+        price: totalPrice,
+        code: _textController.text,
+      );
+
+      // textContorller.clear();
+    }
   }
 
   @override
@@ -137,8 +198,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                         context,
                         selectedButton,
                         widget.selectedDate,
-                        widget.selectedFromTime,
-                        widget.selectedToTime,
+                        widget.selectedFromTime!,
+                        widget.selectedToTime!,
                       );
                     },
                   )),
@@ -320,7 +381,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               selectedLocation: state.selectedLocation,
               selectedGovernorate: state.deliveryInfo.selectedGov,
               selectedLocationName: state.selectedLocationName,
-              couponId: state.couponModel.couponId,
+              code: _textController.text,
             );
           },
         );
@@ -363,8 +424,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     _invoiceCubit.getBrandDeliveryFeesList(
       brandId: widget.service.brand.id,
     );
-
-    if (widget.service.type != ServiceLocationOptions.inBranch) {
+    // widget.service.type != ServiceLocationOptions.inBranch
+    if (_selectedButton.value != ServiceLocationOptions.inBranch) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet(
           context: context,
@@ -432,7 +493,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     LocationModel? selectedLocation,
     required int selectedGovernorate,
     required String selectedLocationName,
-    required String couponId,
+    required String code,
   }) {
     LocationModel? bookingLocationModel =
         selectedButton == ServiceLocationOptions.outBranch
@@ -461,9 +522,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
             : widget.services.map((service) => service.id).toList(),
         date: widget.selectedDate,
         startTimeStamp: widget.selectedStartTimeStamp,
-        isHasCoupon: couponId == '' ? false : true,
+        isHasCoupon: code == '' ? false : true,
         bookingLocationModel: bookingLocationModel,
-        couponId: couponId == '' ? null : couponId,
+        code: code == '' ? null : code,
         gov: selectedGov,
         isInBranch: isInBranch,
       );

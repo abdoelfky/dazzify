@@ -209,19 +209,23 @@ class TimeManager {
 
   static String bookingDuration(BookingCubit booking) {
     /*
-    This Method Calculate the duration of booking and show up
-
-    - 30 Min from 9:00 am to 10:00 am
-    * */
+  This Method Calculates the duration of booking and shows it like:
+  - 30 Min from 9:00 AM to 10:00 AM on 2025 - 02 - 02
+  */
     final bookingInfo = booking.state.singleBooking;
     int bookingDuration = bookingInfo.services.first.duration;
+
     DateTime startTime = DateTime.parse(bookingInfo.startTime).toLocal();
     DateTime endTime = DateTime.parse(bookingInfo.endTime).toLocal();
+
     String startTimeFormat = DateFormat('h:mm a').format(startTime);
     String endTimeFormat = DateFormat('h:mm a').format(endTime);
+    String dateFormat = DateFormat('yyyy - MM - dd').format(startTime);
 
-    return "$bookingDuration ${DazzifyApp.tr.min} ${DazzifyApp.tr.from} $startTimeFormat ${DazzifyApp.tr.to} $endTimeFormat";
+    return "$bookingDuration ${DazzifyApp.tr.min} ${DazzifyApp.tr.from} $startTimeFormat ${DazzifyApp.tr.to} $endTimeFormat"
+        "\n ${DazzifyApp.tr.on} $dateFormat";
   }
+
 
   static void initializeTimer({
     required String startTime,
@@ -290,11 +294,15 @@ class TimeManager {
     Duration difference = serviceDateTime.difference(now);
     int days = difference.inDays;
     int hours = difference.inHours.remainder(24);
-
     // Check if the service time is now
     if (difference.isNegative || difference.inMinutes == 0) {
+      return DazzifyApp.tr.inProgress;
+    }
+    // Return empty string if the service starts in less than 15 minutes or is in the past
+    else if (difference.inMinutes < 15) {
       return "";
     }
+
 
     String timeRemaining = "";
 

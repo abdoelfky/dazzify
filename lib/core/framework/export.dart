@@ -11,5 +11,4 @@ export 'package:flutter/material.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:flutter_screenutil/flutter_screenutil.dart';
 export 'package:solar_icons/solar_icons.dart';
-
 export 'dazzify_text.dart';

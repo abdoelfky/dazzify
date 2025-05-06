@@ -64,14 +64,21 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
                               right: 16.0,
                             ).r,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 8.r,
-                                  height: 8.r,
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.onSurface,
-                                    shape: BoxShape.circle,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 4.0,
+                                    // left: 16.0,
+                                    // right: 16.0,
+                                  ).r,
+                                  child: Container(
+                                    width: 8.r,
+                                    height: 8.r,
+                                    decoration: BoxDecoration(
+                                      color: context.colorScheme.onSurface,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 3.w),
@@ -79,6 +86,7 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
                                   child: DText(
                                     state.appTerms[index],
                                     softWrap: true,
+                                    maxLines: 10,
                                     style:
                                         context.textTheme.bodySmall!.copyWith(
                                       color:

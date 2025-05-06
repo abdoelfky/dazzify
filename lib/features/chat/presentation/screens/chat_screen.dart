@@ -135,10 +135,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                widget.brand.name,
-                                style: context.textTheme.bodyLarge!.copyWith(
-                                  overflow: TextOverflow.ellipsis,
+                              Expanded(
+                                child: Text(
+                                  widget.brand.name,
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                               if (widget.brand.verified)

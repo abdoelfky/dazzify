@@ -425,6 +425,7 @@ class Authenticated extends AutoRouter implements AutoRouteWrapper {
             );
           }
           if (state.addReviewState == UiState.success) {
+            context.maybePop();
             DazzifyToastBar.showSuccess(
               message: context.tr.reviewCreatedSuccessfully,
             );

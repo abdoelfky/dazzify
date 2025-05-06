@@ -1,9 +1,5 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Import Flutter local notifications
 import 'package:fcm_config/fcm_config.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:dazzify/core/framework/export.dart';
-import 'package:dazzify/core/util/notification_type_enum.dart';
 import 'package:dazzify/firebase_options.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mwidgets/mwidgets.dart';
@@ -12,7 +8,7 @@ abstract class FCMNotification {
   Future<String> getFCMToken();
   Future<void> init();
   void onClick({required RemoteMessage message});
-  void onReceived({required RemoteMessage message});
+  // void onReceived({required RemoteMessage message});
 }
 
 @pragma('vm:entry-point')
@@ -64,10 +60,10 @@ class FCMNotificationImpl extends FCMNotification {
     );
 
     // Initialize the Flutter local notifications plugin
-    _initializeLocalNotifications();
+    // _initializeLocalNotifications();
 
     // Request notification permission for iOS
-    _requestNotificationPermission();
+    // _requestNotificationPermission();
 
     // Trigger a dummy notification when the app is opened
     // _showDummyNotification();
@@ -81,7 +77,6 @@ class FCMNotificationImpl extends FCMNotification {
 
   // Initialize the Flutter Local Notifications Plugin
   void _initializeLocalNotifications() {
-    print('_initializeLocalNotifications');
 
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -148,34 +143,34 @@ class FCMNotificationImpl extends FCMNotification {
   @override
   Future<void> onClick({required RemoteMessage message}) async {}
 
-  @override
-  Future<void> onReceived({required RemoteMessage message}) async {
-    final notificationType = getNotificationType(message.data['type']);
-
-    switch (notificationType) {
-      case NotificationTypeEnum.payment:
-        appRouter.navigate(
-          const ProfileTabRoute(
-            children: [
-              ProfileRoute(),
-              PaymentRoutes(children: [TransactionRoute()]),
-            ],
-          ),
-        );
-        break;
-      case NotificationTypeEnum.bookingStatus:
-        appRouter.navigate(
-          const ProfileTabRoute(
-            children: [ProfileRoute(), BookingsHistoryRoute()],
-          ),
-        );
-        break;
-      default:
-        appRouter.navigate(const NotificationsRoute());
-    }
-    kPrint(message.notification);
-    kPrint(message.data);
-  }
+//   @override
+//   Future<void> onReceived({required RemoteMessage message}) async {
+//     final notificationType = getNotificationType(message.data['type']);
+//
+//     switch (notificationType) {
+//       case NotificationTypeEnum.payment:
+//         appRouter.navigate(
+//           const ProfileTabRoute(
+//             children: [
+//               ProfileRoute(),
+//               PaymentRoutes(children: [TransactionRoute()]),
+//             ],
+//           ),
+//         );
+//         break;
+//       case NotificationTypeEnum.bookingStatus:
+//         appRouter.navigate(
+//           const ProfileTabRoute(
+//             children: [ProfileRoute(), BookingsHistoryRoute()],
+//           ),
+//         );
+//         break;
+//       default:
+//         appRouter.navigate(const NotificationsRoute());
+//     }
+//     kPrint(message.notification);
+//     kPrint(message.data);
+//   }
 }
 
 void onDataReceive(Map<String, dynamic> data) {}

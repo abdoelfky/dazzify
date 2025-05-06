@@ -19,13 +19,17 @@ import 'package:intl/intl.dart';
 
 class BookingStatusHeaderComponent extends StatefulWidget {
   final bool isBookingFinished;
+  final bool isArrived;
   final bool isRate;
-  final String status;
+  final BookingStatus status;
+  final String startTime;
   final List<String> refundConditions;
 
   const BookingStatusHeaderComponent({
     super.key,
     required this.isBookingFinished,
+    required this.isArrived,
+    required this.startTime,
     required this.isRate,
     required this.status,
     required this.refundConditions,
@@ -41,13 +45,22 @@ class _BookingStatusHeaderComponentState
   late final BookingCubit bookingCubit;
   bool isButtonActive = true;
   bool isCanceled = false;
-  late BookingStatus bookingStatus;
+
+  // late BookingStatus bookingStatus;
+
+  int getTimeInMinute() {
+    final DateTime timeNow = DateTime.now();
+    final DateTime targetTime = DateTime.parse(widget.startTime).toLocal();
+    final int minutesDifference = targetTime.difference(timeNow).inMinutes;
+
+    return minutesDifference;
+  }
 
   @override
   void initState() {
     super.initState();
     bookingCubit = context.read<BookingCubit>();
-    bookingStatus = getBookingStatus(widget.status);
+    // bookingStatus = getBookingStatus(widget.status);
   }
 
   void changeButtonActivity() {
@@ -82,9 +95,26 @@ class _BookingStatusHeaderComponentState
   }
 
   Widget buildStatusButton() {
+    final startTime = DateTime.parse(widget.startTime).toLocal();
+    final now = DateTime.now();
+    // bool isToday = startTime.year == now.year &&
+    //     startTime.month == now.month &&
+    //     startTime.day == now.day;
+
+    bool isSwiped = getTimeInMinute() <= 0 &&
+        widget.status == BookingStatus.confirmed &&
+        widget.isBookingFinished;
+
     if (widget.isBookingFinished) {
       return rateBookingButton();
-    } else if (bookingStatus != BookingStatus.cancelled) {
+    } else if ((widget.status == BookingStatus.pending) ||
+        (widget.status != BookingStatus.cancelled &&
+            !widget.isBookingFinished &&
+            !widget.isArrived
+        // &&
+        // !isToday
+        ) ||
+        isSwiped) {
       return cancelBookingButton();
     } else {
       return const SizedBox.shrink();
@@ -96,7 +126,7 @@ class _BookingStatusHeaderComponentState
       width: 130.w,
       height: 35.h,
       onTap: () {
-        widget.isRate
+        bookingCubit.state.singleBooking.rating.rate!=0.0
             ? null
             : showModalBottomSheet(
                 context: context,
@@ -113,10 +143,10 @@ class _BookingStatusHeaderComponentState
                 },
               );
       },
-      title: widget.isRate
+      title: bookingCubit.state.singleBooking.rating.rate!=0.0
           ? bookingCubit.state.singleBooking.rating.rate.toString()
           : context.tr.rateService,
-      prefixWidget: widget.isRate
+      prefixWidget: bookingCubit.state.singleBooking.rating.rate!=0.0
           ? SvgPicture.asset(
               AssetsManager.rateStarBold,
               height: 16.h,

@@ -13,6 +13,7 @@
   "userInfoScreenTitle": "قم بإضافة معلوماتك",
   "@TermsSheet": {},
   "termsSheetTitle": "شروط وأحكام Dazzify.",
+  "cancelTermsSheetTitle": "شروط وأحكام الاسترداد",
   "@Home": {},
   "categories": "الفئات",
   "services": "الخدمات",
@@ -389,5 +390,10 @@
   "bookingPending": "حجزك قيد المراجعة حاليًا.",
   "bookingCanceled": "تم إلغاء حجزك. نأمل في خدمتكم مرة أخرى قريبًا.",
   "bookingConfirmed": "تم تأكيد حجزك! استعد لخدمتك.",
-  "bookingCompleted": "تمت خدمتك بنجاح. نأمل أن تكون قد استمتعت بها!"
+  "bookingCompleted": "تمت خدمتك بنجاح. نأمل أن تكون قد استمتعت بها!",
+  "commentsClosedByProvider": "تم إغلاق التعليقات من قبل مزود الخدمه",
+  "inProgress": "قيد التنفيذ",
+  "service": "الخدمة ",
+  "on": "في"
+
 }

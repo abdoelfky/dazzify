@@ -50,7 +50,12 @@ class ReviewCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 16.w),
-                  DText(reviewerName, style: context.textTheme.bodyMedium),
+                  SizedBox(
+                    width: 100.w,
+                    child: DText(reviewerName,
+                        maxLines: 2,
+                        style: context.textTheme.bodyMedium),
+                  ),
                   const Spacer(flex: 3),
                   Row(
                     children: [

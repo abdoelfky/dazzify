@@ -6,8 +6,8 @@ import 'package:dazzify/features/notifications/data/repositories/notifications_r
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 part 'app_notifications_state.dart';
+
 
 class AppNotificationsCubit extends Cubit<AppNotificationsState> {
   final NotificationsRepository _notificationsRepository;
@@ -41,6 +41,7 @@ class AppNotificationsCubit extends Cubit<AppNotificationsState> {
       final results = await _notificationsRepository.subscribeToNotifications(
         deviceToken: device.fcmToken,
       );
+
       results.fold(
         (failure) => emit(
           state.copyWith(

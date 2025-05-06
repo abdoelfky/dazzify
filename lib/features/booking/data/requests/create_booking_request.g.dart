@@ -11,10 +11,11 @@ CreateBookingRequest _$CreateBookingRequestFromJson(
     CreateBookingRequest(
       brandId: json['brandId'] as String,
       branchId: json['branchId'] as String,
-      services: json['services'] as List<String>,
+      services:
+          (json['services'] as List<dynamic>).map((e) => e as String).toList(),
       startTime: json['startTime'] as String,
       isHasCoupon: json['isHasCoupon'] as bool,
-      couponId: json['couponId'] as String?,
+          code: json['code'] as String?,
       bookingLocation: (json['bookingLocation'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, (e as num).toDouble()),
       ),
@@ -30,7 +31,7 @@ Map<String, dynamic> _$CreateBookingRequestToJson(
       'services': instance.services,
       'startTime': instance.startTime,
       'isHasCoupon': instance.isHasCoupon,
-      if (instance.couponId case final value?) 'couponId': value,
+      if (instance.code case final value?) 'code': value,
       if (instance.bookingLocation case final value?) 'bookingLocation': value,
       if (instance.gov case final value?) 'gov': value,
       if (instance.isInBranch case final value?) 'isInBranch': value,

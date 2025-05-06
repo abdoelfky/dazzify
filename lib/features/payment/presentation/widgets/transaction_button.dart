@@ -50,7 +50,11 @@ class _TransactionButtonState extends State<TransactionButton> {
                 serviceName: widget.serviceName,
                 transactionId: widget.transactionId,
               ),
-            );
+            ).then((onValue)
+            {
+              paymentStatus = getPaymentStatus(widget.status);
+
+            });
           },
         );
       case PaymentStatus.refunded:

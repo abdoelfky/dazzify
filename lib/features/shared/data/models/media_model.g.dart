@@ -8,6 +8,7 @@ part of 'media_model.dart';
 
 MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
       id: json['id'] as String? ?? '',
+      aspectRatio: json['aspectRatio'] as String? ?? '',
       caption: json['caption'] as String? ?? '',
       type: json['type'] as String? ?? '',
       thumbnail: json['thumbnail'] as String? ?? '',
@@ -26,6 +27,7 @@ MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
 Map<String, dynamic> _$MediaModelToJson(MediaModel instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'aspectRatio': instance.aspectRatio,
       'caption': instance.caption,
       'type': instance.type,
       'thumbnail': instance.thumbnail,

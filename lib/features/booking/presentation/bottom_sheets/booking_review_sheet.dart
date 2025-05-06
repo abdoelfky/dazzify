@@ -1,4 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/features/booking/data/requests/create_booking_review_request.dart';
 import 'package:dazzify/features/booking/logic/booking_review/booking_review_cubit.dart';
 import 'package:dazzify/features/home/presentation/widgets/custom_rating_bar.dart';
@@ -12,11 +13,13 @@ import 'package:dazzify/features/user/data/models/user/user_model.dart';
 class BookingReviewSheet extends StatefulWidget {
   final BookingReviewCubit bookingReviewCubit;
   final UserModel userModel;
+  final BuildContext closeSheetContext;
 
   const BookingReviewSheet({
     super.key,
     required this.bookingReviewCubit,
     required this.userModel,
+    required this.closeSheetContext,
   });
 
   @override
@@ -25,19 +28,23 @@ class BookingReviewSheet extends StatefulWidget {
 
 class _BookingReviewSheetState extends State<BookingReviewSheet> {
   late final GlobalKey<FormState> formKey;
+  late final TextEditingController _reviewController;
   double rating = 0;
   bool isLoading = false;
-  String reviewComment = "";
+
+  // String reviewComment = "";
 
   @override
   void initState() {
     formKey = GlobalKey<FormState>();
+    _reviewController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     formKey.currentState?.dispose();
+    _reviewController.dispose();
     super.dispose();
   }
 
@@ -84,11 +91,16 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                           ),
                           SizedBox(width: 16),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DText(
-                                state.bookingReviewRequest.brand.name,
-                                style: context.textTheme.bodyLarge,
-                              ),
+                              ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 180.w),
+                                  child: IntrinsicWidth(
+                                      child: DText(
+                                    maxLines: 2,
+                                    state.bookingReviewRequest.brand.name,
+                                    style: context.textTheme.bodyLarge,
+                                  ))),
                               SizedBox(height: 9),
                               DText(
                                 "${state.bookingReviewRequest.totalPrice.toString()} ${context.tr.currency}",
@@ -159,16 +171,22 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                         ).r,
                         child: DazzifyMultilineTextField(
                           maxLength: 200,
+                          controller: _reviewController,
                           hintText: context.tr.reviewComment,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return context.tr.textIsRequired;
-                            }
-                            return null;
+                            // print(value);
+                            // if (value == null || value.isEmpty) {
+                            //   return context.tr.textIsRequired;
+                            // }
+                            // return null;
+                            return ValidationManager.hasData(
+                              data: _reviewController.text,
+                              errorMessage: context.tr.textIsTooShort,
+                            );
                           },
                           onSaved: (value) {
                             if (value != null) {
-                              reviewComment = value;
+                              _reviewController.text = value;
                             }
                           },
                         ),
@@ -180,10 +198,13 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                             isLoading = true;
                           } else if (state.addReviewState == UiState.success) {
                             isLoading = false;
-                            context.maybePop();
+                            // context.maybePop();
+                            // widget.closeSheetContext.maybePop();
+
                             DazzifyToastBar.showSuccess(
                               message: context.tr.reviewCreated,
                             );
+
                           } else {
                             isLoading = false;
                           }
@@ -196,7 +217,7 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                                 CreateBookingReviewRequest(
                                   bookingId:
                                       state.bookingReviewRequest.bookingId,
-                                  comment: reviewComment,
+                                  comment: _reviewController.text,
                                   rate: rating,
                                 ),
                               );
@@ -234,6 +255,7 @@ Future<void> showBookingReviewSheet({
       child: BookingReviewSheet(
         bookingReviewCubit: bookingReviewCubit,
         userModel: userModel,
+        closeSheetContext: context,
       ),
     ),
   );

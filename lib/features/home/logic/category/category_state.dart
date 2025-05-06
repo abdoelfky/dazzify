@@ -19,11 +19,18 @@ class CategoryState extends Equatable {
     bool? hasReachedMax,
     List<BrandModel>? brands,
   }) {
+    // Sort the brands by points if a new list is provided
+    final sortedBrands = brands != null
+        ? (List<BrandModel>.from(brands)
+      ..sort((a, b) => b.points!.compareTo(a.points!))) // Descending order
+        : this.brands;
+
     return CategoryState(
       blocState: blocState ?? this.blocState,
       errorMessage: errorMessage ?? this.errorMessage,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      brands: brands ?? this.brands,
+      brands: sortedBrands
+      // brands: brands ?? this.brands,
     );
   }
 

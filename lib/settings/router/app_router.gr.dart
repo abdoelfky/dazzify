@@ -751,10 +751,9 @@ class MultipleServiceAvailabilityRoute
   MultipleServiceAvailabilityRoute({
     required List<ServiceDetailsModel> services,
     required String branchId,
-    required ServiceSelectionCubit serviceSelectionCubit,
-
     required String branchName,
     LocationModel? location,
+    ServiceSelectionCubit? serviceSelectionCubit,
     Key? key,
     required String brandId,
     List<PageRouteInfo>? children,
@@ -762,10 +761,10 @@ class MultipleServiceAvailabilityRoute
           MultipleServiceAvailabilityRoute.name,
           args: MultipleServiceAvailabilityRouteArgs(
             services: services,
-            serviceSelectionCubit: serviceSelectionCubit,
             branchId: branchId,
             branchName: branchName,
             location: location,
+            serviceSelectionCubit: serviceSelectionCubit,
             key: key,
             brandId: brandId,
           ),
@@ -780,11 +779,11 @@ class MultipleServiceAvailabilityRoute
       final args = data.argsAs<MultipleServiceAvailabilityRouteArgs>();
       return WrappedRoute(
           child: MultipleServiceAvailabilityScreen(
-            services: args.services,
-            serviceSelectionCubit: args.serviceSelectionCubit,
+        services: args.services,
         branchId: args.branchId,
         branchName: args.branchName,
         location: args.location,
+        serviceSelectionCubit: args.serviceSelectionCubit,
         key: args.key,
         brandId: args.brandId,
       ));
@@ -795,17 +794,15 @@ class MultipleServiceAvailabilityRoute
 class MultipleServiceAvailabilityRouteArgs {
   const MultipleServiceAvailabilityRouteArgs({
     required this.services,
-    required this.serviceSelectionCubit,
     required this.branchId,
     required this.branchName,
     this.location,
+    this.serviceSelectionCubit,
     this.key,
     required this.brandId,
   });
 
   final List<ServiceDetailsModel> services;
-
-  final ServiceSelectionCubit serviceSelectionCubit;
 
   final String branchId;
 
@@ -813,13 +810,15 @@ class MultipleServiceAvailabilityRouteArgs {
 
   final LocationModel? location;
 
+  final ServiceSelectionCubit? serviceSelectionCubit;
+
   final Key? key;
 
   final String brandId;
 
   @override
   String toString() {
-    return 'MultipleServiceAvailabilityRouteArgs{services: $services, branchId: $branchId, branchName: $branchName, location: $location, key: $key, brandId: $brandId}';
+    return 'MultipleServiceAvailabilityRouteArgs{services: $services, branchId: $branchId, branchName: $branchName, location: $location, serviceSelectionCubit: $serviceSelectionCubit, key: $key, brandId: $brandId}';
   }
 }
 
@@ -1337,7 +1336,6 @@ class ServiceAvailabilityRoute
         branchId: args.branchId,
         branchName: args.branchName,
         location: args.location,
-
         key: args.key,
       ));
     },
@@ -1459,22 +1457,22 @@ class ServiceDetailsRouteArgs {
 class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
   ServiceInvoiceRoute({
     required ServiceDetailsModel service,
+    required ServiceSelectionCubit serviceSelectionCubit,
     required List<ServiceDetailsModel> services,
     required String branchId,
-    required ServiceSelectionCubit serviceSelectionCubit,
     required String branchName,
     required String selectedDate,
     required String selectedStartTimeStamp,
-    required String selectedFromTime,
-    required String selectedToTime,
+    String? selectedFromTime,
+    String? selectedToTime,
     LocationModel? branchLocation,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ServiceInvoiceRoute.name,
           args: ServiceInvoiceRouteArgs(
-            serviceSelectionCubit: serviceSelectionCubit,
             service: service,
+            serviceSelectionCubit: serviceSelectionCubit,
             services: services,
             branchId: branchId,
             branchName: branchName,
@@ -1496,8 +1494,8 @@ class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
       final args = data.argsAs<ServiceInvoiceRouteArgs>();
       return WrappedRoute(
           child: ServiceInvoiceScreen(
-        serviceSelectionCubit: args.serviceSelectionCubit!,
         service: args.service,
+        serviceSelectionCubit: args.serviceSelectionCubit,
         services: args.services,
         branchId: args.branchId,
         branchName: args.branchName,
@@ -1515,23 +1513,23 @@ class ServiceInvoiceRoute extends PageRouteInfo<ServiceInvoiceRouteArgs> {
 class ServiceInvoiceRouteArgs {
   const ServiceInvoiceRouteArgs({
     required this.service,
+    required this.serviceSelectionCubit,
     required this.services,
     required this.branchId,
     required this.branchName,
     required this.selectedDate,
     required this.selectedStartTimeStamp,
-    required this.selectedFromTime,
-    required this.selectedToTime,
-    required this.serviceSelectionCubit,
+    this.selectedFromTime,
+    this.selectedToTime,
     this.branchLocation,
     this.key,
   });
 
   final ServiceDetailsModel service;
 
-  final List<ServiceDetailsModel> services;
+  final ServiceSelectionCubit serviceSelectionCubit;
 
-  final ServiceSelectionCubit? serviceSelectionCubit;
+  final List<ServiceDetailsModel> services;
 
   final String branchId;
 
@@ -1541,9 +1539,9 @@ class ServiceInvoiceRouteArgs {
 
   final String selectedStartTimeStamp;
 
-  final String selectedFromTime;
+  final String? selectedFromTime;
 
-  final String selectedToTime;
+  final String? selectedToTime;
 
   final LocationModel? branchLocation;
 
@@ -1551,7 +1549,7 @@ class ServiceInvoiceRouteArgs {
 
   @override
   String toString() {
-    return 'ServiceInvoiceRouteArgs{service: $service, branchId: $branchId, branchName: $branchName, selectedDate: $selectedDate, selectedStartTimeStamp: $selectedStartTimeStamp, selectedFromTime: $selectedFromTime, selectedToTime: $selectedToTime, branchLocation: $branchLocation, key: $key}';
+    return 'ServiceInvoiceRouteArgs{service: $service, serviceSelectionCubit: $serviceSelectionCubit, services: $services, branchId: $branchId, branchName: $branchName, selectedDate: $selectedDate, selectedStartTimeStamp: $selectedStartTimeStamp, selectedFromTime: $selectedFromTime, selectedToTime: $selectedToTime, branchLocation: $branchLocation, key: $key}';
   }
 }
 

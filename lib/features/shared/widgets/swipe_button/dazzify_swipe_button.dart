@@ -61,6 +61,10 @@ class _DazzifySwipeButtonState extends State<DazzifySwipeButton> {
         dx / (widget.width ?? context.screenWidth * 0.95 - 13.w);
     slidePercent = slidePercent.clamp(0.0, 1.0);
     _controller.value = slidePercent;
+    // ✅ Trigger when swipe passes 70%
+    if (_controller.value >= 0.7 && _controller.markAsExecuted()) {
+      widget.onSwipe();
+    }
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) {

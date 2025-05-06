@@ -13,6 +13,7 @@ import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/logic/comments/comments_bloc.dart';
 import 'package:dazzify/features/shared/logic/favorite/favorite_cubit.dart';
 import 'package:dazzify/features/shared/logic/likes/likes_cubit.dart';
+import 'package:dazzify/features/shared/widgets/comments_closed_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
@@ -217,6 +218,14 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                               isScrollControlled: false,
                               builder: (context) {
                                 return GuestModeBottomSheet();
+                              },
+                            );
+                          }else if (brandMedia.commentsCount==null) {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: false,
+                              builder: (context) {
+                                return CommentsClosedBottomSheet();
                               },
                             );
                           }else {

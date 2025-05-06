@@ -104,6 +104,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancelBooking": MessageLookupByLibrary.simpleMessage("إلغاء الحجز"),
         "cancelBookingValidation": MessageLookupByLibrary.simpleMessage(
             "هل انت متأكد انك تريد إلغاء الحجز؟"),
+        "cancelTermsSheetTitle":
+            MessageLookupByLibrary.simpleMessage("شروط وأحكام الاسترداد"),
         "canceled": MessageLookupByLibrary.simpleMessage("تم إلغاءه"),
         "cancelled": MessageLookupByLibrary.simpleMessage("تم إلغاءه"),
         "card": MessageLookupByLibrary.simpleMessage("كارت"),
@@ -123,6 +125,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "collectionsTab": MessageLookupByLibrary.simpleMessage("المجموعات"),
         "comment": MessageLookupByLibrary.simpleMessage("أكتب تعليقك"),
         "comments": MessageLookupByLibrary.simpleMessage("التعليقات"),
+        "commentsClosedByProvider": MessageLookupByLibrary.simpleMessage(
+            "تم إغلاق التعليقات من قبل مزود الخدمه"),
         "commentsEmpty":
             MessageLookupByLibrary.simpleMessage("لا يوجد تعليقات حاليا"),
         "commentsTextFieldHint":
@@ -216,6 +220,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "inBranch": MessageLookupByLibrary.simpleMessage("داخل الفرع"),
         "inOrOutBranch":
             MessageLookupByLibrary.simpleMessage("داخل/خارج الفرع"),
+        "inProgress": MessageLookupByLibrary.simpleMessage("قيد التنفيذ"),
         "includes": MessageLookupByLibrary.simpleMessage("يشمل"),
         "infoUpdate": MessageLookupByLibrary.simpleMessage("تحديث المعلومات"),
         "installment": MessageLookupByLibrary.simpleMessage("تقسيط"),
@@ -338,6 +343,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notificationsTitle": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "nowPayInstallment": MessageLookupByLibrary.simpleMessage("NowPay"),
         "ok": MessageLookupByLibrary.simpleMessage("حسنا"),
+        "on": MessageLookupByLibrary.simpleMessage("في"),
         "oops": MessageLookupByLibrary.simpleMessage("عذرًا"),
         "openSettings": MessageLookupByLibrary.simpleMessage("فتح الإعدادات"),
         "orangeCash": MessageLookupByLibrary.simpleMessage("اورانج كاش"),
@@ -432,6 +438,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "لم نتمكن من ارسال رمز التحقق."),
         "sendOtpSuccess":
             MessageLookupByLibrary.simpleMessage("تم ارسال رمز التحقق."),
+        "service": MessageLookupByLibrary.simpleMessage("الخدمة "),
         "serviceAdded":
             MessageLookupByLibrary.simpleMessage("تمت إضافة الخدمة إلى محفظتك"),
         "serviceBooked": MessageLookupByLibrary.simpleMessage("تم حجز الخدمة"),

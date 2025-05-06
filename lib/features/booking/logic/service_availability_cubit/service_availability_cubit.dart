@@ -113,6 +113,7 @@ class ServiceAvailabilityCubit extends Cubit<ServiceAvailabilityState> {
       selectedDate: selectedDateTime,
       isAnySessionSelected: isAnySessionSelected,
       blocState: UiState.success,
+      isSessionConfirmed: false,
       selectedDayTime: selectedDayTime,
       selectedSession: selectedSession,
     ));

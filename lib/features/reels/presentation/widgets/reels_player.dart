@@ -100,6 +100,7 @@ class _ReelPlayerState extends State<ReelPlayer>
             },
             child: Stack(
               children: [
+                Container(color: Colors.black,),
                 Center(
                   child: VisibilityDetector(
                     key: ValueKey<String>(widget.videoUrl),
@@ -113,7 +114,10 @@ class _ReelPlayerState extends State<ReelPlayer>
                       }
                     },
                     child: AspectRatio(
-                      aspectRatio: 8 / 16.5,
+                      aspectRatio:
+                      _parseAspectRatio(widget.reel.aspectRatio) ??
+                          8 / 16.5,
+                      // aspectRatio: 8 / 16.5,
                       child: VideoPlayer(_controller),
                     ),
                   ),
@@ -209,5 +213,17 @@ class _ReelPlayerState extends State<ReelPlayer>
     _hasTheUserOpenedComments.dispose();
     _hasTheUserTappedPause.dispose();
     _showPlayIcon.dispose();
+  }
+}
+double? _parseAspectRatio(String? ratioString) {
+  if (ratioString == null || !ratioString.contains(':')) return null;
+  try {
+    final parts = ratioString.split(':');
+    final width = double.parse(parts[0]);
+    final height = double.parse(parts[1]);
+    if (height == 0) return null;
+    return width / height;
+  } catch (_) {
+    return null;
   }
 }

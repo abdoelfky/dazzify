@@ -68,20 +68,21 @@ class TopRatedServiceCard extends StatelessWidget {
                         bottom: 4.r,
                       ),
                       child: SizedBox(
-                        width: 125.w,
+                        width: 80.w,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             DText(
                               title,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: context.textTheme.bodyMedium!.copyWith(
                                 color: Colors.white,
                               ),
                             ),
                             DText(
-                              price.toString(),
+                              '${price.toString()} ${context.tr.egp}',
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: Colors.white,
                               ),

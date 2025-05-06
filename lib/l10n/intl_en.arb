@@ -237,7 +237,8 @@
   "chat": "Chat",
   "noConversations": "There are no conversations yet, select any vendor to start chatting with",
   "inBranch": "In branch",
-  "brandTermsSheetTitle": "Brand Terms & conditions",
+  "brandTermsSheetTitle": "Brand Terms & Conditions",
+  "cancelTermsSheetTitle": "Refund Terms & Conditions",
   "duration": "Duration",
   "minutes": "minutes",
   "apply": "Apply",
@@ -305,7 +306,7 @@
   "rateService": "Rate Service",
   "hereWeGo": "Here We Go",
   "thisBookingIs": "This Booking is",
-  "serviceDone": "Service is Done, Hope you liked it",
+  "serviceDone": "Your service is complete. We hope you enjoyed it!",
   "swipe": "Swipe",
   "getReadyForService": "\"Get Ready! This Button Will Unlock\n1 Hour Before We Start.\"",
   "bookingCancelled": "Booking Cancelled",
@@ -389,5 +390,9 @@
   "bookingPending": "Your booking is currently under review.",
   "bookingCanceled": "Your booking has been cancelled. We hope to serve you again soon.",
   "bookingConfirmed": "Your booking is confirmed! Get ready for your service.",
-  "bookingCompleted": "Your service is complete. We hope you enjoyed it!"
+  "bookingCompleted": "Your service is complete. We hope you enjoyed it!",
+  "commentsClosedByProvider": "Comments Closed By Provider",
+  "inProgress": "In Progress",
+  "service": "Service ",
+  "on": "On"
 }

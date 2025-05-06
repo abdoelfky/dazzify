@@ -8,6 +8,7 @@ import 'package:dazzify/features/home/presentation/widgets/animated_indicator.da
 import 'package:dazzify/features/reels/data/repositories/reels_repository.dart';
 import 'package:dazzify/features/shared/bottom_sheets/report_bottom_sheet.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
+import 'package:dazzify/features/shared/logic/likes/likes_cubit.dart';
 import 'package:dazzify/features/shared/widgets/animated_read_more_text.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/favorite_icon_button.dart';
@@ -45,14 +46,19 @@ class _MediaPostCardState extends State<MediaPostCard> {
   late List<ChewieController?> _chewieControllers;
   late final ValueNotifier<int> _indicatorIndex;
   late bool didAddView = false;
+  late int _likesCount;
+  late final LikesCubit _likesCubit;
 
   @override
   void initState() {
+    _likesCount = widget.brandMedia.likesCount ?? 0;
     _videoControllers = List<VideoPlayerController?>.filled(
         widget.brandMedia.mediaItems.length, null);
     _chewieControllers = List<ChewieController?>.filled(
         widget.brandMedia.mediaItems.length, null);
     _indicatorIndex = ValueNotifier<int>(0);
+    _likesCubit = context.read<LikesCubit>();
+
     super.initState();
   }
 
@@ -67,7 +73,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
         autoPlay: true,
         looping: true,
         showControls: false,
-        aspectRatio: 4 / 3,
+        aspectRatio: _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 4 / 3,
       );
 
       setState(() {
@@ -106,7 +112,22 @@ class _MediaPostCardState extends State<MediaPostCard> {
                 postHeader(),
                 postMedia(),
                 postButtons(),
-                likesAndCaption(),
+
+                BlocListener<LikesCubit, LikesState>(
+                  listener: (context, state) {
+                    final currentMediaId = _likesCubit.currentMediaId;
+
+                    if (currentMediaId != widget.brandMedia.id) return;
+
+                    if (state.addLikeState == UiState.loading) {
+                      _likesCount++;
+                    } else if (state.removeLikeState == UiState.loading) {
+                      _likesCount--;
+                    }
+                  },
+                  child: likesAndCaption(),
+                )
+
               ],
             ),
           ),
@@ -131,12 +152,12 @@ class _MediaPostCardState extends State<MediaPostCard> {
                           return GuestModeBottomSheet();
                         },
                       );
-                    }else {
+                    } else {
                       showReportBottomSheet(
-                      context: context,
-                      id: widget.brandMedia.id,
-                      type: "media",
-                    );
+                        context: context,
+                        id: widget.brandMedia.id,
+                        type: "media",
+                      );
                     }
                   },
                 )
@@ -190,10 +211,15 @@ class _MediaPostCardState extends State<MediaPostCard> {
                 itemBuilder: (context, index, realIndex) {
                   final mediaItems = widget.brandMedia.mediaItems[index];
                   if (mediaItems.itemType == "photo") {
-                    return DazzifyCachedNetworkImage(
-                      width: context.screenWidth,
-                      imageUrl: widget.brandMedia.mediaItems[index].itemUrl,
-                      fit: BoxFit.cover,
+                    return AspectRatio(
+                      aspectRatio:
+                          _parseAspectRatio(widget.brandMedia.aspectRatio) ??
+                              0.7,
+                      child: DazzifyCachedNetworkImage(
+                        width: context.screenWidth,
+                        imageUrl: widget.brandMedia.mediaItems[index].itemUrl,
+                        fit: BoxFit.cover,
+                      ),
                     );
                   } else {
                     _initializeVideoController(index);
@@ -274,8 +300,8 @@ class _MediaPostCardState extends State<MediaPostCard> {
           SizedBox(height: 8.h),
           AspectRatio(
             // aspectRatio: 1,
-            aspectRatio: .7,
-
+            aspectRatio:
+                _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7,
             child: DazzifyCachedNetworkImage(
               width: context.screenWidth,
               imageUrl: widget.brandMedia.mediaItems[0].itemUrl,
@@ -342,7 +368,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
         children: [
           if (widget.brandMedia.likesCount != null)
             DText(
-              '${widget.brandMedia.likesCount} ${widget.brandMedia.likesCount == 1 ? context.tr.like : context.tr.likes}',
+              '$_likesCount ${_likesCount == 1 ? context.tr.like : context.tr.likes}',
               style: context.textTheme.labelMedium,
             ),
           SizedBox(height: 6.h),
@@ -373,5 +399,18 @@ class _MediaPostCardState extends State<MediaPostCard> {
       chewieController?.dispose();
     }
     super.dispose();
+  }
+}
+
+double? _parseAspectRatio(String? ratioString) {
+  if (ratioString == null || !ratioString.contains(':')) return null;
+  try {
+    final parts = ratioString.split(':');
+    final width = double.parse(parts[0]);
+    final height = double.parse(parts[1]);
+    if (height == 0) return null;
+    return width / height;
+  } catch (_) {
+    return null;
   }
 }

@@ -59,6 +59,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
             }
           },
           builder: (context, state) {
+
             switch (state.singleBookingState) {
               case UiState.initial:
               case UiState.loading:
@@ -72,15 +73,21 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                     });
               case UiState.success:
                 bookingStatus = getBookingStatus(state.singleBooking.status);
+                final startTime =
+                DateTime.parse(state.singleBooking.startTime).toLocal();
+                final now = DateTime.now();
                 return DazzifyOverlayLoading(
                   isLoading: isLoading,
                   child: Column(
                     children: [
                       BookingStatusHeaderComponent(
-                        refundConditions: state.singleBooking.brand.refundConditions,
+                        startTime: state.singleBooking.startTime,
+                        refundConditions:
+                            state.singleBooking.brand.refundConditions,
                         isBookingFinished: state.singleBooking.isFinished,
+                        isArrived: state.singleBooking.isArrived,
                         isRate: state.singleBooking.isRate,
-                        status: state.singleBooking.status,
+                        status: bookingStatus,
                       ),
                       Expanded(
                         child: CustomFadeAnimation(
@@ -113,16 +120,19 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                         ),
                                       ),
                                     if (bookingCubit.state.singleBooking
-                                        .services.length >
+                                            .services.length >
                                         1)
                                       Center(
                                         child: SmoothPageIndicator(
-                                          controller: _pageController, // Connect the page controller
+                                          controller: _pageController,
+                                          // Connect the page controller
                                           count: bookingCubit.state
-                                              .singleBooking.services.length, // The number of dots
+                                              .singleBooking.services.length,
+                                          // The number of dots
                                           effect: ScrollingDotsEffect(
                                             // You can customize the dot effect here
-                                            activeDotColor: context.colorScheme.primary,
+                                            activeDotColor:
+                                                context.colorScheme.primary,
                                             // Active dot color
                                             dotColor: Colors.grey,
                                             // Inactive dot color
@@ -130,7 +140,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                             // Height of the dot
                                             dotWidth: 8.0.h,
                                             // Width of the dot
-                                            spacing: 8.0.w, // Space between dots
+                                            spacing:
+                                                8.0.w, // Space between dots
                                           ),
                                         ),
                                       ),
@@ -157,25 +168,33 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                       style: context.textTheme.titleMedium,
                                     ),
                                     SizedBox(height: 8.h),
+
                                     SwipeButtonComponent(
-                                      status: state.singleBooking.status,
+                                      status: bookingStatus,
                                       isFinished:
                                           state.singleBooking.isFinished,
                                       isArrived: state.singleBooking.isArrived,
                                       startTime: state.singleBooking.startTime,
                                     ),
-                                    SizedBox(height: 16.h),
-                                    if (bookingStatus == BookingStatus.pending)
-                                      Center(
-                                        child: DText(
-                                          context.tr.getReadyForService,
-                                          style: context.textTheme.bodySmall!
-                                              .copyWith(
-                                            color: context.colorScheme.outline,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
+                                    // SizedBox(height: 16.h),
+                                    // if (bookingStatus ==
+                                    //         BookingStatus.confirmed&&
+                                    //     startTime.year == now.year &&
+                                    //     startTime.month == now.month &&
+                                    //     startTime.day == now.day&&
+                                    //     getTimeInMinute(state.singleBooking.startTime) >= 60 &&
+                                    //     !state.singleBooking.isArrived
+                                    // )
+                                    //   Center(
+                                    //     child: DText(
+                                    //       context.tr.bookingConfirmed,
+                                    //       style: context.textTheme.bodySmall!
+                                    //           .copyWith(
+                                    //         color: context.colorScheme.outline,
+                                    //       ),
+                                    //       textAlign: TextAlign.center,
+                                    //     ),
+                                    //   )
                                   ],
                                 ),
                               ),
@@ -340,4 +359,12 @@ Widget customDivider(BuildContext context) {
       ),
     ),
   );
+}
+
+int getTimeInMinute(String startTime) {
+  final DateTime timeNow = DateTime.now();
+  final DateTime targetTime = DateTime.parse(startTime).toLocal();
+  final int minutesDifference = targetTime.difference(timeNow).inMinutes;
+
+  return minutesDifference;
 }

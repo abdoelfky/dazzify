@@ -22,7 +22,8 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
   late final ValueNotifier<bool> _hasReachedTheEnd;
 
   void _scrollListener() {
-    if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
+    if (_scrollController.offset >=
+        _scrollController.position.maxScrollExtent) {
       _hasReachedTheEnd.value = true;
     }
   }
@@ -37,7 +38,7 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return DazzifySheetBody(
-      title: context.tr.termsSheetTitle,
+      title: context.tr.cancelTermsSheetTitle,
       height: 480.h,
       children: [
         Padding(
@@ -46,50 +47,57 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
             height: widget.refundConditions.isEmpty ? 70.h : 280.h,
             child: widget.refundConditions.isEmpty
                 ? LoadingAnimation(
-              height: 70.h,
-              width: 70.w,
-            )
+                    height: 70.h,
+                    width: 70.w,
+                  )
                 : Scrollbar(
-              radius: const Radius.circular(20).r,
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                controller: _scrollController,
-                itemCount: widget.refundConditions.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 24.0,
-                      left: 16.0,
-                      right: 16.0,
-                    ).r,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 8.r,
-                          height: 8.r,
-                          decoration: BoxDecoration(
-                            color: context.colorScheme.onSurface,
-                            shape: BoxShape.circle,
+                    radius: const Radius.circular(20).r,
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      controller: _scrollController,
+                      itemCount: widget.refundConditions.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 24.0,
+                            left: 16.0,
+                            right: 16.0,
+                          ).r,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 4.0,
+                                  // left: 16.0,
+                                  // right: 16.0,
+                                ).r,
+                                child: Container(
+                                  width: 8.r,
+                                  height: 8.r,
+                                  decoration: BoxDecoration(
+                                    color: context.colorScheme.onSurface,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Flexible(
+                                child: DText(
+                                  maxLines: 5,
+                                  widget.refundConditions[index],
+                                  softWrap: true,
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        SizedBox(width: 3.w),
-                        Flexible(
-                          child: DText(
-                            maxLines: 5,
-                            widget.refundConditions[index],
-                            softWrap: true,
-                            style: context.textTheme.bodySmall!.copyWith(
-                              color: context.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ),
         ),
         Spacer(),
@@ -112,7 +120,7 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
               ValueListenableBuilder(
                 valueListenable: _hasReachedTheEnd,
                 builder: (context, value, child) {
-                  bool isAgreeActive = widget.refundConditions.length>10
+                  bool isAgreeActive = widget.refundConditions.length > 10
                       ? value
                       : true; // Make agree button active if no scroll is needed
                   return PrimaryButton(

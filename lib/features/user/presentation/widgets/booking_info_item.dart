@@ -74,9 +74,10 @@ class BookingInfoItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 175.w,
+                        width: 160.w,
                         child: DText(
                           subtitle,
+                          maxLines: 3,
                           style: context.textTheme.bodySmall!.copyWith(
                             color: context.colorScheme.onSurfaceVariant,
                           ),
@@ -95,12 +96,16 @@ class BookingInfoItem extends StatelessWidget {
                       ),
                     ],
                   )
-                : DText(
-                    subtitle,
-                    style: context.textTheme.bodySmall!.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
+                : SizedBox(
+                  width: 200.w,
+                  child: DText(
+                      subtitle,
+                      maxLines: 2,
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
+                ),
           ],
         ),
       ],

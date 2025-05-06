@@ -24,7 +24,6 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
     super.initState();
     bookingStatus = getBookingStatus(widget.booking.status);
     _pageController = PageController();
-
   }
 
   @override
@@ -58,7 +57,8 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                               return ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0).r,
                                 child: DazzifyCachedNetworkImage(
-                                  imageUrl: widget.booking.services[index].image,
+                                  imageUrl:
+                                      widget.booking.services[index].image,
                                   fit: BoxFit.cover,
                                   width: 140.0.w, // Adjust the width
                                   height: 90.0.h, // Adjust the height
@@ -67,12 +67,15 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                             },
                           ),
                         ),
-                        SizedBox(height: 8.w,),
+                        SizedBox(
+                          height: 8.w,
+                        ),
                         Center(
                           child: SmoothPageIndicator(
-                            controller:
-                            _pageController, // Connect the page controller
-                            count: widget.booking.services.length, // The number of dots
+                            controller: _pageController,
+                            // Connect the page controller
+                            count: widget.booking.services.length,
+                            // The number of dots
                             effect: ScrollingDotsEffect(
                               // You can customize the dot effect here
                               activeDotColor: context.colorScheme.primary,
@@ -87,10 +90,8 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
-
                   if (widget.booking.services.length == 1)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.r),
@@ -199,9 +200,11 @@ Widget bookingCompleted(BuildContext context, LastActiveBookingModel booking) {
       text: TextSpan(
         children: [
           TextSpan(
-            text: serviceTime != ""
-                ? context.tr.serviceStartTime
-                : context.tr.serviceStartNow,
+            text: serviceTime == DazzifyApp.tr.inProgress
+                ? context.tr.service
+                : serviceTime != ""
+                    ? context.tr.serviceStartTime
+                    : context.tr.serviceStartNow,
             style: context.textTheme.labelSmall!.copyWith(
               color: serviceTime != ""
                   ? context.colorScheme.outlineVariant

@@ -21,7 +21,7 @@ SingleBookingModel _$SingleBookingModelFromJson(Map<String, dynamic> json) =>
       status: json['status'] as String? ?? '',
       isFinished: json['isFinished'] as bool? ?? false,
       isRate: json['isRate'] as bool? ?? false,
-      isArrived: json['isArived'] as bool? ?? false,
+      isArrived: json['isArrived'] as bool? ?? false,
       branch: BranchInfoModel.fromJson(json['branch'] as Map<String, dynamic>),
       brand: BrandModel.fromJson(json['brand'] as Map<String, dynamic>),
       services: (json['services'] as List<dynamic>)
@@ -47,7 +47,7 @@ Map<String, dynamic> _$SingleBookingModelToJson(SingleBookingModel instance) =>
       'status': instance.status,
       'isFinished': instance.isFinished,
       'isRate': instance.isRate,
-      'isArived': instance.isArrived,
+      'isArrived': instance.isArrived,
       'branch': instance.branch,
       'brand': instance.brand,
       'services': instance.services,

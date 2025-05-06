@@ -61,6 +61,7 @@ class FavoriteCard extends StatelessWidget {
                         title,
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.bodyMedium,
+
                       ),
                     ),
                   ],

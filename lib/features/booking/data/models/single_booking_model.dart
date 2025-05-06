@@ -48,7 +48,7 @@ class SingleBookingModel {
   @JsonKey(defaultValue: false)
   final bool isRate;
 
-  @JsonKey(defaultValue: false, name: "isArived")
+  @JsonKey(defaultValue: false, name: "isArrived")
   final bool isArrived;
 
   final BranchInfoModel branch;

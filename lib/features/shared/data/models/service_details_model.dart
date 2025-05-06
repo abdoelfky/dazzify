@@ -116,7 +116,7 @@ class ServiceDetailsModel {
   FavoriteModel toFavoriteModel() {
     return FavoriteModel(
       id: id,
-      title: "",
+      title: title,
       price: price,
       image: image,
       mainCategory: "",

@@ -58,11 +58,18 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                           );
                         },
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            DText(
-                              widget.reel.brand.name,
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                color: Colors.white,
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 200.w),
+                              child: IntrinsicWidth(
+                                child:  DText(
+                                  maxLines: 1,
+                                  widget.reel.brand.name,
+                                  style: context.textTheme.bodyLarge!.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(width: 4.w),

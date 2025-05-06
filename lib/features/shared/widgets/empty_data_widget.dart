@@ -39,6 +39,7 @@ class EmptyDataWidget extends StatelessWidget {
           DText(
             message,
             textAlign: TextAlign.center,
+            maxLines: 3,
             style: messageStyle ??
                 context.textTheme.titleMedium!.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
