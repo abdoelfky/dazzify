@@ -3750,6 +3750,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Phone number is required`
+  String get phoneNumberIsRequired {
+    return Intl.message(
+      'Phone number is required',
+      name: 'phoneNumberIsRequired',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

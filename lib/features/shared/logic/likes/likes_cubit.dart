@@ -88,13 +88,32 @@ class LikesCubit extends Cubit<LikesState> {
     );
   }
 
-  Future<void> addOrRemoveLike({
-    required String mediaId,
-  }) async {
-    if (state.likesIds.contains(mediaId)) {
-      _removeLike(mediaId: mediaId);
-    } else {
-      _addLike(mediaId: mediaId);
+  // Future<void> addOrRemoveLike({
+  //   required String mediaId,
+  // }) async {
+  //   if (state.likesIds.contains(mediaId)) {
+  //     _removeLike(mediaId: mediaId);
+  //   } else {
+  //     _addLike(mediaId: mediaId);
+  //   }
+  // }
+  final Set<String> _likeProcessing = {};
+
+  Future<void> addOrRemoveLike({required String mediaId}) async {
+    // Prevent multiple taps on the same media item
+    if (_likeProcessing.contains(mediaId)) return;
+
+    _likeProcessing.add(mediaId);
+
+    try {
+      if (state.likesIds.contains(mediaId)) {
+        await _removeLike(mediaId: mediaId);
+      } else {
+        await _addLike(mediaId: mediaId);
+      }
+    } finally {
+      _likeProcessing.remove(mediaId);
     }
   }
+
 }

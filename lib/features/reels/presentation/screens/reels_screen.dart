@@ -104,6 +104,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
                                 padding: const EdgeInsets.only(bottom: 30).r,
                                 child: ReelPlayer(
                                   reel: currentReel,
+                                  // isLiked: likesCubit.state.likesIds.contains(currentReel.id),
                                   videoUrl: currentReel.mediaItems[0].itemUrl,
                                   onLikeTap: () => likesCubit.addOrRemoveLike(
                                       mediaId: currentReel.id),

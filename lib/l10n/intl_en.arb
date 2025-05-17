@@ -394,5 +394,6 @@
   "commentsClosedByProvider": "Comments Closed By Provider",
   "inProgress": "In Progress",
   "service": "Service ",
-  "on": "On"
+  "on": "On",
+  "phoneNumberIsRequired": "Phone number is required"
 }

@@ -38,12 +38,12 @@ class DazzifyBirthdatePicker extends StatefulWidget {
 }
 
 class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   // Function to show the date picker
   Future<void> _selectDate(BuildContext context) async {
     DateTime initialDate = DateTime.now();
-    DateTime firstDate = DateTime(1900);
+    DateTime firstDate = DateTime(1925);
     DateTime lastDate = DateTime.now();
 
     final DateTime? picked = await showDatePicker(
@@ -52,6 +52,7 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
 
       builder: (context, child) {
         // Customizing the dialog and text style
@@ -100,6 +101,7 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
       onTap: () => _selectDate(context),
       // Show date picker on tap
       decoration: InputDecoration(
+
 
           hintText: widget.hintText,
           errorStyle: context.textTheme.bodySmall!.copyWith(

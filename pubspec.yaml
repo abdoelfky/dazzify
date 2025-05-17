@@ -1,7 +1,7 @@
 name: dazzify
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.0+10
+version: 1.0.0+11
 
 ####IOS
 #version: 2.0.0
@@ -140,6 +140,7 @@ flutter_intl:
 
 # flutter run --flavor=dev --dart-define=env=dev --split-per-abi
 # flutter build ipa --flavor=prod --dart-define=env=prod
-#
+# flutter build appBundle --flavor=prod --dart-define=env=prod
+# flutter build appbundle --flavor=prod --dart-define=env=prod
 # flutter build apk --flavor=dev --dart-define=env=dev --split-per-abi
 # flutter build apk --flavor=prod --dart-define=env=prod --split-per-abi

@@ -394,6 +394,6 @@
   "commentsClosedByProvider": "تم إغلاق التعليقات من قبل مزود الخدمه",
   "inProgress": "قيد التنفيذ",
   "service": "الخدمة ",
-  "on": "في"
-
+  "on": "في",
+  "phoneNumberIsRequired": "رقم الهاتف مطلوب"
 }

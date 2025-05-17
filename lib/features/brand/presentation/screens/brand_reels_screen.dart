@@ -65,6 +65,7 @@ class _VendorReelsScreenState extends State<BrandReelsScreen> {
                   ),
                 ],
                 child: ReelPlayer(
+                  // isLiked: likesCubit.state.likesIds.contains(currentReel.id),
                   reel: currentReel,
                   videoUrl: currentReel.mediaItems[0].itemUrl,
                   onLikeTap: () =>

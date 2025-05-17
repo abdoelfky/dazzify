@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:dazzify/core/util/notification_type_enum.dart';
 import 'package:fcm_config/fcm_config.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/firebase_options.dart';
@@ -6,24 +8,42 @@ import 'package:mwidgets/mwidgets.dart';
 
 abstract class FCMNotification {
   Future<String> getFCMToken();
+
   Future<void> init();
+
   void onClick({required RemoteMessage message});
-  // void onReceived({required RemoteMessage message});
+
+  Future<void> onReceived({required RemoteMessage message});
 }
 
 @pragma('vm:entry-point')
 Future<void> onMessagingBackground(RemoteMessage message) async {
-  await FCMConfig.instance.local.displayNotificationFrom(
-    message,
-        (androidNotificationDetails, remoteMessage) async {
-      return androidNotificationDetails;
-    },
-        (darwinNotificationDetails, remoteMessage) async {
-      return darwinNotificationDetails;
-    },
-        (darwinNotificationDetails, remoteMessage) async {
-      return darwinNotificationDetails;
-    },
+  final android = AndroidNotificationDetails(
+    'Dazzify Notifications',
+    'Dazzify Notifications',
+    channelDescription:
+        "Get the latest notifications about Dazzify's offers and messages",
+    importance: Importance.high,
+    sound: RawResourceAndroidNotificationSound('sound_alert'),
+  );
+
+  final ios = DarwinNotificationDetails(
+    presentAlert: true,
+    presentSound: true,
+    presentBadge: true,
+  );
+
+  final notificationDetails = NotificationDetails(
+    android: android,
+    iOS: ios,
+  );
+
+  await FlutterLocalNotificationsPlugin().show(
+    message.hashCode,
+    message.notification?.title ?? '',
+    message.notification?.body ?? '',
+    notificationDetails,
+    payload: jsonEncode(message.data), // ✅ THIS is where payload goes
   );
 }
 
@@ -31,21 +51,22 @@ Future<void> onMessagingBackground(RemoteMessage message) async {
 class FCMNotificationImpl extends FCMNotification {
   final AppRouter appRouter;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   FCMNotificationImpl(this.appRouter);
 
   @override
   Future<String> getFCMToken() async {
-    String? token = '';
-    token = await FCMConfig.instance.messaging.getToken();
-    kPrint('FCMToken : $token');
+    final token = await FCMConfig.instance.messaging.getToken();
+    kPrint('✅ [FCMToken] => $token');
     return token ?? '';
   }
 
   @override
   Future<void> init() async {
-    // Initialize FCMConfig
+    kPrint('🔧 Initializing FCMConfig...');
+
+    // Initialize FCM
     await FCMConfig.instance.init(
       options: DefaultFirebaseOptions.currentPlatform,
       onBackgroundMessage: onMessagingBackground,
@@ -53,124 +74,116 @@ class FCMNotificationImpl extends FCMNotification {
         'Dazzify Notifications',
         'Dazzify Notifications',
         description:
-        "Get the latest notifications about Dazzify's offers and messages",
+            "Get the latest notifications about Dazzify's offers and messages",
         importance: Importance.high,
         sound: RawResourceAndroidNotificationSound('sound_alert'),
       ),
     );
 
-    // Initialize the Flutter local notifications plugin
-    // _initializeLocalNotifications();
+    // Initialize local notifications plugin and handle notification taps
+    await flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings(),
+      ),
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        if (response.payload != null) {
+          final Map<String, dynamic> data = jsonDecode(response.payload!);
+          kPrint('📲 Local notification tapped: $data');
+          final message = RemoteMessage(data: data);
+          await onReceived(message: message);
+        }
+      },
+    );
 
-    // Request notification permission for iOS
-    // _requestNotificationPermission();
+    kPrint('✅ FCMConfig & Notification Plugin initialized.');
 
-    // Trigger a dummy notification when the app is opened
-    // _showDummyNotification();
-
-    // Listen for when the app is opened from a notification
-    FirebaseMessaging.onMessageOpenedApp.listen((event) async {
-      onDataReceive(event.data);
-      kPrint(event.data);
+    // Handle notification when tapped from background
+    FirebaseMessaging.onMessageOpenedApp.listen((message) async {
+      kPrint('📬 onMessageOpenedApp triggered.');
+      kPrint('🔍 Notification Data: ${message.data}');
+      await onReceived(message: message);
     });
-  }
 
-  // Initialize the Flutter Local Notifications Plugin
-  void _initializeLocalNotifications() {
-
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: DarwinInitializationSettings(),
-    );
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  // Request notification permission for iOS
-  void _requestNotificationPermission() async {
-    final FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    // Request permission for iOS (only necessary for iOS devices)
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("User granted permission for notifications");
-    } else {
-      print("User declined permission for notifications");
+    // Handle notification when app is launched from terminated state
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      kPrint('📦 App opened from terminated state via notification.');
+      kPrint('🔍 Initial Notification Data: ${initialMessage.data}');
+      await onReceived(message: initialMessage);
     }
   }
 
-  // Show a dummy notification when the app is opened
-
-  // void _showDummyNotification() async {
-  //   print('_showDummyNotification');
-  //
-  //   const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-  //     'dummy_channel_id',
-  //     'Dummy Notifications',
-  //     channelDescription: 'This is a dummy notification for app open',
-  //     importance: Importance.high,
-  //     priority: Priority.high,
-  //     ticker: 'ticker',
-  //   );
-  //
-  //   const DarwinNotificationDetails iOSNotificationDetails = DarwinNotificationDetails(
-  //     presentAlert: true,
-  //     presentBadge: true,
-  //     presentSound: true,
-  //   );
-  //
-  //   const NotificationDetails platformChannelSpecifics = NotificationDetails(
-  //     android: androidNotificationDetails,
-  //     iOS: iOSNotificationDetails,
-  //   );
-  //
-  //   // Show a dummy notification
-  //   await flutterLocalNotificationsPlugin.show(
-  //     0,
-  //     'Welcome to Dazzify!',
-  //     'This is a dummy notification triggered when the app is opened.',
-  //     platformChannelSpecifics,
-  //     payload: 'Dummy notification payload',
-  //   );
-  // }
+  @override
+  void onClick({required RemoteMessage message}) {
+    kPrint('🖱️ Notification Clicked: ${message.data}');
+  }
 
   @override
-  Future<void> onClick({required RemoteMessage message}) async {}
+  Future<void> onReceived({required RemoteMessage message}) async {
+    try {
+      kPrint('📦 Full RemoteMessage:');
+      kPrint('  Message ID: ${message.messageId}');
+      kPrint('  From: ${message.from}');
+      kPrint('  Sent Time: ${message.sentTime}');
+      kPrint('  Data: ${message.data}');
+      kPrint('  Notification: ${message.notification?.title} - ${message.notification?.body}');
 
-//   @override
-//   Future<void> onReceived({required RemoteMessage message}) async {
-//     final notificationType = getNotificationType(message.data['type']);
-//
-//     switch (notificationType) {
-//       case NotificationTypeEnum.payment:
-//         appRouter.navigate(
-//           const ProfileTabRoute(
-//             children: [
-//               ProfileRoute(),
-//               PaymentRoutes(children: [TransactionRoute()]),
-//             ],
-//           ),
-//         );
-//         break;
-//       case NotificationTypeEnum.bookingStatus:
-//         appRouter.navigate(
-//           const ProfileTabRoute(
-//             children: [ProfileRoute(), BookingsHistoryRoute()],
-//           ),
-//         );
-//         break;
-//       default:
-//         appRouter.navigate(const NotificationsRoute());
-//     }
-//     kPrint(message.notification);
-//     kPrint(message.data);
-//   }
+      // ✅ Check for nested 'data' key
+      dynamic type;
+      if (message.data.containsKey('data')) {
+        final nestedData = message.data['data'];
+        if (nestedData is Map && nestedData.containsKey('type')) {
+          type = nestedData['type'];
+        }
+      } else if (message.data.containsKey('type')) {
+        type = message.data['type'];
+      }
+
+      if (type == null) {
+        kPrint('⚠️ Notification type is null — skipping routing.');
+        return;
+      }
+
+      final notificationType = getNotificationType(type.toString());
+
+      switch (notificationType) {
+        case NotificationTypeEnum.payment:
+          kPrint('➡️ Navigating to Payment screen...');
+          appRouter.navigate(
+            const ProfileTabRoute(
+              children: [
+                ProfileRoute(),
+                PaymentRoutes(children: [TransactionRoute()]),
+              ],
+            ),
+          );
+          break;
+
+        case NotificationTypeEnum.bookingStatus:
+          kPrint('➡️ Navigating to Booking History...');
+          appRouter.navigate(
+            const ProfileTabRoute(
+              children: [ProfileRoute(), BookingsHistoryRoute()],
+            ),
+          );
+          break;
+
+        default:
+          kPrint('➡️ Navigating to Notifications screen (default)...');
+          appRouter.navigate(const NotificationsRoute());
+      }
+
+      kPrint('✅ Navigation complete.');
+    } catch (e, stack) {
+      kPrint('❌ Error handling notification: $e');
+      kPrint(stack.toString());
+    }
+  }
+
+  void onDataReceive(Map<String, dynamic> data) {
+    kPrint('📨 onDataReceive called with: $data');
+    final message = RemoteMessage(data: data);
+    onReceived(message: message);
+  }
 }
-
-void onDataReceive(Map<String, dynamic> data) {}

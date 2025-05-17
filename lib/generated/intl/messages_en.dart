@@ -367,6 +367,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
         "phoneNumberChangedSuccessfully": MessageLookupByLibrary.simpleMessage(
             "Phone Number Changed Successfully"),
+        "phoneNumberIsRequired":
+            MessageLookupByLibrary.simpleMessage("Phone number is required"),
         "pickTime":
             MessageLookupByLibrary.simpleMessage("Click to pick your time"),
         "pleaseLoginToFreelyAccessAppFeatures":

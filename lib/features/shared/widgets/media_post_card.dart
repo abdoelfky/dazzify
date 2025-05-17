@@ -13,6 +13,7 @@ import 'package:dazzify/features/shared/widgets/animated_read_more_text.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/favorite_icon_button.dart';
 import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -48,6 +49,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
   late bool didAddView = false;
   late int _likesCount;
   late final LikesCubit _likesCubit;
+  late ValueNotifier<bool> _showHeart;
 
   @override
   void initState() {
@@ -58,6 +60,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
         widget.brandMedia.mediaItems.length, null);
     _indicatorIndex = ValueNotifier<int>(0);
     _likesCubit = context.read<LikesCubit>();
+    _showHeart = ValueNotifier(false);
 
     super.initState();
   }
@@ -110,9 +113,46 @@ class _MediaPostCardState extends State<MediaPostCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 postHeader(),
-                postMedia(),
+                GestureDetector(
+                    onDoubleTap: () {
+                      if (!widget.isLiked) widget.onLikeTap();
+                      _showHeart.value = true;
+                      Future.delayed(const Duration(milliseconds: 700), () {
+                        _showHeart.value = false;
+                      });
+                    },
+                    child: Stack(
+                      children: [
+                        postMedia(),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          top: 0,
+                          child: ValueListenableBuilder<bool>(
+                            valueListenable: _showHeart,
+                            builder: (context, isVisible, _) {
+                              return AnimatedOpacity(
+                                opacity: isVisible ? 1.0 : 0.0,
+                                duration: const Duration(milliseconds: 300),
+                                child: Icon(
+                                  Icons.favorite,
+                                  color: Colors.red.withOpacity(0.85),
+                                  size: 90,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.5),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )),
                 postButtons(),
-
                 BlocListener<LikesCubit, LikesState>(
                   listener: (context, state) {
                     final currentMediaId = _likesCubit.currentMediaId;
@@ -127,7 +167,6 @@ class _MediaPostCardState extends State<MediaPostCard> {
                   },
                   child: likesAndCaption(),
                 )
-
               ],
             ),
           ),
@@ -189,9 +228,20 @@ class _MediaPostCardState extends State<MediaPostCard> {
               ),
             ),
             SizedBox(width: 8.w),
-            DText(
-              widget.brandMedia.brand.name,
-              style: context.textTheme.bodyMedium,
+            Row(
+              children: [
+                DText(
+                  widget.brandMedia.brand.name,
+                  style: context.textTheme.bodyMedium,
+                ),
+                const SizedBox(width: 2),
+                if (widget.brandMedia.brand.verified)
+                  Icon(
+                    SolarIconsBold.verifiedCheck,
+                    color: context.colorScheme.primary,
+                    size: 15.r,
+                  )
+              ],
             ),
           ],
         ),
@@ -239,7 +289,19 @@ class _MediaPostCardState extends State<MediaPostCard> {
                         ),
                       );
                     } else {
-                      return const SizedBox.shrink();
+                      return Shimmer.fromColors(
+                        baseColor: context.isDarkTheme
+                            ? ColorsManager.baseShimmerDark
+                            : ColorsManager.baseShimmerLight,
+                        highlightColor: context.isDarkTheme
+                            ? ColorsManager.highlightShimmerDark
+                            : ColorsManager.highlightShimmerLight,
+                        child: Container(
+                          width: context.screenWidth,
+                          height: double.infinity,
+                          color: Colors.white,
+                        ),
+                      );
                     }
                   }
                 },
@@ -398,6 +460,8 @@ class _MediaPostCardState extends State<MediaPostCard> {
     for (var chewieController in _chewieControllers) {
       chewieController?.dispose();
     }
+    _showHeart.dispose();
+
     super.dispose();
   }
 }

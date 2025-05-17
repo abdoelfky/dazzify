@@ -51,13 +51,16 @@ class ValidationManager {
   static phoneNumberValidator({required BuildContext context}) {
     final egyptianPhoneNumberRegex = RegExp(r'^(010|011|012|015)\d{8}$');
     return (value) {
-      if (!egyptianPhoneNumberRegex.hasMatch(value ?? '')) {
-        return context.tr.invalidPhoneNumber;
+      if (value == null || value.trim().isEmpty) {
+        return context.tr.phoneNumberIsRequired; // Custom message for empty input
+      } else if (!egyptianPhoneNumberRegex.hasMatch(value)) {
+        return context.tr.invalidPhoneNumber; // Message for invalid format
       } else {
-        return null;
+        return null; // Input is valid
       }
     };
   }
+
 
   static changePhoneNumberValidator(
       {required BuildContext context, required String currentNumber}) {
