@@ -1,7 +1,7 @@
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
-import 'package:dazzify/features/auth/data/models/guest_model.dart';
+import 'package:dazzify/features/auth/data/models/app_config_model.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';

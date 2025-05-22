@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String guestMode = "/guest-mode";
+  static const String appConfig = "/app-config";
 
   static const String success = "success";
   static const String sendOtpPath = "/auth/send-otp";

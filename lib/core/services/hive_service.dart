@@ -1,5 +1,5 @@
 import 'package:dazzify/core/constants/app_constants.dart';
-import 'package:dazzify/features/auth/data/models/guest_model.dart';
+import 'package:dazzify/features/auth/data/models/app_config_model.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

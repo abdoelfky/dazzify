@@ -1,4 +1,4 @@
-import 'package:dazzify/features/auth/data/models/guest_model.dart';
+import 'package:dazzify/features/auth/data/models/app_config_model.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 
 abstract class AuthLocalDatasource {
