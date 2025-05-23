@@ -14,6 +14,7 @@ class AppConstants {
   static const String localeKey = 'LocaleKey';
   static const String userTokensKey = 'UserTokensKey';
   static const String checkGuestMode = 'checkGuestMode';
+  static const String updatePostponeTime = 'update_postpone_time';
   static const String checkGuestModeSession = 'checkGuestModeSession';
   static const String arCode = 'ar';
   static const String enCode = 'en';

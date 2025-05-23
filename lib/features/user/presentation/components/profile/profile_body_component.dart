@@ -195,16 +195,16 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                           return GuestModeBottomSheet();
                         },
                       );
-                    }else {
+                    } else {
                       showDialog(
-                      context: context,
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: _userCubit,
-                          child: const ChangeLanguageDialog(),
-                        );
-                      },
-                    );
+                        context: context,
+                        builder: (context) {
+                          return BlocProvider.value(
+                            value: _userCubit,
+                            child: const ChangeLanguageDialog(),
+                          );
+                        },
+                      );
                     }
                   },
                 ),
@@ -249,11 +249,11 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                                     return GuestModeBottomSheet();
                                   },
                                 );
-                              }else {
+                              } else {
                                 notificationsControl(
-                                isActive: switched,
-                                permissions: state.permissionsState,
-                              );
+                                  isActive: switched,
+                                  permissions: state.permissionsState,
+                                );
                               }
                             },
                             activeIcon: SolarIconsOutline.bellOff,
@@ -325,24 +325,30 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
           SizedBox(height: 16.h),
           PrimaryButton(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return DazzifyDialog(
-                    buttonTitle: context.tr.logOut,
-                    message: context.tr.logOutMessage,
-                    onTap: () => _tokensCubit.deleteUserTokens(),
-                  );
-                },
-              );
+              AuthLocalDatasourceImpl().checkGuestMode()
+                  ? _tokensCubit.deleteUserTokens()
+                  : showDialog(
+                      context: context,
+                      builder: (context) {
+                        return DazzifyDialog(
+                          buttonTitle: context.tr.logOut,
+                          message: context.tr.logOutMessage,
+                          onTap: () => _tokensCubit.deleteUserTokens(),
+                        );
+                      },
+                    );
             },
-            title: context.tr.logOut,
+            title: AuthLocalDatasourceImpl().checkGuestMode()
+                ? context.tr.goToLogin
+                : context.tr.logOut,
             flexBetweenTextAndPrefix: 1,
-            prefixWidget: Icon(
-              SolarIconsOutline.logout_2,
-              size: 16.r,
-              color: context.colorScheme.onPrimary,
-            ),
+            prefixWidget: AuthLocalDatasourceImpl().checkGuestMode()
+                ? null
+                : Icon(
+                    SolarIconsOutline.logout_2,
+                    size: 16.r,
+                    color: context.colorScheme.onPrimary,
+                  ),
           ),
         ],
       ),

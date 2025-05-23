@@ -395,5 +395,9 @@
   "inProgress": "قيد التنفيذ",
   "service": "الخدمة ",
   "on": "في",
-  "phoneNumberIsRequired": "رقم الهاتف مطلوب"
+  "phoneNumberIsRequired": "رقم الهاتف مطلوب",
+  "maintenance": "التطبيق حالياً تحت صيانة مجدولة لتحسين تجربتك.",
+  "update_required_message": "يوجد إصدار جديد من التطبيق. يرجى التحديث للمتابعة.",
+  "later": "لاحقًا"
+
 }

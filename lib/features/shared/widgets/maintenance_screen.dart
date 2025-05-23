@@ -1,23 +1,25 @@
 import 'dart:ui';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
+import 'package:dazzify/core/util/extensions.dart';
+import 'package:dazzify/dazzify_app.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dazzify/settings/theme/colors_scheme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 @RoutePage()
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class MaintenanceScreen extends StatefulWidget {
+  const MaintenanceScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<MaintenanceScreen> createState() => _MaintenanceScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _MaintenanceScreenState extends State<MaintenanceScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -29,14 +31,10 @@ class _SplashScreenState extends State<SplashScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
-
     );
-    authCubit = context.read<AuthCubit>();
-    authCubit.appConfig();
 
     // Use a Tween to animate between 0 and 0.7 (70% of the container height)
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-
     _controller.repeat(reverse: true);
   }
 
@@ -84,9 +82,29 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
               Center(
-                child: Lottie.asset(
-                  AssetsManager.splashAnimatedAppLogo,
-                  repeat: false,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      AssetsManager.splashAnimatedAppLogo,
+                      repeat: true,
+                    ),
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Text(
+                        maxLines: 5,
+                        textAlign: TextAlign.center,
+                        DazzifyApp.tr.maintenance,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.titleMedium!.copyWith(
+                          color: context.colorScheme.secondary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

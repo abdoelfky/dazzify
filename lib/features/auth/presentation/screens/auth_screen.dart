@@ -139,7 +139,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         //   formKey.currentState?.save();
                           // FocusManager.instance.primaryFocus?.unfocus();
                         // context.pushRoute(const BottomNavBarRoute());
-                          await authCubit.guestMode(isClicked:true);
+                          await authCubit.appConfig(isGuestModeClicked:true);
                         // }
                       },
                       title: context.tr.guestMode,

@@ -395,5 +395,8 @@
   "inProgress": "In Progress",
   "service": "Service ",
   "on": "On",
-  "phoneNumberIsRequired": "Phone number is required"
+  "later": "Later",
+  "phoneNumberIsRequired": "Phone number is required",
+  "maintenance":"Our app is currently undergoing scheduled maintenance to improve your experience.",
+  "update_required_message":"A new version of the app is available. Please update to continue."
 }

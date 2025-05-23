@@ -745,6 +745,25 @@ class IssueStatusRouteArgs {
 }
 
 /// generated route for
+/// [MaintenanceScreen]
+class MaintenanceRoute extends PageRouteInfo<void> {
+  const MaintenanceRoute({List<PageRouteInfo>? children})
+      : super(
+          MaintenanceRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MaintenanceRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MaintenanceScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [MultipleServiceAvailabilityScreen]
 class MultipleServiceAvailabilityRoute
     extends PageRouteInfo<MultipleServiceAvailabilityRouteArgs> {

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-
+import 'app_fees_model.dart';
+import 'app_version_model.dart';
 part 'app_config_model.g.dart';
 
 @JsonSerializable()

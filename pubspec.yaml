@@ -1,7 +1,7 @@
 name: dazzify
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.0+11
+version: 1.0.1+11
 
 ####IOS
 #version: 2.0.0
@@ -78,7 +78,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   geolocator: ^13.0.2
   smooth_page_indicator:
-
+  package_info_plus:
   skeletonizer: ^1.4.3
   flash: ^3.1.1
   responsive_framework: ^1.5.1

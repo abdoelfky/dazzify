@@ -2,8 +2,8 @@ import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/constants/api_constants.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
+import 'package:dazzify/features/auth/data/models/app_config_model.dart';
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
-import 'package:dazzify/features/auth/data/models/app_config.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
 import 'package:dazzify/features/auth/data/requests/send_otp_request.dart';
@@ -49,11 +49,11 @@ class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
   }
 
   @override
-  Future<GuestModel> guestMode() async {
-    return await _apiConsumer.get<GuestModel>(
+  Future<AppConfigModel> guestMode() async {
+    return await _apiConsumer.get<AppConfigModel>(
       ApiConstants.appConfig,
       responseReturnType: ResponseReturnType.fromJson,
-      fromJsonMethod: GuestModel.fromJson,
+      fromJsonMethod: AppConfigModel.fromJson,
     );
   }
 

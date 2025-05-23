@@ -245,6 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),
         "lastPayment": MessageLookupByLibrary.simpleMessage("دفعة نهائية"),
         "lateTime": MessageLookupByLibrary.simpleMessage("فترة السماح"),
+        "later": MessageLookupByLibrary.simpleMessage("لاحقًا"),
         "less": MessageLookupByLibrary.simpleMessage("اقل"),
         "like": MessageLookupByLibrary.simpleMessage("إعجاب"),
         "likes": MessageLookupByLibrary.simpleMessage("إعجاب"),
@@ -257,6 +258,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "logOutMessage": MessageLookupByLibrary.simpleMessage(
             " هل انت متأكد انك تريد تسجيل الخروج ؟"),
         "luxor": MessageLookupByLibrary.simpleMessage("الأقصر"),
+        "maintenance": MessageLookupByLibrary.simpleMessage(
+            "التطبيق حالياً تحت صيانة مجدولة لتحسين تجربتك."),
         "male": MessageLookupByLibrary.simpleMessage("ذكر"),
         "masterCard": MessageLookupByLibrary.simpleMessage("كارت الماستر"),
         "matruh": MessageLookupByLibrary.simpleMessage("مطروح"),
@@ -500,6 +503,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "updateLocation": MessageLookupByLibrary.simpleMessage("تحديث الموقع"),
         "updatePhoneNumber":
             MessageLookupByLibrary.simpleMessage("تحديث رقم الهاتف"),
+        "update_required_message": MessageLookupByLibrary.simpleMessage(
+            "يوجد إصدار جديد من التطبيق. يرجى التحديث للمتابعة."),
         "userInfoScreenTitle":
             MessageLookupByLibrary.simpleMessage("قم بإضافة معلوماتك"),
         "userSettings":

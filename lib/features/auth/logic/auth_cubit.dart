@@ -83,10 +83,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> guestMode({bool isClicked = false}) async {
+  Future<void> appConfig({bool isGuestModeClicked = false}) async {
     emit(GuestModeLoadingState());
 
-    final result = await _authRepository.guestMode(isClicked:isClicked );
+    final result = await _authRepository.guestMode(isClicked:isGuestModeClicked );
     result.fold(
       (failure) {
         emit(GuestModeFailureState(failure.message));

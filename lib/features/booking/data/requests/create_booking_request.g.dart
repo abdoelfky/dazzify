@@ -15,7 +15,7 @@ CreateBookingRequest _$CreateBookingRequestFromJson(
           (json['services'] as List<dynamic>).map((e) => e as String).toList(),
       startTime: json['startTime'] as String,
       isHasCoupon: json['isHasCoupon'] as bool,
-          code: json['code'] as String?,
+      code: json['code'] as String?,
       bookingLocation: (json['bookingLocation'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, (e as num).toDouble()),
       ),

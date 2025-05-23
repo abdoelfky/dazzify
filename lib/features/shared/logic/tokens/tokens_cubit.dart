@@ -1,7 +1,10 @@
 import 'package:dazzify/core/api/dio_tokens_interceptor.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
+import 'package:dazzify/features/shared/logic/settings/check_for_app_update.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +50,7 @@ class TokensCubit extends Cubit<TokensState> {
     );
     return _userAccessToken;
   }
+
   Future<void> deleteUserTokens() async {
     emit(TokensLoadingState());
     debugPrint(state.toString());
@@ -59,10 +63,21 @@ class TokensCubit extends Cubit<TokensState> {
     emit(TokensLoadingState());
     emit(const SessionExpiredState(message: ""));
   }
+  bool _hasCheckedUpdate = false;
 
   @override
   void onChange(Change<TokensState> change) {
-    if (change.currentState is TokensLoadingState &&
+    if (!_hasCheckedUpdate) {
+      _hasCheckedUpdate = true;
+      Future.delayed(const Duration(seconds: 4), () {
+        checkForAppUpdate(DazzifyApp.mainContext);
+      });
+    }
+    if (AppConfigManager.isAppInMaintenance) {
+      Future.delayed(const Duration(seconds: 4), () {
+        getIt<AppRouter>().replace(const MaintenanceRoute());
+      });
+    } else if (change.currentState is TokensLoadingState &&
         change.nextState is AuthenticatedState) {
       Future.delayed(const Duration(seconds: 4), () {
         getIt<AppRouter>().replace(const AuthenticatedRoute());

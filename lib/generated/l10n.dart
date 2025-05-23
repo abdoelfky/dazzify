@@ -3751,11 +3751,41 @@ class S {
     );
   }
 
+  /// `Later`
+  String get later {
+    return Intl.message(
+      'Later',
+      name: 'later',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Phone number is required`
   String get phoneNumberIsRequired {
     return Intl.message(
       'Phone number is required',
       name: 'phoneNumberIsRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Our app is currently undergoing scheduled maintenance to improve your experience.`
+  String get maintenance {
+    return Intl.message(
+      'Our app is currently undergoing scheduled maintenance to improve your experience.',
+      name: 'maintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new version of the app is available. Please update to continue.`
+  String get update_required_message {
+    return Intl.message(
+      'A new version of the app is available. Please update to continue.',
+      name: 'update_required_message',
       desc: '',
       args: [],
     );

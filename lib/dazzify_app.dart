@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
+import 'package:dazzify/features/shared/logic/settings/check_for_app_update.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dazzify/features/shared/widgets/falvor_banner.dart';
@@ -42,9 +43,10 @@ class _DazzifyAppState extends State<DazzifyApp> {
     return BuildFlavorBanner(
       child: MultiBlocProvider(
         providers: [
+
           BlocProvider(
             lazy: false,
-            create: (context) => getIt<AuthCubit>()..guestMode(),
+            create: (context) => getIt<AuthCubit>()..appConfig(),
           ),
           BlocProvider(
             create: (context) => getIt<TokensCubit>()..isUserAuthenticated(),

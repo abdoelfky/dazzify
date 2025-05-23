@@ -1,3 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'app_fees_model.g.dart';
+
 @JsonSerializable()
 class AppFees {
   final int max;

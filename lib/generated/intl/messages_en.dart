@@ -250,6 +250,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "lastPayment": MessageLookupByLibrary.simpleMessage("Last Payment"),
         "lateTime": MessageLookupByLibrary.simpleMessage("Late time"),
+        "later": MessageLookupByLibrary.simpleMessage("Later"),
         "less": MessageLookupByLibrary.simpleMessage("Show Less"),
         "like": MessageLookupByLibrary.simpleMessage("Like"),
         "likes": MessageLookupByLibrary.simpleMessage("Likes"),
@@ -262,6 +263,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "logOutMessage": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to log out of your account ?"),
         "luxor": MessageLookupByLibrary.simpleMessage("Luxor"),
+        "maintenance": MessageLookupByLibrary.simpleMessage(
+            "Our app is currently undergoing scheduled maintenance to improve your experience."),
         "male": MessageLookupByLibrary.simpleMessage("Male"),
         "masterCard": MessageLookupByLibrary.simpleMessage("Master Card"),
         "matruh": MessageLookupByLibrary.simpleMessage("Matruh"),
@@ -506,6 +509,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Update location"),
         "updatePhoneNumber":
             MessageLookupByLibrary.simpleMessage("Update Phone Number"),
+        "update_required_message": MessageLookupByLibrary.simpleMessage(
+            "A new version of the app is available. Please update to continue."),
         "userInfoScreenTitle":
             MessageLookupByLibrary.simpleMessage("Add Your Information"),
         "userSettings": MessageLookupByLibrary.simpleMessage("User Settings"),

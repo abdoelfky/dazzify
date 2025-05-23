@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
+import 'package:dazzify/features/auth/data/models/app_config_model.dart';
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
-import 'package:dazzify/features/auth/data/models/app_config.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
@@ -66,10 +67,10 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<Failure, GuestModel>> guestMode({bool isClicked = false}) async {
+  Future<Either<Failure, AppConfigModel>> guestMode({bool isClicked = false}) async {
     try {
-      GuestModel response = await _remoteDatasource.guestMode();
-
+      AppConfigModel response = await _remoteDatasource.guestMode();
+      AppConfigManager.config = response;
       ///from API
       _localDatasource.storeGuestModeSession(response.guestMode);
 
