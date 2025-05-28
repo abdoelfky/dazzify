@@ -3790,6 +3790,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Report submitted successfully!`
+  String get reported {
+    return Intl.message(
+      'Report submitted successfully!',
+      name: 'reported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coming Soon`
+  String get availableSoon {
+    return Intl.message(
+      'Coming Soon',
+      name: 'availableSoon',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

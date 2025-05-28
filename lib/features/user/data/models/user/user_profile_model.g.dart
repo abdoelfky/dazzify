@@ -14,13 +14,13 @@ UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
       location: json['location'] == null
           ? null
           : LocationModel.fromJson(json['location'] as Map<String, dynamic>),
-      birthDay: json['birthDay'] as String? ?? '',
+      birthday: json['birthday'] as String? ?? '',
     );
 
 Map<String, dynamic> _$UserProfileModelToJson(UserProfileModel instance) =>
     <String, dynamic>{
       'gender': instance.gender,
-      'birthDay': instance.birthDay,
+      'birthday': instance.birthday,
       'email': instance.email,
       'wallet': instance.wallet,
       'location': instance.location,

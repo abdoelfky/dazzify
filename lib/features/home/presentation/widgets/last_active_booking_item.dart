@@ -18,6 +18,7 @@ class LastActiveBookingItem extends StatefulWidget {
 class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
   late BookingStatus bookingStatus;
   late PageController _pageController;
+  int _currentPageIndex = 0;
 
   @override
   void initState() {
@@ -27,7 +28,15 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
   }
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final services = widget.booking.services;
+
     return GestureDetector(
       onTap: () {
         context.pushRoute(BookingStatusRoute(bookingId: widget.booking.id));
@@ -35,7 +44,7 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
       child: Container(
         width: 295.w,
         decoration: BoxDecoration(
-          color: context.colorScheme.inversePrimary.withValues(alpha: 0.1),
+          color: context.colorScheme.inversePrimary.withAlpha(25),
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Padding(
@@ -44,77 +53,81 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
             children: [
               Row(
                 children: [
-                  if (widget.booking.services.length > 1)
+                  if (services.length > 1)
                     Column(
                       children: [
                         SizedBox(
-                          width: 140.0.w, // Adjust the width
-                          height: 90.0.h,
+                          width: 140.w,
+                          height: 90.h,
                           child: PageView.builder(
                             controller: _pageController,
-                            itemCount: widget.booking.services.length,
+                            itemCount: services.length,
+                            onPageChanged: (index) {
+                              setState(() {
+                                _currentPageIndex = index;
+                              });
+                            },
                             itemBuilder: (context, index) {
                               return ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0).r,
+                                borderRadius: BorderRadius.circular(8.r),
                                 child: DazzifyCachedNetworkImage(
-                                  imageUrl:
-                                      widget.booking.services[index].image,
+                                  imageUrl: services[index].image,
                                   fit: BoxFit.cover,
-                                  width: 140.0.w, // Adjust the width
-                                  height: 90.0.h, // Adjust the height
+                                  width: 140.w,
+                                  height: 90.h,
                                 ),
                               );
                             },
                           ),
                         ),
-                        SizedBox(
-                          height: 8.w,
-                        ),
+                        SizedBox(height: 8.w),
                         Center(
                           child: SmoothPageIndicator(
                             controller: _pageController,
-                            // Connect the page controller
-                            count: widget.booking.services.length,
-                            // The number of dots
+                            count: services.length,
                             effect: ScrollingDotsEffect(
-                              // You can customize the dot effect here
                               activeDotColor: context.colorScheme.primary,
-                              // Active dot color
                               dotColor: Colors.grey,
-                              // Inactive dot color
-                              dotHeight: 8.0.h,
-                              // Height of the dot
-                              dotWidth: 8.0.h,
-                              // Width of the dot
-                              spacing: 8.0.w, // Space between dots
+                              dotHeight: 8.h,
+                              dotWidth: 8.h,
+                              spacing: 8.w,
                             ),
                           ),
                         ),
                       ],
                     ),
-                  if (widget.booking.services.length == 1)
+                  if (services.length == 1)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.r),
                       child: DazzifyCachedNetworkImage(
+                        imageUrl: services.first.image,
                         fit: BoxFit.cover,
-                        imageUrl: widget.booking.services.first.image,
                         width: 140.w,
                         height: 110.h,
                       ),
                     ),
-                  SizedBox(width: 8.0.w),
+                  SizedBox(width: 8.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: 130.w,
-                        child: DText(
-                          widget.booking.services.first.title,
+                        child: services.length > 1
+                            ? Text(
+                          services[_currentPageIndex].title,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.bodyMedium,
+                        )
+                            : Text(
+                          services.first.title,
                           overflow: TextOverflow.ellipsis,
                           style: context.textTheme.bodyMedium,
                         ),
                       ),
-                      SizedBox(height: 4.0.w),
+                      SizedBox(height: 4.w),
+                      // You can also update date/time and duration for the current service if needed,
+                      // or keep it as booking-level info if that's intended.
+                      // For now, keeping the same booking info:
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -123,15 +136,14 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                             size: 14.r,
                             color: context.colorScheme.onSurfaceVariant,
                           ),
-                          SizedBox(width: 8.0.w),
+                          SizedBox(width: 8.w),
                           DText(
-                            TimeManager.formatBookingDateTime(
-                                widget.booking.startTime),
+                            TimeManager.formatBookingDateTime(widget.booking.startTime),
                             style: context.textTheme.bodySmall,
                           ),
                         ],
                       ),
-                      SizedBox(height: 4.0.w),
+                      SizedBox(height: 4.w),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -140,23 +152,22 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                             size: 14.r,
                             color: context.colorScheme.onSurfaceVariant,
                           ),
-                          SizedBox(width: 8.0.w),
+                          SizedBox(width: 8.w),
                           DText(
                             TimeManager.formatServiceDuration(
-                                widget.booking.services.fold(
-                                    0,
-                                    (total, service) =>
-                                        total + service.duration),
-                                context),
+                              widget.booking.services[_currentPageIndex].duration,
+                              context,
+                            ),
                             style: context.textTheme.bodySmall,
                           ),
+
                         ],
                       ),
-                      SizedBox(height: 4.0.w),
+                      SizedBox(height: 4.w),
                       bookingStatus == BookingStatus.pending
                           ? LastActiveBookingProgressBar(
-                              startTime: widget.booking.createdAt,
-                            )
+                        startTime: widget.booking.createdAt,
+                      )
                           : bookingCompleted(context, widget.booking),
                     ],
                   ),
@@ -164,25 +175,25 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
               ),
               bookingStatus == BookingStatus.confirmed
                   ? PositionedDirectional(
-                      bottom: 5.h,
-                      end: 2.w,
-                      child: Row(
-                        children: [
-                          DText(
-                            BookingStatus.confirmed.name,
-                            style: context.textTheme.labelMedium!.copyWith(
-                              color: ColorsManager.successColor,
-                            ),
-                          ),
-                          SizedBox(width: 1.w),
-                          Icon(
-                            SolarIconsOutline.checkCircle,
-                            size: 14.r,
-                            color: ColorsManager.successColor,
-                          ),
-                        ],
+                bottom: 5.h,
+                end: 2.w,
+                child: Row(
+                  children: [
+                    DText(
+                      BookingStatus.confirmed.name,
+                      style: context.textTheme.labelMedium!.copyWith(
+                        color: ColorsManager.successColor,
                       ),
-                    )
+                    ),
+                    SizedBox(width: 1.w),
+                    Icon(
+                      SolarIconsOutline.checkCircle,
+                      size: 14.r,
+                      color: ColorsManager.successColor,
+                    ),
+                  ],
+                ),
+              )
                   : const SizedBox.shrink(),
             ],
           ),

@@ -10,8 +10,8 @@ class UpdateProfileInfoRequest {
   @JsonKey(name: "gender", includeIfNull: false)
   final String? gender;
 
-  @JsonKey(name: "birthDay", includeIfNull: false)
-  final String? birthDay;
+  @JsonKey(name: "birthday", includeIfNull: false)
+  final String? birthday;
 
   // @JsonKey(name: "age", includeIfNull: false)
   // final int? age;
@@ -19,7 +19,7 @@ class UpdateProfileInfoRequest {
   const UpdateProfileInfoRequest({
     this.email,
     this.gender,
-    this.birthDay,
+    this.birthday,
     // this.age,
   });
 

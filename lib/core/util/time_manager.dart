@@ -1,10 +1,12 @@
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/dazzify_app.dart';
+import 'package:dazzify/features/booking/data/models/booking_service_model.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:intl/intl.dart';
 
+import '../../features/home/data/models/service_model.dart';
 import '../framework/export.dart';
 
 class TimeManager {
@@ -32,6 +34,23 @@ class TimeManager {
       return DateFormat('MMM d, h:mm a', 'en_US').format(dateTime);
     }
   }
+  static String reformatDateToDDMMYYYYWithSlashes(String date) {
+    /*
+   Converts a date string from DD:MM:YYYY (with colons) to DD/MM/YYYY (with slashes)
+   Example: '21:03:2003' -> '21/03/2003'
+  */
+    if (date.contains(':')) {
+      List<String> parts = date.split(':');
+      if (parts.length == 3) {
+        String day = parts[0].padLeft(2, '0');
+        String month = parts[1].padLeft(2, '0');
+        String year = parts[2];
+        return '$day/$month/$year';
+      }
+    }
+    return date; // return as is if format unexpected
+  }
+
   static String reformatDateToDDMMYYYY(String date) {
     /*
   This method converts a date string from 'DD/MM/YYYY' to 'DD:MM:YYYY' format.
@@ -225,6 +244,49 @@ class TimeManager {
     return "$bookingDuration ${DazzifyApp.tr.min} ${DazzifyApp.tr.from} $startTimeFormat ${DazzifyApp.tr.to} $endTimeFormat"
         "\n ${DazzifyApp.tr.on} $dateFormat";
   }
+
+  static String bookingDurationForService({
+    required String bookingStartTime,
+    required int serviceIndex,
+    required List<BookingServiceModel> services,
+  }) {
+    // Parse booking start time
+    DateTime bookingStart = DateTime.parse(bookingStartTime).toLocal();
+
+    // Calculate service start time by adding durations of previous services
+    int previousDuration = 0;
+    for (int i = 0; i < serviceIndex; i++) {
+      previousDuration += services[i].duration;
+    }
+
+    DateTime serviceStart = bookingStart.add(Duration(minutes: previousDuration));
+    DateTime serviceEnd = serviceStart.add(Duration(minutes: services[serviceIndex].duration));
+
+    // Format times
+    String startTimeFormat = DateFormat('h:mm a').format(serviceStart);
+    String endTimeFormat = DateFormat('h:mm a').format(serviceEnd);
+    String dateFormat = DateFormat('yyyy - MM - dd').format(serviceStart);
+
+    int serviceDuration = services[serviceIndex].duration;
+
+    // Format duration as "Xh Ym" or "Ym"
+    String formattedDuration;
+    if (serviceDuration < 60) {
+      formattedDuration = "$serviceDuration ${DazzifyApp.tr.min}";
+    } else {
+      int hours = serviceDuration ~/ 60;
+      int minutes = serviceDuration % 60;
+      if (minutes > 0) {
+        formattedDuration = "${hours}h ${minutes}m";
+      } else {
+        formattedDuration = "${hours}h";
+      }
+    }
+
+    return "$formattedDuration ${DazzifyApp.tr.from} $startTimeFormat ${DazzifyApp.tr.to} $endTimeFormat"
+        "\n${DazzifyApp.tr.on} $dateFormat";
+  }
+
 
 
   static void initializeTimer({

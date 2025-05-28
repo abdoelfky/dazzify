@@ -3,6 +3,7 @@ import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/payment/logic/payment_methods/payment_methods_cubit.dart';
 import 'package:dazzify/features/payment/logic/transactions/transaction_bloc.dart';
 import 'package:dazzify/features/payment/presentation/widgets/installment_item.dart';
+import 'package:dazzify/features/shared/widgets/available_soon_widget.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
 import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
@@ -80,13 +81,15 @@ class _EWalletTabState extends State<EWalletTab> {
               },
             );
           case UiState.failure:
-            return ErrorDataWidget(
-              errorDataType: DazzifyErrorDataType.screen,
-              message: state.cardErrorMessage,
-              onTap: () {
-                paymentMethodsCubit.getCardMethods();
-              },
-            );
+            return AvailableSoonWidget();
+
+        // return ErrorDataWidget(
+            //   errorDataType: DazzifyErrorDataType.screen,
+            //   message: state.cardErrorMessage,
+            //   onTap: () {
+            //     paymentMethodsCubit.getCardMethods();
+            //   },
+            // );
         }
       },
     );

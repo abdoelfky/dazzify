@@ -1,7 +1,18 @@
 import 'package:dazzify/features/auth/data/models/app_config_model.dart';
 
 class AppConfigManager {
-  static late AppConfigModel config;
+  static AppConfigModel? _config;
+
+  static set config(AppConfigModel value) => _config = value;
+
+  static AppConfigModel get config {
+    if (_config == null) {
+      throw Exception('AppConfigManager.config is not initialized yet');
+    }
+    return _config!;
+  }
+
+  static bool get isInitialized => _config != null;
 
   // App Fees
   static int get appFeesMax => config.appFees.max;

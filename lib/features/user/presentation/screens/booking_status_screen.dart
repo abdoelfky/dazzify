@@ -32,6 +32,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
   late BookingStatus bookingStatus;
   bool isLoading = false;
   late PageController _pageController;
+  int _currentPageIndex = 0; // Track current page
 
   @override
   void initState() {
@@ -41,6 +42,12 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
     _pageController = PageController();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,7 +66,6 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
             }
           },
           builder: (context, state) {
-
             switch (state.singleBookingState) {
               case UiState.initial:
               case UiState.loading:
@@ -82,8 +88,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                     children: [
                       BookingStatusHeaderComponent(
                         startTime: state.singleBooking.startTime,
-                        refundConditions:
-                            state.singleBooking.brand.refundConditions,
+                        refundConditions: state.singleBooking.brand.refundConditions,
                         isBookingFinished: state.singleBooking.isFinished,
                         isArrived: state.singleBooking.isArrived,
                         isRate: state.singleBooking.isRate,
@@ -100,101 +105,67 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length >
-                                        1)
+                                    if (bookingCubit.state.singleBooking.services.length > 1)
                                       SizedBox(
                                         height: 140,
                                         child: PageView.builder(
                                           controller: _pageController,
                                           scrollDirection: Axis.horizontal,
-                                          physics: BouncingScrollPhysics(),
-                                          itemCount: bookingCubit.state
-                                              .singleBooking.services.length,
-                                          itemBuilder: (context, index) =>
-                                              MultiBookingWidget(
+                                          physics: const BouncingScrollPhysics(),
+                                          itemCount:
+                                          bookingCubit.state.singleBooking.services.length,
+                                          onPageChanged: (index) {
+                                            setState(() {
+                                              _currentPageIndex = index;
+                                            });
+                                          },
+                                          itemBuilder: (context, index) => MultiBookingWidget(
                                             service: bookingCubit.state
                                                 .singleBooking.services[index],
                                             booking: bookingCubit,
                                           ),
                                         ),
                                       ),
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length >
-                                        1)
+                                    if (bookingCubit.state.singleBooking.services.length > 1)
                                       Center(
                                         child: SmoothPageIndicator(
                                           controller: _pageController,
-                                          // Connect the page controller
                                           count: bookingCubit.state
                                               .singleBooking.services.length,
-                                          // The number of dots
                                           effect: ScrollingDotsEffect(
-                                            // You can customize the dot effect here
-                                            activeDotColor:
-                                                context.colorScheme.primary,
-                                            // Active dot color
+                                            activeDotColor: context.colorScheme.primary,
                                             dotColor: Colors.grey,
-                                            // Inactive dot color
                                             dotHeight: 8.0.h,
-                                            // Height of the dot
                                             dotWidth: 8.0.h,
-                                            // Width of the dot
-                                            spacing:
-                                                8.0.w, // Space between dots
+                                            spacing: 8.0.w,
                                           ),
                                         ),
                                       ),
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length ==
-                                        1)
+                                    if (bookingCubit.state.singleBooking.services.length == 1)
                                       serviceInfo(context, bookingCubit),
                                     SizedBox(height: 16.h),
-                                    bookingInfo(bookingCubit),
+                                    bookingInfo(bookingCubit, _currentPageIndex),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0,
-                                      ).r,
+                                      padding:
+                                      const EdgeInsets.symmetric(vertical: 16.0).r,
                                       child: const Divider(),
                                     ),
                                     priceInfo(
                                         context,
                                         bookingCubit,
-                                        bookingCubit.state.singleBooking
-                                            .services.length),
+                                        bookingCubit.state.singleBooking.services.length),
                                     SizedBox(height: 35.h),
                                     DText(
                                       context.tr.readyForService,
                                       style: context.textTheme.titleMedium,
                                     ),
                                     SizedBox(height: 8.h),
-
                                     SwipeButtonComponent(
                                       status: bookingStatus,
-                                      isFinished:
-                                          state.singleBooking.isFinished,
+                                      isFinished: state.singleBooking.isFinished,
                                       isArrived: state.singleBooking.isArrived,
                                       startTime: state.singleBooking.startTime,
                                     ),
-                                    // SizedBox(height: 16.h),
-                                    // if (bookingStatus ==
-                                    //         BookingStatus.confirmed&&
-                                    //     startTime.year == now.year &&
-                                    //     startTime.month == now.month &&
-                                    //     startTime.day == now.day&&
-                                    //     getTimeInMinute(state.singleBooking.startTime) >= 60 &&
-                                    //     !state.singleBooking.isArrived
-                                    // )
-                                    //   Center(
-                                    //     child: DText(
-                                    //       context.tr.bookingConfirmed,
-                                    //       style: context.textTheme.bodySmall!
-                                    //           .copyWith(
-                                    //         color: context.colorScheme.outline,
-                                    //       ),
-                                    //       textAlign: TextAlign.center,
-                                    //     ),
-                                    //   )
                                   ],
                                 ),
                               ),
@@ -270,8 +241,17 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
   );
 }
 
-Widget bookingInfo(BookingCubit booking) {
+Widget bookingInfo(BookingCubit booking, int currentServiceIndex) {
   final bookingInfo = booking.state.singleBooking;
+  final services = bookingInfo.services;
+
+  final subtitle = (services.isNotEmpty && currentServiceIndex < services.length)
+      ? TimeManager.bookingDurationForService(
+    bookingStartTime: bookingInfo.startTime,
+    serviceIndex: currentServiceIndex,
+    services: services,
+  )
+      : "";
 
   return Column(
     children: [
@@ -296,7 +276,7 @@ Widget bookingInfo(BookingCubit booking) {
       BookingInfoItem(
         icon: SolarIconsOutline.alarm,
         title: DazzifyApp.tr.duration,
-        subtitle: TimeManager.bookingDuration(booking),
+        subtitle: subtitle,
         isImage: false,
       ),
     ],
@@ -311,7 +291,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       if (length > 1)
         PriceInfoItem(
           title:
-              '${DazzifyApp.tr.servicePrice} ( $length ${context.tr.services} )',
+          '${DazzifyApp.tr.servicePrice} ( $length ${context.tr.services} )',
           price: "${priceInfo.price} ${DazzifyApp.tr.egp}",
         ),
       if (length == 1)
@@ -349,7 +329,7 @@ Widget customDivider(BuildContext context) {
   return Row(
     children: List.generate(
       500 ~/ 10,
-      (index) => Expanded(
+          (index) => Expanded(
         child: Container(
           color: index % 2 == 0
               ? Colors.transparent

@@ -35,7 +35,7 @@ class UserState extends Equatable {
       profile: UserProfileModel(
         gender: '',
         email: '',
-        birthDay: '',
+        birthday: '',
         wallet: 0,
         location: LocationModel(
           longitude: 0,

@@ -9,7 +9,7 @@ class UserProfileModel {
   @JsonKey(defaultValue: "")
   final String gender;
   @JsonKey(defaultValue: "")
-  final String birthDay;
+  final String birthday;
   @JsonKey(defaultValue: "")
   final String email;
   @JsonKey(defaultValue: 0)
@@ -23,7 +23,7 @@ class UserProfileModel {
     required this.email,
     required this.wallet,
     this.location,
-    required this.birthDay,
+    required this.birthday,
     // required this.age,
   });
 
@@ -33,7 +33,7 @@ class UserProfileModel {
     this.wallet = 0,
     this.location,
     // this.age = 0,
-    this.birthDay = "",
+    this.birthday = "",
   });
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
@@ -44,7 +44,7 @@ class UserProfileModel {
   UserProfileModel copyWith({
     String? gender,
     String? email,
-    String? birthDay,
+    String? birthday,
     List<dynamic>? couponsUsed,
     int? wallet,
     // int? age,
@@ -55,7 +55,7 @@ class UserProfileModel {
       email: email ?? this.email,
       wallet: wallet ?? this.wallet,
       // age: age ?? this.age,
-      birthDay: birthDay ?? this.birthDay,
+      birthday: birthday ?? this.birthday,
       location: location ?? this.location,
     );
   }

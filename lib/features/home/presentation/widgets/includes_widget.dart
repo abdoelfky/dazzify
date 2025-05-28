@@ -54,6 +54,7 @@ class IncludesWidget extends StatelessWidget {
                       SizedBox(width: 5.w),
                       Flexible(
                         child: DText(
+                          maxLines: 5,
                           include[index],
                           style: context.textTheme.bodyMedium!.copyWith(
                             color: context.colorScheme.outline,

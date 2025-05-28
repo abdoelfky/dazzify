@@ -398,5 +398,8 @@
   "later": "Later",
   "phoneNumberIsRequired": "Phone number is required",
   "maintenance":"Our app is currently undergoing scheduled maintenance to improve your experience.",
-  "update_required_message":"A new version of the app is available. Please update to continue."
+  "update_required_message":"A new version of the app is available. Please update to continue.",
+  "reported": "Report submitted successfully!",
+  "availableSoon": "Coming Soon"
+
 }

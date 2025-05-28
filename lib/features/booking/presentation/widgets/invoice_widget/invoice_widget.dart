@@ -1,4 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/dotted_line.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/invoice_line.dart';
@@ -21,26 +22,18 @@ class InvoiceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ServiceInvoiceCubit, ServiceInvoiceState>(
       builder: (context, state) {
-        // Calculate total price if services are empty or not
-        num totalPrice = 0;
-        if (services.isEmpty) {
-          totalPrice = service.price; // use service price if services is empty
-        } else {
-          totalPrice = services
-              .map((service) => service.price)
-              .toList()
-              .fold<num>(
-                  0,
-                  (sum, item) =>
-                      sum + item); // sum prices if services are not empty
-        }
+        num totalPrice = services.isEmpty
+            ? service.price
+            : services.map((s) => s.price).fold<num>(0, (sum, item) => sum + item);
+
+        final deliveryFees = state.deliveryInfo.selectedDeliveryFees;
+        final appFees = state.invoice.totalPrice - totalPrice - deliveryFees + state.couponModel.discountAmount;
 
         return Column(
           children: [
             DazzifyTextFormField(
               controller: textContorller,
-              fillColor:
-                  context.colorScheme.inversePrimary.withValues(alpha: 0.1),
+              fillColor: context.colorScheme.inversePrimary.withValues(alpha: 0.1),
               textStyle: context.textTheme.bodyMedium,
               textInputType: TextInputType.text,
               borderSide: getBorderSide(
@@ -54,17 +47,12 @@ class InvoiceWidget extends StatelessWidget {
                 price: totalPrice,
                 couponValidationState: state.couponValidationState,
                 service: services.isEmpty ? service : services.first,
-                // select the first service if available or use the service data when empty
                 textContorller: textContorller,
               ),
             ),
-            SizedBox(
-              height: 24.h,
-            ),
+            SizedBox(height: 24.h),
             InvoiceLine(
-              title:
-                  '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
-              // Update services count accordingly
+              title: '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
               amount: totalPrice.toString(),
             ),
             InvoiceLine(
@@ -74,30 +62,22 @@ class InvoiceWidget extends StatelessWidget {
             ),
             InvoiceLine(
               title: context.tr.deliferyFees,
-              amount: state.deliveryInfo.selectedDeliveryFees.toString(),
+              amount: deliveryFees.toString(),
             ),
             InvoiceLine(
               title: context.tr.appFees,
-              amount: services
-                  .map((service) => service.fees)
-                  .toList()
-                  .fold<num>(0, (sum, item) => sum + item)
-                  .toString(),
+              amount: appFees.toStringAsFixed(2),
             ),
             DottedLine(
               lineWidth: context.screenWidth,
               lineColor: context.colorScheme.onSurface,
             ),
-            SizedBox(
-              height: 24.h,
-            ),
+            SizedBox(height: 24.h),
             InvoiceLine(
               title: context.tr.totalPrice,
               amount: state.invoice.totalPrice.toString(),
             ),
-            SizedBox(
-              height: 8.h,
-            ),
+            SizedBox(height: 8.h),
           ],
         );
       },
@@ -112,8 +92,8 @@ BorderSide getBorderSide({
   return couponValidationState == UiState.success
       ? const BorderSide(color: Colors.green)
       : couponValidationState == UiState.failure
-          ? const BorderSide(color: Colors.red)
-          : BorderSide(color: context.colorScheme.primary);
+      ? const BorderSide(color: Colors.red)
+      : BorderSide(color: context.colorScheme.primary);
 }
 
 Widget? getSuffixIcon({
@@ -125,26 +105,24 @@ Widget? getSuffixIcon({
 }) {
   return couponValidationState == UiState.success
       ? Icon(
-          SolarIconsOutline.checkCircle,
-          color: Colors.green,
-        )
+    SolarIconsOutline.checkCircle,
+    color: Colors.green,
+  )
       : TextButton(
-          onPressed: () {
-            if (textContorller.text.isNotEmpty) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              context
-                  .read<ServiceInvoiceCubit>()
-                  .validateCouponAndUpdateInvoice(
-                    service: service,
-                    price: price,
-                    code: textContorller.text,
-                  );
-
-              // textContorller.clear();
-            }
-          },
-          child: DText(
-            context.tr.apply,
-          ),
+    onPressed: () {
+      if (textContorller.text.isNotEmpty) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        context
+            .read<ServiceInvoiceCubit>()
+            .validateCouponAndUpdateInvoice(
+          service: service,
+          price: price,
+          code: textContorller.text,
         );
+      }
+    },
+    child: DText(
+      context.tr.apply,
+    ),
+  );
 }

@@ -99,31 +99,41 @@ class _TransactionScreenState extends State<TransactionScreen> {
             return Expanded(
               child: state.transactions.isEmpty
                   ? EmptyDataWidget(message: DazzifyApp.tr.noTransactions)
-                  : CustomFadeAnimation(
-                      duration: const Duration(milliseconds: 300),
-                      child: ListView.separated(
-                          controller: _controller,
-                          itemCount: state.transactions.length + 1,
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 8.h),
-                          itemBuilder: (context, index) {
-                            if (index >= state.transactions.length) {
-                              if (state.hasTransactionsReachedMax) {
-                                return const SizedBox.shrink();
-                              } else {
-                                return SizedBox(
-                                  height: 30.h,
-                                  width: context.screenWidth,
-                                  child: const LoadingAnimation(),
-                                );
-                              }
-                            } else {
-                              return TransactionItem(
-                                transaction: state.transactions[index],
-                              );
-                            }
-                          }),
-                    ),
+                  : RefreshIndicator(
+                onRefresh: () async {
+                  // Trigger refresh event
+                  transactionBloc.add(const ResetTransactionsEvent());
+                  // Wait for loading state to complete
+                  await transactionBloc.stream.firstWhere(
+                        (state) => state.transactionsState != UiState.loading,
+                  );
+                },
+                child: CustomFadeAnimation(
+                  duration: const Duration(milliseconds: 300),
+                  child: ListView.separated(
+                    controller: _controller,
+                    itemCount: state.transactions.length + 1,
+                    separatorBuilder: (context, index) => SizedBox(height: 8.h),
+                    itemBuilder: (context, index) {
+                      if (index >= state.transactions.length) {
+                        if (state.hasTransactionsReachedMax) {
+                          return const SizedBox.shrink();
+                        } else {
+                          return SizedBox(
+                            height: 30.h,
+                            width: context.screenWidth,
+                            child: const LoadingAnimation(),
+                          );
+                        }
+                      } else {
+                        return TransactionItem(
+                          transaction: state.transactions[index],
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
             );
         }
       },

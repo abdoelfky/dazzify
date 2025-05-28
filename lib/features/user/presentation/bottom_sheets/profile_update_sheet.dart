@@ -26,7 +26,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   // final TextEditingController ageController = TextEditingController();
   final TextEditingController birthDayController = TextEditingController();
   late String selectedGender;
-  late String birthDay;
+  late String birthday;
 
   // late int age;
 
@@ -40,7 +40,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
     fullNameController.text = profileCubit.state.userModel.fullName;
     emailController.text = profileCubit.state.userModel.profile.email;
     selectedGender = profileCubit.state.userModel.profile.gender;
-    birthDayController.text = profileCubit.state.userModel.profile.birthDay;
+    birthDayController.text = profileCubit.state.userModel.profile.birthday;
     isActive = ValueNotifier(false);
     super.initState();
   }
@@ -111,8 +111,8 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                 // ),
                 DazzifyBirthdatePicker(
                   hintText: birthDayController.text != ''
-                      ? birthDayController.text
-                          .replaceAll(RegExp(r'[^0-9]'), '/')
+                      ? TimeManager.reformatDateToDDMMYYYYWithSlashes(
+                          birthDayController.text)
                       : context.tr.birthDate,
                   // label: context.localizedText.birthDate,
                   prefixIconData: SolarIconsOutline.confetti,
@@ -133,7 +133,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                   // },
                   onChanged: (value) {
                     if (value != null) {
-                      birthDay = value;
+                      birthday = value;
                       checkActivity();
                     }
                   },
@@ -214,8 +214,8 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                               profileCubit.updateProfileInfo(
                                 email: emailController.text,
 
-                                birthDay: TimeManager.reformatDateToDDMMYYYY(
-                                    birthDay),
+                                birthday: TimeManager.reformatDateToDDMMYYYY(
+                                    birthday),
                                 // age: age,
                                 gender: selectedGender,
                               );
@@ -251,7 +251,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   //   return profileCubit.state.userModel.profile.age != age;
   // }
   bool birthDayChanged() {
-    return profileCubit.state.userModel.profile.birthDay != birthDay;
+    return profileCubit.state.userModel.profile.birthday != birthday;
   }
 
   void checkActivity() {

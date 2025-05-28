@@ -85,19 +85,17 @@ class ValidationManager {
       }
 
       try {
-        // Parse the value as a DateTime
-        DateTime birthDate = DateFormat('dd/MM/yyyy').parse(value);
+        // Force parsing in English locale, strict format
+        DateTime birthDate = DateFormat('dd/MM/yyyy', 'en_US').parseStrict(value);
         DateTime currentDate = DateTime.now();
+
         int age = currentDate.year - birthDate.year;
 
         if (currentDate.month < birthDate.month ||
-            (currentDate.month == birthDate.month &&
-                currentDate.day < birthDate.day)) {
+            (currentDate.month == birthDate.month && currentDate.day < birthDate.day)) {
           age--;
         }
-        if (value == null || value.isEmpty) {
-          return '$label ${context.tr.textIsRequired}';
-        }
+
         if (age < 14) {
           return context.tr.atLeast14;
         }

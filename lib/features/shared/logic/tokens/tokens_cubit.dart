@@ -4,13 +4,12 @@ import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
+import 'package:dazzify/features/auth/logic/auth_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/check_for_app_update.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mwidgets/mwidgets.dart';
-
 part 'tokens_state.dart';
 
 class TokensCubit extends Cubit<TokensState> {
@@ -63,19 +62,21 @@ class TokensCubit extends Cubit<TokensState> {
     emit(TokensLoadingState());
     emit(const SessionExpiredState(message: ""));
   }
+
   bool _hasCheckedUpdate = false;
 
   @override
   void onChange(Change<TokensState> change) {
-    if (!_hasCheckedUpdate) {
+    if (change.currentState is GuestModeSuccessState &&
+        AppConfigManager.isAppInMaintenance) {
+      Future.delayed(const Duration(seconds: 4), () {
+        getIt<AppRouter>().replace(const MaintenanceRoute());
+      });
+    }
+   else if (change.currentState is GuestModeSuccessState && !_hasCheckedUpdate) {
       _hasCheckedUpdate = true;
       Future.delayed(const Duration(seconds: 4), () {
         checkForAppUpdate(DazzifyApp.mainContext);
-      });
-    }
-    if (AppConfigManager.isAppInMaintenance) {
-      Future.delayed(const Duration(seconds: 4), () {
-        getIt<AppRouter>().replace(const MaintenanceRoute());
       });
     } else if (change.currentState is TokensLoadingState &&
         change.nextState is AuthenticatedState) {

@@ -322,6 +322,7 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
           SizedBox(
             width: 299.w,
             child: DText(
+              maxLines: 50,
               widget.service.description,
               style: context.textTheme.bodyMedium!
                   .copyWith(color: context.colorScheme.outline),

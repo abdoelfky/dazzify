@@ -63,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف"),
         "availableBalance":
             MessageLookupByLibrary.simpleMessage("رصيدك المتاح"),
+        "availableSoon": MessageLookupByLibrary.simpleMessage("متوفر قريبًا"),
         "backHome":
             MessageLookupByLibrary.simpleMessage("عودة للصفحة الرئيسية"),
         "backToBrand":
@@ -416,6 +417,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "report": MessageLookupByLibrary.simpleMessage("ابلاغ"),
         "reportYourIssue":
             MessageLookupByLibrary.simpleMessage("ابلغ عن مشكلتك"),
+        "reported": MessageLookupByLibrary.simpleMessage("تم الإبلاغ بنجاح!"),
         "resendOtp":
             MessageLookupByLibrary.simpleMessage("إعادة ارسال رمز التحقق"),
         "resendOtpIn":

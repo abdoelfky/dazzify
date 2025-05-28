@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Verify phone number"),
         "availableBalance":
             MessageLookupByLibrary.simpleMessage("Your available balance"),
+        "availableSoon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
         "backHome": MessageLookupByLibrary.simpleMessage("Back Home"),
         "backToBrand":
             MessageLookupByLibrary.simpleMessage("Back To Brand Profile"),
@@ -418,6 +419,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "report": MessageLookupByLibrary.simpleMessage("Report"),
         "reportYourIssue":
             MessageLookupByLibrary.simpleMessage("Report Your issue"),
+        "reported": MessageLookupByLibrary.simpleMessage(
+            "Report submitted successfully!"),
         "resendOtp": MessageLookupByLibrary.simpleMessage("Resend OTP"),
         "resendOtpIn": MessageLookupByLibrary.simpleMessage("Resend OTP in"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
