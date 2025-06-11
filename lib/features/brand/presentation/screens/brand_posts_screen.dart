@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
+import 'package:dazzify/core/util/functions.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/booking_from_media/booking_from_media_cubit.dart';
@@ -147,7 +148,7 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                 children: [
                   DazzifyAppBar(
                     isLeading: true,
-                    title: "${widget.brandName} ${DazzifyApp.tr.posts}",
+                    title: "${truncateText(widget.brandName, 25)} ${DazzifyApp.tr.posts}",
                     textStyle: context.textTheme.titleMedium,
                   ),
                   brandPostsList(),

@@ -231,7 +231,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
             Row(
               children: [
                 DText(
-                  widget.brandMedia.brand.name,
+                  truncateText(widget.brandMedia.brand.name,25),
                   style: context.textTheme.bodyMedium,
                 ),
                 const SizedBox(width: 2),
