@@ -108,29 +108,39 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
         ),
         SizedBox(height: 8.h),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            PrimaryButton(
-              width: 155.w,
-              height: 42.h,
-              onTap: () {
-                context.maybePop();
-              },
-              title: context.tr.cancel,
-              textColor: context.colorScheme.primary,
-              isOutLined: true,
+            Expanded(
+              child: Padding(
+                padding:  EdgeInsets.only(right: 5.w,left:5.w ), // Small space between buttons
+                child: PrimaryButton(
+                  // width: 120.w,
+                  height: 42.h,
+                  onTap: () {
+                    context.maybePop();
+                  },
+                  title: context.tr.cancel,
+                  textColor: context.colorScheme.primary,
+                  isOutLined: true,
+                ),
+              ),
             ),
-            ValueListenableBuilder(
-              valueListenable: _hasReachedTheEnd,
-              builder: (context, value, child) => PrimaryButton(
-                isActive: value,
-                title: context.tr.agree,
-                width: 155.w,
-                height: 42.h,
-                onTap: () {
-                  widget.onAgreeTap(true);
-                  context.maybePop();
-                },
+            Expanded(
+              child: Padding(
+                padding:  EdgeInsets.only(right: 5.w,left:5.w ), // Small space between buttons
+                child: ValueListenableBuilder(
+                  valueListenable: _hasReachedTheEnd,
+                  builder: (context, value, child) => PrimaryButton(
+                    isActive: value,
+                    title: context.tr.agree,
+                    // width: 120.w,
+                    height: 42.h,
+                    onTap: () {
+                      widget.onAgreeTap(true);
+                      context.maybePop();
+                    },
+                  ),
+                ),
               ),
             ),
           ],

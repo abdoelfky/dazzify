@@ -72,7 +72,7 @@ class _DazzifyDropDownButtonFieldState
           borderRadius: BorderRadius.circular(8).r,
         ),
       ),
-      style: context.textTheme.bodyMedium,
+      style: context.textTheme.bodySmall,
       decoration: InputDecoration(
         errorStyle: context.textTheme.labelSmall!.copyWith(
           height: 0.3.h,
