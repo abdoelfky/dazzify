@@ -111,23 +111,23 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                   ? MainAxisAlignment.spaceBetween
                                   : MainAxisAlignment.end,
                           children: [
-                            (widget.isAllowMultipleServicesCount &&
-                                    !widget.isBooked)
-                                ? SizedBox(
-                                    width: 62.r,
-                                    height: 16.r,
-                                    child: FittedBox(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: DText(
-                                        '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
-                                        style: context.textTheme.labelLarge!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )
-                                : incDecButton(context),
+                            if ((widget.isAllowMultipleServicesCount &&
+                                !widget.isBooked)||!widget.isAllowMultipleServicesCount)
+                              SizedBox(
+                                width: 62.r,
+                                height: 16.r,
+                                child: FittedBox(
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: DText(
+                                    '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+                                    style: context.textTheme.labelLarge!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            if (widget.isAllowMultipleServicesCount &&
+                                widget.isBooked)
+                            incDecButton(context),
                             SizedBox(
                               width: 8.r,
                             ),
@@ -244,11 +244,12 @@ Widget incDecButton(BuildContext context) {
             color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
             border: Border.all(
                 color:
-                context.colorScheme.inversePrimary.withValues(alpha: 0.5),
+                    context.colorScheme.inversePrimary.withValues(alpha: 0.5),
                 width: 2),
           ),
           child: IconButton(
-            icon: Icon(Icons.remove, size: 18.r, color: context.colorScheme.inversePrimary),
+            icon: Icon(Icons.remove,
+                size: 18.r, color: context.colorScheme.inversePrimary),
             padding: EdgeInsets.zero,
             onPressed: () {},
           ),
@@ -259,8 +260,7 @@ Widget incDecButton(BuildContext context) {
         DText(
           '1',
           style: context.textTheme.labelLarge!
-              .copyWith(
-              fontWeight: FontWeight.bold),
+              .copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 8.w),
 
@@ -277,7 +277,8 @@ Widget incDecButton(BuildContext context) {
                 width: 2),
           ),
           child: IconButton(
-            icon: Icon(Icons.add, size: 18.r, color: context.colorScheme.inversePrimary),
+            icon: Icon(Icons.add,
+                size: 18.r, color: context.colorScheme.inversePrimary),
             padding: EdgeInsets.zero,
             onPressed: () {},
           ),
