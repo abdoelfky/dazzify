@@ -204,6 +204,14 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                     branch: state.selectedBranch,
                                   );
                                 },
+                                quantity: service.quantity,
+                                onQuantityChanged: (newQuantity) {
+                                  _serviceSelectionCubit.updateServiceQuantity(
+                                    serviceId: service.id,
+                                    quantity: newQuantity,
+                                  );
+                                },
+
                                 onCardTap: () {
                                   _goToServiceDetailsScreen(
                                     service: service,

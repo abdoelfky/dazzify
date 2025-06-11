@@ -34,6 +34,8 @@ class ServiceDetailsModel {
 
   @JsonKey(defaultValue: 0)
   final int bookingCount;
+  @JsonKey(defaultValue: 1)
+  final int quantity;
 
   @JsonKey(defaultValue: [])
   final List<String> includes;
@@ -69,6 +71,7 @@ class ServiceDetailsModel {
 
   const ServiceDetailsModel({
     required this.id,
+    required this.quantity,
     required this.brand,
     required this.title,
     required this.description,
@@ -98,6 +101,7 @@ class ServiceDetailsModel {
     this.image = '',
     this.price = 0,
     this.fees = 0,
+    this.quantity = 0,
     this.duration = 0,
     this.bookingCount = 0,
     this.includes = const [],
@@ -112,6 +116,56 @@ class ServiceDetailsModel {
     this.services = const [],
     this.ratingPercentage = const {},
   ]);
+
+  ServiceDetailsModel copyWith({
+    String? id,
+    BrandModel? brand,
+    String? title,
+    String? description,
+    String? image,
+    num? price,
+    int? fees,
+    int? duration,
+    int? bookingCount,
+    int? quantity,
+    List<String>? includes,
+    String? serviceLocation,
+    bool? allowMultipleServicesBook,
+    bool? allowMultipleServicesCount,
+    int? lateLimit,
+    String? type,
+    double? rating,
+    int? ratingCount,
+    List<InBranchesModel>? inBranches,
+    Map<String, double>? ratingPercentage,
+    List<ServiceModel>? services,
+  }) {
+    return ServiceDetailsModel(
+      id: id ?? this.id,
+      brand: brand ?? this.brand,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      price: price ?? this.price,
+      fees: fees ?? this.fees,
+      duration: duration ?? this.duration,
+      bookingCount: bookingCount ?? this.bookingCount,
+      quantity: quantity ?? this.quantity,
+      includes: includes ?? this.includes,
+      serviceLocation: serviceLocation ?? this.serviceLocation,
+      allowMultipleServicesBook:
+      allowMultipleServicesBook ?? this.allowMultipleServicesBook,
+      allowMultipleServicesCount:
+      allowMultipleServicesCount ?? this.allowMultipleServicesCount,
+      lateLimit: lateLimit ?? this.lateLimit,
+      type: type ?? this.type,
+      rating: rating ?? this.rating,
+      ratingCount: ratingCount ?? this.ratingCount,
+      inBranches: inBranches ?? this.inBranches,
+      ratingPercentage: ratingPercentage ?? this.ratingPercentage,
+      services: services ?? this.services,
+    );
+  }
 
   factory ServiceDetailsModel.fromJson(Map<String, dynamic> json) =>
       _$ServiceDetailsModelFromJson(json);

@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/features/brand/presentation/widgets/service_booking_button.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
@@ -10,6 +9,7 @@ class ServiceWidget extends StatefulWidget {
   final String title;
   final String description;
   final num price;
+  final int quantity;
   final void Function()? onSingleBookingTap;
   final ServiceStatus serviceStatus;
   final bool isMultipleService;
@@ -18,19 +18,24 @@ class ServiceWidget extends StatefulWidget {
   final void Function()? onBookingSelectTap;
   final void Function()? onCardTap;
 
+  /// Optional: callback to update quantity in parent
+  final Function(int)? onQuantityChanged;
+
   const ServiceWidget({
     super.key,
     required this.imageUrl,
     required this.title,
     required this.description,
     required this.price,
-    this.onSingleBookingTap,
     required this.serviceStatus,
+    required this.quantity,
+    this.onSingleBookingTap,
     this.isMultipleService = false,
     this.isAllowMultipleServicesCount = false,
     this.isBooked = false,
     this.onBookingSelectTap,
     this.onCardTap,
+    this.onQuantityChanged,
   });
 
   @override
@@ -38,6 +43,30 @@ class ServiceWidget extends StatefulWidget {
 }
 
 class _ServiceWidgetState extends State<ServiceWidget> {
+  late int quantity;
+
+  @override
+  void initState() {
+    quantity = widget.quantity;
+    super.initState();
+  }
+
+  void _increment() {
+    setState(() {
+      quantity++;
+    });
+    widget.onQuantityChanged?.call(quantity);
+  }
+
+  void _decrement() {
+    if (quantity > 1) {
+      setState(() {
+        quantity--;
+      });
+      widget.onQuantityChanged?.call(quantity);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -96,7 +125,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                   widget.description,
                                   maxLines: 3,
                                   style: context.textTheme.bodySmall!.copyWith(
-                                    color: context.colorScheme.onSurfaceVariant,
+                                    color:
+                                    context.colorScheme.onSurfaceVariant,
                                     height: 1.h,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -107,12 +137,13 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                         ),
                         Row(
                           mainAxisAlignment:
-                              widget.serviceStatus != ServiceStatus.confirmation
-                                  ? MainAxisAlignment.spaceBetween
-                                  : MainAxisAlignment.end,
+                          widget.serviceStatus != ServiceStatus.confirmation
+                              ? MainAxisAlignment.spaceBetween
+                              : MainAxisAlignment.end,
                           children: [
                             if ((widget.isAllowMultipleServicesCount &&
-                                !widget.isBooked)||!widget.isAllowMultipleServicesCount)
+                                !widget.isBooked) ||
+                                !widget.isAllowMultipleServicesCount)
                               SizedBox(
                                 width: 62.r,
                                 height: 16.r,
@@ -127,10 +158,13 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                               ),
                             if (widget.isAllowMultipleServicesCount &&
                                 widget.isBooked)
-                            incDecButton(context),
-                            SizedBox(
-                              width: 8.r,
-                            ),
+                              incDecButton(
+                                context,
+                                quantity,
+                                _increment,
+                                _decrement,
+                              ),
+                            SizedBox(width: 8.r),
                             if (widget.serviceStatus !=
                                 ServiceStatus.confirmation)
                               Builder(
@@ -147,9 +181,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                       width: 130.r,
                                       height: 32.r,
                                       onTap: () {
-                                        if (widget.onSingleBookingTap != null) {
-                                          widget.onSingleBookingTap!();
-                                        }
+                                        widget.onSingleBookingTap?.call();
                                       },
                                       title: getButtonTitle(
                                         context,
@@ -180,7 +212,6 @@ class _ServiceWidgetState extends State<ServiceWidget> {
 
   Widget serviceImage() {
     return SizedBox(
-      // height: 108.h,
       width: 80.w,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8).r,
@@ -193,28 +224,26 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   }
 
   String getButtonTitle(BuildContext context, ServiceStatus serviceStatus) {
-    if (serviceStatus == ServiceStatus.booking) {
-      return context.tr.book;
-    } else if (serviceStatus == ServiceStatus.paying) {
-      return context.tr.payService;
-    } else if (serviceStatus == ServiceStatus.pending) {
-      return context.tr.pending;
-    } else {
-      return '';
+    switch (serviceStatus) {
+      case ServiceStatus.booking:
+        return context.tr.book;
+      case ServiceStatus.paying:
+        return context.tr.payService;
+      case ServiceStatus.pending:
+        return context.tr.pending;
+      default:
+        return '';
     }
   }
 
   Widget pendingFilter() {
     return ClipRRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 1,
-          sigmaY: 1,
-        ),
+        filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
         child: Container(
           height: 140.r,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(const Radius.circular(8).r),
+            borderRadius: BorderRadius.all(Radius.circular(8).r),
             color: context.colorScheme.surface.withValues(alpha: 0.25),
           ),
         ),
@@ -223,67 +252,50 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   }
 }
 
-Widget incDecButton(BuildContext context) {
+Widget incDecButton(
+    BuildContext context,
+    int quantity,
+    VoidCallback onIncrement,
+    VoidCallback onDecrement,
+    ) {
   return Container(
-    // height: 32.r,
-    // padding: EdgeInsets.symmetric(horizontal: 8.w),
     decoration: BoxDecoration(
-      // border: Border.all(color: context.colorScheme.inversePrimary.withValues(alpha: 0.3)),
       borderRadius: BorderRadius.circular(30.r),
       color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Minus Circle Button
-        Container(
-          width: 24.r,
-          height: 24.r,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
-            border: Border.all(
-                color:
-                    context.colorScheme.inversePrimary.withValues(alpha: 0.5),
-                width: 2),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.remove,
-                size: 18.r, color: context.colorScheme.inversePrimary),
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-          ),
-        ),
+        buildCircleButton(icon: Icons.remove, onTap: onDecrement),
         SizedBox(width: 8.w),
-
-        // Quantity
         DText(
-          '1',
+          '$quantity',
           style: context.textTheme.labelLarge!
               .copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 8.w),
-
-        // Plus Circle Button
-        Container(
-          width: 24.r,
-          height: 24.r,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
-            border: Border.all(
-                color:
-                    context.colorScheme.inversePrimary.withValues(alpha: 0.5),
-                width: 2),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.add,
-                size: 18.r, color: context.colorScheme.inversePrimary),
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-          ),
-        ),
+        buildCircleButton(icon: Icons.add, onTap: onIncrement),
       ],
+    ),
+  );
+}
+
+Widget buildCircleButton({
+  required IconData icon,
+  required VoidCallback onTap,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: 24.r,
+      height: 24.r,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        border: Border.all(color: Color(0xFF8B2FFB)),
+      ),
+      child: Center(
+          child: Icon(icon, size: 14.r, color: Color(0xFF8B2FFB))),
     ),
   );
 }

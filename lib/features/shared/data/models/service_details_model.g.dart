@@ -9,6 +9,7 @@ part of 'service_details_model.dart';
 ServiceDetailsModel _$ServiceDetailsModelFromJson(Map<String, dynamic> json) =>
     ServiceDetailsModel(
       id: json['id'] as String? ?? '',
+      quantity: (json['quantity'] as num?)?.toInt() ?? 1,
       brand: BrandModel.fromJson(json['brand'] as Map<String, dynamic>),
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -57,6 +58,7 @@ Map<String, dynamic> _$ServiceDetailsModelToJson(
       'fees': instance.fees,
       'duration': instance.duration,
       'bookingCount': instance.bookingCount,
+      'quantity': instance.quantity,
       'includes': instance.includes,
       'serviceLocation': instance.serviceLocation,
       'allowMultipleServicesBook': instance.allowMultipleServicesBook,

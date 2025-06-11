@@ -48,17 +48,21 @@ class BookingService {
   final String image;
   @JsonKey(defaultValue: 0)
   final int price;
+  @JsonKey(defaultValue: 1)
+  final int quantity;
 
   BookingService({
     required this.title,
     required this.image,
     required this.price,
+    required this.quantity,
   });
 
   const BookingService.empty({
     this.title = '',
     this.image = '',
     this.price = 0,
+    this.quantity = 1,
   });
 
   factory BookingService.fromJson(Map<String, dynamic> json) =>

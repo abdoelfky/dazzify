@@ -22,6 +22,7 @@ class IssueItem extends StatefulWidget {
 
 class _IssueItemState extends State<IssueItem> {
   late IssueBloc _issueBloc;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -31,6 +32,9 @@ class _IssueItemState extends State<IssueItem> {
 
   @override
   Widget build(BuildContext context) {
+    final services = widget.issue.services;
+    final currentService = services[_currentIndex];
+
     return GestureDetector(
       onTap: () {
         onCardTap(
@@ -45,38 +49,37 @@ class _IssueItemState extends State<IssueItem> {
             width: context.screenWidth,
             child: Row(
               children: [
-                if (widget.issue.services.length > 1)
-                  SizedBox(
-                    width: 80.w,
-                    height: 110.h,
-                    child: CarouselSlider.builder(
-                      itemCount: widget.issue.services.length,
-                      itemBuilder: (context, index, realIndex) =>
-                          cardImage(widget.issue.services[index].image),
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        // Enable auto-play
-                        autoPlayInterval: const Duration(seconds: 3),
-                        // Set auto-play interval
-                        enlargeCenterPage: true,
-                        // Enlarge the center page for focus
-                        enlargeFactor: 0.65.r,
-                        // Increase the size of the central item
-                        viewportFraction: 1.1
-                            .r, // Set the portion of the screen occupied by the current item
-                      ),
+                SizedBox(
+                  width: 80.w,
+                  height: 110.h,
+                  child: services.length > 1
+                      ? CarouselSlider.builder(
+                    itemCount: services.length,
+                    itemBuilder: (context, index, realIndex) =>
+                        cardImage(services[index].image),
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0.65.r,
+                      viewportFraction: 1.1.r,
+                      onPageChanged: (index, _) {
+                        setState(() => _currentIndex = index);
+                      },
                     ),
-                  ),
-                if (widget.issue.services.length == 1)
-                  cardImage(widget.issue.services.first.image),
+                  )
+                      : cardImage(currentService.image),
+                ),
                 SizedBox(width: 16.w),
+
+                // 🔄 Now synced with current carousel image
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     serviceInfo(
                       context: context,
-                      title: widget.issue.services.first.title,
-                      description: widget.issue.services.first.description,
+                      title: currentService.title,
+                      description: currentService.description,
                     ),
                     SizedBox(height: 16.h),
                     priceAndStatus(context: context, issue: widget.issue),
@@ -92,6 +95,7 @@ class _IssueItemState extends State<IssueItem> {
     );
   }
 }
+
 
 void onCardTap({
   required BuildContext context,

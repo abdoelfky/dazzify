@@ -68,14 +68,39 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                               });
                             },
                             itemBuilder: (context, index) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(8.r),
-                                child: DazzifyCachedNetworkImage(
-                                  imageUrl: services[index].image,
-                                  fit: BoxFit.cover,
-                                  width: 140.w,
-                                  height: 90.h,
-                                ),
+                              return Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    child: DazzifyCachedNetworkImage(
+                                      imageUrl: services[index].image,
+                                      fit: BoxFit.cover,
+                                      width: 140.w,
+                                      height: 90.h,
+                                    ),
+                                  ),
+                                  // if (service.quantity > 1)
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6.r, vertical: 2.r),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            context.colorScheme.inversePrimary,
+                                        borderRadius:
+                                            BorderRadius.circular(6.r),
+                                      ),
+                                      child: DText(
+                                        'X${services[index].quantity}',
+                                          style: context.textTheme.bodyMedium!.copyWith(
+                                              color: context.colorScheme.onSecondary
+                                          )
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               );
                             },
                           ),
@@ -88,8 +113,8 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                             effect: ScrollingDotsEffect(
                               activeDotColor: context.colorScheme.primary,
                               dotColor: Colors.grey,
-                              dotHeight: 8.h,
-                              dotWidth: 8.h,
+                              dotHeight: 4.h,
+                              dotWidth: 20.h,
                               spacing: 8.w,
                             ),
                           ),
@@ -97,14 +122,39 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                       ],
                     ),
                   if (services.length == 1)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: DazzifyCachedNetworkImage(
-                        imageUrl: services.first.image,
-                        fit: BoxFit.cover,
-                        width: 140.w,
-                        height: 110.h,
-                      ),
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: DazzifyCachedNetworkImage(
+                            imageUrl: services.first.image,
+                            fit: BoxFit.cover,
+                            width: 140.w,
+                            height: 90.h,
+                          ),
+                        ),
+                        // if (service.quantity > 1)
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.r, vertical: 2.r),
+                            decoration: BoxDecoration(
+                              color:
+                              context.colorScheme.inversePrimary,
+                              borderRadius:
+                              BorderRadius.circular(6.r),
+                            ),
+                            child: DText(
+                              'X${services.first.quantity}',
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                    color: context.colorScheme.onSecondary
+                                )
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   SizedBox(width: 8.w),
                   Column(
@@ -114,15 +164,15 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                         width: 130.w,
                         child: services.length > 1
                             ? Text(
-                          services[_currentPageIndex].title,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textTheme.bodyMedium,
-                        )
+                                services[_currentPageIndex].title,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.textTheme.bodyMedium,
+                              )
                             : Text(
-                          services.first.title,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textTheme.bodyMedium,
-                        ),
+                                services.first.title,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.textTheme.bodyMedium,
+                              ),
                       ),
                       SizedBox(height: 4.w),
                       // You can also update date/time and duration for the current service if needed,
@@ -138,7 +188,8 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                           ),
                           SizedBox(width: 8.w),
                           DText(
-                            TimeManager.formatBookingDateTime(widget.booking.startTime),
+                            TimeManager.formatBookingDateTime(
+                                widget.booking.startTime),
                             style: context.textTheme.bodySmall,
                           ),
                         ],
@@ -155,19 +206,19 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                           SizedBox(width: 8.w),
                           DText(
                             TimeManager.formatServiceDuration(
-                              widget.booking.services[_currentPageIndex].duration,
+                              widget
+                                  .booking.services[_currentPageIndex].duration,
                               context,
                             ),
                             style: context.textTheme.bodySmall,
                           ),
-
                         ],
                       ),
                       SizedBox(height: 4.w),
                       bookingStatus == BookingStatus.pending
                           ? LastActiveBookingProgressBar(
-                        startTime: widget.booking.createdAt,
-                      )
+                              startTime: widget.booking.createdAt,
+                            )
                           : bookingCompleted(context, widget.booking),
                     ],
                   ),
@@ -175,25 +226,25 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
               ),
               bookingStatus == BookingStatus.confirmed
                   ? PositionedDirectional(
-                bottom: 5.h,
-                end: 2.w,
-                child: Row(
-                  children: [
-                    DText(
-                      BookingStatus.confirmed.name,
-                      style: context.textTheme.labelMedium!.copyWith(
-                        color: ColorsManager.successColor,
+                      bottom: 5.h,
+                      end: 2.w,
+                      child: Row(
+                        children: [
+                          DText(
+                            BookingStatus.confirmed.name,
+                            style: context.textTheme.labelMedium!.copyWith(
+                              color: ColorsManager.successColor,
+                            ),
+                          ),
+                          SizedBox(width: 1.w),
+                          Icon(
+                            SolarIconsOutline.checkCircle,
+                            size: 14.r,
+                            color: ColorsManager.successColor,
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(width: 1.w),
-                    Icon(
-                      SolarIconsOutline.checkCircle,
-                      size: 14.r,
-                      color: ColorsManager.successColor,
-                    ),
-                  ],
-                ),
-              )
+                    )
                   : const SizedBox.shrink(),
             ],
           ),

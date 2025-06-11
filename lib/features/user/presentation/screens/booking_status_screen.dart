@@ -143,8 +143,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                             activeDotColor:
                                                 context.colorScheme.primary,
                                             dotColor: Colors.grey,
-                                            dotHeight: 8.0.h,
-                                            dotWidth: 8.0.h,
+                                            dotHeight: 4.0.h,
+                                            dotWidth: 20.0.h,
                                             spacing: 8.0.w,
                                           ),
                                         ),
@@ -206,15 +206,41 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8).r,
-          child: DazzifyCachedNetworkImage(
-            imageUrl: serviceInfo.services.first.image,
-            fit: BoxFit.cover,
-            width: 80.w,
-            height: 100.h,
-          ),
-        ),
+        Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8).r,
+              child: DazzifyCachedNetworkImage(
+                imageUrl: serviceInfo.services.first.image,
+                fit: BoxFit.cover,
+                width: 80.w,
+                height: 100.h,
+              ),
+            ),
+            // if (service.quantity > 1)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 6.r, vertical: 2.r),
+                decoration: BoxDecoration(
+                  color:
+                  context.colorScheme.inversePrimary,
+                  borderRadius:
+                  BorderRadius.circular(6.r),
+                ),
+                child: DText(
+                    'X${serviceInfo.services.first.quantity}',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                        color: context.colorScheme.onSecondary
+                    )
+                ),
+              ),
+            ),
+          ],
+        )
+        ,
         SizedBox(width: 15.w),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,

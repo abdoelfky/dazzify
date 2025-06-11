@@ -4,10 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
-import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:dazzify/features/booking/data/models/delivery_info_model.dart';
-import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/bottom_sheets/governorate_bottom_sheet.dart';
 import 'package:dazzify/features/booking/presentation/widgets/branch_button.dart';
@@ -26,7 +24,6 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mwidgets/mwidgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../widgets/multi_service_information.dart';
@@ -67,16 +64,16 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
         BlocProvider(
           create: (context) => getIt<ServiceInvoiceCubit>()
             ..updateInvoice(
-              price: services.map((service) => service.price).toList(),
-              appFees: services.map((service) => service.fees).toList(),
+              price: services.map((service) => service.price * service.quantity).toList(),
+              appFees: services.map((service) => service.fees.toDouble()).toList(),
             ),
         ),
         if (services.isEmpty)
           BlocProvider(
             create: (context) => getIt<ServiceInvoiceCubit>()
               ..updateInvoice(
-                price: [service.price],
-                appFees: [service.fees],
+                price: [service.price * service.quantity],
+                appFees: [service.fees.toDouble()],
               ),
           ),
       ],
@@ -156,8 +153,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           widget.selectedFromTime!, totalDuration);
     });
     _invoiceCubit.updateInvoice(
-      price: widget.services.map((service) => service.price).toList(),
-      appFees: widget.services.map((service) => service.fees).toList(),
+      price: widget.services.map((service) => service.price * service.quantity).toList(),
+      appFees: widget.services.map((service) => service.fees.toDouble()).toList(),
     );
     //Coupon Code reset
     if (_textController.text.isNotEmpty) {
@@ -277,9 +274,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                       // Active dot color
                       dotColor: Colors.grey,
                       // Inactive dot color
-                      dotHeight: 8.0.h,
+                      dotHeight: 4.0.h,
                       // Height of the dot
-                      dotWidth: 8.0.h,
+                      dotWidth: 20.0.h,
                       // Width of the dot
                       spacing: 8.0.w, // Space between dots
                     ),
@@ -525,9 +522,22 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         message: context.tr.selectYourLocation,
       );
     } else {
+
+      // Build servicesWithQuantity payload
+      final servicesWithQuantity = (widget.services.isEmpty
+          ? [widget.service]
+          : widget.services)
+          .map((service) => {
+        "serviceId": service.id,
+        "quantity": service.quantity,
+      })
+          .toList();
+
+
       _invoiceCubit.bookService(
         brandId: widget.service.brand.id,
         branchId: widget.branchId,
+        servicesWithQuantity: servicesWithQuantity,
         services: widget.services.isEmpty
             ? [widget.service.id]
             : widget.services.map((service) => service.id).toList(),

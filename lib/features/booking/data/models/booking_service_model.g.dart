@@ -10,6 +10,7 @@ BookingServiceModel _$BookingServiceModelFromJson(Map<String, dynamic> json) =>
     BookingServiceModel(
       id: json['id'] as String? ?? '',
       title: json['title'] as String? ?? '',
+      quantity: (json['quantity'] as num?)?.toInt() ?? 1,
       description: json['description'] as String? ?? '',
       image: json['image'] as String? ?? '',
       duration: (json['duration'] as num?)?.toInt() ?? 0,
@@ -23,4 +24,5 @@ Map<String, dynamic> _$BookingServiceModelToJson(
       'description': instance.description,
       'image': instance.image,
       'duration': instance.duration,
+      'quantity': instance.quantity,
     };

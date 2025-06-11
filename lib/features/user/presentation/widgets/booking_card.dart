@@ -3,7 +3,7 @@ import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/features/booking/data/models/bookings_list_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 
-class BookingCard extends StatelessWidget {
+class BookingCard extends StatefulWidget {
   final String imageUrl;
   final String title;
   final int price;
@@ -20,7 +20,19 @@ class BookingCard extends StatelessWidget {
   });
 
   @override
+  State<BookingCard> createState() => _BookingCardState();
+}
+
+class _BookingCardState extends State<BookingCard> {
+  final CarouselSliderController _carouselController = CarouselSliderController();
+  int _currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
+    final isMultiple = widget.services.length > 1;
+    final currentService =
+    isMultiple ? widget.services[_currentIndex] : widget.services.first;
+
     return Container(
       height: 100.h,
       decoration: BoxDecoration(
@@ -31,53 +43,102 @@ class BookingCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (services.length > 1)
-                Padding(
-                  padding: const EdgeInsets.all(10).r,
-                  child: SizedBox(
-                    height: 80.h,
-                    width: 70.w,
-                    child: CarouselSlider.builder(
-                      itemCount: services.length,
-                      itemBuilder: (context, index, realIndex) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(4.0).r,
-                          child: DazzifyCachedNetworkImage(
-                            imageUrl: services[index].image,
-                            fit: BoxFit.cover,
-                            height: 80.h,
-                            width: 70.w, // Adjust the height
+              Padding(
+                padding: const EdgeInsets.all(10).r,
+                child: SizedBox(
+                  height: 80.h,
+                  width: 70.w,
+                  child: isMultiple
+                      ? CarouselSlider.builder(
+                    carouselController: _carouselController,
+                    itemCount: widget.services.length,
+                    itemBuilder: (context, index, _) {
+                      final service = widget.services[index];
+                      return Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4.0).r,
+                            child: DazzifyCachedNetworkImage(
+                              imageUrl: service.image,
+                              fit: BoxFit.cover,
+                              height: 80.h,
+                              width: 70.w,
+                            ),
                           ),
-                        );
+                          // if (service.quantity > 1)
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 6.r, vertical: 2.r),
+                                decoration: BoxDecoration(
+                                  color:
+                                  context.colorScheme.inversePrimary,
+                                  borderRadius:
+                                  BorderRadius.circular(6.r),
+                                ),
+                                child: DText(
+                                  'X${service.quantity}',
+                                  style: context.textTheme.bodyMedium!
+                                      .copyWith(
+                                      color: context.colorScheme
+                                          .onSecondary),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0.65.r,
+                      viewportFraction: 1.1.r,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
                       },
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        // Enable auto-play
-                        autoPlayInterval: const Duration(seconds: 3),
-                        // Set auto-play interval
-                        enlargeCenterPage: true,
-                        // Enlarge the center page for focus
-                        enlargeFactor: 0.65.r,
-                        // Increase the size of the central item
-                        viewportFraction: 1.1
-                            .r, // Set the portion of the screen occupied by the current item
+                    ),
+                  )
+                      : Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4).r,
+                        child: DazzifyCachedNetworkImage(
+                          imageUrl: widget.imageUrl,
+                          height: 80.h,
+                          width: 70.w,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
+                      // if (currentService.quantity > 1)
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.r, vertical: 2.r),
+                            decoration: BoxDecoration(
+                              color:
+                              context.colorScheme.inversePrimary,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: DText(
+                              'X${currentService.quantity}',
+                              style: context.textTheme.bodyMedium!
+                                  .copyWith(
+                                  color: context
+                                      .colorScheme.onSecondary),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-              if (services.length == 1)
-                Padding(
-                  padding: const EdgeInsets.all(10).r,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4).r,
-                    child: DazzifyCachedNetworkImage(
-                      imageUrl: imageUrl,
-                      height: 80.h,
-                      width: 70.w,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+              ),
               SizedBox(width: 6.w),
               Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -88,7 +149,7 @@ class BookingCard extends StatelessWidget {
                     SizedBox(
                       width: 200.w,
                       child: DText(
-                        title,
+                        currentService.title ?? widget.title,
                         style: context.textTheme.bodyLarge!.copyWith(
                           color: context.colorScheme.primary,
                           overflow: TextOverflow.ellipsis,
@@ -99,8 +160,8 @@ class BookingCard extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: reformatPriceWithCommas(services.fold(0,
-                                    (total, service) => total + service.price))
+                            text: reformatPriceWithCommas(
+                                currentService.price * currentService.quantity)
                                 .toString(),
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: context.colorScheme.onSurfaceVariant,
@@ -112,14 +173,14 @@ class BookingCard extends StatelessWidget {
                               color: context.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          TextSpan(
-                            text: services.length > 1
-                                ? "   ( ${services.length} ${context.tr.services} ) "
-                                : "",
-                            style: context.textTheme.bodySmall!.copyWith(
-                              color: context.colorScheme.primary,
+                          if (isMultiple)
+                            TextSpan(
+                              text:
+                              "   ( ${widget.services.length} ${context.tr.services} ) ",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                color: context.colorScheme.primary,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -132,7 +193,7 @@ class BookingCard extends StatelessWidget {
             bottom: 6.h,
             end: 8.w,
             child: DText(
-              TimeManager.formatBookingDateTime(startTime),
+              TimeManager.formatBookingDateTime(widget.startTime),
               style: context.textTheme.bodySmall!.copyWith(
                 color: context.colorScheme.outline,
               ),

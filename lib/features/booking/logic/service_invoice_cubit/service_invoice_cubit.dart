@@ -127,6 +127,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
     required String brandId,
     required String branchId,
     required List<String> services,
+    required List<Map<String, dynamic>>  servicesWithQuantity,
     required String date,
     required String startTimeStamp,
     required bool isHasCoupon,
@@ -164,7 +165,8 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
 
     if (code != null) {
       debugPrint('---couponCode: $code');
-    }    if (notes != null) {
+    }
+    if (notes != null) {
       debugPrint('---notes: $notes');
     }
 
@@ -185,6 +187,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
         notes: notes,
         gov: gov,
         isInBranch: isInBranch,
+        servicesWithQuantity: servicesWithQuantity,
       ),
     );
 

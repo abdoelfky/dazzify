@@ -22,9 +22,15 @@ class InvoiceWidget extends StatelessWidget {
     return BlocBuilder<ServiceInvoiceCubit, ServiceInvoiceState>(
       builder: (context, state) {
         num totalPrice = services.isEmpty
-            ? service.price
-            : services.map((s) => s.price).fold<num>(0, (sum, item) => sum + item);
+            ? service.price * service.quantity
+            : services.fold<num>(
+          0,
+              (sum, s) => sum + (s.price * s.quantity),
+        );
 
+        final totalCount = services.isEmpty
+            ? service.quantity
+            : services.fold<int>(0, (sum, s) => sum + s.quantity);
         final deliveryFees = state.deliveryInfo.selectedDeliveryFees;
         final appFees = state.invoice.totalPrice - totalPrice - deliveryFees + state.couponModel.discountAmount;
 
@@ -51,9 +57,13 @@ class InvoiceWidget extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             InvoiceLine(
-              title: '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
+              title: '${context.tr.servicePrice} ($totalCount ${context.tr.services})',
               amount: totalPrice,
             ),
+            // InvoiceLine(
+            //   title: '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
+            //   amount: totalPrice,
+            // ),
             InvoiceLine(
               title: context.tr.couponDisc,
               amount: state.couponModel.discountAmount,

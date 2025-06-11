@@ -33,17 +33,41 @@ class ServiceInformation extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 80.h,
-              width: 80.w,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8).r,
-                child: DazzifyCachedNetworkImage(
-                  imageUrl: service.image,
-                  fit: BoxFit.cover,
+            Stack(
+              children: [
+                SizedBox(
+                  height: 80.h,
+                  width: 80.w,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8).r,
+                    child: DazzifyCachedNetworkImage(
+                      imageUrl: service.image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
+                // if (service.quantity > 1)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 6.r, vertical: 2.r),
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.inversePrimary,
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: DText(
+                      'X${service.quantity}',
+                        style: context.textTheme.bodyMedium!.copyWith(
+                            color: context.colorScheme.onSecondary
+                        )
+                    ),
+                  ),
+                ),
+              ],
             ),
+
             SizedBox(
               width: 16.w,
             ),

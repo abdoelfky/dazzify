@@ -133,9 +133,9 @@ class _TransactionItemState extends State<TransactionItem> {
                           // Active dot color
                           dotColor: Colors.grey,
                           // Inactive dot color
-                          dotHeight: 8.0.h,
+                          dotHeight: 4.0.h,
                           // Height of the dot
-                          dotWidth: 8.0.h,
+                          dotWidth: 20.0.h,
                           // Width of the dot
                           spacing: 8.0.w, // Space between dots
                         ),

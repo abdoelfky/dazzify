@@ -133,23 +133,51 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
   void selectBookingService({
     required ServiceDetailsModel service,
   }) {
-    List<ServiceDetailsModel> selectedServices =
-        state.selectedBrandServices.toList();
-    List<String> selectedServicesIds = state.selectedBrandServicesIds.toList();
-    if (selectedServices.contains(service)) {
-      selectedServices.remove(service);
+    final selectedServices = List<ServiceDetailsModel>.from(state.selectedBrandServices);
+    final selectedServicesIds = List<String>.from(state.selectedBrandServicesIds);
+
+    final isSelected = selectedServicesIds.contains(service.id);
+
+    if (isSelected) {
+      selectedServices.removeWhere((s) => s.id == service.id);
       selectedServicesIds.remove(service.id);
-      emit(state.copyWith(
-        selectedBrandServices: selectedServices,
-        selectedBrandServicesIds: selectedServicesIds,
-      ));
     } else {
       selectedServices.add(service);
       selectedServicesIds.add(service.id);
-      emit(state.copyWith(
-        selectedBrandServices: selectedServices,
-        selectedBrandServicesIds: selectedServicesIds,
-      ));
     }
+
+    emit(state.copyWith(
+      selectedBrandServices: selectedServices,
+      selectedBrandServicesIds: selectedServicesIds,
+    ));
   }
+
+  void updateServiceQuantity({
+    required String serviceId,
+    required int quantity,
+  }) {
+    final updatedServices = Map<String, List<ServiceDetailsModel>>.from(state.brandServices);
+
+    for (var category in updatedServices.keys) {
+      updatedServices[category] = updatedServices[category]!.map((service) {
+        if (service.id == serviceId) {
+          return service.copyWith(quantity: quantity);
+        }
+        return service;
+      }).toList();
+    }
+
+    final updatedSelected = state.selectedBrandServices.map((s) {
+      if (s.id == serviceId) {
+        return s.copyWith(quantity: quantity);
+      }
+      return s;
+    }).toList();
+
+    emit(state.copyWith(
+      brandServices: updatedServices,
+      selectedBrandServices: updatedSelected,
+    ));
+  }
+
 }

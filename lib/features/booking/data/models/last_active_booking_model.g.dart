@@ -34,6 +34,7 @@ ActiveBookingService _$ActiveBookingServiceFromJson(
       title: json['title'] as String? ?? '',
       image: json['image'] as String? ?? '',
       duration: (json['duration'] as num?)?.toInt() ?? 0,
+      quantity: (json['quantity'] as num?)?.toInt() ?? 1,
     );
 
 Map<String, dynamic> _$ActiveBookingServiceToJson(
@@ -42,4 +43,5 @@ Map<String, dynamic> _$ActiveBookingServiceToJson(
       'title': instance.title,
       'image': instance.image,
       'duration': instance.duration,
+      'quantity': instance.quantity,
     };

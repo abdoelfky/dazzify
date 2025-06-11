@@ -48,17 +48,21 @@ class ActiveBookingService {
   final String image;
   @JsonKey(defaultValue: 0)
   final int duration;
+  @JsonKey(defaultValue: 1)
+  final int quantity;
 
   ActiveBookingService({
     required this.title,
     required this.image,
     required this.duration,
+    required this.quantity,
   });
 
   const ActiveBookingService.empty({
     this.title = '',
     this.image = '',
     this.duration = 0,
+    this.quantity = 0,
   });
 
   factory ActiveBookingService.fromJson(Map<String, dynamic> json) =>

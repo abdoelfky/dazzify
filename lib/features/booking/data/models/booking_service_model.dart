@@ -18,10 +18,13 @@ class BookingServiceModel {
 
   @JsonKey(defaultValue: 0)
   final int duration;
+  @JsonKey(defaultValue: 1)
+  final int quantity;
 
   const BookingServiceModel({
     required this.id,
     required this.title,
+    required this.quantity,
     required this.description,
     required this.image,
     required this.duration,
@@ -33,6 +36,7 @@ class BookingServiceModel {
     this.description = "",
     this.image = "",
     this.duration = 0,
+    this.quantity = 1,
   });
 
   factory BookingServiceModel.fromJson(Map<String, dynamic> json) =>

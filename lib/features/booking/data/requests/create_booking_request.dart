@@ -25,12 +25,16 @@ class CreateBookingRequest {
   @JsonKey(name: "isInBranch", includeIfNull: false)
   final bool? isInBranch;
 
+  @JsonKey(name: "servicesWithQuantity")
+  final List<Map<String, dynamic>> servicesWithQuantity;
+
   const CreateBookingRequest({
     required this.brandId,
     required this.branchId,
     required this.services,
     required this.startTime,
     required this.isHasCoupon,
+    required this.servicesWithQuantity,
     this.code,
     this.notes,
     this.bookingLocation,
