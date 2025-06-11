@@ -16,6 +16,8 @@ class CreateBookingRequest {
   final bool isHasCoupon;
   @JsonKey(name: "code", includeIfNull: false)
   final String? code;
+  @JsonKey(name: "notes", includeIfNull: false)
+  final String? notes;
   @JsonKey(name: "bookingLocation", includeIfNull: false)
   final Map<String, double>? bookingLocation;
   @JsonKey(name: "gov", includeIfNull: false)
@@ -30,6 +32,7 @@ class CreateBookingRequest {
     required this.startTime,
     required this.isHasCoupon,
     this.code,
+    this.notes,
     this.bookingLocation,
     this.gov,
     this.isInBranch,

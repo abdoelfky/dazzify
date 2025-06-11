@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
 List<T> toModelList<T>(
@@ -8,4 +9,11 @@ List<T> toModelList<T>(
 Future<void> openUrlSheet({required String url}) async {
   await Share.shareUri(Uri.parse(url));
 }
-///
+double reformatRating(double rating) {
+  return double.parse(rating.toStringAsFixed(1));
+}
+
+String reformatPriceWithCommas(num price) {
+  final formatter = NumberFormat('#,###');
+  return formatter.format(price);
+}

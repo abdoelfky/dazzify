@@ -82,7 +82,8 @@ class TopRatedServiceCard extends StatelessWidget {
                               ),
                             ),
                             DText(
-                              '${price.toString()} ${context.tr.egp}',
+
+                              '${reformatPriceWithCommas(price)} ${context.tr.egp}',
                               style: context.textTheme.bodySmall!.copyWith(
                                 color: Colors.white,
                               ),

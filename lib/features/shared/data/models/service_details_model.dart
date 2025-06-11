@@ -43,6 +43,9 @@ class ServiceDetailsModel {
   @JsonKey(defaultValue: false)
   final bool allowMultipleServicesBook;
 
+  @JsonKey(defaultValue: false)
+  final bool allowMultipleServicesCount;
+
   @JsonKey(defaultValue: 0)
   final int lateLimit;
 
@@ -83,6 +86,7 @@ class ServiceDetailsModel {
     required this.inBranches,
     required this.ratingPercentage,
     required this.allowMultipleServicesBook,
+    required this.allowMultipleServicesCount,
     this.services,
   });
 
@@ -103,6 +107,7 @@ class ServiceDetailsModel {
     this.rating = 0,
     this.ratingCount = 0,
     this.allowMultipleServicesBook = false,
+    this.allowMultipleServicesCount = false,
     this.inBranches = const [],
     this.services = const [],
     this.ratingPercentage = const {},

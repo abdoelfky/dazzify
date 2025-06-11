@@ -131,6 +131,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
     required String startTimeStamp,
     required bool isHasCoupon,
     String? code,
+    String? notes,
     LocationModel? bookingLocationModel,
     int? gov,
     bool? isInBranch,
@@ -163,6 +164,8 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
 
     if (code != null) {
       debugPrint('---couponCode: $code');
+    }    if (notes != null) {
+      debugPrint('---notes: $notes');
     }
 
     if (isInBranch != null) {
@@ -179,6 +182,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
         isHasCoupon: isHasCoupon,
         // code: couponId,
         code: code,
+        notes: notes,
         gov: gov,
         isInBranch: isInBranch,
       ),

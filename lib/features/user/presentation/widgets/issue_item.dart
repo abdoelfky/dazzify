@@ -174,7 +174,8 @@ Widget priceAndStatus({
     children: [
       SizedBox(
         width: context.screenWidth * 0.47,
-        child: DText("${issue.price} ${context.tr.currency}",
+
+        child: DText("${reformatPriceWithCommas(issue.price)} ${context.tr.egp}",
             style: context.textTheme.bodyMedium),
       ),
       if (issue.status.isNotEmpty)

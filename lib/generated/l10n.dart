@@ -3810,6 +3810,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Write Notes For Provider`
+  String get writeNotes {
+    return Intl.message(
+      'Write Notes For Provider',
+      name: 'writeNotes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get notes {
+    return Intl.message(
+      'Notes',
+      name: 'notes',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

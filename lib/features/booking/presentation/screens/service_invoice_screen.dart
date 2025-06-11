@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
+import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:dazzify/features/booking/data/models/delivery_info_model.dart';
 import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
@@ -17,6 +18,7 @@ import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
+import 'package:dazzify/features/shared/widgets/dazzify_multiline_text_field.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
@@ -91,6 +93,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   late final ValueNotifier<String> _selectedButton;
   late ServiceInvoiceCubit _invoiceCubit;
   late PageController _pageController;
+  late TextEditingController _notesController;
 
   final ValueNotifier<bool> _isCodeValidatingLoading = ValueNotifier(false);
   final TextEditingController _textController = TextEditingController();
@@ -102,6 +105,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
 
     _initialization();
     _pageController = PageController();
+    _notesController = TextEditingController();
 
     // _services= widget.services;
     // print(_services.length);
@@ -342,6 +346,11 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                   service: widget.service,
                 ),
               ),
+              DazzifyMultilineTextField(
+                controller: _notesController,
+                maxLength: 300,
+                hintText: DazzifyApp.tr.writeNotes,
+              ),
             ],
           ),
         ),
@@ -382,6 +391,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               selectedGovernorate: state.deliveryInfo.selectedGov,
               selectedLocationName: state.selectedLocationName,
               code: _textController.text,
+              notes:_notesController.text
             );
           },
         );
@@ -494,6 +504,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     required int selectedGovernorate,
     required String selectedLocationName,
     required String code,
+    required String notes,
   }) {
     LocationModel? bookingLocationModel =
         selectedButton == ServiceLocationOptions.outBranch
@@ -525,6 +536,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         isHasCoupon: code == '' ? false : true,
         bookingLocationModel: bookingLocationModel,
         code: code == '' ? null : code,
+        notes: notes == '' ? null : notes,
         gov: selectedGov,
         isInBranch: isInBranch,
       );

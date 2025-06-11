@@ -16,6 +16,7 @@ class PriceInfoItem extends StatelessWidget {
         ),
         const Spacer(),
         DText(
+
           price,
           style: context.textTheme.bodySmall!.copyWith(
             color: context.colorScheme.outline,

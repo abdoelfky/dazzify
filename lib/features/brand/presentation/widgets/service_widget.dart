@@ -13,6 +13,7 @@ class ServiceWidget extends StatefulWidget {
   final void Function()? onSingleBookingTap;
   final ServiceStatus serviceStatus;
   final bool isMultipleService;
+  final bool isAllowMultipleServicesCount;
   final bool isBooked;
   final void Function()? onBookingSelectTap;
   final void Function()? onCardTap;
@@ -26,6 +27,7 @@ class ServiceWidget extends StatefulWidget {
     this.onSingleBookingTap,
     required this.serviceStatus,
     this.isMultipleService = false,
+    this.isAllowMultipleServicesCount = false,
     this.isBooked = false,
     this.onBookingSelectTap,
     this.onCardTap,
@@ -45,16 +47,31 @@ class _ServiceWidgetState extends State<ServiceWidget> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16).r,
             child: Container(
-              height: 140.h,
+              height: 150.h,
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(8)).r,
-                color:
-                    context.colorScheme.inversePrimary.withValues(alpha: 0.1),
+                color: context.colorScheme.onSecondary,
               ),
               child: Row(
                 children: [
-                  serviceImage(),
+                  Column(
+                    children: [
+                      Expanded(child: serviceImage()),
+                      if (widget.isAllowMultipleServicesCount &&
+                          widget.isBooked)
+                        Column(
+                          children: [
+                            SizedBox(height: 8.w),
+                            DText(
+                              '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+                              style: context.textTheme.labelLarge!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                   SizedBox(width: 16.w),
                   Expanded(
                     child: Column(
@@ -94,17 +111,23 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                   ? MainAxisAlignment.spaceBetween
                                   : MainAxisAlignment.end,
                           children: [
-                            SizedBox(
-                              width: 62.r,
-                              height: 16.r,
-                              child: FittedBox(
-                                alignment: AlignmentDirectional.centerStart,
-                                child: DText(
-                                  '${widget.price} ${context.tr.egp}',
-                                  style: context.textTheme.titleSmall,
-                                ),
-                              ),
-                            ),
+                            (widget.isAllowMultipleServicesCount &&
+                                    !widget.isBooked)
+                                ? SizedBox(
+                                    width: 62.r,
+                                    height: 16.r,
+                                    child: FittedBox(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: DText(
+                                        '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+                                        style: context.textTheme.labelLarge!
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  )
+                                : incDecButton(context),
                             SizedBox(
                               width: 8.r,
                             ),
@@ -113,9 +136,11 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                               Builder(
                                 builder: (context) {
                                   if (widget.isMultipleService) {
-                                    return ServiceBookingButton(
-                                      isBooked: widget.isBooked,
-                                      onTap: widget.onBookingSelectTap,
+                                    return Expanded(
+                                      child: ServiceBookingButton(
+                                        isBooked: widget.isBooked,
+                                        onTap: widget.onBookingSelectTap,
+                                      ),
                                     );
                                   } else {
                                     return PrimaryButton(
@@ -155,7 +180,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
 
   Widget serviceImage() {
     return SizedBox(
-      height: 108.h,
+      // height: 108.h,
       width: 80.w,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8).r,
@@ -196,4 +221,68 @@ class _ServiceWidgetState extends State<ServiceWidget> {
       ),
     );
   }
+}
+
+Widget incDecButton(BuildContext context) {
+  return Container(
+    // height: 32.r,
+    // padding: EdgeInsets.symmetric(horizontal: 8.w),
+    decoration: BoxDecoration(
+      // border: Border.all(color: context.colorScheme.inversePrimary.withValues(alpha: 0.3)),
+      borderRadius: BorderRadius.circular(30.r),
+      color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Minus Circle Button
+        Container(
+          width: 24.r,
+          height: 24.r,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
+            border: Border.all(
+                color:
+                context.colorScheme.inversePrimary.withValues(alpha: 0.5),
+                width: 2),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.remove, size: 18.r, color: context.colorScheme.inversePrimary),
+            padding: EdgeInsets.zero,
+            onPressed: () {},
+          ),
+        ),
+        SizedBox(width: 8.w),
+
+        // Quantity
+        DText(
+          '1',
+          style: context.textTheme.labelLarge!
+              .copyWith(
+              fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 8.w),
+
+        // Plus Circle Button
+        Container(
+          width: 24.r,
+          height: 24.r,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.colorScheme.inversePrimary.withValues(alpha: 0.05),
+            border: Border.all(
+                color:
+                    context.colorScheme.inversePrimary.withValues(alpha: 0.5),
+                width: 2),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.add, size: 18.r, color: context.colorScheme.inversePrimary),
+            padding: EdgeInsets.zero,
+            onPressed: () {},
+          ),
+        ),
+      ],
+    ),
+  );
 }

@@ -26,6 +26,7 @@ class BookingState extends Equatable {
     this.lastActiveBookings = const [],
     this.singleBooking = const SingleBookingModel(
       id: '',
+      notes: '',
       startTime: '',
       endTime: '',
       isInBranch: false,

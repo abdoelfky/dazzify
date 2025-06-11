@@ -61,7 +61,8 @@ class BrandCard extends StatelessWidget {
                   ),
                 ),
                 DText(
-                  '${context.tr.priceRange} : ${brand.minPrice} ${context.tr.currency} - ${brand.maxPrice} ${context.tr.currency}',
+
+                  '${context.tr.priceRange} : ${reformatPriceWithCommas(brand.minPrice!)} ${context.tr.egp} - ${reformatPriceWithCommas(brand.maxPrice!)} ${context.tr.egp}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.labelSmall!.copyWith(

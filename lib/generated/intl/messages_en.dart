@@ -339,6 +339,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notPaid": MessageLookupByLibrary.simpleMessage("Not Paid"),
         "notValidEmail":
             MessageLookupByLibrary.simpleMessage("Not a valid email."),
+        "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "notificationMessage": MessageLookupByLibrary.simpleMessage(
             "Makeup Vendor accepted your request please keep in touch with him"),
         "notificationPermissionDialog": MessageLookupByLibrary.simpleMessage(
@@ -528,6 +529,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "waitingForResponse":
             MessageLookupByLibrary.simpleMessage("Waiting For response"),
         "wePay": MessageLookupByLibrary.simpleMessage("We Pay"),
+        "writeNotes":
+            MessageLookupByLibrary.simpleMessage("Write Notes For Provider"),
         "writeReply": MessageLookupByLibrary.simpleMessage("Write a reply"),
         "writeReview": MessageLookupByLibrary.simpleMessage("Write a review"),
         "yes": MessageLookupByLibrary.simpleMessage("YES"),

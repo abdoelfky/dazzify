@@ -9,6 +9,7 @@ part of 'single_booking_model.dart';
 SingleBookingModel _$SingleBookingModelFromJson(Map<String, dynamic> json) =>
     SingleBookingModel(
       id: json['id'] as String? ?? '',
+      notes: json['notes'] as String? ?? '',
       startTime: json['startTime'] as String? ?? '',
       endTime: json['endTime'] as String? ?? '',
       isInBranch: json['isInBranch'] as bool? ?? false,
@@ -45,6 +46,7 @@ Map<String, dynamic> _$SingleBookingModelToJson(SingleBookingModel instance) =>
       'deliveryFees': instance.deliveryFees,
       'totalPrice': instance.totalPrice,
       'status': instance.status,
+      'notes': instance.notes,
       'isFinished': instance.isFinished,
       'isRate': instance.isRate,
       'isArrived': instance.isArrived,

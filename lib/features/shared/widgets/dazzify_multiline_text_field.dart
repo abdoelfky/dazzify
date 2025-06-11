@@ -52,7 +52,7 @@ class DazzifyMultilineTextField extends StatelessWidget {
                 child: TextField(
                   controller: controller,
                   keyboardType: TextInputType.multiline,
-                  maxLines: null,
+                  maxLines: 5,
                   maxLength: maxLength,
                   autofocus: false,
                   style: TextStyle(

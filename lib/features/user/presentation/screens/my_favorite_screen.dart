@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -76,7 +77,7 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                               return FavoriteCard(
                                 image: item.image,
                                 title: item.title,
-                                price: '${item.price} ${context.tr.currency}',
+                                price: '${reformatPriceWithCommas(item.price)} ${context.tr.currency}',
                                 onTap: () {
                                   context
                                       .read<BookingFromMediaCubit>()

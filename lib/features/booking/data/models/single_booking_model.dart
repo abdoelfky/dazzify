@@ -42,6 +42,9 @@ class SingleBookingModel {
   @JsonKey(defaultValue: "")
   final String status;
 
+  @JsonKey(defaultValue: "")
+  final String notes;
+
   @JsonKey(defaultValue: false)
   final bool isFinished;
 
@@ -59,6 +62,7 @@ class SingleBookingModel {
 
   const SingleBookingModel({
     required this.id,
+    required this.notes,
     required this.startTime,
     required this.endTime,
     required this.isInBranch,
@@ -81,6 +85,7 @@ class SingleBookingModel {
 
   const SingleBookingModel.loading({
     this.id = '',
+    this.notes = '',
     this.startTime = '',
     this.endTime = '',
     this.isInBranch = false,
@@ -108,6 +113,7 @@ class SingleBookingModel {
 
   const SingleBookingModel.empty([
     this.id = '',
+    this.notes = '',
     this.startTime = '',
     this.endTime = '',
     this.isInBranch = false,
@@ -130,6 +136,7 @@ class SingleBookingModel {
 
   SingleBookingModel copyWith({
     String? id,
+    String? notes,
     String? startTime,
     String? endTime,
     bool? isInBranch,
@@ -152,6 +159,7 @@ class SingleBookingModel {
   }) {
     return SingleBookingModel(
       id: id ?? this.id,
+      notes: notes ?? this.notes,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       isInBranch: isInBranch ?? this.isInBranch,

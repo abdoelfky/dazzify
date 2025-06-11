@@ -338,6 +338,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notPaid": MessageLookupByLibrary.simpleMessage("غير مدفوع"),
         "notValidEmail":
             MessageLookupByLibrary.simpleMessage("بريد إلكتروني غير صحيح"),
+        "notes": MessageLookupByLibrary.simpleMessage("الملاحظات"),
         "notificationMessage": MessageLookupByLibrary.simpleMessage(
             "لقد قبل بائع المكياج طلبك، يرجى البقاء على اتصال معه"),
         "notificationPermissionDialog": MessageLookupByLibrary.simpleMessage(
@@ -522,6 +523,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "waitingForResponse":
             MessageLookupByLibrary.simpleMessage("في إنتظار الرد"),
         "wePay": MessageLookupByLibrary.simpleMessage("وي باي"),
+        "writeNotes":
+            MessageLookupByLibrary.simpleMessage("اكتب ملاحظات لمقدم الخدمة"),
         "writeReply": MessageLookupByLibrary.simpleMessage("اكتب ردا"),
         "writeReview": MessageLookupByLibrary.simpleMessage("اكتب تقييمًا"),
         "yes": MessageLookupByLibrary.simpleMessage("نعم"),

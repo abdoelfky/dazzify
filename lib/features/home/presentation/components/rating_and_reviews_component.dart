@@ -55,7 +55,7 @@ class _RatingAndReviewsComponentState extends State<RatingAndReviewsComponent> {
           SizedBox(height: 12.h),
           Center(
             child: DText(
-              widget.service.rating.toString(),
+              reformatRating(widget.service.rating).toString(),
               style: context.textTheme.titleLarge,
             ),
           ),

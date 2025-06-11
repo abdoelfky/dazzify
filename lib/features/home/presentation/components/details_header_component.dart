@@ -162,7 +162,7 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
         SizedBox(height: 8.h),
         RichText(
           text: TextSpan(
-            text: '${widget.service.price} ',
+            text: '${reformatPriceWithCommas(widget.service.price)} ',
             style: context.textTheme.titleMedium!,
             children: [
               TextSpan(

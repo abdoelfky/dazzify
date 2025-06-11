@@ -143,7 +143,8 @@ class _TransactionItemState extends State<TransactionItem> {
                     ),
                     SizedBox(height: 6.h),
                     DText(
-                      "${widget.transaction.amount.toString()} ${context.tr.egp}",
+
+                      "${reformatPriceWithCommas(widget.transaction.amount)} ${context.tr.egp}",
                       style: context.textTheme.bodySmall,
                     ),
                   ],
@@ -196,7 +197,7 @@ class _TransactionItemState extends State<TransactionItem> {
                         ),
                         SizedBox(height: 4.h),
                         DText(
-                          "${widget.transaction.amount.toString()} ${context.tr.egp}",
+                          "${reformatPriceWithCommas(widget.transaction.amount)} ${context.tr.egp}",
                           style: context.textTheme.bodySmall,
                         ),
                       ],

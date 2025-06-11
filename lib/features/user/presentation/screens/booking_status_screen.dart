@@ -80,7 +80,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
               case UiState.success:
                 bookingStatus = getBookingStatus(state.singleBooking.status);
                 final startTime =
-                DateTime.parse(state.singleBooking.startTime).toLocal();
+                    DateTime.parse(state.singleBooking.startTime).toLocal();
                 final now = DateTime.now();
                 return DazzifyOverlayLoading(
                   isLoading: isLoading,
@@ -88,7 +88,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                     children: [
                       BookingStatusHeaderComponent(
                         startTime: state.singleBooking.startTime,
-                        refundConditions: state.singleBooking.brand.refundConditions,
+                        refundConditions:
+                            state.singleBooking.brand.refundConditions,
                         isBookingFinished: state.singleBooking.isFinished,
                         isArrived: state.singleBooking.isArrived,
                         isRate: state.singleBooking.isRate,
@@ -105,35 +106,42 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (bookingCubit.state.singleBooking.services.length > 1)
+                                    if (bookingCubit.state.singleBooking
+                                            .services.length >
+                                        1)
                                       SizedBox(
                                         height: 140,
                                         child: PageView.builder(
                                           controller: _pageController,
                                           scrollDirection: Axis.horizontal,
-                                          physics: const BouncingScrollPhysics(),
-                                          itemCount:
-                                          bookingCubit.state.singleBooking.services.length,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          itemCount: bookingCubit.state
+                                              .singleBooking.services.length,
                                           onPageChanged: (index) {
                                             setState(() {
                                               _currentPageIndex = index;
                                             });
                                           },
-                                          itemBuilder: (context, index) => MultiBookingWidget(
+                                          itemBuilder: (context, index) =>
+                                              MultiBookingWidget(
                                             service: bookingCubit.state
                                                 .singleBooking.services[index],
                                             booking: bookingCubit,
                                           ),
                                         ),
                                       ),
-                                    if (bookingCubit.state.singleBooking.services.length > 1)
+                                    if (bookingCubit.state.singleBooking
+                                            .services.length >
+                                        1)
                                       Center(
                                         child: SmoothPageIndicator(
                                           controller: _pageController,
                                           count: bookingCubit.state
                                               .singleBooking.services.length,
                                           effect: ScrollingDotsEffect(
-                                            activeDotColor: context.colorScheme.primary,
+                                            activeDotColor:
+                                                context.colorScheme.primary,
                                             dotColor: Colors.grey,
                                             dotHeight: 8.0.h,
                                             dotWidth: 8.0.h,
@@ -141,19 +149,24 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                           ),
                                         ),
                                       ),
-                                    if (bookingCubit.state.singleBooking.services.length == 1)
+                                    if (bookingCubit.state.singleBooking
+                                            .services.length ==
+                                        1)
                                       serviceInfo(context, bookingCubit),
                                     SizedBox(height: 16.h),
-                                    bookingInfo(bookingCubit, _currentPageIndex),
+                                    bookingInfo(
+                                        bookingCubit, _currentPageIndex),
                                     Padding(
-                                      padding:
-                                      const EdgeInsets.symmetric(vertical: 16.0).r,
+                                      padding: const EdgeInsets.symmetric(
+                                              vertical: 16.0)
+                                          .r,
                                       child: const Divider(),
                                     ),
                                     priceInfo(
                                         context,
                                         bookingCubit,
-                                        bookingCubit.state.singleBooking.services.length),
+                                        bookingCubit.state.singleBooking
+                                            .services.length),
                                     SizedBox(height: 35.h),
                                     DText(
                                       context.tr.readyForService,
@@ -162,7 +175,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                     SizedBox(height: 8.h),
                                     SwipeButtonComponent(
                                       status: bookingStatus,
-                                      isFinished: state.singleBooking.isFinished,
+                                      isFinished:
+                                          state.singleBooking.isFinished,
                                       isArrived: state.singleBooking.isArrived,
                                       startTime: state.singleBooking.startTime,
                                     ),
@@ -244,14 +258,16 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
 Widget bookingInfo(BookingCubit booking, int currentServiceIndex) {
   final bookingInfo = booking.state.singleBooking;
   final services = bookingInfo.services;
+  final notes = bookingInfo.notes;
 
-  final subtitle = (services.isNotEmpty && currentServiceIndex < services.length)
-      ? TimeManager.bookingDurationForService(
-    bookingStartTime: bookingInfo.startTime,
-    serviceIndex: currentServiceIndex,
-    services: services,
-  )
-      : "";
+  final subtitle =
+      (services.isNotEmpty && currentServiceIndex < services.length)
+          ? TimeManager.bookingDurationForService(
+              bookingStartTime: bookingInfo.startTime,
+              serviceIndex: currentServiceIndex,
+              services: services,
+            )
+          : "";
 
   return Column(
     children: [
@@ -279,6 +295,14 @@ Widget bookingInfo(BookingCubit booking, int currentServiceIndex) {
         subtitle: subtitle,
         isImage: false,
       ),
+      if (notes != "") SizedBox(height: 16.h),
+      if (notes != "")
+        BookingInfoItem(
+          icon: SolarIconsOutline.notes,
+          title: DazzifyApp.tr.notes,
+          subtitle: notes,
+          isImage: false,
+        ),
     ],
   );
 }
@@ -288,16 +312,18 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
 
   return Column(
     children: [
+
       if (length > 1)
         PriceInfoItem(
+
           title:
-          '${DazzifyApp.tr.servicePrice} ( $length ${context.tr.services} )',
-          price: "${priceInfo.price} ${DazzifyApp.tr.egp}",
+              '${DazzifyApp.tr.servicePrice} ( $length ${context.tr.services} )',
+          price: "${reformatPriceWithCommas(priceInfo.price)} ${DazzifyApp.tr.egp}",
         ),
       if (length == 1)
         PriceInfoItem(
           title: DazzifyApp.tr.servicePrice,
-          price: "${priceInfo.price} ${DazzifyApp.tr.egp}",
+          price: "${reformatPriceWithCommas(priceInfo.price)} ${DazzifyApp.tr.egp}",
         ),
       SizedBox(height: 16.h),
       PriceInfoItem(
@@ -319,7 +345,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       SizedBox(height: 24.h),
       PriceInfoItem(
         title: DazzifyApp.tr.totalPrice,
-        price: "${priceInfo.totalPrice} ${DazzifyApp.tr.egp}",
+        price: "${reformatPriceWithCommas(priceInfo.totalPrice)} ${DazzifyApp.tr.egp}",
       ),
     ],
   );
@@ -329,7 +355,7 @@ Widget customDivider(BuildContext context) {
   return Row(
     children: List.generate(
       500 ~/ 10,
-          (index) => Expanded(
+      (index) => Expanded(
         child: Container(
           color: index % 2 == 0
               ? Colors.transparent

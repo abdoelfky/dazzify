@@ -12,7 +12,7 @@ class DazzifyUpdateDialog extends StatelessWidget {
   final String message;
   final String buttonTitle;
   final Future<void> Function() onTap;
-  final bool isCancelable; // ✅ NEW
+  final bool isCancelable;
 
   const DazzifyUpdateDialog({
     super.key,

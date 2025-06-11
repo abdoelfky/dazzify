@@ -15,7 +15,7 @@ class ServiceBookingButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        width: 130.w,
+        // width: 130.w,
         height: 32.h,
         duration: Duration(milliseconds: 300),
         decoration: BoxDecoration(

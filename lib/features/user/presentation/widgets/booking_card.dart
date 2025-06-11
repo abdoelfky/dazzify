@@ -99,9 +99,8 @@ class BookingCard extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: services
-                                .fold(0,
-                                    (total, service) => total + service.price)
+                            text: reformatPriceWithCommas(services.fold(0,
+                                    (total, service) => total + service.price))
                                 .toString(),
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: context.colorScheme.onSurfaceVariant,

@@ -1,5 +1,4 @@
 import 'package:dazzify/core/framework/export.dart';
-import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/dotted_line.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/invoice_line.dart';
@@ -53,20 +52,20 @@ class InvoiceWidget extends StatelessWidget {
             SizedBox(height: 24.h),
             InvoiceLine(
               title: '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
-              amount: totalPrice.toString(),
+              amount: totalPrice,
             ),
             InvoiceLine(
               title: context.tr.couponDisc,
-              amount: state.couponModel.discountAmount.toString(),
+              amount: state.couponModel.discountAmount,
               isWithBraces: true,
             ),
             InvoiceLine(
               title: context.tr.deliferyFees,
-              amount: deliveryFees.toString(),
+              amount: deliveryFees,
             ),
             InvoiceLine(
               title: context.tr.appFees,
-              amount: appFees.toStringAsFixed(2),
+              amount: double.parse(appFees.toStringAsFixed(2)),
             ),
             DottedLine(
               lineWidth: context.screenWidth,
@@ -75,7 +74,7 @@ class InvoiceWidget extends StatelessWidget {
             SizedBox(height: 24.h),
             InvoiceLine(
               title: context.tr.totalPrice,
-              amount: state.invoice.totalPrice.toString(),
+              amount: state.invoice.totalPrice,
             ),
             SizedBox(height: 8.h),
           ],

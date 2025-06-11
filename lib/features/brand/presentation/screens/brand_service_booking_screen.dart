@@ -63,6 +63,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: SafeArea(
         child: Column(
           children: [
@@ -196,6 +197,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                   state.selectedCategoryId]![index];
                               return ServiceWidget(
                                 isMultipleService: widget.isMultipleBooking,
+                                isAllowMultipleServicesCount: service.allowMultipleServicesCount,
                                 onSingleBookingTap: () {
                                   _goToBookingDateSelectionScreen(
                                     service: service,
@@ -231,7 +233,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                       );
                     } else {
                       return EmptyDataWidget(
-                        message: context.tr.noData,
+                        message: context.tr.noServices,
                       );
                     }
                   },

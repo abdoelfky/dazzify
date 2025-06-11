@@ -37,6 +37,8 @@ ServiceDetailsModel _$ServiceDetailsModelFromJson(Map<String, dynamic> json) =>
               {},
       allowMultipleServicesBook:
           json['allowMultipleServicesBook'] as bool? ?? false,
+      allowMultipleServicesCount:
+          json['allowMultipleServicesCount'] as bool? ?? false,
       services: (json['services'] as List<dynamic>?)
               ?.map((e) => ServiceModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -58,6 +60,7 @@ Map<String, dynamic> _$ServiceDetailsModelToJson(
       'includes': instance.includes,
       'serviceLocation': instance.serviceLocation,
       'allowMultipleServicesBook': instance.allowMultipleServicesBook,
+      'allowMultipleServicesCount': instance.allowMultipleServicesCount,
       'lateLimit': instance.lateLimit,
       'type': instance.type,
       'rating': instance.rating,

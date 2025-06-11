@@ -2,7 +2,7 @@ import 'package:dazzify/core/framework/export.dart';
 
 class InvoiceLine extends StatelessWidget {
   final String title;
-  final String amount;
+  final num amount;
   final bool isWithBraces;
 
   const InvoiceLine({
@@ -27,8 +27,8 @@ class InvoiceLine extends StatelessWidget {
           const Spacer(),
           DText(
             isWithBraces
-                ? '($amount ${context.tr.egp})'
-                : '$amount ${context.tr.egp}',
+                ? '(${reformatPriceWithCommas(amount)} ${context.tr.egp})'
+                : '${reformatPriceWithCommas(amount)} ${context.tr.egp}',
             style: context.textTheme.bodyLarge,
           ),
         ],

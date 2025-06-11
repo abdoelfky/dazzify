@@ -81,7 +81,8 @@ class PopularServiceCard extends StatelessWidget {
                         ),
                   ),
                   DText(
-                    '${service.price.toString()} ${context.tr.egp}',
+
+                    '${reformatPriceWithCommas(service.price)} ${context.tr.egp}',
                     style: context.textTheme.bodySmall!.copyWith(
                       color: Colors.white,
                     ),
