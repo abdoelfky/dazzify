@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dazzify/core/util/notification_type_enum.dart';
+import 'package:dazzify/features/chat/presentation/screens/chat_screen.dart';
 import 'package:fcm_config/fcm_config.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/firebase_options.dart';
@@ -165,6 +166,26 @@ class FCMNotificationImpl extends FCMNotification {
           appRouter.navigate(
             const ProfileTabRoute(
               children: [ProfileRoute(), BookingsHistoryRoute()],
+            ),
+          );
+          break;
+        case NotificationTypeEnum.general:
+          kPrint('➡️ Navigating to Home Screen ...');
+          appRouter.navigate(
+            const HomeRoute(),
+          );
+          break;
+        case NotificationTypeEnum.newMessage:
+          kPrint('➡️ Navigating to Messages ...');
+          appRouter.navigate(
+            const ConversationsRoute(),
+          );
+          break;
+        case NotificationTypeEnum.issueStatus:
+          kPrint('➡️ Navigating to issues ...');
+          appRouter.navigate(
+            const ProfileTabRoute(
+              children: [ProfileRoute(), IssueRoute()],
             ),
           );
           break;

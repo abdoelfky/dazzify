@@ -82,7 +82,7 @@ class WebSocketServiceImpl extends WebSocketService {
 
   @override
   void sendChatOpenCloseEvent(ChatOpenedRequest request) {
-    socketConsumer.emit("off_notifications", request.toJson());
+    socketConsumer.emit(request.event, request.toJson());
   }
 
   @override

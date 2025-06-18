@@ -28,6 +28,7 @@ class ChatScreen extends StatefulWidget implements AutoRouteWrapper {
   final String branchId;
   final String branchName;
   final String? serviceToBeSent;
+
   const ChatScreen({
     required this.brand,
     required this.branchId,
@@ -76,6 +77,14 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    _chatCubit.close();
+
+    super.dispose();
   }
 
   @override
@@ -195,7 +204,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 child: BlocBuilder<ChatCubit, ChatState>(
                   builder: (context, state) {
-
                     switch (state.fetchingMessagesState) {
                       case UiState.initial:
                       case UiState.loading:
@@ -263,8 +271,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         hintText: "${context.tr.message}..",
                         controller: textController,
                         validator: (text) => null,
-                        contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16,vertical: 16).r,
+                        contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16)
+                            .r,
                         minLines: 1,
                         maxLines: 6,
                         textInputType: TextInputType.text,

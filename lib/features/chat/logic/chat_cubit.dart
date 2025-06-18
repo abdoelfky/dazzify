@@ -7,6 +7,7 @@ import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/services/image_picking_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/web_socket/repositories/web_socket_repository.dart';
+import 'package:dazzify/core/web_socket/requests/chat_opened_request.dart';
 import 'package:dazzify/core/web_socket/response/web_socket_response.dart';
 import 'package:dazzify/features/chat/data/models/branch_message_model.dart';
 import 'package:dazzify/features/chat/data/models/message_model.dart';
@@ -43,7 +44,13 @@ class ChatCubit extends Cubit<ChatState> {
     this.branchId = branchId;
     this.branchName = branchName;
     this.brand = brand;
-  }
+    _webSocketRepository.sendChatOpenCloseEvent(
+      ChatOpenedRequest(
+        branchId: branchId,
+        type: "chat",
+        event: "off_notifications",
+      ),
+    );  }
 
   Future<void> getAllMessages() async {
     emit(state.copyWith(fetchingMessagesState: UiState.loading));
@@ -140,5 +147,12 @@ class ChatCubit extends Cubit<ChatState> {
         }
       },
     );
+  }
+  @override
+  Future<void> close() {
+    _webSocketRepository.sendChatOpenCloseEvent(
+      ChatOpenedRequest(branchId: branchId,event: 'on_notifications'),
+    );
+    return super.close();
   }
 }
