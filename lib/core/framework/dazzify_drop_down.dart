@@ -27,7 +27,7 @@ class _DazzifyIconMenuState extends State<DazzifyIconMenu> {
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
-        height: _isMenuOpen ? (widget.options.length * 65.0).h : 44.h,
+        height: _isMenuOpen ? (widget.options.length * 70.0).h : 44.h,
         curve: Curves.easeInOut,
         width: 40.w,
         decoration: BoxDecoration(
@@ -51,10 +51,15 @@ class _DazzifyIconMenuState extends State<DazzifyIconMenu> {
                         _isMenuOpen ? Icons.close : SolarIconsOutline.menuDots;
                   });
                 },
-                child: Icon(
-                  _menuIcon,
-                  size: 24.r,
-                  color: Colors.white,
+                child: Padding(
+                  padding: _isMenuOpen
+                      ? EdgeInsets.only(top: 16).r
+                      : EdgeInsets.zero,
+                  child: Icon(
+                    _menuIcon,
+                    size: 26.r,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -62,16 +67,16 @@ class _DazzifyIconMenuState extends State<DazzifyIconMenu> {
               Flexible(
                 child: ListView(
                   shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 16),
+                  padding: EdgeInsets.only(top: 16).r,
                   children: widget.options.map<Widget>((option) {
-                    if (option.icon != null) {
+                    if (option.icon != null){
                       return GestureDetector(
                         onTap: option.onTap,
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 16).r,
                           child: Icon(
                             option.icon,
-                            size: 24.r,
+                            size: 26.r,
                             color: Colors.white,
                           ),
                         ),
@@ -83,8 +88,8 @@ class _DazzifyIconMenuState extends State<DazzifyIconMenu> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 16).r,
                           child: SizedBox(
-                            width: 24.r,
-                            height: 24.r,
+                            width: 26.r,
+                            height: 26.r,
                             child: SvgPicture.asset(
                               option.svgIcon!,
                               fit: BoxFit.scaleDown,

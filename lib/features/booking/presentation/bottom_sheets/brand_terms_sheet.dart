@@ -7,7 +7,6 @@ import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/brand_terms_cubit/brand_terms_cubit.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
-import 'package:dazzify/features/brand/data/repositories/brand_repository.dart';
 import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
@@ -53,41 +52,51 @@ class BrandTermsSheet extends StatefulWidget {
 class _BrandTermsSheetState extends State<BrandTermsSheet> {
   late final ScrollController _scrollController;
   late final ValueNotifier<bool> _hasReachedTheEnd;
+  late final ValueNotifier<bool> _hasCheckedAgree;
   late final BrandTermsCubit _brandTermsCubit = getIt<BrandTermsCubit>();
-  late final ServiceSelectionCubit _serviceSelectionCubit =
-      getIt<ServiceSelectionCubit>();
+  late final ServiceSelectionCubit _serviceSelectionCubit = getIt<ServiceSelectionCubit>();
 
   void _scrollListener() {
-    if (_scrollController.offset >=
-        _scrollController.position.maxScrollExtent) {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
       _hasReachedTheEnd.value = true;
     }
   }
 
   void _checkIfScrollable() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients &&
-          _scrollController.position.maxScrollExtent == 0) {
+      if (_scrollController.hasClients && _scrollController.position.maxScrollExtent == 0) {
         _hasReachedTheEnd.value = true;
       }
     });
   }
 
+
   @override
   void initState() {
-    // _serviceSelectionCubit = context.read<ServiceSelectionCubit>();
-
     _brandTermsCubit.getBrandTerms(brandId: widget.service.brand.id);
     _scrollController = ScrollController()..addListener(_scrollListener);
     _hasReachedTheEnd = ValueNotifier(false);
+    _hasCheckedAgree = ValueNotifier(false);
+
+    // ✅ تحقق إذا لم يكن هناك تمرير (scroll)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients &&
+          _scrollController.position.maxScrollExtent == 0) {
+        _hasReachedTheEnd.value = true;
+      }
+    });
+
     super.initState();
   }
+
 
   @override
   void dispose() {
     _scrollController
       ..removeListener(_scrollListener)
       ..dispose();
+    _hasReachedTheEnd.dispose();
+    _hasCheckedAgree.dispose();
     super.dispose();
   }
 
@@ -103,9 +112,7 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
         handlerHeight: 4.h,
         handlerWidth: 120.w,
         children: [
-          SizedBox(
-            height: 8.h,
-          ),
+          SizedBox(height: 8.h),
           Divider(
             color: ColorsManager.bottomSheetDivider,
             height: 1.h,
@@ -119,22 +126,18 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                   case UiState.initial:
                   case UiState.loading:
                     return const LoadingAnimation();
+
                   case UiState.failure:
                     return ErrorDataWidget(
-                      onTap: () {
-                        _brandTermsCubit.getBrandTerms(
-                          brandId: widget.service.brand.id,
-                        );
-                      },
+                      onTap: () => _brandTermsCubit.getBrandTerms(brandId: widget.service.brand.id),
                       errorDataType: DazzifyErrorDataType.sheet,
                       message: state.errorMessage,
                     );
+
                   case UiState.success:
                     if (state.brandTerms.isEmpty) {
                       return Center(
-                        child: EmptyDataWidget(
-                          message: context.tr.noBrandTerms,
-                        ),
+                        child: EmptyDataWidget(message: context.tr.noBrandTerms),
                       );
                     } else {
                       _checkIfScrollable();
@@ -145,35 +148,20 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                               child: ListView.builder(
                                 controller: _scrollController,
                                 itemCount: state.brandTerms.length,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 16,
-                                ).r,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16).r,
                                 itemBuilder: (context, index) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 24.0,
-                                      left: 16.0,
-                                      right: 16.0,
-                                    ).r,
+                                    padding: const EdgeInsets.only(bottom: 24.0, left: 16.0, right: 16.0).r,
                                     child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      // mainAxisAlignment:
-                                      //     MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 4.0,
-                                            // left: 16.0,
-                                            // right: 16.0,
-                                          ).r,
+                                          padding: const EdgeInsets.only(top: 4.0).r,
                                           child: Container(
                                             width: 8.r,
                                             height: 8.r,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  context.colorScheme.onSurface,
+                                              color: context.colorScheme.onSurface,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
@@ -184,13 +172,12 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                             state.brandTerms[index],
                                             softWrap: true,
                                             maxLines: 8,
-                                            style: context.textTheme.bodySmall!
-                                                .copyWith(
-                                              color: context
-                                                  .colorScheme.onSurfaceVariant,
+                                            style: context.textTheme.bodySmall!.copyWith(
+                                              color: context.colorScheme.onSurfaceVariant,
                                             ),
                                           ),
-                                        )
+                                        ),
+                                        // ✅ Checkbox Section
                                       ],
                                     ),
                                   );
@@ -198,66 +185,97 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                               ),
                             ),
                           ),
+
+
+
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 40).r,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            child: Column(
                               children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                            horizontal: 10)
-                                        .r,
-                                    child: PrimaryButton(
-                                      textColor: context.colorScheme.primary,
-                                      color: context.colorScheme.primary,
-                                      isOutLined: true,
-                                      width: 155.w,
-                                      onTap: () {
-                                        context.maybePop();
+                                ValueListenableBuilder(
+                                  valueListenable: _hasReachedTheEnd,
+                                  builder: (_, reachedEnd, __) {
+                                    if (!reachedEnd) return const SizedBox.shrink();
+
+                                    return ValueListenableBuilder(
+                                      valueListenable: _hasCheckedAgree,
+                                      builder: (_, checked, __) {
+                                        return Row(
+                                          children: [
+                                            Checkbox(
+                                              value: checked,
+                                              onChanged: (val) => _hasCheckedAgree.value = val ?? false,
+                                            ),
+                                            Expanded(
+                                              child: DText(
+                                                context.tr.iAgreeToTerms,
+                                                style: context.textTheme.bodySmall,
+                                              ),
+                                            ),
+                                          ],
+                                        );
                                       },
-                                      title: context.tr.cancel,
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                            horizontal: 10)
-                                        .r,
-                                    child: ValueListenableBuilder(
-                                      valueListenable: _hasReachedTheEnd,
-                                      builder: (context, value, child) =>
-                                          PrimaryButton(
-                                        isActive: value,
-                                        title: context.tr.agree,
-                                        width: 155.w,
-                                        height: 42.h,
-                                        onTap: () {
-                                          context.maybePop();
-                                          context.pushRoute(ServiceInvoiceRoute(
-                                            service: widget.service,
-                                            serviceSelectionCubit:
-                                                widget.serviceSelectionCubit ??
-                                                    _serviceSelectionCubit,
-                                            services: widget.services,
-                                            branchId: widget.branchId,
-                                            branchName: widget.branchName,
-                                            branchLocation:
-                                                widget.branchLocation,
-                                            selectedDate: widget.selectedDate,
-                                            selectedStartTimeStamp:
-                                                widget.selectedStartTimeStamp,
-                                            selectedFromTime:
-                                                widget.selectedFromTime,
-                                            selectedToTime:
-                                                widget.selectedToTime,
-                                          ));
-                                          context.maybePop();
-                                        },
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                        child: PrimaryButton(
+                                          textColor: context.colorScheme.primary,
+                                          isOutLined: true,
+                                          width: 155.w,
+                                          onTap: () {
+                                            context.maybePop();
+                                          },
+                                          title: context.tr.cancel,
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                        child: ValueListenableBuilder(
+                                          valueListenable: _hasReachedTheEnd,
+                                          builder: (_, reachedEnd, __) {
+                                            return ValueListenableBuilder(
+                                              valueListenable: _hasCheckedAgree,
+                                              builder: (_, checked, __) {
+                                                final isScrollable = state.brandTerms.length > 10;
+                                                final isActive = isScrollable ? (reachedEnd && checked) : checked;
+
+                                                return PrimaryButton(
+                                                  isActive: isActive,
+                                                  title: context.tr.agree,
+                                                  width: 155.w,
+                                                  height: 42.h,
+                                                  onTap: () {
+                                                    context.maybePop();
+                                                    context.pushRoute(ServiceInvoiceRoute(
+                                                      service: widget.service,
+                                                      serviceSelectionCubit: widget.serviceSelectionCubit ?? _serviceSelectionCubit,
+                                                      services: widget.services,
+                                                      branchId: widget.branchId,
+                                                      branchName: widget.branchName,
+                                                      branchLocation: widget.branchLocation,
+                                                      selectedDate: widget.selectedDate,
+                                                      selectedStartTimeStamp: widget.selectedStartTimeStamp,
+                                                      selectedFromTime: widget.selectedFromTime,
+                                                      selectedToTime: widget.selectedToTime,
+                                                    ));
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

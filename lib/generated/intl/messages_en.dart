@@ -224,6 +224,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "hours": MessageLookupByLibrary.simpleMessage("Hours"),
         "hoursShortcut": MessageLookupByLibrary.simpleMessage("H"),
+        "iAgreeToTerms":
+            MessageLookupByLibrary.simpleMessage("I agree to the terms"),
         "inBranch": MessageLookupByLibrary.simpleMessage("In branch"),
         "inOrOutBranch": MessageLookupByLibrary.simpleMessage("In/Out Branch"),
         "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),

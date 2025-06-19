@@ -218,6 +218,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "history": MessageLookupByLibrary.simpleMessage("التاريخ"),
         "hours": MessageLookupByLibrary.simpleMessage("ساعة"),
         "hoursShortcut": MessageLookupByLibrary.simpleMessage("س"),
+        "iAgreeToTerms":
+            MessageLookupByLibrary.simpleMessage("أوافق على الشروط والأحكام"),
         "inBranch": MessageLookupByLibrary.simpleMessage("داخل الفرع"),
         "inOrOutBranch":
             MessageLookupByLibrary.simpleMessage("داخل/خارج الفرع"),

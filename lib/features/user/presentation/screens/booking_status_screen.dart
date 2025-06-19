@@ -99,10 +99,10 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                         child: CustomFadeAnimation(
                           duration: const Duration(milliseconds: 500),
                           child: ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 16).r,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(16.0).r,
+                                padding: const EdgeInsets.symmetric(vertical: 16.0).r,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

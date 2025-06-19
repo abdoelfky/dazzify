@@ -402,6 +402,7 @@
   "reported": "Report submitted successfully!",
   "availableSoon": "Coming Soon",
   "writeNotes": "Write Notes For Provider",
-  "notes": "Notes"
+  "notes": "Notes",
+  "iAgreeToTerms": "I agree to the terms"
 
 }

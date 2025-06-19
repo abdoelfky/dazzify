@@ -45,15 +45,21 @@ class _TransactionButtonState extends State<TransactionButton> {
           ).r,
           title: context.tr.pay,
           onTap: () {
-            context.pushRoute(
+
+            context
+                .pushRoute(
               PaymentMethodRoute(
                 serviceName: widget.serviceName,
                 transactionId: widget.transactionId,
               ),
-            ).then((onValue)
-            {
-              paymentStatus = getPaymentStatus(widget.status);
+            )
+                .then((onValue) {
+              print('ddddd');
+              // final updatedStatus = await context.read<TransactionBloc>().getStatus(widget.transactionId);
 
+              setState(() {
+                paymentStatus = getPaymentStatus(widget.status);
+              });
             });
           },
         );

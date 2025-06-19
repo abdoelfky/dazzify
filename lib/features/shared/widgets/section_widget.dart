@@ -32,12 +32,15 @@ class SectionWidget extends StatelessWidget {
           ),
           Visibility(
             visible: sectionType == SectionType.withTextButton,
-            child: TextButton(
-              onPressed: onTextButtonTap,
-              child: DText(
-                sectionButtonTitle ?? context.tr.more,
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: context.colorScheme.primary,
+            child: GestureDetector(
+              onTap: onTextButtonTap,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: DText(
+                  sectionButtonTitle ?? context.tr.more,
+                  style: context.textTheme.bodySmall!.copyWith(
+                    color: context.colorScheme.primary,
+                  ),
                 ),
               ),
             ),

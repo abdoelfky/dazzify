@@ -5,6 +5,8 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:mwidgets/mwidgets.dart';
+
 
 @RoutePage()
 class PaymentWebViewScreen extends StatefulWidget {
@@ -31,7 +33,30 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         AppConstants.paymentChannel,
         onMessageReceived: (message) {
           widget.transactionBloc.add(const ResetTransactionsEvent());
-          context.navigateTo(const TransactionRoute());
+
+          // context.replaceRoute(const TransactionRoute());
+          context.router.replaceAll([
+            const AuthenticatedRoute(
+              children: [
+                BottomNavBarRoute(
+                  children: [
+                    ProfileTabRoute(
+                      children: [
+                        PaymentRoutes(
+                          children: [
+                            TransactionRoute(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ]);
+
+
+          // context.navigateTo(const TransactionRoute());
         },
       );
   }

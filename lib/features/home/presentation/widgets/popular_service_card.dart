@@ -98,7 +98,7 @@ class PopularServiceCard extends StatelessWidget {
                   return FavoriteIconButton(
                     iconSize: 18.r,
                     backgroundColor:
-                        context.colorScheme.onPrimary.withValues(alpha: 0.1),
+                    context.colorScheme.onPrimary.withValues(alpha: 0.6),
                     favoriteColor: context.colorScheme.primary,
                     unFavoriteColor: context.colorScheme.primary,
                     isFavorite: state.favoriteIds.contains(service.id),

@@ -3830,6 +3830,16 @@ class S {
       args: [],
     );
   }
+
+  /// `I agree to the terms`
+  String get iAgreeToTerms {
+    return Intl.message(
+      'I agree to the terms',
+      name: 'iAgreeToTerms',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

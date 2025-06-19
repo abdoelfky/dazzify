@@ -20,6 +20,7 @@ class CancelTermsBottomSheet extends StatefulWidget {
 class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
   late final ScrollController _scrollController;
   late final ValueNotifier<bool> _hasReachedTheEnd;
+  late final ValueNotifier<bool> _hasCheckedAgree;
 
   void _scrollListener() {
     if (_scrollController.offset >=
@@ -28,10 +29,21 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
     }
   }
 
+
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(_scrollListener);
     _hasReachedTheEnd = ValueNotifier(false);
+    _hasCheckedAgree = ValueNotifier(false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // ✅ If no scroll is needed, activate hasReachedTheEnd
+      if (_scrollController.hasClients &&
+          _scrollController.position.maxScrollExtent == 0) {
+        _hasReachedTheEnd.value = true;
+      }
+    });
+
     super.initState();
   }
 
@@ -102,38 +114,103 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
         ),
         Spacer(),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40).r,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          padding: const EdgeInsets.symmetric(vertical: 10).r,
+          child: Column(
             children: [
-              PrimaryButton(
-                width: 155.w,
-                height: 42.h,
-                onTap: () {
-                  context.maybePop();
-                },
-                title: context.tr.cancel,
-                textColor: context.colorScheme.primary,
-                isOutLined: true,
-              ),
-              // Ensure "Agree" button is always enabled if the list is short or when the user has scrolled to the end.
-              ValueListenableBuilder(
-                valueListenable: _hasReachedTheEnd,
-                builder: (context, value, child) {
-                  bool isAgreeActive = widget.refundConditions.length > 10
-                      ? value
-                      : true; // Make agree button active if no scroll is needed
-                  return PrimaryButton(
-                    isActive: isAgreeActive,
-                    title: context.tr.agree,
+              if (widget.refundConditions.isNotEmpty)
+                ValueListenableBuilder(
+                  valueListenable: _hasReachedTheEnd,
+                  builder: (_, hasReached, __) {
+                    if (!hasReached) return const SizedBox.shrink();
+
+                    return ValueListenableBuilder(
+                      valueListenable: _hasCheckedAgree,
+                      builder: (_, hasChecked, __) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8).r,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: hasChecked,
+                                onChanged: (val) =>
+                                _hasCheckedAgree.value = val ?? false,
+                              ),
+                              Expanded(
+                                child: DText(
+                                  context.tr.iAgreeToTerms,
+                                  style: context.textTheme.bodySmall,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  PrimaryButton(
                     width: 155.w,
                     height: 42.h,
                     onTap: () {
-                      widget.onAgreeTap(true);
                       context.maybePop();
                     },
-                  );
-                },
+                    title: context.tr.cancel,
+                    textColor: context.colorScheme.primary,
+                    isOutLined: true,
+                  ),
+
+                  ValueListenableBuilder(
+                    valueListenable: _hasReachedTheEnd,
+                    builder: (context, hasReached, child) {
+                      return ValueListenableBuilder(
+                        valueListenable: _hasCheckedAgree,
+                        builder: (context, hasChecked, child) {
+                          bool isScrollable =
+                              widget.refundConditions.length > 10;
+                          bool isAgreeActive = isScrollable
+                              ? (hasReached && hasChecked)
+                              : hasChecked;
+
+                          return PrimaryButton(
+                            isActive: isAgreeActive,
+                            title: context.tr.agree,
+                            width: 155.w,
+                            height: 42.h,
+                            onTap: () {
+                              widget.onAgreeTap(true);
+                              context.maybePop();
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+
+                  // Ensure "Agree" button is always enabled if the list is short or when the user has scrolled to the end.
+                  // ValueListenableBuilder(
+                  //   valueListenable: _hasReachedTheEnd,
+                  //   builder: (context, value, child) {
+                  //     bool isAgreeActive = widget.refundConditions.length > 10
+                  //         ? value
+                  //         : true; // Make agree button active if no scroll is needed
+                  //     return PrimaryButton(
+                  //       isActive: isAgreeActive,
+                  //       title: context.tr.agree,
+                  //       width: 155.w,
+                  //       height: 42.h,
+                  //       onTap: () {
+                  //         widget.onAgreeTap(true);
+                  //         context.maybePop();
+                  //       },
+                  //     );
+                  //   },
+                  // ),
+                ],
               ),
             ],
           ),
@@ -148,6 +225,8 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
       ..dispose()
       ..removeListener(_scrollListener);
     _hasReachedTheEnd.dispose();
+    _hasCheckedAgree.dispose();
+
     super.dispose();
   }
 }

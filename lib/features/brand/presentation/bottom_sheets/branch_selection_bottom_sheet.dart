@@ -69,12 +69,15 @@ class _BranchSelectionBottomSheetState
                 );
               case UiState.success:
                 if (state.brandBranches.isEmpty) {
-                  return Center(
-                    child: EmptyDataWidget(
-                      message: context.tr.noBranches,
+                  return Expanded(
+                    child: Center(
+                      child: EmptyDataWidget(
+                        message: context.tr.noBranches,
+                      ),
                     ),
                   );
-                } else {
+                } else
+                {
                   return Expanded(
                     child: ListView.separated(
                       itemCount: state.brandBranches.length,
