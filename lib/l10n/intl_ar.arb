@@ -403,6 +403,7 @@
   "availableSoon": "متوفر قريبًا",
   "writeNotes": "اكتب ملاحظات لمقدم الخدمة",
   "notes": "الملاحظات",
-  "iAgreeToTerms": "أوافق على الشروط والأحكام"
+  "iAgreeToTerms": "أوافق على الشروط والأحكام",
+  "noServicesAtThisCategory": "لا توجد خدمات حالياً في هذا القسم"
 
 }

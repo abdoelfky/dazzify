@@ -326,6 +326,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSearchResult": MessageLookupByLibrary.simpleMessage(
             "There are no results matching your input"),
         "noServices": MessageLookupByLibrary.simpleMessage("No Services Found"),
+        "noServicesAtThisCategory": MessageLookupByLibrary.simpleMessage(
+            "There are currently no services in this category."),
         "noSessions": MessageLookupByLibrary.simpleMessage(
             "There are no available sessions for this vender yet, try again later"),
         "noSessionsToday": MessageLookupByLibrary.simpleMessage(

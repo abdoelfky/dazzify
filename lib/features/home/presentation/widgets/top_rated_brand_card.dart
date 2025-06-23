@@ -111,7 +111,7 @@ class TopRatedBrandCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6).r,
                       child: Container(
-                        width: 100.w,
+                        width: 60.w,
                         height: 1.5.h,
                         color: context.colorScheme.onPrimary,
                       ),

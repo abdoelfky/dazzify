@@ -226,24 +226,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               SizedBox(
                 height: 24.h,
               ),
-              // if(widget.services.length>1)
-              //   SizedBox(
-              //     height: 140,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,  // Change to horizontal scrolling
-              //       physics: BouncingScrollPhysics(),
-              //       shrinkWrap: true,
-              //       itemCount: widget.services.length,
-              //       itemBuilder: (context, index) => MultiServiceWidget(
-              //         service: widget.services[index],
-              //         index: index,
-              //         branchLocation: widget.branchLocation,
-              //         invoiceCubit: _invoiceCubit,
-              //         removeService: removeService, // Pass the remove callback
-              //
-              //       ),
-              //     ),
-              //   ),
 
               if (widget.services.length > 1)
                 // This ensures the carousel with the dot indicator is only shown when there are more than 1 item
@@ -301,7 +283,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                   onSelectLocationTap: () {
                     _openGovernoratesSheet();
                   },
-                  service: widget.service,
+                  service: widget.services.first,
                   branchLocation: widget.branchLocation,
                   invoiceCubit: _invoiceCubit,
                   selectedButton: selectedButton,
@@ -340,7 +322,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 child: InvoiceWidget(
                   textContorller: _textController,
                   services: widget.services,
-                  service: widget.service,
+                  service: widget.services.first,
                 ),
               ),
               DazzifyMultilineTextField(

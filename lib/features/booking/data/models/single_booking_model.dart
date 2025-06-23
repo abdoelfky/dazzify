@@ -3,6 +3,7 @@ import 'package:dazzify/features/booking/data/models/booking_service_model.dart'
 import 'package:dazzify/features/booking/data/models/branch_info_model.dart';
 import 'package:dazzify/features/booking/data/models/service_location_model.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
+import 'package:dazzify/features/booking/data/models/booking_payment_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'single_booking_model.g.dart';
@@ -59,6 +60,8 @@ class SingleBookingModel {
   final List<BookingServiceModel> services;
   final ServiceLocationModel bookingLocation;
   final BookingRateModel rating;
+  @JsonKey(defaultValue: [])
+  final List<BookingPaymentModel> payments;
 
   const SingleBookingModel({
     required this.id,
@@ -81,6 +84,7 @@ class SingleBookingModel {
     required this.services,
     required this.bookingLocation,
     required this.rating,
+    required this.payments,
   });
 
   const SingleBookingModel.loading({
@@ -104,6 +108,7 @@ class SingleBookingModel {
     this.services = const [],
     this.bookingLocation = const ServiceLocationModel.empty(),
     this.rating = const BookingRateModel.empty(),
+    this.payments = const [],
   });
 
   factory SingleBookingModel.fromJson(Map<String, dynamic> json) =>
@@ -132,6 +137,7 @@ class SingleBookingModel {
     this.services = const [],
     this.bookingLocation = const ServiceLocationModel.empty(),
     this.rating = const BookingRateModel.empty(),
+    this.payments = const [],
   ]);
 
   SingleBookingModel copyWith({
@@ -155,7 +161,7 @@ class SingleBookingModel {
     List<BookingServiceModel>? services,
     ServiceLocationModel? bookingLocation,
     BookingRateModel? rating,
-    List<String>? refundConditions,
+    List<BookingPaymentModel>? payments,
   }) {
     return SingleBookingModel(
       id: id ?? this.id,
@@ -178,6 +184,7 @@ class SingleBookingModel {
       services: services ?? this.services,
       bookingLocation: bookingLocation ?? this.bookingLocation,
       rating: rating ?? this.rating,
+      payments: payments ?? this.payments,
     );
   }
 }

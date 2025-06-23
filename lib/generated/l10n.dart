@@ -1940,6 +1940,16 @@ class S {
     );
   }
 
+  /// `There are currently no services in this category.`
+  String get noServicesAtThisCategory {
+    return Intl.message(
+      'There are currently no services in this category.',
+      name: 'noServicesAtThisCategory',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No Branches Found`
   String get noBranches {
     return Intl.message(

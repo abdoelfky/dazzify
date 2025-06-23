@@ -103,7 +103,7 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                                   ))),
                               SizedBox(height: 9),
                               DText(
-                                "${state.bookingReviewRequest.totalPrice.toString()} ${context.tr.currency}",
+                                "${state.bookingReviewRequest.totalPrice.toString()} ${context.tr.egp}",
                                 style: context.textTheme.bodyMedium!.copyWith(
                                   color: context.colorScheme.onSurfaceVariant,
                                 ),

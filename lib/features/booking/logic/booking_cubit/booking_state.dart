@@ -56,7 +56,7 @@ class BookingState extends Equatable {
         name: '',
         longitude: 0.0,
         latitude: 0.0,
-      ),
+      ), payments: [],
     ),
     this.errorMessage = "",
   });

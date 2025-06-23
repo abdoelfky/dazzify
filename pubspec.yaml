@@ -1,10 +1,10 @@
 name: dazzify
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.1+11
+#version: 1.0.1+11
 
 ####IOS
-#version: 2.0.0
+version: 2.0.1
 
 environment:
   sdk: '>=3.4.1 <4.0.0'

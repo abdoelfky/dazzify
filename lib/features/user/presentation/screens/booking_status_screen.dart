@@ -1,9 +1,12 @@
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
-import 'package:dazzify/features/booking/presentation/widgets/multi_service_widget.dart';
+import 'package:dazzify/features/payment/data/models/transaction_model.dart';
+import 'package:dazzify/features/payment/presentation/widgets/transaction_bar.dart';
+import 'package:dazzify/features/payment/presentation/widgets/transaction_button.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:dazzify/features/shared/enums/booking_status_enum.dart';
+import 'package:dazzify/features/shared/enums/transaction_enum.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
@@ -99,10 +102,13 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                         child: CustomFadeAnimation(
                           duration: const Duration(milliseconds: 500),
                           child: ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 16).r,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16).r,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16.0).r,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.0)
+                                        .r,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -162,12 +168,49 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                           .r,
                                       child: const Divider(),
                                     ),
+
                                     priceInfo(
                                         context,
                                         bookingCubit,
                                         bookingCubit.state.singleBooking
                                             .services.length),
                                     SizedBox(height: 35.h),
+                                    // if(state.singleBooking.payments.isNotEmpty)
+                                    // Row(
+                                    //   children: [
+                                    //     TransactionBar(
+                                    //       transaction: TransactionModel(
+                                    //           id: state.singleBooking.payments
+                                    //               .first.transactionId,
+                                    //           bookingId: state.singleBooking.id,
+                                    //           status: "not paid",
+                                    //           amount: 22,
+                                    //           refundAmount: 22,
+                                    //           expiredAt: state.singleBooking
+                                    //               .payments.first.expAt,
+                                    //           createdAt: state.singleBooking
+                                    //               .payments.first.createdAt,
+                                    //           type: state.singleBooking.payments
+                                    //               .first.type,
+                                    //           services: []),
+                                    //       onTimerFinish: () {
+                                    //         // setState(() {
+                                    //         //   widget.transaction.status =
+                                    //         //       "cancelled";
+                                    //         // });
+                                    //       },
+                                    //     ),
+                                    //     const Spacer(),
+                                    //     TransactionButton(
+                                    //       status: "not paid",
+                                    //       serviceName: state
+                                    //           .singleBooking.services[0].title,
+                                    //       transactionId: state.singleBooking
+                                    //           .payments.first.transactionId,
+                                    //     ),
+                                    //   ],
+                                    // ),
+
                                     DText(
                                       context.tr.readyForService,
                                       style: context.textTheme.titleMedium,
@@ -222,25 +265,18 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
               top: 0,
               right: 0,
               child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 6.r, vertical: 2.r),
+                padding: EdgeInsets.symmetric(horizontal: 6.r, vertical: 2.r),
                 decoration: BoxDecoration(
-                  color:
-                  context.colorScheme.inversePrimary,
-                  borderRadius:
-                  BorderRadius.circular(6.r),
+                  color: context.colorScheme.inversePrimary,
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
-                child: DText(
-                    'X${serviceInfo.services.first.quantity}',
-                    style: context.textTheme.bodyMedium!.copyWith(
-                        color: context.colorScheme.onSecondary
-                    )
-                ),
+                child: DText('X${serviceInfo.services.first.quantity}',
+                    style: context.textTheme.bodyMedium!
+                        .copyWith(color: context.colorScheme.onSecondary)),
               ),
             ),
           ],
-        )
-        ,
+        ),
         SizedBox(width: 15.w),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -338,18 +374,18 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
 
   return Column(
     children: [
-
       if (length > 1)
         PriceInfoItem(
-
           title:
               '${DazzifyApp.tr.servicePrice} ( $length ${context.tr.services} )',
-          price: "${reformatPriceWithCommas(priceInfo.price)} ${DazzifyApp.tr.egp}",
+          price:
+              "${reformatPriceWithCommas(priceInfo.price)} ${DazzifyApp.tr.egp}",
         ),
       if (length == 1)
         PriceInfoItem(
           title: DazzifyApp.tr.servicePrice,
-          price: "${reformatPriceWithCommas(priceInfo.price)} ${DazzifyApp.tr.egp}",
+          price:
+              "${reformatPriceWithCommas(priceInfo.price)} ${DazzifyApp.tr.egp}",
         ),
       SizedBox(height: 16.h),
       PriceInfoItem(
@@ -371,7 +407,8 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       SizedBox(height: 24.h),
       PriceInfoItem(
         title: DazzifyApp.tr.totalPrice,
-        price: "${reformatPriceWithCommas(priceInfo.totalPrice)} ${DazzifyApp.tr.egp}",
+        price:
+            "${reformatPriceWithCommas(priceInfo.totalPrice)} ${DazzifyApp.tr.egp}",
       ),
     ],
   );

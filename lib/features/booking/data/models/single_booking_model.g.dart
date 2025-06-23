@@ -31,6 +31,11 @@ SingleBookingModel _$SingleBookingModelFromJson(Map<String, dynamic> json) =>
       bookingLocation: ServiceLocationModel.fromJson(
           json['bookingLocation'] as Map<String, dynamic>),
       rating: BookingRateModel.fromJson(json['rating'] as Map<String, dynamic>),
+      payments: (json['payments'] as List<dynamic>?)
+              ?.map((e) =>
+                  BookingPaymentModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$SingleBookingModelToJson(SingleBookingModel instance) =>
@@ -55,4 +60,5 @@ Map<String, dynamic> _$SingleBookingModelToJson(SingleBookingModel instance) =>
       'services': instance.services,
       'bookingLocation': instance.bookingLocation,
       'rating': instance.rating,
+      'payments': instance.payments,
     };

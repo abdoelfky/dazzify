@@ -54,7 +54,10 @@ class BookingReviewCubit extends Cubit<BookingReviewState> {
         );
       },
       (bookingReviewRequest) {
-        emit(state.copyWith(addReviewState: UiState.success));
+        emit(state.copyWith(
+            addReviewState: UiState.success,
+            bookingReviewRequest: BookingReviewRequestModel.empty(),
+            bookingReviewRequestState: UiState.initial));
       },
     );
   }

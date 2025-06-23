@@ -206,6 +206,7 @@
   "noCategories": "No Categories Found",
   "brandServices": "Services",
   "noServices": "No Services Found",
+  "noServicesAtThisCategory": "There are currently no services in this category.",
   "noBranches": "No Branches Found",
   "emptyVendorImages": "Didn't Share Any Images Yet.",
   "emptyVendorReels": "Didn't Share Any Reels Yet.",

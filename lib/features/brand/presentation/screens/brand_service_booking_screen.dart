@@ -176,7 +176,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
               return Expanded(
                 child: Center(
                   child: EmptyDataWidget(
-                    message: context.tr.noServices,
+                    message: context.tr.noServicesAtThisCategory,
                   ),
                 ),
               );
@@ -241,7 +241,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                       );
                     } else {
                       return EmptyDataWidget(
-                        message: context.tr.noServices,
+                        message: context.tr.noServicesAtThisCategory,
                       );
                     }
                   },
