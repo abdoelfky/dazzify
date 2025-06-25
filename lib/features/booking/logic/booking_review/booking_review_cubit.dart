@@ -40,6 +40,7 @@ class BookingReviewCubit extends Cubit<BookingReviewState> {
 
   Future<void> addBookingReview(CreateBookingReviewRequest request) async {
     emit(state.copyWith(addReviewState: UiState.loading));
+    emit(state.copyWith(bookingReviewRequestState: UiState.initial));
     final response = await bookingRepository.createBookingReview(
       request: request,
     );

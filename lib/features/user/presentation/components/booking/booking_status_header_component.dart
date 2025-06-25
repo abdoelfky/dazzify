@@ -97,9 +97,9 @@ class _BookingStatusHeaderComponentState
   Widget buildStatusButton() {
     final startTime = DateTime.parse(widget.startTime).toLocal();
     final now = DateTime.now();
-    // bool isToday = startTime.year == now.year &&
-    //     startTime.month == now.month &&
-    //     startTime.day == now.day;
+    bool isToday = startTime.year == now.year &&
+        startTime.month == now.month &&
+        startTime.day == now.day;
 
     bool isSwiped = getTimeInMinute() <= 0 &&
         widget.status == BookingStatus.confirmed &&
@@ -111,8 +111,8 @@ class _BookingStatusHeaderComponentState
         (widget.status != BookingStatus.cancelled &&
             !widget.isBookingFinished &&
             !widget.isArrived
-        // &&
-        // !isToday
+        &&
+        !isToday
         ) ||
         isSwiped) {
       return cancelBookingButton();

@@ -50,9 +50,18 @@ class BrandProfileScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _BrandProfileScreenState extends State<BrandProfileScreen>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+  late  TabController _tabController;
   late final BrandBloc _brandBloc;
   late final ScrollController _controller;
+
+  int _resolveInitialTabIndex(BrandState state) {
+    final hasPhotos = state.photos.isNotEmpty;
+    final hasReels = state.reels.isNotEmpty;
+
+    if (hasPhotos) return 0;
+    if (hasReels) return 1;
+    return 0;
+  }
 
   @override
   void initState() {
@@ -60,6 +69,9 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
     _tabController = TabController(length: 3, vsync: this);
     _controller = ScrollController();
     _brandBloc = context.read<BrandBloc>();
+    _brandBloc.add(GetBrandImagesEvent(widget.brand!.id));
+    _brandBloc.add(GetBrandReelsEvent(widget.brand!.id));
+
     if (widget.brand != null) {
       _brandBloc.add(
         SetSingleBrandDetailsEvent(widget.brand!),
@@ -87,6 +99,17 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
         },
         child: BlocBuilder<BrandBloc, BrandState>(
           builder: (context, state) {
+
+            if (_tabController.index == 0 &&
+                state.brandDetailsState == UiState.success &&
+                state.photosState == UiState.success &&
+                state.reelsState == UiState.success) {
+              final resolvedIndex = _resolveInitialTabIndex(state);
+              if (_tabController.index != resolvedIndex) {
+                _tabController.animateTo(resolvedIndex);
+              }
+            }
+
             if (state.brandDetailsState == UiState.loading) {
               return const Center(
                 child: LoadingAnimation(),
@@ -229,12 +252,12 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                                   return GuestModeBottomSheet();
                                 },
                               );
-                            }else {
+                            } else {
                               showReportBottomSheet(
-                              context: context,
-                              id: state.brandDetails.id,
-                              type: "brand",
-                            );
+                                context: context,
+                                id: state.brandDetails.id,
+                                type: "brand",
+                              );
                             }
                           },
                         )

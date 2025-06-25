@@ -199,7 +199,7 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                           } else if (state.addReviewState == UiState.success) {
                             isLoading = false;
                             // context.maybePop();
-                            // widget.closeSheetContext.maybePop();
+                            widget.closeSheetContext.maybePop();
 
                             DazzifyToastBar.showSuccess(
                               message: context.tr.reviewCreated,

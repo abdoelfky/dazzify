@@ -423,7 +423,7 @@ class Authenticated extends AutoRouter implements AutoRouteWrapper {
       ],
       child: BlocListener<BookingReviewCubit, BookingReviewState>(
         listener: (context, state) {
-          if (state.bookingReviewRequestState == UiState.success) {
+                  if (state.bookingReviewRequestState == UiState.success) {
             showBookingReviewSheet(
               userModel: context.read<UserCubit>().state.userModel,
               context: context,
