@@ -102,7 +102,7 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                       child: PrimaryButton(
                         isLoading: isLoading,
                         onTap: () {
-                          if (formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()&&!isLoading) {
                             bookingCubit.createReview(
                               comment: reviewComment,
                               rate: rating,

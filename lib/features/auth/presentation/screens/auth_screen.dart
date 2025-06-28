@@ -122,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     PrimaryButton(
                       isLoading: isLoading,
                       onTap: () async {
-                        if (formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()&&!isLoading) {
                           formKey.currentState?.save();
                           FocusManager.instance.primaryFocus?.unfocus();
                           await authCubit.sendOtp(phoneNumber: phoneNumber);

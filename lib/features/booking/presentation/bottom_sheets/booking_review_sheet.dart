@@ -212,7 +212,7 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                         child: PrimaryButton(
                           isLoading: isLoading,
                           onTap: () {
-                            if (formKey.currentState!.validate()) {
+                            if (formKey.currentState!.validate()&&!isLoading) {
                               widget.bookingReviewCubit.addBookingReview(
                                 CreateBookingReviewRequest(
                                   bookingId:

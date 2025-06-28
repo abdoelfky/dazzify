@@ -80,7 +80,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(8)).r,
-                color: context.colorScheme.onSecondary,
+                color: context.colorScheme.onInverseSurface,
               ),
               child: Row(
                 children: [

@@ -93,7 +93,7 @@ class _IssueSheetState extends State<IssueSheet> {
                     return PrimaryButton(
                       isLoading: isLoading,
                       onTap: () async {
-                        if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()&&!isLoading) {
                           issueBloc.add(
                             CreateIssueEvent(
                               bookingId: widget.bookingId,

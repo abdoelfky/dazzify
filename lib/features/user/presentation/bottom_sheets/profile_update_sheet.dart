@@ -201,7 +201,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                         title: context.tr.update,
                         isActive: isActive.value,
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()&&!isLoading) {
                             _formKey.currentState!.save();
                             if (nameChanged()) {
                               profileCubit.updateProfileName(

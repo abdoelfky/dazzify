@@ -56,15 +56,24 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
                       context.colorScheme.inversePrimary.withValues(alpha: 0.1),
                 ),
               ),
+              // PositionedDirectional(
+              //   top: 100.h,
+              //   start: 30.w,
+              //   child: titleAndPrice(),
+              // ),
               PositionedDirectional(
-                top: 100.h,
+                top: 90.h,
                 start: 30.w,
-                child: titleAndPrice(),
+                child: SizedBox(
+                  width: context.screenWidth - 100.w, // Or any specific width like 250.w
+                  child: titleAndPrice(),
+                ),
               ),
+
               PositionedDirectional(
                 start: 20,
                 bottom: 0,
-                top: 180.h,
+                top: 185.h,
                 child: buildServiceImages(),
               ),
               if (!widget.isBooking)
@@ -158,8 +167,11 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
           style: context.textTheme.titleLarge!.copyWith(
             color: context.colorScheme.primary,
           ),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
         ),
-        SizedBox(height: 8.h),
+
+        SizedBox(height: 4.h),
         RichText(
           text: TextSpan(
             text: '${reformatPriceWithCommas(widget.service.price)} ',
