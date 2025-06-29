@@ -64,8 +64,11 @@ class ServiceInvoiceScreen extends StatefulWidget implements AutoRouteWrapper {
         BlocProvider(
           create: (context) => getIt<ServiceInvoiceCubit>()
             ..updateInvoice(
-              price: services.map((service) => service.price * service.quantity).toList(),
-              appFees: services.map((service) => service.fees.toDouble()).toList(),
+              price: services
+                  .map((service) => service.price * service.quantity)
+                  .toList(),
+              appFees:
+                  services.map((service) => service.fees.toDouble()).toList(),
             ),
         ),
         if (services.isEmpty)
@@ -139,8 +142,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
 
   // Method to remove service by index
   void removeService(int index) {
-
-
     // widget.serviceSelectionCubit.selectBookingService(service: widget.services[index]);
     widget.serviceSelectionCubit.removeServicesSelected(index: index);
     setState(() {
@@ -153,8 +154,11 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           widget.selectedFromTime!, totalDuration);
     });
     _invoiceCubit.updateInvoice(
-      price: widget.services.map((service) => service.price * service.quantity).toList(),
-      appFees: widget.services.map((service) => service.fees.toDouble()).toList(),
+      price: widget.services
+          .map((service) => service.price * service.quantity)
+          .toList(),
+      appFees:
+          widget.services.map((service) => service.fees.toDouble()).toList(),
     );
     //Coupon Code reset
     if (_textController.text.isNotEmpty) {
@@ -168,16 +172,16 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
             .map((service) => service.price)
             .toList()
             .fold<num>(
-            0,
+                0,
                 (sum, item) =>
-            sum + item); // sum prices if services are not empty
+                    sum + item); // sum prices if services are not empty
       }
       FocusManager.instance.primaryFocus?.unfocus();
       context.read<ServiceInvoiceCubit>().validateCouponAndUpdateInvoice(
-        service: widget.services.first,
-        price: totalPrice,
-        code: _textController.text,
-      );
+            service: widget.services.first,
+            price: totalPrice,
+            code: _textController.text,
+          );
 
       // textContorller.clear();
     }
@@ -226,7 +230,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               SizedBox(
                 height: 24.h,
               ),
-
               if (widget.services.length > 1)
                 // This ensures the carousel with the dot indicator is only shown when there are more than 1 item
                 SizedBox(
@@ -264,7 +267,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                     ),
                   ),
                 ),
-
               if (widget.services.length > 1)
                 MultiServiceInformation(
                   onSelectLocationTap: () {
@@ -283,7 +285,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                   onSelectLocationTap: () {
                     _openGovernoratesSheet();
                   },
-                  service: widget.services.first,
+                  service: widget.services.isEmpty
+                      ? widget.service
+                      : widget.services.first,
                   branchLocation: widget.branchLocation,
                   invoiceCubit: _invoiceCubit,
                   selectedButton: selectedButton,
@@ -322,7 +326,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 child: InvoiceWidget(
                   textContorller: _textController,
                   services: widget.services,
-                  service: widget.services.first,
+                  service: widget.services.isEmpty
+                      ? widget.service
+                      : widget.services.first,
                 ),
               ),
               DazzifyMultilineTextField(
@@ -364,29 +370,71 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           title: context.tr.confirm,
           isLoading: _isBookingLoading,
           onTap: () {
-              _onConfirmTap(
-              selectedButton: selectedButton,
-              selectedLocation: state.selectedLocation,
-              selectedGovernorate: state.deliveryInfo.selectedGov,
-              selectedLocationName: state.selectedLocationName,
-              code: _textController.text,
-              notes:_notesController.text
-            );
-
+            _onConfirmTap(
+                selectedButton: selectedButton,
+                selectedLocation: state.selectedLocation,
+                selectedGovernorate: state.deliveryInfo.selectedGov,
+                selectedLocationName: state.selectedLocationName,
+                code: _textController.text,
+                notes: _notesController.text);
           },
         );
       },
     );
   }
 
+  // Row branchesButtons(String selectedButton, BuildContext context) {
+  //   return Row(
+  //     children: [
+  //       BranchButton(
+  //         isActive: widget.service.serviceLocation !=
+  //             ServiceLocationOptions.outBranch,
+  //         onTap: () {
+  //           _selectButton(ServiceLocationOptions.inBranch);
+  //         },
+  //         height: 42.h,
+  //         width: 160.w,
+  //         isSelected: selectedButton == ServiceLocationOptions.inBranch,
+  //         title: context.tr.inBranch,
+  //       ),
+  //       const Spacer(),
+  //       BranchButton(
+  //         isActive:
+  //             widget.service.serviceLocation != ServiceLocationOptions.inBranch,
+  //         onTap: () {
+  //           _selectButton(ServiceLocationOptions.outBranch);
+  //           _openGovernoratesSheet();
+  //         },
+  //         height: 42.h,
+  //         width: 160.w,
+  //         isSelected: selectedButton == ServiceLocationOptions.outBranch,
+  //         title: context.tr.outBranch,
+  //       ),
+  //     ],
+  //   );
+  // }
   Row branchesButtons(String selectedButton, BuildContext context) {
+    final Set<String> allLocations = widget.services.isNotEmpty
+        ? widget.services.map((s) => s.serviceLocation).toSet()
+        : {widget.service.serviceLocation};
+
+    final bool hasAny = allLocations.contains(ServiceLocationOptions.any);
+    final bool hasIn = allLocations.contains(ServiceLocationOptions.inBranch);
+    final bool hasOut = allLocations.contains(ServiceLocationOptions.outBranch);
+
+    // Determine if buttons should be enabled
+    final bool enableIn = (hasAny && !hasOut) || (hasIn && !hasOut && !hasAny);
+    final bool enableOut = (hasAny && !hasIn) || (hasOut && !hasIn && !hasAny);
+    final bool enableBoth = hasAny && !hasIn && !hasOut;
+
     return Row(
       children: [
         BranchButton(
-          isActive: widget.service.serviceLocation !=
-              ServiceLocationOptions.outBranch,
+          isActive: enableIn || enableBoth,
           onTap: () {
-            _selectButton(ServiceLocationOptions.inBranch);
+            if (enableIn || enableBoth) {
+              _selectButton(ServiceLocationOptions.inBranch);
+            }
           },
           height: 42.h,
           width: 160.w,
@@ -395,11 +443,12 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         ),
         const Spacer(),
         BranchButton(
-          isActive:
-              widget.service.serviceLocation != ServiceLocationOptions.inBranch,
+          isActive: enableOut || enableBoth,
           onTap: () {
-            _selectButton(ServiceLocationOptions.outBranch);
-            _openGovernoratesSheet();
+            if (enableOut || enableBoth) {
+              _selectButton(ServiceLocationOptions.outBranch);
+              _openGovernoratesSheet();
+            }
           },
           height: 42.h,
           width: 160.w,
@@ -459,13 +508,16 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   }
 
   void _initialization() {
-    if (widget.service.serviceLocation == ServiceLocationOptions.outBranch) {
-      _selectedButton = ValueNotifier(ServiceLocationOptions.outBranch);
+    final Set<String> allLocations = widget.services.isNotEmpty
+        ? widget.services.map((s) => s.serviceLocation).toSet()
+        : {widget.service.serviceLocation};
 
-      _invoiceCubit.updateSelectedLocationName(
-        selectedLocationName: DazzifyApp.tr.NotSelectedYet,
-      );
-    } else {
+    final bool hasAny = allLocations.contains(ServiceLocationOptions.any);
+    final bool hasIn = allLocations.contains(ServiceLocationOptions.inBranch);
+    final bool hasOut = allLocations.contains(ServiceLocationOptions.outBranch);
+
+    if ((hasAny && !hasOut) || (hasIn && !hasOut && !hasAny)) {
+      // Default to in-branch
       _selectedButton = ValueNotifier(ServiceLocationOptions.inBranch);
 
       _invoiceCubit
@@ -475,6 +527,13 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         ..updateSelectedLocationName(
           selectedLocationName: widget.branchName,
         );
+    } else {
+      // Default to out-branch
+      _selectedButton = ValueNotifier(ServiceLocationOptions.outBranch);
+
+      _invoiceCubit.updateSelectedLocationName(
+        selectedLocationName: DazzifyApp.tr.NotSelectedYet,
+      );
     }
   }
 
@@ -505,17 +564,14 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
         message: context.tr.selectYourLocation,
       );
     } else {
-
       // Build servicesWithQuantity payload
-      final servicesWithQuantity = (widget.services.isEmpty
-          ? [widget.service]
-          : widget.services)
-          .map((service) => {
-        "serviceId": service.id,
-        "quantity": service.quantity,
-      })
-          .toList();
-
+      final servicesWithQuantity =
+          (widget.services.isEmpty ? [widget.service] : widget.services)
+              .map((service) => {
+                    "serviceId": service.id,
+                    "quantity": service.quantity,
+                  })
+              .toList();
 
       _invoiceCubit.bookService(
         brandId: widget.service.brand.id,
