@@ -1,10 +1,11 @@
+import 'package:dazzify/core/util/time_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 class DazzifyBirthdatePicker extends StatefulWidget {
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final Widget? prefixIcon;
   final IconData? prefixIconData;
   final String? label;
@@ -19,7 +20,7 @@ class DazzifyBirthdatePicker extends StatefulWidget {
 
   const DazzifyBirthdatePicker({
     super.key,
-    this.controller,
+    required this.controller,
     this.prefixIcon,
     this.prefixIconData,
     this.label,
@@ -38,7 +39,7 @@ class DazzifyBirthdatePicker extends StatefulWidget {
 }
 
 class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
-  final TextEditingController _controller = TextEditingController();
+  late final TextEditingController _controller;
 
   // Function to show the date picker
   Future<void> _selectDate(BuildContext context) async {
@@ -47,13 +48,11 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
     DateTime lastDate = DateTime.now();
 
     final DateTime? picked = await showDatePicker(
-
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
-
       builder: (context, child) {
         // Customizing the dialog and text style
         return Theme(
@@ -92,6 +91,16 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    setState(() {
+      _controller.text = TimeManager.reformatDateToDDMMYYYYWithSlashes(
+          widget.controller!.text);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -101,8 +110,6 @@ class _DazzifyBirthdatePickerState extends State<DazzifyBirthdatePicker> {
       onTap: () => _selectDate(context),
       // Show date picker on tap
       decoration: InputDecoration(
-
-
           hintText: widget.hintText,
           errorStyle: context.textTheme.bodySmall!.copyWith(
             height: 0.3.h,

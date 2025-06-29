@@ -25,9 +25,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   late String userName;
   late String emailAddress;
   late String gender;
+  final TextEditingController birthDayController = TextEditingController();
 
   // late int age;
-  late String birthDay;
+  // late String birthDay;
 
   late AuthCubit authCubit;
   bool isLoading = false;
@@ -115,6 +116,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     // ),
                     DazzifyBirthdatePicker(
                       hintText: context.tr.birthDate,
+                      controller: birthDayController,
                       prefixIconData: SolarIconsOutline.confetti,
                       validator: ValidationManager.ageValidator(
                         context: context,
@@ -122,7 +124,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ),
                       onSaved: (value) {
                         if (value != null) {
-                          birthDay = value;
+                          birthDayController.text = value;
 
                           // age = int.parse(value);
                         }
@@ -178,7 +180,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                       gender: gender,
                                       birthDay:
                                           TimeManager.reformatDateToDDMMYYYY(
-                                              birthDay),
+                                              birthDayController.text),
                                       email: emailAddress,
                                     );
                                   }

@@ -43,7 +43,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isActive ? onTap : null,
+      onTap: (isActive && !isLoading) ? onTap : null,
       child: Container(
         width: width ?? 312.w,
         height: height ?? 42.h,

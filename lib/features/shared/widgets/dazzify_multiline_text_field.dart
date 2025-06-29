@@ -58,7 +58,7 @@ class DazzifyMultilineTextField extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14.r,
-                    color: Theme.of(context).colorScheme.scrim,
+                    // color: Theme.of(context).colorScheme.scrim,
                   ),
                   onChanged: onChanged,
                   decoration: InputDecoration(
@@ -66,7 +66,7 @@ class DazzifyMultilineTextField extends StatelessWidget {
                     hintStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 14.r,
-                      color: Theme.of(context).colorScheme.scrim,
+                      // color: Theme.of(context).colorScheme.scrim,
                     ),
                     border: const OutlineInputBorder(
                       borderSide: BorderSide.none,

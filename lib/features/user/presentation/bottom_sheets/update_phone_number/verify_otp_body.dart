@@ -105,7 +105,7 @@ class _VerifyOtpBodyState extends State<VerifyOtpBody> {
                 SizedBox(height: 65.h),
                 PrimaryButton(
                   onTap: () async {
-                    if (_formKey.currentState!.validate()&&!isLoading) {
+                    if (_formKey.currentState!.validate()) {
                       FocusManager.instance.primaryFocus?.unfocus();
                       await _profileCubit.verifyUpdatePhoneNumber(
                         otp: otpCode,

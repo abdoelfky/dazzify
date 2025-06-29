@@ -364,7 +364,6 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           title: context.tr.confirm,
           isLoading: _isBookingLoading,
           onTap: () {
-            if(!_isBookingLoading) {
               _onConfirmTap(
               selectedButton: selectedButton,
               selectedLocation: state.selectedLocation,
@@ -373,7 +372,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
               code: _textController.text,
               notes:_notesController.text
             );
-            }
+
           },
         );
       },

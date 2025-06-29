@@ -26,7 +26,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   // final TextEditingController ageController = TextEditingController();
   final TextEditingController birthDayController = TextEditingController();
   late String selectedGender;
-  late String birthday;
+  // late String birthday;
 
   // late int age;
 
@@ -116,24 +116,16 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                       : context.tr.birthDate,
                   // label: context.localizedText.birthDate,
                   prefixIconData: SolarIconsOutline.confetti,
+                  controller: birthDayController,
 
                   validator: ValidationManager.ageValidator(
                     context: context,
                     label: context.tr.birthDate,
                   ),
 
-                  // onSaved: (value) {
-                  //
-                  //   if (value != null) {
-                  //     birthDay = value;
-                  //     checkActivity();
-                  //
-                  //     // age = int.parse(value);
-                  //   }
-                  // },
                   onChanged: (value) {
                     if (value != null) {
-                      birthday = value;
+                      birthDayController.text = value;
                       checkActivity();
                     }
                   },
@@ -201,7 +193,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                         title: context.tr.update,
                         isActive: isActive.value,
                         onTap: () {
-                          if (_formKey.currentState!.validate()&&!isLoading) {
+                          if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             if (nameChanged()) {
                               profileCubit.updateProfileName(
@@ -215,7 +207,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                                 email: emailController.text,
 
                                 birthday: TimeManager.reformatDateToDDMMYYYY(
-                                    birthday),
+                                    birthDayController.text),
                                 // age: age,
                                 gender: selectedGender,
                               );
@@ -251,7 +243,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   //   return profileCubit.state.userModel.profile.age != age;
   // }
   bool birthDayChanged() {
-    return profileCubit.state.userModel.profile.birthday != birthday;
+    return profileCubit.state.userModel.profile.birthday != birthDayController.text;
   }
 
   void checkActivity() {
