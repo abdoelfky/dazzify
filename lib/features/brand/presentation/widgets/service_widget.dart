@@ -266,7 +266,7 @@ Widget incDecButton(
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildCircleButton(icon: Icons.remove, onTap: onDecrement),
+        buildCircleButton(icon: Icons.remove, onTap: onDecrement,context: context),
         SizedBox(width: 8.w),
         DText(
           '$quantity',
@@ -274,7 +274,7 @@ Widget incDecButton(
               .copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 8.w),
-        buildCircleButton(icon: Icons.add, onTap: onIncrement),
+        buildCircleButton(icon: Icons.add, onTap: onIncrement,context: context),
       ],
     ),
   );
@@ -283,6 +283,7 @@ Widget incDecButton(
 Widget buildCircleButton({
   required IconData icon,
   required VoidCallback onTap,
+  required BuildContext context
 }) {
   return GestureDetector(
     onTap: onTap,
@@ -292,10 +293,10 @@ Widget buildCircleButton({
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
-        border: Border.all(color: Color(0xFF8B2FFB)),
+        border: Border.all(color: context.colorScheme.primary),
       ),
       child: Center(
-          child: Icon(icon, size: 14.r, color: Color(0xFF8B2FFB))),
+          child: Icon(icon, size: 14.r, color: context.colorScheme.primary)),
     ),
   );
 }

@@ -124,9 +124,6 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                         name: category.name,
                         isSelected: category.id == state.selectedCategoryId,
                         onTap: () {
-                          print("category${category.id}");
-                          print("category${state.selectedCategoryId}");
-
                           _serviceSelectionCubit.selectCategory(
                               brandCategory: category);
                         },
