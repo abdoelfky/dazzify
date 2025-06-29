@@ -32,7 +32,7 @@ class InvoiceWidget extends StatelessWidget {
             ? service.quantity
             : services.fold<int>(0, (sum, s) => sum + s.quantity);
         final deliveryFees = state.deliveryInfo.selectedDeliveryFees;
-        final appFees = state.invoice.totalPrice - totalPrice - deliveryFees + state.couponModel.discountAmount;
+        final appFees = state.invoice.totalPrice - totalPrice - deliveryFees + state.invoice.discountAmount;
 
         return Column(
           children: [
@@ -66,7 +66,7 @@ class InvoiceWidget extends StatelessWidget {
             // ),
             InvoiceLine(
               title: context.tr.couponDisc,
-              amount: state.couponModel.discountAmount,
+              amount: state.invoice.discountAmount,
               isWithBraces: true,
             ),
             InvoiceLine(

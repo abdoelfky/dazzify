@@ -73,6 +73,9 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
         state.copyWith(
           errorMessage: failure.message,
           couponValidationState: UiState.failure,
+            invoice: state.invoice.updateInvoice(
+              discountAmount: 0,
+            )
         ),
       ),
       (coupon) {

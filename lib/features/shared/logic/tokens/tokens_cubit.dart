@@ -10,6 +10,7 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'tokens_state.dart';
 
 class TokensCubit extends Cubit<TokensState> {
@@ -67,18 +68,9 @@ class TokensCubit extends Cubit<TokensState> {
 
   @override
   void onChange(Change<TokensState> change) {
-    if (change.currentState is GuestModeSuccessState &&
-        AppConfigManager.isAppInMaintenance) {
-      Future.delayed(const Duration(seconds: 4), () {
-        getIt<AppRouter>().replace(const MaintenanceRoute());
-      });
-    }
-   else if (change.currentState is GuestModeSuccessState && !_hasCheckedUpdate) {
-      _hasCheckedUpdate = true;
-      Future.delayed(const Duration(seconds: 4), () {
-        checkForAppUpdate(DazzifyApp.mainContext);
-      });
-    } else if (change.currentState is TokensLoadingState &&
+    if (AppConfigManager.isAppInMaintenance)
+      return;
+    else if (change.currentState is TokensLoadingState &&
         change.nextState is AuthenticatedState) {
       Future.delayed(const Duration(seconds: 4), () {
         getIt<AppRouter>().replace(const AuthenticatedRoute());

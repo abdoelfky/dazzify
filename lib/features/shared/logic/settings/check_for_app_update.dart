@@ -26,7 +26,7 @@ class UpdatePostponeManager {
   }
 }
 
-Future<void> checkForAppUpdate(BuildContext context) async {
+Future<void> checkForAppUpdate() async {
   final info = await PackageInfo.fromPlatform();
   final currentVersion = info.version;
   final isForceUpdate = AppConfigManager.forceUpdate;
@@ -39,7 +39,7 @@ Future<void> checkForAppUpdate(BuildContext context) async {
 
   if (currentVersion != remoteVersion) {
     showDialog(
-      context: context,
+      context: DazzifyApp.mainContext,
       barrierDismissible: !isForceUpdate,
       builder: (_) => PopScope(
         canPop: !isForceUpdate,
