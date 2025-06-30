@@ -87,8 +87,10 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                   Column(
                     children: [
                       Expanded(child: serviceImage()),
-                      if (widget.isAllowMultipleServicesCount &&
-                          widget.isBooked)
+                      if ((widget.isAllowMultipleServicesCount &&
+                              widget.isBooked) ||
+                          (!widget.isMultipleService &&
+                              widget.isAllowMultipleServicesCount))
                         Column(
                           children: [
                             SizedBox(height: 8.w),
@@ -125,8 +127,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                   widget.description,
                                   maxLines: 3,
                                   style: context.textTheme.bodySmall!.copyWith(
-                                    color:
-                                    context.colorScheme.onSurfaceVariant,
+                                    color: context.colorScheme.onSurfaceVariant,
                                     height: 1.h,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -137,13 +138,13 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                         ),
                         Row(
                           mainAxisAlignment:
-                          widget.serviceStatus != ServiceStatus.confirmation
-                              ? MainAxisAlignment.spaceBetween
-                              : MainAxisAlignment.end,
+                              widget.serviceStatus != ServiceStatus.confirmation
+                                  ? MainAxisAlignment.spaceBetween
+                                  : MainAxisAlignment.end,
                           children: [
-                            if ((widget.isAllowMultipleServicesCount &&
-                                !widget.isBooked) ||
-                                !widget.isAllowMultipleServicesCount)
+                            if (widget.isMultipleService &&
+                                widget.isAllowMultipleServicesCount &&
+                                !widget.isBooked)
                               SizedBox(
                                 width: 62.r,
                                 height: 16.r,
@@ -156,8 +157,10 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                   ),
                                 ),
                               ),
-                            if (widget.isAllowMultipleServicesCount &&
-                                widget.isBooked)
+                            if ((widget.isAllowMultipleServicesCount &&
+                                    widget.isBooked) ||
+                                (!widget.isMultipleService &&
+                                    widget.isAllowMultipleServicesCount))
                               incDecButton(
                                 context,
                                 quantity,
@@ -253,11 +256,11 @@ class _ServiceWidgetState extends State<ServiceWidget> {
 }
 
 Widget incDecButton(
-    BuildContext context,
-    int quantity,
-    VoidCallback onIncrement,
-    VoidCallback onDecrement,
-    ) {
+  BuildContext context,
+  int quantity,
+  VoidCallback onIncrement,
+  VoidCallback onDecrement,
+) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(30.r),
@@ -266,7 +269,8 @@ Widget incDecButton(
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildCircleButton(icon: Icons.remove, onTap: onDecrement,context: context),
+        buildCircleButton(
+            icon: Icons.remove, onTap: onDecrement, context: context),
         SizedBox(width: 8.w),
         DText(
           '$quantity',
@@ -274,17 +278,17 @@ Widget incDecButton(
               .copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 8.w),
-        buildCircleButton(icon: Icons.add, onTap: onIncrement,context: context),
+        buildCircleButton(
+            icon: Icons.add, onTap: onIncrement, context: context),
       ],
     ),
   );
 }
 
-Widget buildCircleButton({
-  required IconData icon,
-  required VoidCallback onTap,
-  required BuildContext context
-}) {
+Widget buildCircleButton(
+    {required IconData icon,
+    required VoidCallback onTap,
+    required BuildContext context}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(

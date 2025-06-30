@@ -32,12 +32,13 @@ class DazzifyApp extends StatefulWidget {
 
 class _DazzifyAppState extends State<DazzifyApp> {
   final settingsCubit = getIt<SettingsCubit>();
+  late final TokensCubit tokensCubit;
 
-  // @override
-  // void initState() {
-  //   NotificationsService.requestPermissions();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    tokensCubit = getIt<TokensCubit>(); // initialize once
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,37 +47,37 @@ class _DazzifyAppState extends State<DazzifyApp> {
         providers: [
           BlocProvider(
             lazy: false,
-            create: (context) => getIt<AuthCubit>()..appConfig(),
+            create: (_) => getIt<AuthCubit>()..appConfig(),
           ),
           BlocProvider(
-            create: (context) => getIt<TokensCubit>()..isUserAuthenticated(),
+            create: (_) => tokensCubit,
           ),
           BlocProvider(
-            create: (context) => settingsCubit
+            create: (_) => settingsCubit
               ..checkAppTheme()
               ..checkAppLanguage(),
           ),
           BlocProvider(
-            create: (context) => getIt<AppNotificationsCubit>(),
+            create: (_) => getIt<AppNotificationsCubit>(),
           ),
         ],
-
-        // ✅ Add MultiBlocListener here
         child: MultiBlocListener(
           listeners: [
             BlocListener<AuthCubit, AuthState>(
-              listener: (context, authState) {
-                if (authState is GuestModeSuccessState &&
-                    AppConfigManager.isAppInMaintenance) {
+              listener: (context, authState) async{
+                if (authState is GuestModeSuccessState) {
+                 await checkForAppUpdate();
+
+                  if (AppConfigManager.isAppInMaintenance) {
                     getIt<AppRouter>().replace(const MaintenanceRoute());
-                } else
-                  if (authState is GuestModeSuccessState) {
-                    checkForAppUpdate();
+                  } else {
+                    tokensCubit.isUserAuthenticated();
+                  }
                 }
               },
             ),
+
           ],
-          // 🧠 The rest of your app goes here
           child: ScreenUtilInit(
             designSize: const Size(360, 800),
             minTextAdapt: true,
@@ -122,5 +123,4 @@ class _DazzifyAppState extends State<DazzifyApp> {
       ),
     );
   }
-
 }

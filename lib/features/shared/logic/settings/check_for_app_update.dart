@@ -38,7 +38,7 @@ Future<void> checkForAppUpdate() async {
   if (!shouldShow) return;
 
   if (currentVersion != remoteVersion) {
-    showDialog(
+    await showDialog(
       context: DazzifyApp.mainContext,
       barrierDismissible: !isForceUpdate,
       builder: (_) => PopScope(

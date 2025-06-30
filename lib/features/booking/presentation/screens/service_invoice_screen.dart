@@ -163,19 +163,24 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     //Coupon Code reset
     if (_textController.text.isNotEmpty) {
       // Calculate total price if services are empty or not
-      num totalPrice = 0;
-      if (widget.services.isEmpty) {
-        totalPrice =
-            widget.service.price; // use service price if services is empty
-      } else {
-        totalPrice = widget.services
-            .map((service) => service.price)
-            .toList()
-            .fold<num>(
-                0,
-                (sum, item) =>
-                    sum + item); // sum prices if services are not empty
-      }
+      num totalPrice = widget.services.isEmpty
+          ? widget.service.price * widget.service.quantity
+          : widget.services.fold<num>(
+        0,
+            (sum, s) => sum + (s.price * s.quantity),
+      );
+      // if (widget.services.isEmpty) {
+      //   totalPrice =
+      //       widget.service.price; // use service price if services is empty
+      // } else {
+      //   totalPrice = widget.services
+      //       .map((service) => service.price)
+      //       .toList()
+      //       .fold<num>(
+      //           0,
+      //           (sum, item) =>
+      //               sum + item); // sum prices if services are not empty
+      // }
       FocusManager.instance.primaryFocus?.unfocus();
       context.read<ServiceInvoiceCubit>().validateCouponAndUpdateInvoice(
             service: widget.services.first,

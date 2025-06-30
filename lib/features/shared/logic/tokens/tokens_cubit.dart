@@ -64,13 +64,9 @@ class TokensCubit extends Cubit<TokensState> {
     emit(const SessionExpiredState(message: ""));
   }
 
-  bool _hasCheckedUpdate = false;
-
   @override
   void onChange(Change<TokensState> change) {
-    if (AppConfigManager.isAppInMaintenance)
-      return;
-    else if (change.currentState is TokensLoadingState &&
+    if (change.currentState is TokensLoadingState &&
         change.nextState is AuthenticatedState) {
       Future.delayed(const Duration(seconds: 4), () {
         getIt<AppRouter>().replace(const AuthenticatedRoute());
