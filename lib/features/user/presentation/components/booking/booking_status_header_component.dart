@@ -107,15 +107,22 @@ class _BookingStatusHeaderComponentState
 
     if (widget.isBookingFinished) {
       return rateBookingButton();
-    } else if ((widget.status == BookingStatus.pending) ||
-        (widget.status != BookingStatus.cancelled &&
-            !widget.isBookingFinished &&
-            !widget.isArrived
-            &&getTimeInMinute() <= 0
-        // &&
-        // !isToday
-        ) ||
-        isSwiped) {
+    } else if
+    // (
+    // (widget.status == BookingStatus.pending) ||
+    //     (widget.status != BookingStatus.cancelled &&
+    //         !widget.isBookingFinished &&
+    //         !widget.isArrived
+    //         &&getTimeInMinute() <= 0
+    //     // &&
+    //     // !isToday
+    //     ) ||
+    //     isSwiped)
+         (!(getTimeInMinute() <= 60 &&
+        // getTimeInMinute() < 0 &&
+        widget.status == BookingStatus.confirmed &&
+        !widget.isArrived))
+    {
       return cancelBookingButton();
     } else {
       return const SizedBox.shrink();

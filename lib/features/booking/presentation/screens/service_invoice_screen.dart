@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
@@ -110,8 +109,12 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
     // _services= widget.services;
     // print(_services.length);
     // _serviceSelectionCubit = context.read<ServiceSelectionCubit>();
+    final Set<String> allLocations = widget.services.isNotEmpty
+        ? widget.services.map((s) => s.serviceLocation).toSet()
+        : {widget.service.serviceLocation};
 
-    if (widget.service.serviceLocation == ServiceLocationOptions.outBranch) {
+    final bool hasOut = allLocations.contains(ServiceLocationOptions.outBranch);
+    if (hasOut) {
       _openGovernoratesSheet();
     }
     super.initState();
@@ -380,7 +383,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 selectedLocation: state.selectedLocation,
                 selectedGovernorate: state.deliveryInfo.selectedGov,
                 selectedLocationName: state.selectedLocationName,
-                code: _textController.text,
+                code: state.couponValidationState != UiState.success?'':_textController.text,
                 notes: _notesController.text);
           },
         );
