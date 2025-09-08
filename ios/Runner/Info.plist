@@ -65,5 +65,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>FacebookAppID</key>
+    <string>2967524626742822</string>
+    <key>FacebookClientToken</key>
+    <string>49cecb36f2affc7f6ed198561f5512c2</string>
+    <key>FacebookDisplayName</key>
+    <string>Dazzify</string>
 </dict>
 </plist>

@@ -1,0 +1,5 @@
+<resources>
+    <!-- Facebook Config -->
+    <string name="facebook_app_id">2967524626742822</string>
+    <string name="facebook_client_token">49cecb36f2affc7f6ed198561f5512c2</string>
+</resources>

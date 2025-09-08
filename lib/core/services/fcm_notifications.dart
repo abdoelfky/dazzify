@@ -29,6 +29,7 @@ Future<void> onMessagingBackground(RemoteMessage message) async {
   );
 
   final ios = DarwinNotificationDetails(
+    interruptionLevel: InterruptionLevel.timeSensitive,
     presentAlert: true,
     presentSound: true,
     presentBadge: true,
@@ -66,6 +67,8 @@ class FCMNotificationImpl extends FCMNotification {
   @override
   Future<void> init() async {
     kPrint('🔧 Initializing FCMConfig...');
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
 
     // Initialize FCM
     await FCMConfig.instance.init(

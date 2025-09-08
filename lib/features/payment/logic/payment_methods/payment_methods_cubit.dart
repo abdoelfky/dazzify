@@ -55,7 +55,7 @@ class PaymentMethodsCubit extends Cubit<PaymentMethodsState> {
   Future<void> getInstallmentsMethods() async {
     emit(state.copyWith(installmentsMethodsState: UiState.loading));
     final result =
-        await _paymentRepository.getPaymentMethods(type: 'installments');
+        await _paymentRepository.getPaymentMethods(type: 'installment');
 
     result.fold(
       (failure) => emit(
