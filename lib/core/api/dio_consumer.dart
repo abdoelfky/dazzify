@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/api/api_status_codes.dart';
 import 'package:dazzify/core/api/base_response.dart';
+import 'package:dazzify/core/api/dio_language_interceptor.dart';
 import 'package:dazzify/core/api/dio_tokens_interceptor.dart';
 import 'package:dazzify/core/config/build_config.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
@@ -37,6 +38,7 @@ class DioApiConsumer extends ApiConsumer {
       ..validateStatus =
           (status) => status! < ApiStatusCodes.internalServerError;
 
+    dioClient.interceptors.add(DioLanguageInterceptor());
     dioClient.interceptors.add(getIt<DioTokenInterceptor>());
 
     dioClient.interceptors.add(

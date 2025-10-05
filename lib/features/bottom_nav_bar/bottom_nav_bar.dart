@@ -136,6 +136,27 @@ class _BottomNavBarState extends State<BottomNavBar>
             }
           },
         ),
+        BlocListener<SettingsCubit, SettingsState>(
+          listenWhen: (previous, current) =>
+              previous.currentLanguageCode != current.currentLanguageCode,
+          listener: (context, state) {
+            // When language changes, refetch data for all screens
+            // Clear cached data
+            mainCategories.clear();
+            
+            // Refetch home data
+            context.read<HomeCubit>()
+              ..getBanners()
+              ..getMainCategories()
+              ..getPopularBrands()
+              ..getTopRatedBrands()
+              ..getPopularServices()
+              ..getTopRatedServices();
+            
+            // Refetch booking data
+            context.read<BookingCubit>().getLastActiveBookings();
+          },
+        ),
       ],
       child: AutoTabsScaffold(
         resizeToAvoidBottomInset: false,
