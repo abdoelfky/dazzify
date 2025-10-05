@@ -40,7 +40,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           isLoading.value = true;
         } else if (state.updateProfileLangState == UiState.success) {
           isLoading.value = false;
-          settingsCubit.changeAppLanguage(
+          // Update local language setting - this will trigger the BlocListener in bottom_nav_bar
+          // which will refetch all data with the new language
+          await settingsCubit.changeAppLanguage(
             languageCode: state.updatedLanguageCode,
           );
         } else {
