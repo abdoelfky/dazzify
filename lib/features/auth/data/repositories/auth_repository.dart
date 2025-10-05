@@ -20,7 +20,10 @@ abstract class AuthRepository {
     required ValidateOtpRequest request,
   });
 
-  Future<Either<Failure, AppConfigModel>> guestMode({bool isClicked = false});
+  Future<Either<Failure, AppConfigModel>> guestMode({
+    bool isClicked = false,
+    String? languagePreference,
+  });
 
   Future<Either<Failure, TokensModel>> addUserInformation({
     required AddUserInfoRequest request,

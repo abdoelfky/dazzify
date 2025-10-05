@@ -6,8 +6,13 @@ part 'send_otp_request.g.dart';
 class SendOtpRequest {
   @JsonKey(name: "phoneNumber")
   final String phoneNumber;
+  @JsonKey(name: "languagePreference", includeIfNull: false)
+  final String? languagePreference;
 
-  const SendOtpRequest({required this.phoneNumber});
+  const SendOtpRequest({
+    required this.phoneNumber,
+    this.languagePreference,
+  });
 
   factory SendOtpRequest.fromJson(Map<String, dynamic> json) =>
       _$SendOtpRequestFromJson(json);

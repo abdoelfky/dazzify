@@ -33,6 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoadingState());
     final request = SendOtpRequest(
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      languagePreference: _getCurrentLanguageCode(),
     );
     final result = await _authRepository.sendOtp(request);
     result.fold(
@@ -54,7 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
     final request = ValidateOtpRequest(
       phoneNumber: phoneNumber,
       otpCode: otpCode,
-      lang: authModel.isNewUser ? null : _getCurrentLanguageCode(),
+      lang: _getCurrentLanguageCode(),
     );
 
     if (authModel.isNewUser) {
@@ -86,7 +87,10 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> appConfig({bool isGuestModeClicked = false}) async {
     emit(GuestModeLoadingState());
 
-    final result = await _authRepository.guestMode(isClicked:isGuestModeClicked );
+    final result = await _authRepository.guestMode(
+      isClicked: isGuestModeClicked,
+      languagePreference: _getCurrentLanguageCode(),
+    );
     result.fold(
       (failure) {
         emit(GuestModeFailureState(failure.message));

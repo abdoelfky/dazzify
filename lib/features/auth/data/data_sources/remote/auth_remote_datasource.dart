@@ -18,7 +18,7 @@ abstract class AuthRemoteDatasource {
     required ValidateOtpRequest request,
   });
 
-  Future<AppConfigModel> guestMode();
+  Future<AppConfigModel> guestMode({String? languagePreference});
 
   Future<TokensModel> addUserInformation({
     required AddUserInfoRequest request,

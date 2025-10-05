@@ -49,11 +49,14 @@ class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
   }
 
   @override
-  Future<AppConfigModel> guestMode() async {
+  Future<AppConfigModel> guestMode({String? languagePreference}) async {
     return await _apiConsumer.get<AppConfigModel>(
       ApiConstants.appConfig,
       responseReturnType: ResponseReturnType.fromJson,
       fromJsonMethod: AppConfigModel.fromJson,
+      queryParameters: languagePreference != null
+          ? {AppConstants.lang: languagePreference}
+          : null,
     );
   }
 

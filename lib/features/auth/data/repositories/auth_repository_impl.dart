@@ -67,9 +67,14 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AppConfigModel>> guestMode({bool isClicked = false}) async {
+  Future<Either<Failure, AppConfigModel>> guestMode({
+    bool isClicked = false,
+    String? languagePreference,
+  }) async {
     try {
-      AppConfigModel response = await _remoteDatasource.guestMode();
+      AppConfigModel response = await _remoteDatasource.guestMode(
+        languagePreference: languagePreference,
+      );
       AppConfigManager.config = response;
       ///from API
       _localDatasource.storeGuestModeSession(response.guestMode);
