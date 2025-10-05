@@ -7,7 +7,6 @@ import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasou
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
 import 'package:dazzify/features/auth/presentation/widgets/auth_header.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
-import 'package:dazzify/features/shared/logic/settings/settings_state.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_text_form_field.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
