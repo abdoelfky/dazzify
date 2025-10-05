@@ -6,7 +6,7 @@ class MetaSdkService {
   MetaSdkService._();
   static final MetaSdkService instance = MetaSdkService._();
 
-  final _metaSdk = FlutterMetaSdk.instance;
+  final _metaSdk = FlutterMetaSdk();
 
   /// Initialize Meta SDK
   /// Should be called once during app initialization
