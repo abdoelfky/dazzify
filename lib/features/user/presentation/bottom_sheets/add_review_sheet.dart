@@ -31,6 +31,9 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
   @override
   Widget build(BuildContext context) {
     return DazzifySheetBody(
+      height: context.isKeyboardClosed
+          ? context.screenHeight * 0.85
+          : context.screenHeight,
       title: context.tr.writeReview,
       textStyle: context.textTheme.titleLarge,
       enableBottomInsets: true,
@@ -39,19 +42,26 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
           child: ListView(
             shrinkWrap: true,
             children: [
-              SizedBox(height: 28.h),
-              serviceInfo(context, bookingCubit),
-              SizedBox(height: 28.h),
-              brandInfo(context, bookingCubit),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24).r,
-                child: Center(
-                  child: CustomRatingBar(
-                    initialRating: 0,
-                    onRatingUpdate: (value) {
-                      rating = value;
-                    },
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
+                child: Column(
+                  children: [
+                    SizedBox(height: 28.h),
+                    serviceInfo(context, bookingCubit),
+                    SizedBox(height: 28.h),
+                    brandInfo(context, bookingCubit),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24).r,
+                      child: Center(
+                        child: CustomRatingBar(
+                          initialRating: 0,
+                          onRatingUpdate: (value) {
+                            rating = value;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Form(
@@ -124,86 +134,83 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
 }
 
 Widget serviceInfo(BuildContext context, BookingCubit bookingCubit) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: const Radius.circular(50).r,
-            topEnd: const Radius.circular(20).r,
-            bottomStart: const Radius.circular(20).r,
-            bottomEnd: const Radius.circular(50).r,
-          ),
-          child: DazzifyCachedNetworkImage(
-            width: 120.w,
-            height: 145.h,
-            imageUrl: bookingCubit.state.singleBooking.services.first.image,
-            fit: BoxFit.cover,
-          ),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ClipRRect(
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: const Radius.circular(40).r,
+          topEnd: const Radius.circular(16).r,
+          bottomStart: const Radius.circular(16).r,
+          bottomEnd: const Radius.circular(40).r,
         ),
-        SizedBox(width: 16.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 200.r,
+        child: DazzifyCachedNetworkImage(
+          width: 120.w,
+          height: 145.h,
+          imageUrl: bookingCubit.state.singleBooking.services.first.image,
+          fit: BoxFit.cover,
+        ),
+      ),
+      SizedBox(width: 16.w),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 180.w),
+            child: IntrinsicWidth(
               child: DText(
-                maxLines: 4,
+                maxLines: 2,
                 bookingCubit.state.singleBooking.services.first.title,
                 style: context.textTheme.bodyLarge,
               ),
             ),
-            DText(
-              "${bookingCubit.state.singleBooking.price} ${context.tr.egp}",
-              style: context.textTheme.bodyMedium!.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
+          ),
+          SizedBox(height: 9.h),
+          DText(
+            "${bookingCubit.state.singleBooking.price} ${context.tr.egp}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
             ),
-          ],
-        ),
-      ],
-    ),
+          ),
+        ],
+      ),
+    ],
   );
 }
 
 Widget brandInfo(BuildContext context, BookingCubit bookingCubit) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 24).r,
-    child: Row(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(360).r,
-          child: DazzifyCachedNetworkImage(
-            imageUrl: bookingCubit.state.singleBooking.brand.logo,
-            fit: BoxFit.cover,
-            height: 40.h,
-            width: 40.w,
-          ),
+  return Row(
+    children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(360).r,
+        child: DazzifyCachedNetworkImage(
+          imageUrl: bookingCubit.state.singleBooking.brand.logo,
+          fit: BoxFit.cover,
+          height: 40.h,
+          width: 40.w,
         ),
-        SizedBox(width: 16.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DText(
-              bookingCubit.state.singleBooking.brand.name,
-              style: context.textTheme.bodyMedium,
-            ),
-            SizedBox(height: 4.h),
-            SizedBox(
-              width: 220.w,
-              child: DText(
-                maxLines: 3,
-                context.tr.reviewConditions,
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                ),
+      ),
+      SizedBox(width: 16.w),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DText(
+            bookingCubit.state.singleBooking.brand.name,
+            style: context.textTheme.bodyMedium,
+          ),
+          SizedBox(height: 4.h),
+          SizedBox(
+            width: 220.w,
+            child: DText(
+              context.tr.reviewConditions,
+              style: context.textTheme.bodySmall!.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
               ),
             ),
-          ],
-        ),
-      ],
-    ),
+          ),
+        ],
+      ),
+    ],
   );
 }
