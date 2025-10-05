@@ -287,8 +287,8 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
                 SizedBox(
                   width: 120.w,
                   child: DText(
-                    maxLines: 2,
                     serviceInfo.services.first.title,
+                    softWrap: true,
                     style: context.textTheme.bodyLarge,
                   ),
                 ),
@@ -303,10 +303,10 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
               width: 180.w,
               child: DText(
                 serviceInfo.services.first.description,
+                softWrap: true,
                 style: context.textTheme.bodySmall!.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
                 ),
-                softWrap: true,
               ),
             ),
           ],
