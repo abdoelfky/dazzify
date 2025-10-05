@@ -6,11 +6,13 @@ class MetaSdkService {
   MetaSdkService._();
   static final MetaSdkService instance = MetaSdkService._();
 
+  final _metaSdk = FlutterMetaSdk.instance;
+
   /// Initialize Meta SDK
   /// Should be called once during app initialization
   Future<void> initialize() async {
     try {
-      await FlutterMetaSdk.initialize();
+      await _metaSdk.initialize();
       // Log app activation when SDK initializes
       await logAppActivated();
     } catch (e) {
@@ -23,8 +25,8 @@ class MetaSdkService {
   /// This is automatically tracked when the app is opened
   Future<void> logAppActivated() async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_activate_app',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_activate_app',
         parameters: {},
       );
     } catch (e) {
@@ -36,8 +38,8 @@ class MetaSdkService {
   /// This should be called the first time user opens the app after installation
   Future<void> logAppInstall() async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_first_time_purchase',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_first_time_purchase',
         parameters: {
           'fb_mobile_launch_source': 'Organic',
         },
@@ -53,8 +55,8 @@ class MetaSdkService {
     String? registrationMethod,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_complete_registration',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_complete_registration',
         parameters: {
           if (registrationMethod != null)
             'fb_registration_method': registrationMethod,
@@ -73,8 +75,8 @@ class MetaSdkService {
     Map<String, dynamic>? additionalParams,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_purchase',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_purchase',
         parameters: {
           'fb_currency': currency,
           'fb_content_type': 'product',
@@ -95,8 +97,8 @@ class MetaSdkService {
     Map<String, dynamic>? additionalParams,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_content_view',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_content_view',
         parameters: {
           'fb_content_type': contentType,
           'fb_content_id': contentId,
@@ -115,8 +117,8 @@ class MetaSdkService {
     Map<String, dynamic>? additionalParams,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_search',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_search',
         parameters: {
           'fb_search_string': searchString,
           ...?additionalParams,
@@ -137,8 +139,8 @@ class MetaSdkService {
     Map<String, dynamic>? additionalParams,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_add_to_cart',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_add_to_cart',
         parameters: {
           'fb_content_id': contentId,
           'fb_content_type': contentType,
@@ -160,8 +162,8 @@ class MetaSdkService {
     Map<String, dynamic>? additionalParams,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_add_to_wishlist',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_add_to_wishlist',
         parameters: {
           'fb_content_id': contentId,
           'fb_content_type': contentType,
@@ -182,8 +184,8 @@ class MetaSdkService {
     Map<String, dynamic>? additionalParams,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: 'fb_mobile_initiated_checkout',
+      await _metaSdk.logEvent(
+        name: 'fb_mobile_initiated_checkout',
         parameters: {
           'fb_num_items': numItems,
           'fb_currency': currency,
@@ -203,8 +205,8 @@ class MetaSdkService {
     Map<String, dynamic>? parameters,
   }) async {
     try {
-      FlutterMetaSdk.logEvent(
-        eventName: eventName,
+      await _metaSdk.logEvent(
+        name: eventName,
         parameters: parameters ?? {},
       );
     } catch (e) {
@@ -216,7 +218,7 @@ class MetaSdkService {
   /// Call this after user logs in
   Future<void> setUserId(String userId) async {
     try {
-      FlutterMetaSdk.setUserId(userId);
+      await _metaSdk.setUserId(userId);
     } catch (e) {
       print('Meta SDK set user ID error: $e');
     }
@@ -226,7 +228,7 @@ class MetaSdkService {
   /// Call this when user logs out
   Future<void> clearUserId() async {
     try {
-      FlutterMetaSdk.clearUserId();
+      await _metaSdk.clearUserId();
     } catch (e) {
       print('Meta SDK clear user ID error: $e');
     }
@@ -256,7 +258,7 @@ class MetaSdkService {
       if (country != null) userData['country'] = country;
 
       if (userData.isNotEmpty) {
-        FlutterMetaSdk.setUserData(userData);
+        await _metaSdk.setUserData(userData);
       }
     } catch (e) {
       print('Meta SDK set user data error: $e');
@@ -266,7 +268,7 @@ class MetaSdkService {
   /// Clear user data
   Future<void> clearUserData() async {
     try {
-      FlutterMetaSdk.clearUserData();
+      await _metaSdk.clearUserData();
     } catch (e) {
       print('Meta SDK clear user data error: $e');
     }
