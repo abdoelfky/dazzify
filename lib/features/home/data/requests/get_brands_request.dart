@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
 part 'get_brands_request.g.dart';
 
 @JsonSerializable()

@@ -10,7 +10,7 @@ import 'package:dazzify/features/user/presentation/components/profile/profile_he
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:restart/restart.dart';
+import 'package:restart_app/restart_app.dart';
 
 @RoutePage()
 class ProfileScreen extends StatefulWidget {
