@@ -10,7 +10,6 @@ import 'package:dazzify/features/user/presentation/components/profile/profile_he
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:restart/restart.dart';
 
 @RoutePage()
 class ProfileScreen extends StatefulWidget {
@@ -40,11 +39,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (state.updateProfileLangState == UiState.loading) {
           isLoading.value = true;
         } else if (state.updateProfileLangState == UiState.success) {
+          isLoading.value = false;
           settingsCubit.changeAppLanguage(
             languageCode: state.updatedLanguageCode,
           );
-          // await NotificationsService.close();
-          restart();
         } else {
           isLoading.value = false;
           DazzifyToastBar.showError(
