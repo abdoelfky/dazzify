@@ -306,8 +306,7 @@ Widget serviceInfo(BuildContext context, BookingCubit booking) {
                 style: context.textTheme.bodySmall!.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
                 ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
             ),
           ],
