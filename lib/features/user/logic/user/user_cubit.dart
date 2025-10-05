@@ -42,17 +42,6 @@ class UserCubit extends Cubit<UserState> {
             errorMessage: failure.message, userState: UiState.failure));
       },
       (user) {
-        // Set user ID in Meta SDK for tracking
-        MetaSdkService.instance.setUserId(user.id);
-        // Set user data for advanced matching
-        MetaSdkService.instance.setUserData(
-          email: user.profile.email,
-          firstName: user.fullName.split(' ').first,
-          lastName: user.fullName.split(' ').length > 1 
-              ? user.fullName.split(' ').last 
-              : null,
-          phone: user.phoneNumber,
-        );
         emit(state.copyWith(userModel: user, userState: UiState.success));
       },
     );
@@ -69,9 +58,6 @@ class UserCubit extends Cubit<UserState> {
             deleteUserAccountState: UiState.failure));
       },
       (unit) {
-        // Clear Meta SDK user data when account is deleted
-        MetaSdkService.instance.clearUserId();
-        MetaSdkService.instance.clearUserData();
         emit(state.copyWith(
           deleteUserAccountState: UiState.success,
         ));

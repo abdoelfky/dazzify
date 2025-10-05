@@ -130,17 +130,6 @@ class AuthCubit extends Cubit<AuthState> {
       (success) {
         // Track app install and registration completion for Meta
         MetaSdkService.instance.logAppInstall();
-        MetaSdkService.instance.logCompletedRegistration(
-          registrationMethod: 'Phone',
-        );
-        // Set user data for advanced matching
-        MetaSdkService.instance.setUserData(
-          email: email,
-          firstName: fullName.split(' ').first,
-          lastName: fullName.split(' ').length > 1 
-              ? fullName.split(' ').last 
-              : null,
-        );
         emit(AuthAddUserInfoSuccessState());
         _appNotificationsCubit.subscribeToNotifications();
       },

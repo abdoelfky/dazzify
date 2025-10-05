@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'features/auth/logic/auth_cubit.dart';
 
 class DazzifyApp extends StatefulWidget {
@@ -67,7 +66,6 @@ class _DazzifyAppState extends State<DazzifyApp> {
               listener: (context, authState) async{
                 if (authState is GuestModeSuccessState) {
                  await checkForAppUpdate();
-
                   if (AppConfigManager.isAppInMaintenance) {
                     getIt<AppRouter>().replace(const MaintenanceRoute());
                   } else {

@@ -56,9 +56,6 @@ class TokensCubit extends Cubit<TokensState> {
     emit(TokensLoadingState());
     debugPrint(state.toString());
     await _authRepository.deleteUserTokens();
-    // Clear Meta SDK user data on logout
-    MetaSdkService.instance.clearUserId();
-    MetaSdkService.instance.clearUserData();
     getIt<DioTokenInterceptor>().logoutReset();
     emit(LogoutState());
   }
