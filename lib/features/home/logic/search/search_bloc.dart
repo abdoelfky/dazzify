@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/home/data/repositories/home_repository.dart';
 import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
@@ -16,6 +17,7 @@ part 'search_state.dart';
 @Injectable()
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final HomeRepository _homeRepository;
+  final MetaAnalyticsService _metaAnalytics;
   final int _mediaLimit = 20;
   final int _brandsLimit = 20;
   int _mediaPage = 1;
@@ -23,6 +25,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   SearchBloc(
     this._homeRepository,
+    this._metaAnalytics,
   ) : super(const SearchState()) {
     on<GetMediaItemsEvent>(onGetMediaItemsEvent, transformer: droppable());
     on<SwitchScreenViewEvent>(onSwitchScreenViewEvent);
@@ -95,6 +98,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       ));
     } else {
       emit(state.copyWith(blocState: UiState.loading));
+
+      // Track search event in Meta
+      _metaAnalytics.logSearch(
+        searchString: event.keyWord!,
+        contentType: 'brand',
+      );
 
       final result = await _homeRepository.getPopularBrands(
         request: GetBrandsRequest(

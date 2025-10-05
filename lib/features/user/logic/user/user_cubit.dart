@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_image_cropper.dart';
@@ -23,11 +24,13 @@ part 'user_state.dart';
 @Injectable()
 class UserCubit extends Cubit<UserState> {
   final UserRepository _profileRepository;
+  final MetaAnalyticsService _metaAnalytics;
   late String newPhoneNumber;
   final DazzifyPickAndCropImage dazzifyPickAndCropImage;
 
   UserCubit(
     this._profileRepository,
+    this._metaAnalytics,
     this.dazzifyPickAndCropImage,
   ) : super(const UserState());
 
@@ -41,6 +44,15 @@ class UserCubit extends Cubit<UserState> {
             errorMessage: failure.message, userState: UiState.failure));
       },
       (user) {
+        // Set user ID in Meta for Facebook/Instagram ad tracking
+        _metaAnalytics.setUserId(user.id);
+        _metaAnalytics.logEvent(
+          'UserLogin',
+          parameters: {
+            'user_id': user.id,
+            'phone': user.phoneNumber,
+          },
+        );
         emit(state.copyWith(userModel: user, userState: UiState.success));
       },
     );

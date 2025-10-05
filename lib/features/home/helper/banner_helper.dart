@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/features/brand/logic/booking_from_media/booking_from_media_cubit.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/shared/enums/banners_action_enum.dart';
@@ -16,6 +18,16 @@ class BannerHelper {
     required BuildContext context,
     required BannersAction bannersAction,
   }) async {
+    // Track banner/ad click in Meta for Facebook/Instagram ads
+    final metaAnalytics = getIt<MetaAnalyticsService>();
+    metaAnalytics.logEvent(
+      'BannerClick',
+      parameters: {
+        'banner_action': bannersAction.toString(),
+        'banner_index': index,
+      },
+    );
+    
     switch (bannersAction) {
       case BannersAction.initial:
         return;

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/shared/data/models/favorite_model.dart';
 import 'package:dazzify/features/user/data/repositories/user_repository.dart';
@@ -12,9 +13,11 @@ part 'favorite_state.dart';
 @injectable
 class FavoriteCubit extends Cubit<FavoriteState> {
   final UserRepository _userRepository;
+  final MetaAnalyticsService _metaAnalytics;
 
   FavoriteCubit(
     this._userRepository,
+    this._metaAnalytics,
   ) : super(const FavoriteState());
 
   Future<void> getFavoriteModels() async {
@@ -86,6 +89,13 @@ class FavoriteCubit extends Cubit<FavoriteState> {
         ),
       ),
       (success) {
+        // Track add to wishlist in Meta for Facebook/Instagram ads
+        _metaAnalytics.logAddToWishlist(
+          contentId: favoriteService.id,
+          contentName: favoriteService.name,
+          value: favoriteService.price?.toDouble(),
+          currency: 'EGP',
+        );
         emit(
           state.copyWith(
             blocState: UiState.success,

@@ -1,3 +1,4 @@
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
@@ -15,11 +16,13 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository;
   final AppNotificationsCubit _appNotificationsCubit;
   final SettingsCubit _settingsCubit;
+  final MetaAnalyticsService _metaAnalytics;
 
   AuthCubit(
     this._authRepository,
     this._appNotificationsCubit,
     this._settingsCubit,
+    this._metaAnalytics,
   ) : super(AuthInitialState());
   late String phoneNumber;
   late String registerToken;
@@ -123,6 +126,10 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (failure) => emit(AuthAddUserInfoFailureState(failure.message)),
       (success) {
+        // Track user registration completion in Meta
+        _metaAnalytics.logCompleteRegistration(
+          registrationMethod: 'phone',
+        );
         emit(AuthAddUserInfoSuccessState());
         _appNotificationsCubit.subscribeToNotifications();
       },

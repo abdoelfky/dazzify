@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/booking/data/models/brand_delivery_fees_model.dart';
 import 'package:dazzify/features/booking/data/models/coupon_model.dart';
@@ -21,9 +22,14 @@ part 'service_invoice_state.dart';
 @Injectable()
 class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
   final BookingRepository _repository;
+  final MetaAnalyticsService _metaAnalytics;
+
+  // Expose meta analytics for external access
+  MetaAnalyticsService get metaAnalytics => _metaAnalytics;
 
   ServiceInvoiceCubit(
     this._repository,
+    this._metaAnalytics,
   ) : super(const ServiceInvoiceState());
 
   Future<void> getBrandDeliveryFeesList({
@@ -201,11 +207,31 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
           creatingBookingState: UiState.failure,
         ),
       ),
-      (unit) => emit(
-        state.copyWith(
-          creatingBookingState: UiState.success,
-        ),
-      ),
+      (unit) {
+        // Track booking creation in Meta for Facebook/Instagram ads
+        final totalAmount = state.invoice.totalAfterDelivery;
+        _metaAnalytics.logPurchase(
+          amount: totalAmount.toDouble(),
+          currency: 'EGP', // Egyptian Pound - adjust if needed
+          contentType: 'booking',
+          contentId: brandId,
+        );
+        _metaAnalytics.logEvent(
+          eventName: 'BookingCreated',
+          parameters: {
+            'brand_id': brandId,
+            'branch_id': branchId,
+            'num_services': services.length,
+            'total_amount': totalAmount,
+            'has_coupon': isHasCoupon,
+          },
+        );
+        emit(
+          state.copyWith(
+            creatingBookingState: UiState.success,
+          ),
+        );
+      },
     );
   }
 
