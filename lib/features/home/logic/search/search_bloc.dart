@@ -164,9 +164,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  void onRefreshEvent(RefreshEvent event, Emitter<SearchState> emit) {
+  Future<void> onRefreshEvent(RefreshEvent event, Emitter<SearchState> emit) async {
     _mediaPage = 1;
     _brandsPage = 1;
     emit(const SearchState());
+    // Fetch media items after refresh
+    add(GetMediaItemsEvent());
   }
 }
