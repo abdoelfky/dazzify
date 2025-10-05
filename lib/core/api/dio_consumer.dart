@@ -239,7 +239,9 @@ class DioApiConsumer extends ApiConsumer {
       }
     } else {
       if (baseResponse.error!.code == 401 &&
-          baseResponse.error!.message == AppConstants.bannedUserTokenMessage) {
+          (baseResponse.error!.message == AppConstants.bannedUserTokenMessage ||
+           baseResponse.error!.message == AppConstants.invalidUserAccessTokenMessage ||
+           baseResponse.error!.message == AppConstants.invalidUserRefreshTokenMessage)) {
         getIt<TokensCubit>().emitSessionExpired();
       } else {
         throw ServerException(
@@ -276,6 +278,14 @@ class DioApiConsumer extends ApiConsumer {
       case DioExceptionType.badCertificate:
         break;
       case DioExceptionType.cancel:
+        // Check if this is a session expired cancellation
+        if (error.error is String && 
+            (error.error.toString().contains('session expired') || 
+             error.error.toString().contains('Invalid RefreshToken'))) {
+          // Session expired, user will be redirected to login
+          // Don't throw an exception that would show an error message
+          return;
+        }
         break;
       case DioExceptionType.unknown:
         throw const NoInternetConnectionException();
