@@ -96,9 +96,9 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                               SizedBox(width: 3.w),
                               Flexible(
                                 child: DText(
-                                  maxLines: 5,
                                   widget.refundConditions[index],
                                   softWrap: true,
+                                  overflow: null,
                                   style: context.textTheme.bodySmall!.copyWith(
                                     color: context.colorScheme.onSurfaceVariant,
                                   ),
