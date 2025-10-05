@@ -29,7 +29,6 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
     }
   }
 
-
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(_scrollListener);
@@ -98,7 +97,8 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                                 child: DText(
                                   widget.refundConditions[index],
                                   softWrap: true,
-                                  overflow: null,
+                                  maxLines: null,
+                                  overflow: TextOverflow.visible,
                                   style: context.textTheme.bodySmall!.copyWith(
                                     color: context.colorScheme.onSurfaceVariant,
                                   ),
@@ -134,7 +134,7 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                               Checkbox(
                                 value: hasChecked,
                                 onChanged: (val) =>
-                                _hasCheckedAgree.value = val ?? false,
+                                    _hasCheckedAgree.value = val ?? false,
                               ),
                               Expanded(
                                 child: DText(
@@ -149,7 +149,6 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                     );
                   },
                 ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
