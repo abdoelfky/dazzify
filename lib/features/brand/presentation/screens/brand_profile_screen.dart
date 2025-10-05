@@ -69,13 +69,13 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
     _tabController = TabController(length: 3, vsync: this);
     _controller = ScrollController();
     _brandBloc = context.read<BrandBloc>();
-    _brandBloc.add(GetBrandImagesEvent(widget.brand!.id));
-    _brandBloc.add(GetBrandReelsEvent(widget.brand!.id));
 
     if (widget.brand != null) {
       _brandBloc.add(
         SetSingleBrandDetailsEvent(widget.brand!),
       );
+      _brandBloc.add(GetBrandImagesEvent(widget.brand!.id));
+      _brandBloc.add(GetBrandReelsEvent(widget.brand!.id));
     } else {
       _brandBloc.add(
         GetSingleBrandDetailsEvent(widget.brandSlug!),
