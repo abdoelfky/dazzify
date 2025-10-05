@@ -92,6 +92,18 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
     );
   }
 
+  void clearCoupon() {
+    emit(
+      state.copyWith(
+        couponValidationState: UiState.initial,
+        couponModel: const CouponModel.empty(),
+        invoice: state.invoice.updateInvoice(
+          discountAmount: 0,
+        ),
+      ),
+    );
+  }
+
   void updateInvoice({
     List<num>? price,
     num? deliveryFees,

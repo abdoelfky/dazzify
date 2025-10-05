@@ -571,6 +571,12 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       DazzifyToastBar.showError(
         message: context.tr.selectYourLocation,
       );
+    } else if (_textController.text.isNotEmpty && 
+               _invoiceCubit.state.couponValidationState != UiState.success) {
+      // Check if coupon code is entered but not applied
+      DazzifyToastBar.showError(
+        message: context.tr.pleaseApplyCoupon,
+      );
     } else {
       // Build servicesWithQuantity payload
       final servicesWithQuantity =

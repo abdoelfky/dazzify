@@ -404,6 +404,7 @@
   "writeNotes": "اكتب ملاحظات لمقدم الخدمة",
   "notes": "الملاحظات",
   "iAgreeToTerms": "أوافق على الشروط والأحكام",
-  "noServicesAtThisCategory": "لا توجد خدمات حالياً في هذا القسم"
+  "noServicesAtThisCategory": "لا توجد خدمات حالياً في هذا القسم",
+  "pleaseApplyCoupon": "يرجى تطبيق رمز الكوبون قبل التأكيد"
 
 }
