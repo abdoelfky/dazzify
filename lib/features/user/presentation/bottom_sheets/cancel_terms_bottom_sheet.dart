@@ -98,6 +98,7 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                                 child: DText(
                                   widget.refundConditions[index],
                                   softWrap: true,
+                                  overflow: null,
                                   style: context.textTheme.bodySmall!.copyWith(
                                     color: context.colorScheme.onSurfaceVariant,
                                   ),

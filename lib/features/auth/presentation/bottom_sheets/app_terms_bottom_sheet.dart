@@ -108,6 +108,7 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
                                 child: DText(
                                   state.appTerms[index],
                                   softWrap: true,
+                                  overflow: null,
                                   style: context.textTheme.bodySmall!.copyWith(
                                     color: context.colorScheme.onSurfaceVariant,
                                   ),

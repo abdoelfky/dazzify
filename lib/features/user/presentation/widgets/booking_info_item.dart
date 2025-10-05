@@ -77,6 +77,7 @@ class BookingInfoItem extends StatelessWidget {
                         width: 160.w,
                         child: DText(
                           subtitle,
+                          overflow: null,
                           style: context.textTheme.bodySmall!.copyWith(
                             color: context.colorScheme.onSurfaceVariant,
                           ),
@@ -99,6 +100,7 @@ class BookingInfoItem extends StatelessWidget {
                   width: 200.w,
                   child: DText(
                       subtitle,
+                      overflow: null,
                       style: context.textTheme.bodySmall!.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
                       ),

@@ -171,6 +171,7 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                           child: DText(
                                             state.brandTerms[index],
                                             softWrap: true,
+                                            overflow: null,
                                             style: context.textTheme.bodySmall!.copyWith(
                                               color: context.colorScheme.onSurfaceVariant,
                                             ),
