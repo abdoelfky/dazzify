@@ -404,6 +404,7 @@
   "availableSoon": "Coming Soon",
   "writeNotes": "Write Notes For Provider",
   "notes": "Notes",
-  "iAgreeToTerms": "I agree to the terms"
+  "iAgreeToTerms": "I agree to the terms",
+  "pleaseApplyCoupon": "Please apply the coupon code before confirming"
 
 }

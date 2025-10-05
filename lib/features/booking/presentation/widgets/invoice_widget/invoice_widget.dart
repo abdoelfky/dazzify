@@ -47,6 +47,12 @@ class InvoiceWidget extends StatelessWidget {
               ),
               prefixIconData: SolarIconsOutline.ticketSale,
               validator: (value) => null,
+              onChanged: (value) {
+                // Reset coupon validation state if user changes text after applying
+                if (state.couponValidationState == UiState.success) {
+                  context.read<ServiceInvoiceCubit>().clearCoupon();
+                }
+              },
               suffixIcon: getSuffixIcon(
                 context: context,
                 price: totalPrice,
@@ -113,10 +119,26 @@ Widget? getSuffixIcon({
   required num price,
 }) {
   return couponValidationState == UiState.success
-      ? Icon(
-    SolarIconsOutline.checkCircle,
-    color: Colors.green,
-  )
+      ? Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              SolarIconsOutline.checkCircle,
+              color: Colors.green,
+            ),
+            SizedBox(width: 8.w),
+            IconButton(
+              icon: Icon(
+                SolarIconsOutline.closeCircle,
+                color: context.colorScheme.error,
+              ),
+              onPressed: () {
+                textContorller.clear();
+                context.read<ServiceInvoiceCubit>().clearCoupon();
+              },
+            ),
+          ],
+        )
       : TextButton(
     onPressed: () {
       if (textContorller.text.isNotEmpty) {
