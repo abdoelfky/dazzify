@@ -3,6 +3,7 @@ import 'package:dazzify/bloc_observer.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/fcm_notifications.dart';
 import 'package:dazzify/core/services/hive_service.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,10 @@ Future<void> main() async {
   navRootKey = getIt<GlobalKey<NavigatorState>>();
   final notify = getIt<FCMNotification>();
   await notify.init();
+  
+  // Initialize Meta SDK for Facebook/Instagram ad tracking
+  final metaAnalytics = getIt<MetaAnalyticsService>();
+  await metaAnalytics.init();
   // final mapsImplementation = GoogleMapsFlutterPlatform.instance;
   // if (mapsImplementation is GoogleMapsFlutterAndroid) {
   //   mapsImplementation.useAndroidViewSurface = true;

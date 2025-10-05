@@ -102,6 +102,18 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   void initState() {
     _invoiceCubit = context.read<ServiceInvoiceCubit>();
 
+    // Track checkout initiation in Meta for Facebook/Instagram ads
+    final totalPrice = widget.services.isNotEmpty
+        ? widget.services.fold<num>(
+            0, (sum, service) => sum + (service.price * service.quantity))
+        : widget.service.price * widget.service.quantity;
+    _invoiceCubit.metaAnalytics.logInitiateCheckout(
+      value: totalPrice.toDouble(),
+      currency: 'EGP',
+      contentType: 'booking',
+      contentId: widget.service.brand.id,
+    );
+
     _initialization();
     _pageController = PageController();
     _notesController = TextEditingController();

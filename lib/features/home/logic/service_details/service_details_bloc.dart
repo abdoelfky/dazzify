@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dazzify/core/services/meta_analytics_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/data/repositories/home_repository.dart';
@@ -15,11 +16,12 @@ part 'service_details_state.dart';
 class ServiceDetailsBloc
     extends Bloc<ServiceDetailsEvent, ServiceDetailsState> {
   final HomeRepository _repository;
+  final MetaAnalyticsService _metaAnalytics;
 
   int _reviewPage = 1;
   final int _reviewsLimit = 20;
 
-  ServiceDetailsBloc(this._repository) : super(const ServiceDetailsState()) {
+  ServiceDetailsBloc(this._repository, this._metaAnalytics) : super(const ServiceDetailsState()) {
     on<GetBrandBranchesEvent>(_onGetBrandBranches);
     on<AddServiceEvent>(_addService);
     on<GetServiceDetailsEvent>(_getServiceDetails);
@@ -71,12 +73,32 @@ class ServiceDetailsBloc
           errorCode: failure.errorCode,
         ),
       ),
-      (service) => emit(
-        state.copyWith(
-          blocState: UiState.success,
-          service: service,
-        ),
-      ),
+      (service) {
+        // Track service view in Meta for Facebook/Instagram ads
+        _metaAnalytics.logViewContent(
+          contentType: 'service',
+          contentId: service.id,
+          contentName: service.name,
+          value: service.price.toDouble(),
+          currency: 'EGP',
+        );
+        _metaAnalytics.logEvent(
+          eventName: 'ViewService',
+          parameters: {
+            'service_id': service.id,
+            'service_name': service.name,
+            'brand_id': service.brand.id,
+            'brand_name': service.brand.name,
+            'price': service.price,
+          },
+        );
+        emit(
+          state.copyWith(
+            blocState: UiState.success,
+            service: service,
+          ),
+        );
+      },
     );
   }
 
