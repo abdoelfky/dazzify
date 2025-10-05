@@ -28,11 +28,11 @@ class DText extends StatelessWidget {
     return Text(
       text,
       style: style ?? context.textTheme.bodySmall,
-      maxLines: maxLines, // 👈 خليه nullable عشان يقدر ياخد النص كامل
+      maxLines: maxLines,
       textDirection: textDirection,
-      softWrap: softWrap ?? true, // 👈 فعل الـ softWrap
+      softWrap: softWrap ?? true,
       textAlign: textAlign ?? TextAlign.start,
-      overflow: overflow, // 👈 سيبه زي ما هو أو مرره لما تحتاج
+      overflow: overflow,
     );
   }
 }
