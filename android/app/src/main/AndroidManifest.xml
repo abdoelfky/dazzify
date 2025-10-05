@@ -103,5 +103,8 @@
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
         </intent>
+        <!-- Facebook queries for deep linking -->
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.facebook.orca" />
     </queries>
 </manifest>

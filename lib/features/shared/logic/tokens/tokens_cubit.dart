@@ -2,6 +2,7 @@ import 'package:dazzify/core/api/dio_tokens_interceptor.dart';
 import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/meta_sdk_service.dart';
 import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
@@ -55,6 +56,9 @@ class TokensCubit extends Cubit<TokensState> {
     emit(TokensLoadingState());
     debugPrint(state.toString());
     await _authRepository.deleteUserTokens();
+    // Clear Meta SDK user data on logout
+    MetaSdkService.instance.clearUserId();
+    MetaSdkService.instance.clearUserData();
     getIt<DioTokenInterceptor>().logoutReset();
     emit(LogoutState());
   }
