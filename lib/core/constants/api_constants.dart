@@ -46,6 +46,7 @@ class ApiConstants {
   static const String notInterestedToReview =
       "/review/not-interested-to-review";
   static const String getMissedReviews = "/review/missed-review";
+  static const String privacyPolicies = "/settings/privacy-policies/public";
 
   static String getBrandDeliveryFees(String brandId) =>
       "/brand/$brandId/delivery-fees";

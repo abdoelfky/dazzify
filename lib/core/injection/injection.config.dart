@@ -127,6 +127,16 @@ import 'package:dazzify/features/reels/data/repositories/reels_repository.dart'
 import 'package:dazzify/features/reels/data/repositories/reels_repository_impl.dart'
     as _i255;
 import 'package:dazzify/features/reels/logic/reels_bloc.dart' as _i468;
+import 'package:dazzify/features/settings/data/data_sources/settings_remote_datasource.dart'
+    as _i900;
+import 'package:dazzify/features/settings/data/data_sources/settings_remote_datasource_impl.dart'
+    as _i901;
+import 'package:dazzify/features/settings/data/repositories/settings_repository.dart'
+    as _i902;
+import 'package:dazzify/features/settings/data/repositories/settings_repository_impl.dart'
+    as _i903;
+import 'package:dazzify/features/settings/logic/privacy_policy_cubit.dart'
+    as _i904;
 import 'package:dazzify/features/shared/data/data_sources/local/local_datasource.dart'
     as _i422;
 import 'package:dazzify/features/shared/data/repositories/local_repository/local_repository.dart'
@@ -273,6 +283,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i786.PaymentRepositoryImpl(gh<_i46.PaymentRemoteDataSource>()));
     gh.lazySingleton<_i775.ChatRepository>(
         () => _i1048.ChatRepositoryImpl(gh<_i425.ChatRemoteDatasource>()));
+    gh.lazySingleton<_i900.SettingsRemoteDatasource>(
+        () => _i901.SettingsRemoteDatasourceImpl(apiConsumer: gh<_i373.ApiConsumer>()));
+    gh.lazySingleton<_i902.SettingsRepository>(
+        () => _i903.SettingsRepositoryImpl(remoteDataSource: gh<_i900.SettingsRemoteDatasource>()));
+    gh.factory<_i904.PrivacyPolicyCubit>(
+        () => _i904.PrivacyPolicyCubit(settingsRepository: gh<_i902.SettingsRepository>()));
     gh.lazySingleton<_i716.BookingRemoteDatasource>(
         () => _i210.BookingRemoteDatasourceImpl(gh<_i373.ApiConsumer>()));
     gh.lazySingleton<_i447.BrandRepository>(
