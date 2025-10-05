@@ -83,9 +83,8 @@ class MultiBookingWidget extends StatelessWidget {
                         Expanded(
                           child: DText(
                             service.title,
-                            style: context.textTheme.bodyLarge!.copyWith(
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            softWrap: true,
+                            style: context.textTheme.bodyLarge,
                           ),
                         ),
                         SizedBox(
@@ -101,11 +100,9 @@ class MultiBookingWidget extends StatelessWidget {
                     ),
                     Text(
                       service.description,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
                       style: context.textTheme.bodySmall!.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
