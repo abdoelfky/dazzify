@@ -33,7 +33,7 @@ class DText extends StatelessWidget {
       // minFontSize: minFontSize ?? 13.0,
       softWrap: softWrap,
       textAlign: textAlign,
-      overflow: overflow!,
+      overflow: overflow ?? TextOverflow.ellipsis,
     );
   }
 }
