@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:restart/restart.dart';
 import 'firebase_options.dart';
 
 late GlobalKey<NavigatorState> navRootKey;
@@ -47,7 +48,11 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(const DazzifyApp());
+    runApp(
+      Restart.builder(
+        () => const DazzifyApp(),
+      ),
+    );
   });
   // },
   //   (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
