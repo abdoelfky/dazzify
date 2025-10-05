@@ -3,6 +3,7 @@ import 'package:dazzify/bloc_observer.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/fcm_notifications.dart';
 import 'package:dazzify/core/services/hive_service.dart';
+import 'package:dazzify/core/services/meta_sdk_service.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Meta SDK for tracking app events and conversions
+  await MetaSdkService.instance.initialize();
 
   Bloc.observer = MyBlocObserver();
   await Future.wait([

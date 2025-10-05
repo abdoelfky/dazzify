@@ -1,3 +1,4 @@
+import 'package:dazzify/core/services/meta_sdk_service.dart';
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
@@ -123,6 +124,19 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (failure) => emit(AuthAddUserInfoFailureState(failure.message)),
       (success) {
+        // Track app install and registration completion for Meta
+        MetaSdkService.instance.logAppInstall();
+        MetaSdkService.instance.logCompletedRegistration(
+          registrationMethod: 'Phone',
+        );
+        // Set user data for advanced matching
+        MetaSdkService.instance.setUserData(
+          email: email,
+          firstName: fullName.split(' ').first,
+          lastName: fullName.split(' ').length > 1 
+              ? fullName.split(' ').last 
+              : null,
+        );
         emit(AuthAddUserInfoSuccessState());
         _appNotificationsCubit.subscribeToNotifications();
       },
