@@ -46,16 +46,16 @@ class _DazzifyAppState extends State<DazzifyApp> {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            create: (_) => settingsCubit
+              ..checkAppTheme()
+              ..checkAppLanguage(),
+          ),
+          BlocProvider(
             lazy: false,
             create: (_) => getIt<AuthCubit>()..appConfig(),
           ),
           BlocProvider(
             create: (_) => tokensCubit,
-          ),
-          BlocProvider(
-            create: (_) => settingsCubit
-              ..checkAppTheme()
-              ..checkAppLanguage(),
           ),
           BlocProvider(
             create: (_) => getIt<AppNotificationsCubit>(),

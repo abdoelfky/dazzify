@@ -28,7 +28,6 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController phoneController;
-
   late final ValueNotifier<bool> isFieldValid;
   bool isLoading = false;
   bool isGuestLoading = false;
@@ -53,56 +52,6 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           children: [
             const AuthHeader(isLogoAnimated: true),
-            BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (context, settingsState) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0).r,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          final newLanguage = settingsState.currentLanguageCode == AppConstants.enCode
-                              ? AppConstants.arCode
-                              : AppConstants.enCode;
-                          context.read<SettingsCubit>().changeAppLanguage(
-                                languageCode: newLanguage,
-                              );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ).r,
-                          decoration: BoxDecoration(
-                            color: context.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(20).r,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              DText(
-                                settingsState.currentLanguageCode == AppConstants.enCode
-                                    ? AppConstants.usFlag
-                                    : AppConstants.egyptFlag,
-                                style: context.textTheme.bodyMedium,
-                              ),
-                              SizedBox(width: 6.w),
-                              DText(
-                                settingsState.currentLanguageCode == AppConstants.enCode
-                                    ? context.tr.english
-                                    : context.tr.arabic,
-                                style: context.textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
             SizedBox(height: 20.h),
             Padding(
               padding: const EdgeInsets.symmetric(

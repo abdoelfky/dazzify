@@ -69,11 +69,16 @@ android {
             dimension "dazzify"
             resValue "string", "app_name", "Dazzify"
         }
-//        dev {
-//            dimension "dazzify"
-//            applicationIdSuffix ".dev"
-//            resValue "string", "app_name", "Dazzify Dev"
-//        }
+        dev {
+            dimension "dazzify"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "Dazzify Dev"
+        }
+        dev {
+            dimension "dazzify"
+            applicationIdSuffix ".prod"
+            resValue "string", "app_name", "Dazzify"
+        }
 //        stg {
 //            dimension "dazzify"
 //            applicationIdSuffix ".stg"
