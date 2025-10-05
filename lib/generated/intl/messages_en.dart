@@ -380,6 +380,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Phone number is required"),
         "pickTime":
             MessageLookupByLibrary.simpleMessage("Click to pick your time"),
+        "pleaseApplyCoupon": MessageLookupByLibrary.simpleMessage(
+            "Please apply the coupon code before confirming"),
         "pleaseLoginToFreelyAccessAppFeatures":
             MessageLookupByLibrary.simpleMessage(
                 "Please log in to freely access app features."),

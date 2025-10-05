@@ -3850,6 +3850,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Please apply the coupon code before confirming`
+  String get pleaseApplyCoupon {
+    return Intl.message(
+      'Please apply the coupon code before confirming',
+      name: 'pleaseApplyCoupon',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

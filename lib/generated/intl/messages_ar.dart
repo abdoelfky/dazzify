@@ -378,6 +378,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("رقم الهاتف مطلوب"),
         "pickTime": MessageLookupByLibrary.simpleMessage(
             "انقر لاختيار الوقت المناسب لك"),
+        "pleaseApplyCoupon": MessageLookupByLibrary.simpleMessage(
+            "يرجى تطبيق رمز الكوبون قبل التأكيد"),
         "pleaseLoginToFreelyAccessAppFeatures":
             MessageLookupByLibrary.simpleMessage(
                 "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية."),
