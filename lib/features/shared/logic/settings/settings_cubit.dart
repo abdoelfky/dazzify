@@ -13,7 +13,9 @@ class SettingsCubit extends Cubit<SettingsState> {
   late String currentLanguageCode;
   late bool isDarkTheme;
 
-  SettingsCubit(this._localRepository) : super(const SettingsState());
+  SettingsCubit(this._localRepository) : super(const SettingsState()) {
+    currentLanguageCode = AppConstants.enCode;
+  }
 
   void checkAppTheme() {
     try {
