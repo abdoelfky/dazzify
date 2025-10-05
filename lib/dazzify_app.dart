@@ -108,7 +108,7 @@ class _DazzifyAppState extends State<DazzifyApp> {
                     DazzifyApp.tr = context.tr;
                     return DazzifyApp.tr.appName;
                   },
-                  locale: Locale(settingsCubit.currentLanguageCode),
+                  locale: Locale(state.currentLanguageCode),
                   supportedLocales: S.delegate.supportedLocales,
                   theme: state.isDarkTheme
                       ? ThemeManager.darkTheme()
