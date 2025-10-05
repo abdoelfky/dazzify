@@ -41,8 +41,23 @@ class DioTokenInterceptor extends Interceptor {
       options.headers['Authorization'] = 'Bearer $_accessToken';
     } catch (exception) {
       if (exception is AccessTokenException) {
-        await _refreshToken();
-        options.headers['Authorization'] = 'Bearer $_accessToken';
+        try {
+          await _refreshToken();
+          options.headers['Authorization'] = 'Bearer $_accessToken';
+        } catch (refreshException) {
+          if (refreshException is RefreshTokenException) {
+            // Session expired, the refresh token handler already called emitSessionExpired
+            // Reject the request gracefully without crashing
+            return handler.reject(
+              DioException(
+                requestOptions: options,
+                error: refreshException.message,
+                type: DioExceptionType.cancel,
+              ),
+            );
+          }
+          rethrow;
+        }
       } else {
         rethrow;
       }
@@ -91,6 +106,17 @@ class DioTokenInterceptor extends Interceptor {
         final response = await _retry(requestOptions);
         return handler.resolve(response);
       } catch (e) {
+        if (e is RefreshTokenException) {
+          // Session expired, redirect to login was already triggered
+          // Return a cancelled error instead of crashing
+          return handler.reject(
+            DioException(
+              requestOptions: requestOptions,
+              error: e.message,
+              type: DioExceptionType.cancel,
+            ),
+          );
+        }
         return handler.next(err);
       }
     }
