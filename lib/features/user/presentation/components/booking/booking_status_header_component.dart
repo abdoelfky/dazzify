@@ -97,36 +97,41 @@ class _BookingStatusHeaderComponentState
   Widget buildStatusButton() {
     final startTime = DateTime.parse(widget.startTime).toLocal();
     final now = DateTime.now();
-    // bool isToday = startTime.year == now.year &&
-    //     startTime.month == now.month &&
-    //     startTime.day == now.day;
+    final minutesUntilBooking = getTimeInMinute();
 
-    bool isSwiped = getTimeInMinute() <= 0 &&
-        widget.status == BookingStatus.confirmed &&
-        widget.isBookingFinished;
-
+    // If booking is finished, show review button
     if (widget.isBookingFinished) {
       return rateBookingButton();
-    } else if
-    // (
-    // (widget.status == BookingStatus.pending) ||
-    //     (widget.status != BookingStatus.cancelled &&
-    //         !widget.isBookingFinished &&
-    //         !widget.isArrived
-    //         &&getTimeInMinute() <= 0
-    //     // &&
-    //     // !isToday
-    //     ) ||
-    //     isSwiped)
-         (!(getTimeInMinute() <= 60 &&
-        // getTimeInMinute() < 0 &&
-        widget.status == BookingStatus.confirmed &&
-        !widget.isArrived))
-    {
-      return cancelBookingButton();
-    } else {
+    }
+
+    // If booking is cancelled, hide cancel button
+    if (widget.status == BookingStatus.cancelled) {
       return const SizedBox.shrink();
     }
+
+    // If booking is pending, show cancel button
+    if (widget.status == BookingStatus.pending) {
+      return cancelBookingButton();
+    }
+
+    // If booking is confirmed
+    if (widget.status == BookingStatus.confirmed) {
+      // If user has arrived, hide cancel button
+      if (widget.isArrived) {
+        return const SizedBox.shrink();
+      }
+
+      // If booking time has passed, hide cancel button
+      if (minutesUntilBooking <= 0) {
+        return const SizedBox.shrink();
+      }
+
+      // Before booking time and not arrived, show cancel button
+      return cancelBookingButton();
+    }
+
+    // Default: hide button
+    return const SizedBox.shrink();
   }
 
   Widget rateBookingButton() {
