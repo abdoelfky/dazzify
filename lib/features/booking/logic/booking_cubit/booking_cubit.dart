@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/failures.dart';
@@ -24,6 +25,7 @@ part 'booking_state.dart';
 class BookingCubit extends Cubit<BookingState> {
   final BookingRepository _bookingRepository;
   final WebSocketRepository _webSocketRepository;
+  StreamSubscription<WebSocketResponse>? _socketSubscription;
 
   BookingCubit(
     this._bookingRepository,
@@ -204,7 +206,10 @@ class BookingCubit extends Cubit<BookingState> {
   }
 
   void _startWebsocketConnection() async {
-    _webSocketRepository.socketEventPass().listen(
+    // Cancel existing subscription to prevent duplicates
+    await _socketSubscription?.cancel();
+    
+    _socketSubscription = _webSocketRepository.socketEventPass().listen(
       (WebSocketResponse response) async {
         if (response.type == WebSocketDataType.booking) {
           emit(state.copyWith(lastActiveBookingState: UiState.loading));
@@ -218,5 +223,11 @@ class BookingCubit extends Cubit<BookingState> {
         }
       },
     );
+  }
+
+  @override
+  Future<void> close() {
+    _socketSubscription?.cancel();
+    return super.close();
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/web_socket/repositories/web_socket_repository.dart';
@@ -14,6 +15,7 @@ part 'booking_review_state.dart';
 class BookingReviewCubit extends Cubit<BookingReviewState> {
   final BookingRepository bookingRepository;
   final WebSocketRepository webSocketRepository;
+  StreamSubscription<WebSocketResponse>? _socketSubscription;
 
   BookingReviewCubit(
     this.bookingRepository,
@@ -69,7 +71,10 @@ class BookingReviewCubit extends Cubit<BookingReviewState> {
       );
 
   Future<void> getMissedBookingReviewFromSocket() async {
-    webSocketRepository.socketEventPass().listen((WebSocketResponse response) {
+    // Cancel existing subscription to prevent duplicates
+    await _socketSubscription?.cancel();
+    
+    _socketSubscription = webSocketRepository.socketEventPass().listen((WebSocketResponse response) {
       if (response.type == WebSocketDataType.review) {
         final BookingReviewRequestModel bookingReviewRequest = response.data;
         emit(
@@ -79,5 +84,11 @@ class BookingReviewCubit extends Cubit<BookingReviewState> {
         );
       }
     });
+  }
+
+  @override
+  Future<void> close() {
+    _socketSubscription?.cancel();
+    return super.close();
   }
 }
