@@ -69,7 +69,9 @@ class _DazzifyAppState extends State<DazzifyApp> {
                   if (AppConfigManager.isAppInMaintenance) {
                     getIt<AppRouter>().replace(const MaintenanceRoute());
                   } else {
-                    tokensCubit.isUserAuthenticated();
+                    // Don't call isUserAuthenticated for guest mode
+                    // The auth_screen already handles navigation to AuthenticatedRoute
+                    // tokensCubit.isUserAuthenticated();
                   }
                 }
               },
