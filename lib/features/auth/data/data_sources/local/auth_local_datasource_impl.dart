@@ -20,6 +20,12 @@ class AuthLocalDatasourceImpl extends AuthLocalDatasource {
       final TokensModel tokens =
           settingsDatabase.get(AppConstants.userTokensKey)!;
       debugPrint("ACCESS TOKEN: ${tokens.accessToken}");
+      
+      // For guest users, check accessTokenExpireTime as they don't have refresh tokens
+      if (tokens.refreshTokenExpireTime == null) {
+        return currentTime().isBefore(tokens.accessTokenExpireTime);
+      }
+      
       return currentTime().isBefore(tokens.refreshTokenExpireTime!);
     } else {
       return false;
