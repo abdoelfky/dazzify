@@ -57,8 +57,7 @@ TokensModel _$TokensModelFromJson(Map<String, dynamic> json) => TokensModel(
       accessToken: json['accessToken'] as String? ?? '',
       refreshToken: json['refreshToken'] as String? ?? '',
       accessTokenExpireTime:
-          DateTime.parse(json['accessTokenExpireTime'] as String),
-      refreshTokenExpireTime: json['refreshTokenExpireTime'] == null
-          ? null
-          : DateTime.parse(json['refreshTokenExpireTime'] as String),
+          TokensModel._fromJsonDateTime(json['accessTokenExpireTime'] as String),
+      refreshTokenExpireTime: 
+          TokensModel._fromJsonDateTimeNullable(json['refreshTokenExpireTime'] as String?),
     );
