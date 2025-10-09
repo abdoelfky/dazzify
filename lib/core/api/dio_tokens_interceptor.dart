@@ -90,8 +90,8 @@ class DioTokenInterceptor extends Interceptor {
           final newTokens = TokensModel(
             accessToken: response.guestToken!,
             accessTokenExpireTime: response.guestTokenExpireTime!,
-            refreshToken: response.guestToken,
-            refreshTokenExpireTime: response.guestTokenExpireTime!,
+            refreshToken: null,
+            refreshTokenExpireTime: null,
           );
           await getIt<AuthLocalDatasource>().storeUserTokens(newTokens);
           _accessToken = response.guestToken;
