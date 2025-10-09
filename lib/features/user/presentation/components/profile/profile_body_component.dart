@@ -5,6 +5,7 @@ import 'package:dazzify/features/notifications/logic/app_notifications/app_notif
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_dialog.dart';
+import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/permission_dialog.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
@@ -306,6 +307,10 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         listener: (context, state) {
                           if (state.deleteUserAccountState == UiState.success) {
                             _tokensCubit.deleteUserTokens();
+                          } else if (state.deleteUserAccountState == UiState.failure) {
+                            DazzifyToastBar.showError(
+                              message: state.errorMessage,
+                            );
                           }
                         },
                         child: DazzifyDialog(
