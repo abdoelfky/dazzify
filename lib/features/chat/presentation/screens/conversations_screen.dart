@@ -80,16 +80,19 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                               );
                       case UiState.success:
                         if (state.conversations.isEmpty) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 24.0),
-                            child: EmptyDataWidget(
-                              svgIconPath: AssetsManager.chatRoundLineIcon,
-                              message: context.tr.noConversations,
-                              width: 120.w,
-                              height: 120.h,
-                            ),
-                          );
+                          return AuthLocalDatasourceImpl().checkGuestMode()
+                              ? GuestModeWidget()
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24.0),
+                                  child: EmptyDataWidget(
+                                    svgIconPath:
+                                        AssetsManager.chatRoundLineIcon,
+                                    message: context.tr.noConversations,
+                                    width: 120.w,
+                                    height: 120.h,
+                                  ),
+                                );
                         } else {
                           return CustomFadeAnimation(
                             duration: const Duration(milliseconds: 500),

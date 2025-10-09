@@ -148,7 +148,8 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                 children: [
                   DazzifyAppBar(
                     isLeading: true,
-                    title: "${truncateText(widget.brandName, 25)} ${DazzifyApp.tr.posts}",
+                    title:
+                        "${truncateText(widget.brandName, 25)} ${DazzifyApp.tr.posts}",
                     textStyle: context.textTheme.titleMedium,
                   ),
                   brandPostsList(),
@@ -210,7 +211,17 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                         isLiked:
                             likesCubit.state.likesIds.contains(brandMedia.id),
                         onLikeTap: () {
-                          likesCubit.addOrRemoveLike(mediaId: brandMedia.id);
+                          if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: false,
+                              builder: (context) {
+                                return GuestModeBottomSheet();
+                              },
+                            );
+                          } else {
+                            likesCubit.addOrRemoveLike(mediaId: brandMedia.id);
+                          }
                         },
                         onCommentTap: () {
                           if (AuthLocalDatasourceImpl().checkGuestMode()) {
@@ -221,7 +232,7 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                                 return GuestModeBottomSheet();
                               },
                             );
-                          }else if (brandMedia.commentsCount==null) {
+                          } else if (brandMedia.commentsCount == null) {
                             showModalBottomSheet(
                               context: context,
                               isScrollControlled: false,
@@ -229,7 +240,7 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                                 return CommentsClosedBottomSheet();
                               },
                             );
-                          }else {
+                          } else {
                             handelCommentsTap(brandMedia);
                           }
                         },
@@ -242,7 +253,7 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                                 return GuestModeBottomSheet();
                               },
                             );
-                          }else {
+                          } else {
                             handelSendServiceTap(brandMedia);
                           }
                         },

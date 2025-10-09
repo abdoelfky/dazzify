@@ -56,8 +56,8 @@ class TokensModelAdapter extends TypeAdapter<TokensModel> {
 TokensModel _$TokensModelFromJson(Map<String, dynamic> json) => TokensModel(
       accessToken: json['accessToken'] as String? ?? '',
       refreshToken: json['refreshToken'] as String? ?? '',
-      accessTokenExpireTime:
-          TokensModel._fromJsonDateTime(json['accessTokenExpireTime'] as String),
-      refreshTokenExpireTime: 
-          TokensModel._fromJsonDateTimeNullable(json['refreshTokenExpireTime'] as String?),
+      accessTokenExpireTime: TokensModel._fromJsonDateTime(
+          json['accessTokenExpireTime'] as String),
+      refreshTokenExpireTime: TokensModel._fromJsonDateTimeNullable(
+          json['refreshTokenExpireTime'] as String?),
     );

@@ -26,7 +26,7 @@ class BrandModel {
   final String? description;
 
   @JsonKey(defaultValue: 0)
-  final int? rating;
+  final double? rating;
 
   @JsonKey(defaultValue: 0)
   final int? ratingCount;

@@ -109,7 +109,7 @@ class PopularBrandCard extends StatelessWidget {
                       ),
                       SizedBox(width: 4.w),
                       DText(
-                        brand.rating!.toStringAsFixed(1),
+                        brand.rating!.toString(),
                         style: context.textTheme.bodySmall!
                             .copyWith(color: context.colorScheme.outline),
                       ),

@@ -11,6 +11,7 @@ import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/functions.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
@@ -242,7 +243,9 @@ class DioApiConsumer extends ApiConsumer {
           (baseResponse.error!.message == AppConstants.bannedUserTokenMessage ||
            baseResponse.error!.message == AppConstants.invalidUserAccessTokenMessage ||
            baseResponse.error!.message == AppConstants.invalidUserRefreshTokenMessage)) {
-        getIt<TokensCubit>().emitSessionExpired();
+        if (!getIt<AuthLocalDatasource>().checkGuestMode()) {
+          getIt<TokensCubit>().emitSessionExpired();
+        }
       } else {
         throw ServerException(
           baseResponse.error!.code,

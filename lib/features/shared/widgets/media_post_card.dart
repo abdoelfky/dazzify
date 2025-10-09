@@ -115,11 +115,21 @@ class _MediaPostCardState extends State<MediaPostCard> {
                 postHeader(),
                 GestureDetector(
                     onDoubleTap: () {
-                      if (!widget.isLiked) widget.onLikeTap();
-                      _showHeart.value = true;
-                      Future.delayed(const Duration(milliseconds: 700), () {
-                        _showHeart.value = false;
-                      });
+                      if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: false,
+                          builder: (context) {
+                            return GuestModeBottomSheet();
+                          },
+                        );
+                      } else {
+                        if (!widget.isLiked) widget.onLikeTap();
+                        _showHeart.value = true;
+                        Future.delayed(const Duration(milliseconds: 700), () {
+                          _showHeart.value = false;
+                        });
+                      }
                     },
                     child: Stack(
                       children: [
@@ -231,7 +241,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
             Row(
               children: [
                 DText(
-                  truncateText(widget.brandMedia.brand.name,25),
+                  truncateText(widget.brandMedia.brand.name, 25),
                   style: context.textTheme.bodyMedium,
                 ),
                 const SizedBox(width: 2),

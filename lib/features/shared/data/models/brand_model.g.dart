@@ -20,7 +20,7 @@ BrandModel _$BrandModelFromJson(Map<String, dynamic> json) => BrandModel(
       username: json['slug'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      rating: (json['rating'] as num?)?.toInt() ?? 0,
+      rating: (json['rating'] as num?)?.toDouble() ?? 0,
       ratingCount: (json['ratingCount'] as num?)?.toInt() ?? 0,
       totalBookingsCount: (json['totalBookingsCount'] as num?)?.toInt() ?? 0,
       points: (json['points'] as num?)?.toInt() ?? 0,

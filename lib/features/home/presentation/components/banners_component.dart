@@ -90,13 +90,26 @@ class _BannersComponentState extends State<BannersComponent> {
                                 bottomRight: Radius.circular(30),
                               ).r,
                               child: GestureDetector(
-                                onTap: () => BannerHelper.onBannerTap(
-                                  context: context,
-                                  homeState: state,
-                                  bookingState: bookingFromMediaCubit.state,
-                                  bannersAction: bannersAction,
-                                  index: index,
-                                ),
+                                onTap: () {
+                                  if (AuthLocalDatasourceImpl()
+                                      .checkGuestMode()) {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: false,
+                                      builder: (context) {
+                                        return GuestModeBottomSheet();
+                                      },
+                                    );
+                                  } else {
+                                    BannerHelper.onBannerTap(
+                                      context: context,
+                                      homeState: state,
+                                      bookingState: bookingFromMediaCubit.state,
+                                      bannersAction: bannersAction,
+                                      index: index,
+                                    );
+                                  }
+                                },
                                 child: DazzifyCachedNetworkImage(
                                   width: context.screenWidth,
                                   height: 320.h,
@@ -124,7 +137,17 @@ class _BannersComponentState extends State<BannersComponent> {
                     child: GlassIconButton(
                       icon: SolarIconsOutline.heart,
                       onPressed: () {
-                        context.navigateTo(const MyFavoriteRoute());
+                        if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: false,
+                            builder: (context) {
+                              return GuestModeBottomSheet();
+                            },
+                          );
+                        } else {
+                          context.navigateTo(const MyFavoriteRoute());
+                        }
                       },
                     ),
                   ),
@@ -142,7 +165,7 @@ class _BannersComponentState extends State<BannersComponent> {
                               return GuestModeBottomSheet();
                             },
                           );
-                        }else {
+                        } else {
                           context.pushRoute(const NotificationsRoute());
                         }
                       },

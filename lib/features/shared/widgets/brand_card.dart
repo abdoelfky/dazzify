@@ -95,7 +95,7 @@ class BrandCard extends StatelessWidget {
                 Row(
                   children: [
                     DText(
-                      brand.rating!.toStringAsFixed(1),
+                      brand.rating!.toString(),
                       style: context.textTheme.bodySmall!
                           .copyWith(color: context.colorScheme.outline),
                     ),

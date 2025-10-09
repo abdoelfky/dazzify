@@ -108,16 +108,26 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
                   unFavoriteColor: context.colorScheme.onPrimary,
                   favoriteColor: context.colorScheme.error,
                   onFavoriteTap: () {
-                    setState(() {
-                      if (_isLiked) {
-                        _likesCount--;
-                      } else {
-                        _likesCount++;
-                      }
-                      _isLiked = !_isLiked;
-                    });
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    } else {
+                      setState(() {
+                        if (_isLiked) {
+                          _likesCount--;
+                        } else {
+                          _likesCount++;
+                        }
+                        _isLiked = !_isLiked;
+                      });
 
-                    widget.onLikeTap(); // هذا يستدعي cubit
+                      widget.onLikeTap(); // هذا يستدعي cubit
+                    }
                   },
                   isFavorite: state.likesIds.contains(widget.reel.id),
                 ),
