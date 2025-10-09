@@ -90,8 +90,21 @@ class AuthLocalDatasourceImpl extends AuthLocalDatasource {
     if (checkIfTokensExist()) {
       final TokensModel tokens =
           settingsDatabase.get(AppConstants.userTokensKey)!;
+      
+      // Check if user is in guest mode - guest tokens don't have refresh tokens
+      if (checkGuestMode()) {
+        await settingsDatabase.delete(AppConstants.userTokensKey);
+        throw const RefreshTokenException('Guest session expired.');
+      }
+      
+      // Check if refresh token exists
+      if (tokens.refreshToken == null) {
+        await settingsDatabase.delete(AppConstants.userTokensKey);
+        throw const RefreshTokenException('Your session expired.');
+      }
+      
       if (currentTime().isBefore(tokens.refreshTokenExpireTime!)) {
-        return settingsDatabase.get(AppConstants.userTokensKey)!.refreshToken;
+        return tokens.refreshToken!;
       } else {
         await settingsDatabase.delete(AppConstants.userTokensKey);
         throw const RefreshTokenException('Your session expired.');

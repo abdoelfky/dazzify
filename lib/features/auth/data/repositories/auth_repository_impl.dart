@@ -83,6 +83,7 @@ class AuthRepositoryImpl extends AuthRepository {
         _localDatasource.storeUserTokens(TokensModel(
           accessToken: response.guestToken!,
           accessTokenExpireTime: response.guestTokenExpireTime!,
+          refreshToken: null,  // Guest tokens don't have refresh tokens
           refreshTokenExpireTime: response.guestTokenExpireTime!));
 
         _localDatasource.storeGuestMode(true);

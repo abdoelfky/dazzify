@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/constants/api_constants.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/features/booking/data/data_sources/remote/booking_remote_datasource.dart';
 import 'package:dazzify/features/booking/data/models/booking_review_request_model.dart';
 import 'package:dazzify/features/booking/data/models/bookings_list_model.dart';
@@ -170,20 +171,30 @@ class BookingRemoteDatasourceImpl extends BookingRemoteDatasource {
 
   @override
   Future<List<LastActiveBookingModel>> getLastActiveBookings() async {
-    return await _apiConsumer.get<LastActiveBookingModel>(
-      ApiConstants.lastActiveBooking,
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: LastActiveBookingModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<LastActiveBookingModel>(
+        ApiConstants.lastActiveBooking,
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: LastActiveBookingModel.fromJson,
+      );
+    } on SessionCancelledException {
+      // Session expired, return empty list instead of crashing
+      return [];
+    }
   }
 
   @override
   Future<BookingReviewRequestModel> getMissedReview() async {
-    return await _apiConsumer.get<BookingReviewRequestModel>(
-      ApiConstants.getMissedReviews,
-      responseReturnType: ResponseReturnType.fromJson,
-      fromJsonMethod: BookingReviewRequestModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<BookingReviewRequestModel>(
+        ApiConstants.getMissedReviews,
+        responseReturnType: ResponseReturnType.fromJson,
+        fromJsonMethod: BookingReviewRequestModel.fromJson,
+      );
+    } on SessionCancelledException {
+      // Session expired, return default model
+      return BookingReviewRequestModel();
+    }
   }
 
   @override

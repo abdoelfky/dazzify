@@ -98,3 +98,8 @@ class RefreshTokenException extends Equatable implements Exception {
     return '$message';
   }
 }
+
+class SessionCancelledException extends ServerException {
+  const SessionCancelledException([errorCode, message])
+      : super(errorCode ?? 0, message ?? "Session cancelled");
+}

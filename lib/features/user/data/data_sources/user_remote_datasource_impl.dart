@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/constants/api_constants.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/features/shared/data/models/comments/comment_model.dart';
 import 'package:dazzify/features/shared/data/models/favorite_model.dart';
 import 'package:dazzify/features/shared/data/requests/report_request.dart';
@@ -30,11 +31,16 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
 
   @override
   Future<UserModel> getUser() async {
-    return await _apiConsumer.get<UserModel>(
-      ApiConstants.getUserData,
-      responseReturnType: ResponseReturnType.fromJson,
-      fromJsonMethod: UserModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<UserModel>(
+        ApiConstants.getUserData,
+        responseReturnType: ResponseReturnType.fromJson,
+        fromJsonMethod: UserModel.fromJson,
+      );
+    } on SessionCancelledException {
+      // Session expired, return default user model
+      return UserModel();
+    }
   }
 
   @override

@@ -283,12 +283,11 @@ class DioApiConsumer extends ApiConsumer {
             (error.error.toString().contains('session expired') || 
              error.error.toString().contains('Invalid RefreshToken'))) {
           // Session expired, user will be redirected to login
-          // Don't throw an exception that would show an error message
-          return;
+          // Throw a specific exception that can be caught
+          throw const SessionCancelledException();
         }
-        // For other cancellations, throw a generic exception
-        throw const ServerException(0, 'Request cancelled');
-      
+        throw const DataException();
+
       case DioExceptionType.unknown:
         throw const NoInternetConnectionException();
     }
