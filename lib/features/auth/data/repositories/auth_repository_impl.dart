@@ -77,10 +77,10 @@ class AuthRepositoryImpl extends AuthRepository {
       );
       AppConfigManager.config = response;
       ///from API
-      if(isClicked) {
-        // Store true when user taps "Continue as Guest"
-        _localDatasource.storeGuestModeSession(true);
-        
+      _localDatasource.storeGuestModeSession(response.guestMode);
+
+      // Store guest token if user clicked guest mode OR if API requires guest mode
+      if(isClicked || response.guestMode) {
         _localDatasource.storeUserTokens(TokensModel(
           accessToken: response.guestToken!,
           accessTokenExpireTime: response.guestTokenExpireTime!,
@@ -89,9 +89,6 @@ class AuthRepositoryImpl extends AuthRepository {
 
         _localDatasource.storeGuestMode(true);
 
-      } else {
-        // Use response.guestMode for configuration (showing Continue as Guest button)
-        _localDatasource.storeGuestModeSession(response.guestMode);
       }
       return Right(response);
     } on ServerException catch (exception) {
