@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/services/meta_sdk_service.dart';
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_image_cropper.dart';
 import 'package:dazzify/features/user/data/models/user/user_model.dart';
@@ -24,15 +25,23 @@ part 'user_state.dart';
 @Injectable()
 class UserCubit extends Cubit<UserState> {
   final UserRepository _profileRepository;
+  final AuthLocalDatasource _authLocalDatasource;
   late String newPhoneNumber;
   final DazzifyPickAndCropImage dazzifyPickAndCropImage;
 
   UserCubit(
     this._profileRepository,
+    this._authLocalDatasource,
     this.dazzifyPickAndCropImage,
   ) : super(const UserState());
 
   Future<void> getUser() async {
+    // Skip fetching user data if in guest mode
+    if (_authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(userState: UiState.success));
+      return;
+    }
+
     emit(state.copyWith(userState: UiState.loading));
     Either<Failure, UserModel> result = await _profileRepository.getUser();
 

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/shared/data/models/favorite_model.dart';
 import 'package:dazzify/features/user/data/repositories/user_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -12,12 +13,20 @@ part 'favorite_state.dart';
 @injectable
 class FavoriteCubit extends Cubit<FavoriteState> {
   final UserRepository _userRepository;
+  final AuthLocalDatasource _authLocalDatasource;
 
   FavoriteCubit(
     this._userRepository,
+    this._authLocalDatasource,
   ) : super(const FavoriteState());
 
   Future<void> getFavoriteModels() async {
+    // Skip fetching favorites if in guest mode
+    if (_authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(blocState: UiState.success));
+      return;
+    }
+
     final result = await _userRepository.getFavoriteModels();
 
     result.fold(
@@ -39,6 +48,12 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   }
 
   Future<void> getFavoriteIds() async {
+    // Skip fetching favorite IDs if in guest mode
+    if (_authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(blocState: UiState.success));
+      return;
+    }
+
     final result = await _userRepository.getFavoriteIds();
 
     result.fold(

@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/web_socket/repositories/web_socket_repository.dart';
 import 'package:dazzify/core/web_socket/response/web_socket_response.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/booking/data/models/booking_review_request_model.dart';
 import 'package:dazzify/features/booking/data/repositories/booking_repository.dart';
 import 'package:dazzify/features/booking/data/requests/create_booking_review_request.dart';
@@ -15,16 +16,27 @@ part 'booking_review_state.dart';
 class BookingReviewCubit extends Cubit<BookingReviewState> {
   final BookingRepository bookingRepository;
   final WebSocketRepository webSocketRepository;
+  final AuthLocalDatasource authLocalDatasource;
   StreamSubscription<WebSocketResponse>? _socketSubscription;
 
   BookingReviewCubit(
     this.bookingRepository,
     this.webSocketRepository,
+    this.authLocalDatasource,
   ) : super(BookingReviewState()) {
-    getMissedBookingReviewFromSocket();
+    // Only subscribe to websocket if not in guest mode
+    if (!authLocalDatasource.checkGuestMode()) {
+      getMissedBookingReviewFromSocket();
+    }
   }
 
   Future<void> getMissedBookingReview() async {
+    // Skip fetching missed reviews if in guest mode
+    if (authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(bookingReviewRequestState: UiState.success));
+      return;
+    }
+
     emit(state.copyWith(bookingReviewRequestState: UiState.loading));
     final response = await bookingRepository.getMissedReview();
     response.fold(

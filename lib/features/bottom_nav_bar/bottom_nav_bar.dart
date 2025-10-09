@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/booking/logic/booking_review/booking_review_cubit.dart';
 import 'package:dazzify/features/bottom_nav_bar/widgets/nav_active_profile_picture.dart';
@@ -70,7 +71,12 @@ class _BottomNavBarState extends State<BottomNavBar>
     bookingReviewCubit = context.read<BookingReviewCubit>();
     notificationsCubit.getNotificationsState();
     socketCubit.connectToWebSocket();
-    bookingReviewCubit.getMissedBookingReview();
+    
+    // Only fetch missed booking reviews if not in guest mode
+    if (!AuthLocalDatasourceImpl().checkGuestMode()) {
+      bookingReviewCubit.getMissedBookingReview();
+    }
+    
     DeepLinkingHelper.init();
     // NotificationsService.onClickNotification.stream.listen((event) {
     //   _handleNotificationClick(event);

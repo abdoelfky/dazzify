@@ -5,6 +5,7 @@ import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/web_socket/repositories/web_socket_repository.dart';
 import 'package:dazzify/core/web_socket/response/web_socket_response.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/booking/data/models/booking_rate_model.dart';
 import 'package:dazzify/features/booking/data/models/branch_info_model.dart';
 import 'package:dazzify/features/booking/data/models/last_active_booking_model.dart';
@@ -25,11 +26,13 @@ part 'booking_state.dart';
 class BookingCubit extends Cubit<BookingState> {
   final BookingRepository _bookingRepository;
   final WebSocketRepository _webSocketRepository;
+  final AuthLocalDatasource _authLocalDatasource;
   StreamSubscription<WebSocketResponse>? _socketSubscription;
 
   BookingCubit(
     this._bookingRepository,
     this._webSocketRepository,
+    this._authLocalDatasource,
   ) : super(const BookingState()) {
     _startWebsocketConnection();
   }
@@ -186,6 +189,12 @@ class BookingCubit extends Cubit<BookingState> {
   }
 
   Future<void> getLastActiveBookings() async {
+    // Skip fetching bookings if in guest mode
+    if (_authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(lastActiveBookingState: UiState.success));
+      return;
+    }
+
     emit(state.copyWith(lastActiveBookingState: UiState.loading));
 
     final result = await _bookingRepository.getLastActiveBookings();

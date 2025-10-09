@@ -4,6 +4,7 @@ import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/web_socket/repositories/web_socket_repository.dart';
 import 'package:dazzify/core/web_socket/response/web_socket_response.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/chat/data/models/branch_message_model.dart';
 import 'package:dazzify/features/chat/data/models/chat_branch_model.dart';
 import 'package:dazzify/features/chat/data/models/conversation_model.dart';
@@ -19,13 +20,21 @@ part 'conversations_state.dart';
 class ConversationsCubit extends Cubit<ConversationsState> {
   final ChatRepository _chatRepository;
   final WebSocketRepository _webSocketRepository;
+  final AuthLocalDatasource _authLocalDatasource;
 
   ConversationsCubit(
     this._chatRepository,
     this._webSocketRepository,
+    this._authLocalDatasource,
   ) : super(const ConversationsState());
 
   Future<void> getConversations() async {
+    // Skip fetching conversations if in guest mode
+    if (_authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(blocState: UiState.success));
+      return;
+    }
+
     emit(state.copyWith(blocState: UiState.loading));
 
     Either<Failure, List<ConversationModel>> result =

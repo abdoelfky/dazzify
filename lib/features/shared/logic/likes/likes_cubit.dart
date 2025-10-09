@@ -1,4 +1,5 @@
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/user/data/repositories/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,18 @@ part 'likes_state.dart';
 @injectable
 class LikesCubit extends Cubit<LikesState> {
   final UserRepository _userRepository;
+  final AuthLocalDatasource _authLocalDatasource;
   String currentMediaId = "";
 
-  LikesCubit(this._userRepository) : super(const LikesState());
+  LikesCubit(this._userRepository, this._authLocalDatasource) : super(const LikesState());
 
   Future<void> getLikesIds() async {
+    // Skip fetching likes if in guest mode
+    if (_authLocalDatasource.checkGuestMode()) {
+      emit(state.copyWith(idsState: UiState.success));
+      return;
+    }
+
     final result = await _userRepository.getLikesIds();
 
     result.fold(
