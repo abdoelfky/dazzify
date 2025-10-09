@@ -39,7 +39,8 @@ class DioTokenInterceptor extends Interceptor {
 
     try {
       // Always fetch fresh token for guest users to avoid using stale cached tokens
-      if (getIt<AuthLocalDatasource>().checkGuestMode()) {
+      final isGuest = getIt<AuthLocalDatasource>().checkGuestMode();
+      if (isGuest) {
         _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
       } else {
         _accessToken ??= getIt<AuthLocalDatasource>().getAccessToken();
@@ -49,6 +50,10 @@ class DioTokenInterceptor extends Interceptor {
       if (exception is AccessTokenException) {
         try {
           await _refreshToken();
+          // Always fetch the refreshed token from storage for guest users
+          if (getIt<AuthLocalDatasource>().checkGuestMode()) {
+            _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
+          }
           options.headers['Authorization'] = 'Bearer $_accessToken';
         } catch (refreshException) {
           if (refreshException is RefreshTokenException) {
@@ -90,7 +95,7 @@ class DioTokenInterceptor extends Interceptor {
           final newTokens = TokensModel(
             accessToken: response.guestToken!,
             accessTokenExpireTime: response.guestTokenExpireTime!,
-            refreshToken: response.guestToken,
+            refreshToken: null, // Guest tokens don't have refresh tokens
             refreshTokenExpireTime: response.guestTokenExpireTime!,
           );
           await getIt<AuthLocalDatasource>().storeUserTokens(newTokens);
@@ -153,8 +158,15 @@ class DioTokenInterceptor extends Interceptor {
       headers: requestOptions.headers,
     );
     // Ensure we use the fresh token for retry, especially for guest users
-    if (getIt<AuthLocalDatasource>().checkGuestMode()) {
-      _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
+    final isGuest = getIt<AuthLocalDatasource>().checkGuestMode();
+    if (isGuest) {
+      try {
+        _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
+      } catch (e) {
+        // If token fetch fails, attempt to refresh
+        await _refreshToken();
+        _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
+      }
     }
     options.headers?['Authorization'] = 'Bearer $_accessToken';
     return getIt<Dio>().request<dynamic>(
