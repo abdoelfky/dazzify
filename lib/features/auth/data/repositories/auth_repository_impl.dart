@@ -118,18 +118,41 @@ class AuthRepositoryImpl extends AuthRepository {
       final String accessToken = _localDatasource.getAccessToken();
       return Right(accessToken);
     } on AccessTokenException {
-      try {
-        final String refreshToken = await _getRefreshToken();
+      // Check if user is in guest mode
+      if (_localDatasource.checkGuestMode()) {
         try {
-          final TokensModel updatedToken =
-              await _refreshUserAccessToken(refreshToken);
-          _localDatasource.updateAccessToken(updatedToken);
-          return Right(updatedToken.accessToken);
+          // Fetch a new guest token for guest users
+          final AppConfigModel response = await _remoteDatasource.guestMode();
+          if (response.guestToken != null) {
+            final newTokens = TokensModel(
+              accessToken: response.guestToken!,
+              accessTokenExpireTime: response.guestTokenExpireTime!,
+              refreshToken: null,
+              refreshTokenExpireTime: response.guestTokenExpireTime!,
+            );
+            await _localDatasource.storeUserTokens(newTokens);
+            return Right(response.guestToken!);
+          } else {
+            return Left(SessionFailure(message: 'Failed to refresh guest token'));
+          }
         } on ServerException catch (exception) {
           return Left(ApiFailure(message: exception.message!));
         }
-      } on RefreshTokenException catch (exception) {
-        return Left(SessionFailure(message: exception.message!));
+      } else {
+        // Regular user - use refresh token flow
+        try {
+          final String refreshToken = await _getRefreshToken();
+          try {
+            final TokensModel updatedToken =
+                await _refreshUserAccessToken(refreshToken);
+            _localDatasource.updateAccessToken(updatedToken);
+            return Right(updatedToken.accessToken);
+          } on ServerException catch (exception) {
+            return Left(ApiFailure(message: exception.message!));
+          }
+        } on RefreshTokenException catch (exception) {
+          return Left(SessionFailure(message: exception.message!));
+        }
       }
     }
   }

@@ -7,6 +7,7 @@ import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
+import 'package:dazzify/features/auth/data/models/tokens_model.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dio/dio.dart';
 
@@ -76,12 +77,31 @@ class DioTokenInterceptor extends Interceptor {
     _refreshCompleter = Completer<void>();
 
     try {
-      final String refreshToken =
-          await getIt<AuthLocalDatasource>().getRefreshToken();
-      final newTokens = await getIt<AuthRemoteDatasource>()
-          .refreshUserAccessToken(refreshToken);
-      await getIt<AuthLocalDatasource>().updateAccessToken(newTokens);
-      _accessToken = newTokens.accessToken;
+      // Check if user is in guest mode
+      if (getIt<AuthLocalDatasource>().checkGuestMode()) {
+        // Fetch a new guest token
+        final response = await getIt<AuthRemoteDatasource>().guestMode();
+        if (response.guestToken != null) {
+          final newTokens = TokensModel(
+            accessToken: response.guestToken!,
+            accessTokenExpireTime: response.guestTokenExpireTime!,
+            refreshToken: null,
+            refreshTokenExpireTime: response.guestTokenExpireTime!,
+          );
+          await getIt<AuthLocalDatasource>().storeUserTokens(newTokens);
+          _accessToken = response.guestToken;
+        } else {
+          throw const RefreshTokenException('Failed to refresh guest token');
+        }
+      } else {
+        // Regular user - use refresh token flow
+        final String refreshToken =
+            await getIt<AuthLocalDatasource>().getRefreshToken();
+        final newTokens = await getIt<AuthRemoteDatasource>()
+            .refreshUserAccessToken(refreshToken);
+        await getIt<AuthLocalDatasource>().updateAccessToken(newTokens);
+        _accessToken = newTokens.accessToken;
+      }
     } catch (exception) {
       if (exception is RefreshTokenException) {
         getIt<TokensCubit>().emitSessionExpired();
