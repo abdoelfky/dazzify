@@ -42,7 +42,8 @@ class AppConfigModel {
       
       // Convert to Africa/Cairo timezone
       final cairoDateTime = tz.TZDateTime.from(parsedDate, cairoLocation);
-      
+      print('cairoDateTime');
+      print(cairoDateTime);
       // Return as regular DateTime
       return cairoDateTime;
     } catch (e) {

@@ -52,45 +52,45 @@ class _DazzifyAppState extends State<DazzifyApp> {
           ),
         ],
         child: ScreenUtilInit(
-            designSize: const Size(360, 800),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            builder: (context, child) => BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (context, state) {
-                return MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
-                  builder: (context, child) {
-                    return MediaQuery(
-                      data: MediaQuery.of(context).copyWith(
-                        textScaler: TextScaler.noScaling,
-                      ),
-                      child: child!,
-                    );
-                  },
-                  routerConfig: getIt<AppRouter>().config(
-                    navigatorObservers: () => [
-                      MyRouteObserver(),
-                      AutoRouteObserver(),
-                    ],
-                  ),
-                  localizationsDelegates: const [
-                    S.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
+          designSize: const Size(360, 800),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) =>
+              BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                builder: (context, child) {
+                  return MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      textScaler: TextScaler.noScaling,
+                    ),
+                    child: child!,
+                  );
+                },
+                routerConfig: getIt<AppRouter>().config(
+                  navigatorObservers: () => [
+                    MyRouteObserver(),
+                    AutoRouteObserver(),
                   ],
-                  onGenerateTitle: (context) {
-                    DazzifyApp.tr = context.tr;
-                    return DazzifyApp.tr.appName;
-                  },
-                  locale: Locale(state.currentLanguageCode),
-                  supportedLocales: S.delegate.supportedLocales,
-                  theme: state.isDarkTheme
-                      ? ThemeManager.darkTheme()
-                      : ThemeManager.lightTheme(),
-                );
-              },
-            ),
+                ),
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                onGenerateTitle: (context) {
+                  DazzifyApp.tr = context.tr;
+                  return DazzifyApp.tr.appName;
+                },
+                locale: Locale(state.currentLanguageCode),
+                supportedLocales: S.delegate.supportedLocales,
+                theme: state.isDarkTheme
+                    ? ThemeManager.darkTheme()
+                    : ThemeManager.lightTheme(),
+              );
+            },
           ),
         ),
       ),
