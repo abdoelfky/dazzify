@@ -61,44 +61,49 @@ class _DazzifyAppState extends State<DazzifyApp> {
           builder: (context, child) =>
               BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
-              return MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                builder: (context, child) {
-                  Widget wrappedChild = child!;
-                  
-                  // On Android and other non-iOS platforms, wrap with swipe-back gesture
-                  if (!kIsWeb && !Platform.isIOS) {
-                    wrappedChild = SwipeBackNavigator(child: wrappedChild);
-                  }
-                  
-                  return MediaQuery(
-                    data: MediaQuery.of(context).copyWith(
-                      textScaler: TextScaler.noScaling,
-                    ),
-                    child: wrappedChild,
-                  );
+              return GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
                 },
-                routerConfig: getIt<AppRouter>().config(
-                  navigatorObservers: () => [
-                    MyRouteObserver(),
-                    AutoRouteObserver(),
+                child: MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  builder: (context, child) {
+                    Widget wrappedChild = child!;
+
+                    // On Android and other non-iOS platforms, wrap with swipe-back gesture
+                    if (!kIsWeb && !Platform.isIOS) {
+                      wrappedChild = SwipeBackNavigator(child: wrappedChild);
+                    }
+
+                    return MediaQuery(
+                      data: MediaQuery.of(context).copyWith(
+                        textScaler: TextScaler.noScaling,
+                      ),
+                      child: wrappedChild,
+                    );
+                  },
+                  routerConfig: getIt<AppRouter>().config(
+                    navigatorObservers: () => [
+                      MyRouteObserver(),
+                      AutoRouteObserver(),
+                    ],
+                  ),
+                  localizationsDelegates: const [
+                    S.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
                   ],
+                  onGenerateTitle: (context) {
+                    DazzifyApp.tr = context.tr;
+                    return DazzifyApp.tr.appName;
+                  },
+                  locale: Locale(state.currentLanguageCode),
+                  supportedLocales: S.delegate.supportedLocales,
+                  theme: state.isDarkTheme
+                      ? ThemeManager.darkTheme()
+                      : ThemeManager.lightTheme(),
                 ),
-                localizationsDelegates: const [
-                  S.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                onGenerateTitle: (context) {
-                  DazzifyApp.tr = context.tr;
-                  return DazzifyApp.tr.appName;
-                },
-                locale: Locale(state.currentLanguageCode),
-                supportedLocales: S.delegate.supportedLocales,
-                theme: state.isDarkTheme
-                    ? ThemeManager.darkTheme()
-                    : ThemeManager.lightTheme(),
               );
             },
           ),
