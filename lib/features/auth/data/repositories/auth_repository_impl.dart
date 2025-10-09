@@ -171,6 +171,7 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   bool isUserAuthenticated() {
+
     return _localDatasource.checkIfTokensExist();
   }
 
