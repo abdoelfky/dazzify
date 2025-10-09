@@ -34,6 +34,7 @@ dependencies:
   intl:
   intl_utils:
   lottie:
+  timezone:
   percent_indicator: ^4.2.4
   pinput:
   solar_icons: ^0.0.5
