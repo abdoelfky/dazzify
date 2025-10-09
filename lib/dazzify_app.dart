@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/navigation/swipe_back_page.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
@@ -9,6 +11,7 @@ import 'package:dazzify/generated/l10n.dart';
 import 'package:dazzify/route_observer.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:dazzify/settings/theme/theme_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -61,11 +64,18 @@ class _DazzifyAppState extends State<DazzifyApp> {
               return MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 builder: (context, child) {
+                  Widget wrappedChild = child!;
+                  
+                  // On Android and other non-iOS platforms, wrap with swipe-back gesture
+                  if (!kIsWeb && !Platform.isIOS) {
+                    wrappedChild = SwipeBackNavigator(child: wrappedChild);
+                  }
+                  
                   return MediaQuery(
                     data: MediaQuery.of(context).copyWith(
                       textScaler: TextScaler.noScaling,
                     ),
-                    child: child!,
+                    child: wrappedChild,
                   );
                 },
                 routerConfig: getIt<AppRouter>().config(
