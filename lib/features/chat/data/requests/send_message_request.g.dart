@@ -14,10 +14,19 @@ SendMessageRequest _$SendMessageRequestFromJson(Map<String, dynamic> json) =>
       serviceId: json['serviceId'] as String?,
     );
 
-Map<String, dynamic> _$SendMessageRequestToJson(SendMessageRequest instance) =>
-    <String, dynamic>{
-      'branchId': instance.branchId,
-      'messageType': instance.messageType,
-      if (instance.content case final value?) 'content': value,
-      if (instance.serviceId case final value?) 'serviceId': value,
-    };
+Map<String, dynamic> _$SendMessageRequestToJson(SendMessageRequest instance) {
+  final val = <String, dynamic>{
+    'branchId': instance.branchId,
+    'messageType': instance.messageType,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('content', instance.content);
+  writeNotNull('serviceId', instance.serviceId);
+  return val;
+}

@@ -286,10 +286,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i162.AppNotificationsCubit>(),
           gh<_i110.SettingsCubit>(),
         ));
-    gh.factory<_i966.BookingReviewCubit>(() => _i966.BookingReviewCubit(
-          gh<_i626.BookingRepository>(),
-          gh<_i160.WebSocketRepository>(),
-        ));
     gh.factory<_i180.BookingFromMediaCubit>(
         () => _i180.BookingFromMediaCubit(gh<_i447.BrandRepository>()));
     gh.factory<_i798.BrandBloc>(
@@ -298,9 +294,19 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i968.ServiceSelectionCubit(gh<_i447.BrandRepository>()));
     gh.factory<_i299.BrandBranchesCubit>(
         () => _i299.BrandBranchesCubit(gh<_i447.BrandRepository>()));
+    gh.factory<_i291.BookingCubit>(() => _i291.BookingCubit(
+          gh<_i626.BookingRepository>(),
+          gh<_i160.WebSocketRepository>(),
+          gh<_i26.AuthLocalDatasource>(),
+        ));
     gh.lazySingleton<_i380.SocketCubit>(() => _i380.SocketCubit(
           gh<_i160.WebSocketRepository>(),
           gh<_i462.TokensCubit>(),
+        ));
+    gh.factory<_i856.ConversationsCubit>(() => _i856.ConversationsCubit(
+          gh<_i775.ChatRepository>(),
+          gh<_i160.WebSocketRepository>(),
+          gh<_i26.AuthLocalDatasource>(),
         ));
     gh.factory<_i410.ServiceAvailabilityCubit>(
         () => _i410.ServiceAvailabilityCubit(gh<_i626.BookingRepository>()));
@@ -325,6 +331,11 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i499.UserRepository>(
         () => _i825.UserRepositoryImpl(gh<_i868.UserRemoteDataSource>()));
+    gh.factory<_i966.BookingReviewCubit>(() => _i966.BookingReviewCubit(
+          gh<_i626.BookingRepository>(),
+          gh<_i160.WebSocketRepository>(),
+          gh<_i26.AuthLocalDatasource>(),
+        ));
     gh.factory<_i454.ReportCubit>(() => _i454.ReportCubit(
           gh<_i719.TextEditingController>(),
           gh<_i719.GlobalKey<_i719.FormState>>(),
@@ -338,20 +349,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i316.SearchBloc(gh<_i660.HomeRepository>()));
     gh.factory<_i852.ServicesBloc>(
         () => _i852.ServicesBloc(gh<_i660.HomeRepository>()));
-    gh.factory<_i968.UserCubit>(() => _i968.UserCubit(
-          gh<_i499.UserRepository>(),
-          gh<_i457.DazzifyPickAndCropImage>(),
-        ));
-    gh.factory<_i856.ConversationsCubit>(() => _i856.ConversationsCubit(
-          gh<_i775.ChatRepository>(),
-          gh<_i160.WebSocketRepository>(),
-        ));
     gh.factory<_i435.CommentsBloc>(
         () => _i435.CommentsBloc(gh<_i499.UserRepository>()));
-    gh.factory<_i108.LikesCubit>(
-        () => _i108.LikesCubit(gh<_i499.UserRepository>()));
-    gh.factory<_i593.FavoriteCubit>(
-        () => _i593.FavoriteCubit(gh<_i499.UserRepository>()));
     gh.factory<_i149.BookingHistoryBloc>(
         () => _i149.BookingHistoryBloc(gh<_i626.BookingRepository>()));
     gh.factory<_i303.IssueBloc>(
@@ -360,14 +359,23 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i199.ServiceDetailsBloc(gh<_i660.HomeRepository>()));
     gh.factory<_i218.HomeCubit>(
         () => _i218.HomeCubit(gh<_i660.HomeRepository>()));
-    gh.factory<_i291.BookingCubit>(() => _i291.BookingCubit(
-          gh<_i626.BookingRepository>(),
-          gh<_i160.WebSocketRepository>(),
-        ));
     gh.factory<_i683.LocationCubit>(
         () => _i683.LocationCubit(gh<_i499.UserRepository>()));
     gh.factory<_i468.ReelsBloc>(
         () => _i468.ReelsBloc(gh<_i720.ReelsRepository>()));
+    gh.factory<_i108.LikesCubit>(() => _i108.LikesCubit(
+          gh<_i499.UserRepository>(),
+          gh<_i26.AuthLocalDatasource>(),
+        ));
+    gh.factory<_i593.FavoriteCubit>(() => _i593.FavoriteCubit(
+          gh<_i499.UserRepository>(),
+          gh<_i26.AuthLocalDatasource>(),
+        ));
+    gh.factory<_i968.UserCubit>(() => _i968.UserCubit(
+          gh<_i499.UserRepository>(),
+          gh<_i26.AuthLocalDatasource>(),
+          gh<_i457.DazzifyPickAndCropImage>(),
+        ));
     return this;
   }
 }

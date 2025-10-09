@@ -13,9 +13,18 @@ ValidateOtpRequest _$ValidateOtpRequestFromJson(Map<String, dynamic> json) =>
       lang: json['languagePreference'] as String?,
     );
 
-Map<String, dynamic> _$ValidateOtpRequestToJson(ValidateOtpRequest instance) =>
-    <String, dynamic>{
-      'phoneNumber': instance.phoneNumber,
-      'otp': instance.otpCode,
-      if (instance.lang case final value?) 'languagePreference': value,
-    };
+Map<String, dynamic> _$ValidateOtpRequestToJson(ValidateOtpRequest instance) {
+  final val = <String, dynamic>{
+    'phoneNumber': instance.phoneNumber,
+    'otp': instance.otpCode,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('languagePreference', instance.lang);
+  return val;
+}

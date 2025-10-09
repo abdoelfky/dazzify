@@ -28,17 +28,26 @@ CreateBookingRequest _$CreateBookingRequestFromJson(
     );
 
 Map<String, dynamic> _$CreateBookingRequestToJson(
-        CreateBookingRequest instance) =>
-    <String, dynamic>{
-      'brandId': instance.brandId,
-      'branchId': instance.branchId,
-      'services': instance.services,
-      'startTime': instance.startTime,
-      'isHasCoupon': instance.isHasCoupon,
-      if (instance.code case final value?) 'code': value,
-      if (instance.notes case final value?) 'notes': value,
-      if (instance.bookingLocation case final value?) 'bookingLocation': value,
-      if (instance.gov case final value?) 'gov': value,
-      if (instance.isInBranch case final value?) 'isInBranch': value,
-      'servicesWithQuantity': instance.servicesWithQuantity,
-    };
+    CreateBookingRequest instance) {
+  final val = <String, dynamic>{
+    'brandId': instance.brandId,
+    'branchId': instance.branchId,
+    'services': instance.services,
+    'startTime': instance.startTime,
+    'isHasCoupon': instance.isHasCoupon,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('code', instance.code);
+  writeNotNull('notes', instance.notes);
+  writeNotNull('bookingLocation', instance.bookingLocation);
+  writeNotNull('gov', instance.gov);
+  writeNotNull('isInBranch', instance.isInBranch);
+  val['servicesWithQuantity'] = instance.servicesWithQuantity;
+  return val;
+}

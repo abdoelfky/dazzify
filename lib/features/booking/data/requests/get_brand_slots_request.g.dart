@@ -19,11 +19,20 @@ GetBrandSlotsRequest _$GetBrandSlotsRequestFromJson(
     );
 
 Map<String, dynamic> _$GetBrandSlotsRequestToJson(
-        GetBrandSlotsRequest instance) =>
-    <String, dynamic>{
-      'branchId': instance.branchId,
-      if (instance.serviceId case final value?) 'serviceId': value,
-      if (instance.services case final value?) 'services': value,
-      'month': instance.month,
-      'year': instance.year,
-    };
+    GetBrandSlotsRequest instance) {
+  final val = <String, dynamic>{
+    'branchId': instance.branchId,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('serviceId', instance.serviceId);
+  writeNotNull('services', instance.services);
+  val['month'] = instance.month;
+  val['year'] = instance.year;
+  return val;
+}

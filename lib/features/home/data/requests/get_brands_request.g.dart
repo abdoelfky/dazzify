@@ -14,10 +14,18 @@ GetBrandsRequest _$GetBrandsRequestFromJson(Map<String, dynamic> json) =>
       limit: (json['limit'] as num).toInt(),
     );
 
-Map<String, dynamic> _$GetBrandsRequestToJson(GetBrandsRequest instance) =>
-    <String, dynamic>{
-      if (instance.keyword case final value?) 'keyword': value,
-      if (instance.mainCategory case final value?) 'mainCategory': value,
-      'page': instance.page,
-      'limit': instance.limit,
-    };
+Map<String, dynamic> _$GetBrandsRequestToJson(GetBrandsRequest instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('keyword', instance.keyword);
+  writeNotNull('mainCategory', instance.mainCategory);
+  val['page'] = instance.page;
+  val['limit'] = instance.limit;
+  return val;
+}

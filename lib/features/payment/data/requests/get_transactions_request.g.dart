@@ -15,9 +15,18 @@ GetTransactionsRequest _$GetTransactionsRequestFromJson(
     );
 
 Map<String, dynamic> _$GetTransactionsRequestToJson(
-        GetTransactionsRequest instance) =>
-    <String, dynamic>{
-      'page': instance.page,
-      'limit': instance.limit,
-      if (instance.status case final value?) 'status': value,
-    };
+    GetTransactionsRequest instance) {
+  final val = <String, dynamic>{
+    'page': instance.page,
+    'limit': instance.limit,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('status', instance.status);
+  return val;
+}
