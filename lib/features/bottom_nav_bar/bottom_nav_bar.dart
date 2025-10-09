@@ -70,10 +70,10 @@ class _BottomNavBarState extends State<BottomNavBar>
     socketCubit = context.read<SocketCubit>();
     bookingReviewCubit = context.read<BookingReviewCubit>();
     notificationsCubit.getNotificationsState();
-    socketCubit.connectToWebSocket();
-    
+
     // Only fetch missed booking reviews if not in guest mode
     if (!AuthLocalDatasourceImpl().checkGuestMode()) {
+      socketCubit.connectToWebSocket();
       bookingReviewCubit.getMissedBookingReview();
     }
     
