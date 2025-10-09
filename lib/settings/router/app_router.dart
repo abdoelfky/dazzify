@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/navigation/swipe_back_page.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:dazzify/features/auth/presentation/screens/auth_screen.dart';
 import 'package:dazzify/features/auth/presentation/screens/otp_verify_screen.dart';
 import 'package:dazzify/features/auth/presentation/screens/user_info_screen.dart';
@@ -77,7 +80,14 @@ part 'app_router.gr.dart';
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
 class AppRouter extends RootStackRouter {
   @override
-  RouteType get defaultRouteType => RouteType.adaptive();
+  RouteType get defaultRouteType {
+    // On iOS, use Cupertino route type which has native swipe-back gesture
+    if (!kIsWeb && Platform.isIOS) {
+      return const RouteType.cupertino();
+    }
+    // On other platforms, use Material route type (swipe gesture will be added via wrapper)
+    return const RouteType.material();
+  }
 
   @override
   List<AutoRoute> get routes => [
