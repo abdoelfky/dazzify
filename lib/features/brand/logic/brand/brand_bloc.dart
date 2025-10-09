@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/brand/data/repositories/brand_repository.dart';
 import 'package:dazzify/features/brand/data/requests/get_brand_media_request.dart';
@@ -228,6 +229,11 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
 
   Future<void> _onAddBrandViewEvent(
       AddBrandViewEvent event, Emitter<BrandState> emit) async {
+    // Skip adding brand view in guest mode
+    if (AuthLocalDatasourceImpl().checkGuestModeSession()) {
+      return;
+    }
+
     emit(state.copyWith(
       addingBrandViewState: UiState.loading,
     ));
