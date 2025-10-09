@@ -1,6 +1,7 @@
 import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/constants/api_constants.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/data/data_sources/remote/home_remote_datasource.dart';
 import 'package:dazzify/features/home/data/models/banner_model.dart';
@@ -23,11 +24,15 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
 
   @override
   Future<List<BannerModel>> getBanners() async {
-    return await _apiConsumer.get<BannerModel>(
-      ApiConstants.banners,
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: BannerModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<BannerModel>(
+        ApiConstants.banners,
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: BannerModel.fromJson,
+      );
+    } on SessionCancelledException {
+      return [];
+    }
   }
 
   @override
@@ -39,66 +44,86 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
       AppConstants.sort: AppConstants.totalBookingsCountDesc,
     };
 
-    return await _apiConsumer.get<BrandModel>(
-      ApiConstants.brands,
-      queryParameters: queryParameters,
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: BrandModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<BrandModel>(
+        ApiConstants.brands,
+        queryParameters: queryParameters,
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: BrandModel.fromJson,
+      );
+    } on SessionCancelledException {
+      return [];
+    }
   }
 
   @override
   Future<List<BrandModel>> getTopRatedBrands({
     required GetBrandsRequest request,
   }) async {
-    return await _apiConsumer.get<BrandModel>(
-      ApiConstants.brands,
-      queryParameters: {
-        ...request.toJson(),
-        AppConstants.sort: AppConstants.ratingDesc,
-      },
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: BrandModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<BrandModel>(
+        ApiConstants.brands,
+        queryParameters: {
+          ...request.toJson(),
+          AppConstants.sort: AppConstants.ratingDesc,
+        },
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: BrandModel.fromJson,
+      );
+    } on SessionCancelledException {
+      return [];
+    }
   }
 
   @override
   Future<List<CategoryModel>> getMainCategories() async {
-    return await _apiConsumer.get<CategoryModel>(
-      ApiConstants.mainCategories,
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: CategoryModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<CategoryModel>(
+        ApiConstants.mainCategories,
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: CategoryModel.fromJson,
+      );
+    } on SessionCancelledException {
+      return [];
+    }
   }
 
   @override
   Future<List<ServiceDetailsModel>> getPopularServices({
     required GetServicesRequest request,
   }) async {
-    return await _apiConsumer.get<ServiceDetailsModel>(
-      ApiConstants.services,
-      queryParameters: {
-        ...request.toJson(),
-        AppConstants.sort: AppConstants.bookingCountDesc,
-      },
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: ServiceDetailsModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<ServiceDetailsModel>(
+        ApiConstants.services,
+        queryParameters: {
+          ...request.toJson(),
+          AppConstants.sort: AppConstants.bookingCountDesc,
+        },
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: ServiceDetailsModel.fromJson,
+      );
+    } on SessionCancelledException {
+      return [];
+    }
   }
 
   @override
   Future<List<ServiceDetailsModel>> getTopRatedServices({
     required GetServicesRequest request,
   }) async {
-    return await _apiConsumer.get<ServiceDetailsModel>(
-      ApiConstants.services,
-      queryParameters: {
-        ...request.toJson(),
-        AppConstants.sort: AppConstants.ratingDesc,
-      },
-      responseReturnType: ResponseReturnType.fromJsonList,
-      fromJsonMethod: ServiceDetailsModel.fromJson,
-    );
+    try {
+      return await _apiConsumer.get<ServiceDetailsModel>(
+        ApiConstants.services,
+        queryParameters: {
+          ...request.toJson(),
+          AppConstants.sort: AppConstants.ratingDesc,
+        },
+        responseReturnType: ResponseReturnType.fromJsonList,
+        fromJsonMethod: ServiceDetailsModel.fromJson,
+      );
+    } on SessionCancelledException {
+      return [];
+    }
   }
 
   @override

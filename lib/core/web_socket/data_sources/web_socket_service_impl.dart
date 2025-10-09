@@ -17,7 +17,7 @@ import 'package:socket_io_client/socket_io_client.dart' as SOCKET;
 
 @LazySingleton(as: WebSocketService)
 class WebSocketServiceImpl extends WebSocketService {
-  late SOCKET.Socket socketConsumer;
+  SOCKET.Socket? socketConsumer;
   StreamController<WebSocketResponse> socketEventPassStream =
       StreamController<WebSocketResponse>.broadcast();
 
@@ -30,8 +30,8 @@ class WebSocketServiceImpl extends WebSocketService {
       'transports': ['websocket'],
       'auth': {'token': userAccessToken},
     });
-    socketConsumer.connect();
-    socketConsumer.on('new_message', (data) {
+    socketConsumer!.connect();
+    socketConsumer!.on('new_message', (data) {
       debugPrint("SOCKET NEW MESSAGE : $data");
 
       final WebSocketResponse newMessage = WebSocketResponse(
@@ -42,7 +42,7 @@ class WebSocketServiceImpl extends WebSocketService {
       socketEventPassStream.sink.add(newMessage);
     });
 
-    socketConsumer.on('ban', (data) {
+    socketConsumer!.on('ban', (data) {
       debugPrint("This User Is Banned");
       final WebSocketResponse ban = WebSocketResponse(
         type: WebSocketDataType.ban,
@@ -50,7 +50,7 @@ class WebSocketServiceImpl extends WebSocketService {
       socketEventPassStream.sink.add(ban);
     });
 
-    socketConsumer.on('booking', (data) {
+    socketConsumer!.on('booking', (data) {
       debugPrint("New Last Active Booking List Received : $data");
 
       final WebSocketResponse newBookingList = WebSocketResponse(
@@ -63,7 +63,7 @@ class WebSocketServiceImpl extends WebSocketService {
 
       socketEventPassStream.sink.add(newBookingList);
     });
-    socketConsumer.on('review', (data) {
+    socketConsumer!.on('review', (data) {
       if (kDebugMode) {
         print("Booking Review Request Received : $data");
       }
@@ -74,7 +74,7 @@ class WebSocketServiceImpl extends WebSocketService {
 
       socketEventPassStream.sink.add(bookReviewRequest);
     });
-    socketConsumer.onError((data) => throw const DataException());
+    socketConsumer!.onError((data) => throw const DataException());
   }
 
   @override
@@ -82,13 +82,18 @@ class WebSocketServiceImpl extends WebSocketService {
 
   @override
   void sendChatOpenCloseEvent(ChatOpenedRequest request) {
-    socketConsumer.emit(request.event, request.toJson());
+    socketConsumer?.emit(request.event, request.toJson());
   }
 
   @override
   Future<void> disconnectWebSocket() async {
-    socketConsumer.clearListeners();
-    socketEventPassStream.close();
-    socketConsumer.disconnect();
+    if (socketConsumer != null) {
+      socketConsumer!.clearListeners();
+      socketConsumer!.disconnect();
+      socketConsumer = null;
+    }
+    if (!socketEventPassStream.isClosed) {
+      await socketEventPassStream.close();
+    }
   }
 }
