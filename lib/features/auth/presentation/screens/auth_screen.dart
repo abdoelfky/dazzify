@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/framework/dazzify_text.dart';
+import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
@@ -105,7 +106,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   }
                   isLoading = false;
                 } else if (state is GuestModeSuccessState) {
-                  context.pushRoute(const AuthenticatedRoute());
+                  getIt<AppRouter>().replace(const AuthenticatedRoute());
 
                   isGuestLoading = false;
                 }else if (state is AuthVerifyNumberFailureState) {
