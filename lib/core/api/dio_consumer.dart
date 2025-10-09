@@ -243,6 +243,10 @@ class DioApiConsumer extends ApiConsumer {
            baseResponse.error!.message == AppConstants.invalidUserAccessTokenMessage ||
            baseResponse.error!.message == AppConstants.invalidUserRefreshTokenMessage)) {
         getIt<TokensCubit>().emitSessionExpired();
+        throw ServerException(
+          baseResponse.error!.code,
+          baseResponse.error!.message,
+        );
       } else {
         throw ServerException(
           baseResponse.error!.code,
