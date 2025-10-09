@@ -90,7 +90,7 @@ class DioTokenInterceptor extends Interceptor {
           final newTokens = TokensModel(
             accessToken: response.guestToken!,
             accessTokenExpireTime: response.guestTokenExpireTime!,
-            refreshToken: null,
+            refreshToken: response.guestToken,
             refreshTokenExpireTime: response.guestTokenExpireTime!,
           );
           await getIt<AuthLocalDatasource>().storeUserTokens(newTokens);
@@ -132,8 +132,7 @@ class DioTokenInterceptor extends Interceptor {
         return handler.resolve(response);
       } catch (e) {
         if (e is RefreshTokenException) {
-          // Session expired, redirect to login was already triggered
-          // Return a cancelled error instead of crashing
+
           return handler.reject(
             DioException(
               requestOptions: requestOptions,

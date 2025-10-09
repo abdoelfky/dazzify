@@ -16,10 +16,8 @@ class AuthRepositoryImpl extends AuthRepository {
   final AuthRemoteDatasource _remoteDatasource;
   final AuthLocalDatasource _localDatasource;
 
-  const AuthRepositoryImpl(
-    this._remoteDatasource,
-    this._localDatasource,
-  );
+  const AuthRepositoryImpl(this._remoteDatasource,
+      this._localDatasource,);
 
   @override
   Future<Either<Failure, AuthModel>> sendOtp(SendOtpRequest request) async {
@@ -76,19 +74,19 @@ class AuthRepositoryImpl extends AuthRepository {
         languagePreference: languagePreference,
       );
       AppConfigManager.config = response;
+
       ///from API
       _localDatasource.storeGuestModeSession(response.guestMode);
 
       // Store guest token if user clicked guest mode OR if API requires guest mode
-      if(isClicked || response.guestMode) {
+      if (isClicked || response.guestMode) {
         _localDatasource.storeUserTokens(TokensModel(
-          accessToken: response.guestToken!,
-          accessTokenExpireTime: response.guestTokenExpireTime!,
-          refreshToken: null,  // Guest tokens don't have refresh tokens
-          refreshTokenExpireTime: response.guestTokenExpireTime!));
+            accessToken: response.guestToken!,
+            accessTokenExpireTime: response.guestTokenExpireTime!,
+            refreshToken: null, // Guest tokens don't have refresh tokens
+            refreshTokenExpireTime: response.guestTokenExpireTime!));
 
         _localDatasource.storeGuestMode(true);
-
       }
       return Right(response);
     } on ServerException catch (exception) {
@@ -134,7 +132,8 @@ class AuthRepositoryImpl extends AuthRepository {
             await _localDatasource.storeUserTokens(newTokens);
             return Right(response.guestToken!);
           } else {
-            return Left(SessionFailure(message: 'Failed to refresh guest token'));
+            return Left(
+                SessionFailure(message: 'Failed to refresh guest token'));
           }
         } on ServerException catch (exception) {
           return Left(ApiFailure(message: exception.message!));
@@ -145,7 +144,7 @@ class AuthRepositoryImpl extends AuthRepository {
           final String refreshToken = await _getRefreshToken();
           try {
             final TokensModel updatedToken =
-                await _refreshUserAccessToken(refreshToken);
+            await _refreshUserAccessToken(refreshToken);
             _localDatasource.updateAccessToken(updatedToken);
             return Right(updatedToken.accessToken);
           } on ServerException catch (exception) {
