@@ -1,9 +1,13 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
+import 'package:dazzify/features/shared/logic/settings/check_for_app_update.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
+import 'package:dazzify/settings/router/app_router.dart';
 import 'package:dazzify/settings/theme/colors_scheme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,8 +52,19 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TokensCubit, TokensState>(
-      listener: (context, state) {},
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) async {
+        if (state is GuestModeSuccessState) {
+          // Check for app updates and maintenance mode
+          await checkForAppUpdate();
+          if (AppConfigManager.isAppInMaintenance) {
+            getIt<AppRouter>().replace(const MaintenanceRoute());
+          } else {
+            // After guest mode is set up, check authentication status
+            context.read<TokensCubit>().isUserAuthenticated();
+          }
+        }
+      },
       child: AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
