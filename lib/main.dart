@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'firebase_options.dart';
 
 late GlobalKey<NavigatorState> navRootKey;
@@ -19,6 +20,10 @@ Future<void> main() async {
   // runZonedGuarded(
   //   () async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize timezone database for Africa/Cairo timezone support
+  tz.initializeTimeZones();
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
