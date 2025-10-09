@@ -79,7 +79,8 @@ class AuthRepositoryImpl extends AuthRepository {
       ///from API
       _localDatasource.storeGuestModeSession(response.guestMode);
 
-      if(isClicked) {
+      // Store guest token if user clicked guest mode OR if API requires guest mode
+      if(isClicked || response.guestMode) {
         _localDatasource.storeUserTokens(TokensModel(
           accessToken: response.guestToken!,
           accessTokenExpireTime: response.guestTokenExpireTime!,

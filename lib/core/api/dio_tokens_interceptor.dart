@@ -38,7 +38,12 @@ class DioTokenInterceptor extends Interceptor {
     }
 
     try {
-      _accessToken ??= getIt<AuthLocalDatasource>().getAccessToken();
+      // Always fetch fresh token for guest users to avoid using stale cached tokens
+      if (getIt<AuthLocalDatasource>().checkGuestMode()) {
+        _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
+      } else {
+        _accessToken ??= getIt<AuthLocalDatasource>().getAccessToken();
+      }
       options.headers['Authorization'] = 'Bearer $_accessToken';
     } catch (exception) {
       if (exception is AccessTokenException) {
@@ -148,6 +153,10 @@ class DioTokenInterceptor extends Interceptor {
       method: requestOptions.method,
       headers: requestOptions.headers,
     );
+    // Ensure we use the fresh token for retry, especially for guest users
+    if (getIt<AuthLocalDatasource>().checkGuestMode()) {
+      _accessToken = getIt<AuthLocalDatasource>().getAccessToken();
+    }
     options.headers?['Authorization'] = 'Bearer $_accessToken';
     return getIt<Dio>().request<dynamic>(
       requestOptions.path,
