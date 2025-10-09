@@ -39,7 +39,7 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
       );
     } on SessionCancelledException {
       // Session expired, return default user model
-      return UserModel();
+      return UserModel.empty();
     }
   }
 
