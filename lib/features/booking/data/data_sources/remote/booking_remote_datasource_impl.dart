@@ -193,7 +193,7 @@ class BookingRemoteDatasourceImpl extends BookingRemoteDatasource {
       );
     } on SessionCancelledException {
       // Session expired, return default model
-      return BookingReviewRequestModel();
+      return BookingReviewRequestModel.empty();
     }
   }
 
