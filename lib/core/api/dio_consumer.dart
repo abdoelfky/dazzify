@@ -286,7 +286,9 @@ class DioApiConsumer extends ApiConsumer {
           // Don't throw an exception that would show an error message
           return;
         }
-        break;
+        // For other cancellations, throw a generic exception
+        throw const ServerException(0, 'Request cancelled');
+      
       case DioExceptionType.unknown:
         throw const NoInternetConnectionException();
     }

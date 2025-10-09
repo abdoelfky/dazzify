@@ -21,6 +21,17 @@ class AppNotificationsCubit extends Cubit<AppNotificationsState> {
   }
 
   Future<void> subscribeToNotifications() async {
+    // Check if user is authenticated before subscribing
+    final isUserLoggedIn = _authRepository.isUserAuthenticated();
+    if (!isUserLoggedIn) {
+      // Guest users don't need to subscribe to notifications
+      emit(state.copyWith(
+        isSubscribedToNotifications: false,
+        subscriptionState: UiState.success,
+      ));
+      return;
+    }
+
     await checkForNotificationsPermission();
     if (state.permissionsState == PermissionsState.granted) {
       emit(state.copyWith(
@@ -59,6 +70,17 @@ class AppNotificationsCubit extends Cubit<AppNotificationsState> {
   }
 
   Future<void> unSubscribeFromNotifications() async {
+    // Check if user is authenticated before unsubscribing
+    final isUserLoggedIn = _authRepository.isUserAuthenticated();
+    if (!isUserLoggedIn) {
+      // Guest users are not subscribed, so nothing to unsubscribe
+      emit(state.copyWith(
+        isSubscribedToNotifications: false,
+        subscriptionState: UiState.success,
+      ));
+      return;
+    }
+
     final device = await DeviceInfo.getInfo();
     // final String? deviceToken = await NotificationsService.getDeviceToken();
     // if (deviceToken != null) {
