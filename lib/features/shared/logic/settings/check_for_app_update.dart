@@ -26,6 +26,29 @@ class UpdatePostponeManager {
   }
 }
 
+/// Compares two semantic version strings.
+/// Returns:
+/// - negative value if version1 < version2
+/// - 0 if version1 == version2
+/// - positive value if version1 > version2
+int compareVersions(String version1, String version2) {
+  final v1Parts = version1.split('.').map((e) => int.tryParse(e) ?? 0).toList();
+  final v2Parts = version2.split('.').map((e) => int.tryParse(e) ?? 0).toList();
+
+  final maxLength = v1Parts.length > v2Parts.length ? v1Parts.length : v2Parts.length;
+
+  for (int i = 0; i < maxLength; i++) {
+    final v1 = i < v1Parts.length ? v1Parts[i] : 0;
+    final v2 = i < v2Parts.length ? v2Parts[i] : 0;
+
+    if (v1 != v2) {
+      return v1 - v2;
+    }
+  }
+
+  return 0;
+}
+
 Future<void> checkForAppUpdate() async {
   final info = await PackageInfo.fromPlatform();
   final currentVersion = info.version;
@@ -37,7 +60,8 @@ Future<void> checkForAppUpdate() async {
   final shouldShow = isForceUpdate || await UpdatePostponeManager.shouldShowUpdate();
   if (!shouldShow) return;
 
-  if (currentVersion != remoteVersion) {
+  // Only show update popup if current version is older than remote version
+  if (compareVersions(currentVersion, remoteVersion) < 0) {
     await showDialog(
       context: DazzifyApp.mainContext,
       barrierDismissible: !isForceUpdate,
