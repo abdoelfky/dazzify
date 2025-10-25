@@ -142,9 +142,9 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                   ? MainAxisAlignment.spaceBetween
                                   : MainAxisAlignment.end,
                           children: [
-                            if (widget.isMultipleService &&
+                            if ((widget.isMultipleService &&
                                 widget.isAllowMultipleServicesCount &&
-                                !widget.isBooked)
+                                !widget.isBooked)||!widget.isAllowMultipleServicesCount)
                               SizedBox(
                                 width: 62.r,
                                 height: 16.r,
