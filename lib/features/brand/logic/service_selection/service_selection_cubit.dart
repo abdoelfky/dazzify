@@ -39,6 +39,8 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
             state.copyWith(
               brandCategoriesState: UiState.success,
               brandCategories: brandCategories,
+              brandServicesState: UiState.success,
+              brandServices: {},
             ),
           );
         } else {
