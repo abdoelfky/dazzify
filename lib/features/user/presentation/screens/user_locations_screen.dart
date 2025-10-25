@@ -122,10 +122,7 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                   isButtonActive = true;
                   selectedLatLng = latLng;
                 },
-                scrollGesturesEnabled: true,
-                zoomGesturesEnabled: true,
-                tiltGesturesEnabled: true,
-                rotateGesturesEnabled: true,
+
                 gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                   Factory<OneSequenceGestureRecognizer>(
                     () => EagerGestureRecognizer(),

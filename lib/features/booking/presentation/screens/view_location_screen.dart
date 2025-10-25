@@ -121,10 +121,7 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                     _viewLocationCubit.showButton();
                   },
                   onTap: _mapOnTap,
-                  scrollGesturesEnabled: true,
-                  zoomGesturesEnabled: true,
-                  tiltGesturesEnabled: true,
-                  rotateGesturesEnabled: true,
+
                   gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                     Factory<OneSequenceGestureRecognizer>(
                       () => EagerGestureRecognizer(),

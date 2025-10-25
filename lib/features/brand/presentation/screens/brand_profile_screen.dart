@@ -235,9 +235,11 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                         MenuOption(
                           svgIcon: AssetsManager.shareIcon,
                           onTap: () {
+                            print('object');
                             openUrlSheet(
                               url: AppConstants.shareBrand(
                                   state.brandDetails.username!),
+                              context: context
                             );
                           },
                         ),

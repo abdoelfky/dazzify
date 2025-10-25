@@ -158,10 +158,10 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                         svgIcon: AssetsManager.shareIcon,
                         onTap: () {
                           openUrlSheet(
-                            url: AppConstants.shareService(
-                              state.service.id,
-                            ),
-                          );
+                              url: AppConstants.shareService(
+                                state.service.id,
+                              ),
+                              context: context);
                         },
                       ),
                       MenuOption(
@@ -175,12 +175,12 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 return GuestModeBottomSheet();
                               },
                             );
-                          }else {
+                          } else {
                             showReportBottomSheet(
-                            context: context,
-                            id: state.service.id,
-                            type: "service",
-                          );
+                              context: context,
+                              id: state.service.id,
+                              type: "service",
+                            );
                           }
                         },
                       )
