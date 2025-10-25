@@ -34,17 +34,26 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
         ),
       ),
       (brandCategories) {
-        emit(
-          state.copyWith(
-            brandCategoriesState: UiState.success,
-            brandCategories: brandCategories,
-            selectedCategoryId: brandCategories[0].id,
-          ),
-        );
-        getBrandServices(
-          categoryId: state.selectedCategoryId,
-          branchId: state.selectedBranch.id,
-        );
+        if (brandCategories.isEmpty) {
+          emit(
+            state.copyWith(
+              brandCategoriesState: UiState.success,
+              brandCategories: brandCategories,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              brandCategoriesState: UiState.success,
+              brandCategories: brandCategories,
+              selectedCategoryId: brandCategories[0].id,
+            ),
+          );
+          getBrandServices(
+            categoryId: state.selectedCategoryId,
+            branchId: state.selectedBranch.id,
+          );
+        }
       },
     );
   }
