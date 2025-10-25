@@ -105,6 +105,10 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                 initialCameraPosition: initialCameraPosition,
                 markers: state.markers,
                 myLocationEnabled: true,
+                scrollGesturesEnabled: true,
+                zoomGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                rotateGesturesEnabled: true,
                 style: context.isDarkTheme ? darkMapStyle : '[]',
                 onMapCreated: (GoogleMapController controller) {
                   context.read<LocationCubit>().showButton();

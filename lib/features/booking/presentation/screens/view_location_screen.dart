@@ -110,6 +110,10 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                   markers: state.markers,
                   myLocationEnabled: true,
                   myLocationButtonEnabled: true,
+                  scrollGesturesEnabled: true,
+                  zoomGesturesEnabled: true,
+                  tiltGesturesEnabled: true,
+                  rotateGesturesEnabled: true,
                   style: context.isDarkTheme ? _darkMapStyle : '[]',
                   onMapCreated: (GoogleMapController controller) {
                     _viewLocationCubit.showButton();
