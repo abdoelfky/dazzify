@@ -245,6 +245,12 @@ class DioApiConsumer extends ApiConsumer {
            baseResponse.error!.message == AppConstants.invalidUserRefreshTokenMessage)) {
         if (!getIt<AuthLocalDatasource>().checkGuestMode()) {
           getIt<TokensCubit>().emitSessionExpired();
+        } else {
+          // Guest mode: throw exception instead of silently failing
+          throw ServerException(
+            baseResponse.error!.code,
+            baseResponse.error!.message,
+          );
         }
       } else {
         throw ServerException(
