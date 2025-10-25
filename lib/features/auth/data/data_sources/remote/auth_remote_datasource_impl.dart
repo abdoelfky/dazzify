@@ -54,8 +54,9 @@ class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
       ApiConstants.appConfig,
       responseReturnType: ResponseReturnType.fromJson,
       fromJsonMethod: AppConfigModel.fromJson,
-      queryParameters: languagePreference != null
-          ? {AppConstants.lang: languagePreference}
+      queryParameters:
+      languagePreference != null
+          ? {AppConstants.languagePreference: languagePreference}
           : null,
     );
   }

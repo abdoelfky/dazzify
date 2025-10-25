@@ -35,6 +35,7 @@ class AppConstants {
   static const String returnDataById = "id";
   static const String serviceId = "serviceId";
   static const String lang = "lang";
+  static const String languagePreference = "languagePreference";
   static const String data = "data";
   static const String page = "page";
   static const String limit = "limit";

@@ -34,7 +34,7 @@ class AuthHeader extends StatelessWidget {
           child: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, settingsState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14.0,vertical: 12).r,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 20).r,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
