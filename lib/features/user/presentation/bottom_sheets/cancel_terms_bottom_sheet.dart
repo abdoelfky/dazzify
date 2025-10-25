@@ -128,21 +128,24 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                       builder: (_, hasChecked, __) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8).r,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Checkbox(
-                                value: hasChecked,
-                                onChanged: (val) =>
-                                    _hasCheckedAgree.value = val ?? false,
-                              ),
-                              Expanded(
-                                child: DText(
-                                  context.tr.iAgreeToTerms,
-                                  style: context.textTheme.bodySmall,
+                          child: InkWell(
+                            onTap: () => _hasCheckedAgree.value = !hasChecked,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                  value: hasChecked,
+                                  onChanged: (val) =>
+                                      _hasCheckedAgree.value = val ?? false,
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: DText(
+                                    context.tr.iAgreeToTerms,
+                                    style: context.textTheme.bodySmall,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

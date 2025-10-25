@@ -18,33 +18,40 @@ class SelectionConfirmation extends StatelessWidget {
           child: SizedBox(
               width: 328.w,
               height: 36.h,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 250.w,
-                    child: FittedBox(
-                      child: DText(
-                        context.tr.serviceSelectionConfirmation(
-                          state.selectedSession.fromTime,
-                          state.selectedSession.toTime,
-                          state.selectedDate,
-                        ),
-                        style: context.textTheme.bodySmall!.copyWith(
-                          color: context.colorScheme.onSurfaceVariant,
+              child: InkWell(
+                onTap: () {
+                  context
+                      .read<ServiceAvailabilityCubit>()
+                      .changeSessionConfirmation(value: !state.isSessionConfirmed);
+                },
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 250.w,
+                      child: FittedBox(
+                        child: DText(
+                          context.tr.serviceSelectionConfirmation(
+                            state.selectedSession.fromTime,
+                            state.selectedSession.toTime,
+                            state.selectedDate,
+                          ),
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  Checkbox(
-                    value: state.isSessionConfirmed,
-                    onChanged: (value) {
-                      context
-                          .read<ServiceAvailabilityCubit>()
-                          .changeSessionConfirmation(value: value!);
-                    },
-                  )
-                ],
+                    const Spacer(),
+                    Checkbox(
+                      value: state.isSessionConfirmed,
+                      onChanged: (value) {
+                        context
+                            .read<ServiceAvailabilityCubit>()
+                            .changeSessionConfirmation(value: value!);
+                      },
+                    )
+                  ],
+                ),
               )),
         );
       },
