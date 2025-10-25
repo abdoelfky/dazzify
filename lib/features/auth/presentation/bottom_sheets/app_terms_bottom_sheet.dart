@@ -138,20 +138,23 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
                 return ValueListenableBuilder(
                   valueListenable: _hasCheckedAgree,
                   builder: (_, checked, __) {
-                    return Row(
-                      children: [
-                        Checkbox(
-                          value: checked,
-                          onChanged: (val) =>
-                              _hasCheckedAgree.value = val ?? false,
-                        ),
-                        Expanded(
-                          child: DText(
-                            context.tr.iAgreeToTerms,
-                            style: context.textTheme.bodySmall,
+                    return InkWell(
+                      onTap: () => _hasCheckedAgree.value = !checked,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: checked,
+                            onChanged: (val) =>
+                                _hasCheckedAgree.value = val ?? false,
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: DText(
+                              context.tr.iAgreeToTerms,
+                              style: context.textTheme.bodySmall,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
