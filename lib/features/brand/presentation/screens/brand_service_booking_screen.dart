@@ -63,7 +63,6 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SafeArea(
         child: Column(
           children: [
@@ -106,7 +105,10 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
             case UiState.failure:
               return SizedBox.shrink();
             case UiState.success:
-              return ListView.separated(
+              if (state.brandCategories.isEmpty) {
+                return SizedBox(width: 8.w);
+              } else {
+                return ListView.separated(
                 padding: EdgeInsetsDirectional.only(start: 16, bottom: 8),
                 itemCount: state.brandCategories.length,
                 scrollDirection: Axis.horizontal,
@@ -133,6 +135,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                 },
                 separatorBuilder: (context, index) => SizedBox(width: 8.w),
               );
+              }
           }
         },
       ),
@@ -194,7 +197,8 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                   state.selectedCategoryId]![index];
                               return ServiceWidget(
                                 isMultipleService: widget.isMultipleBooking,
-                                isAllowMultipleServicesCount: service.allowMultipleServicesCount,
+                                isAllowMultipleServicesCount:
+                                    service.allowMultipleServicesCount,
                                 onSingleBookingTap: () {
                                   _goToBookingDateSelectionScreen(
                                     service: service,
@@ -208,7 +212,6 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                     quantity: newQuantity,
                                   );
                                 },
-
                                 onCardTap: () {
                                   _goToServiceDetailsScreen(
                                     service: service,
