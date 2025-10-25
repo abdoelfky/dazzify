@@ -22,22 +22,18 @@ class DeepLinkingHelper {
       if (segments[0] == 'service') {
         String serviceId = segments[1];
         // Navigate to the service page
-        getIt<AppRouter>().navigate(
-          AuthenticatedRoute(children: [
-            ServiceDetailsRoute(
-              serviceId: serviceId,
-            ),
-          ]),
+        getIt<AppRouter>().push(
+          ServiceDetailsRoute(
+            serviceId: serviceId,
+          ),
         );
       } else if (segments[0] == 'brand') {
         String brandUserName = segments[1];
         // Navigate to the brand page
-        getIt<AppRouter>().navigate(
-          AuthenticatedRoute(children: [
-            BrandProfileRoute(
-              brandSlug: brandUserName,
-            ),
-          ]),
+        getIt<AppRouter>().push(
+          BrandProfileRoute(
+            brandSlug: brandUserName,
+          ),
         );
       }
     } catch (e) {
