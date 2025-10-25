@@ -10,6 +10,8 @@ import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,6 +117,15 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                     _viewLocationCubit.showButton();
                   },
                   onTap: _mapOnTap,
+                  scrollGesturesEnabled: true,
+                  zoomGesturesEnabled: true,
+                  tiltGesturesEnabled: true,
+                  rotateGesturesEnabled: true,
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  },
                 ),
                 PositionedDirectional(
                     top: 24.h,
