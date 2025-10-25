@@ -7,10 +7,10 @@ import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/features/user/presentation/components/profile/profile_body_component.dart';
 import 'package:dazzify/features/user/presentation/components/profile/profile_header_component.dart';
+import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:restart_app/restart_app.dart';
 
 @RoutePage()
 class ProfileScreen extends StatefulWidget {
@@ -44,8 +44,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           await settingsCubit.changeAppLanguage(
             languageCode: state.updatedLanguageCode,
           );
-          // Restart the app to reload data from API with the new language
-          Restart.restartApp();
+          // Navigate to splash screen to refetch all data with the new language
+          context.router.replaceAll([
+            const UnAuthenticatedRoute(
+              children: [SplashRoute()],
+            ),
+          ]);
         } else {
           isLoading.value = false;
           DazzifyToastBar.showError(
