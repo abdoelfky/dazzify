@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/navigation/custom_page_transitions.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
@@ -77,7 +78,7 @@ part 'app_router.gr.dart';
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
 class AppRouter extends RootStackRouter {
   @override
-  RouteType get defaultRouteType => RouteType.cupertino();
+  RouteType get defaultRouteType => CustomPageTransitions.slideAndFade();
 
   @override
   List<AutoRoute> get routes => [
