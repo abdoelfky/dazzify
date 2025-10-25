@@ -8,6 +8,7 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
 import 'package:dazzify/features/auth/data/models/tokens_model.dart';
+import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:dazzify/features/shared/logic/tokens/tokens_cubit.dart';
 import 'package:dio/dio.dart';
 
@@ -84,8 +85,11 @@ class DioTokenInterceptor extends Interceptor {
     try {
       // Check if user is in guest mode
       if (getIt<AuthLocalDatasource>().checkGuestMode()) {
-        // Fetch a new guest token
-        final response = await getIt<AuthRemoteDatasource>().guestMode();
+        // Fetch a new guest token with current language preference
+        final currentLanguage = getIt<SettingsCubit>().currentLanguageCode;
+        final response = await getIt<AuthRemoteDatasource>().guestMode(
+          languagePreference: currentLanguage,
+        );
         if (response.guestToken != null) {
           final newTokens = TokensModel(
             accessToken: response.guestToken!,

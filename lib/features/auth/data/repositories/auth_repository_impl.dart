@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
@@ -11,6 +12,7 @@ import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
 import 'package:dazzify/features/auth/data/requests/send_otp_request.dart';
 import 'package:dazzify/features/auth/data/requests/validate_otp_request.dart';
+import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final AuthRemoteDatasource _remoteDatasource;
@@ -120,8 +122,11 @@ class AuthRepositoryImpl extends AuthRepository {
       // Check if user is in guest mode
       if (_localDatasource.checkGuestMode()) {
         try {
-          // Fetch a new guest token for guest users
-          final AppConfigModel response = await _remoteDatasource.guestMode();
+          // Fetch a new guest token for guest users with current language preference
+          final currentLanguage = getIt<SettingsCubit>().currentLanguageCode;
+          final AppConfigModel response = await _remoteDatasource.guestMode(
+            languagePreference: currentLanguage,
+          );
           if (response.guestToken != null) {
             final newTokens = TokensModel(
               accessToken: response.guestToken!,
