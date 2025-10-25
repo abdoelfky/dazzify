@@ -10,6 +10,8 @@ import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 import 'package:dazzify/features/user/logic/location/location_cubit.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -119,6 +121,15 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                       .addMarker(latLng.latitude, latLng.longitude);
                   isButtonActive = true;
                   selectedLatLng = latLng;
+                },
+                scrollGesturesEnabled: true,
+                zoomGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                rotateGesturesEnabled: true,
+                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
+                  ),
                 },
               ),
               PositionedDirectional(
