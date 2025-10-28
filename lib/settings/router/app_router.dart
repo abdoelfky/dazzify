@@ -59,6 +59,7 @@ import 'package:dazzify/features/shared/widgets/dazzify_photo_viewer.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/maintenance_screen.dart';
 import 'package:dazzify/features/shared/widgets/splash_screen.dart';
+import 'package:dazzify/features/settings/presentation/screens/privacy_policy_screen.dart';
 import 'package:dazzify/features/shared/widgets/web_view_screen.dart';
 import 'package:dazzify/features/user/logic/issue/issue_bloc.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
@@ -318,6 +319,11 @@ class AppRouter extends RootStackRouter {
             ),
             CustomRoute(
               page: WebViewRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              durationInMilliseconds: 300,
+            ),
+            CustomRoute(
+              page: PrivacyPolicyRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
           ],

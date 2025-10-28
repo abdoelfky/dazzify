@@ -165,6 +165,13 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
             children: Column(
               children: [
                 ProfileCustomListTile(
+                  iconData: SolarIconsOutline.shieldCheck,
+                  title: context.tr.privacyPolicy,
+                  onTap: () {
+                    context.pushRoute(const PrivacyPolicyRoute());
+                  },
+                ),
+                ProfileCustomListTile(
                   iconData: Icons.language_outlined,
                   title: context.tr.language,
                   suffixWidget: BlocBuilder<SettingsCubit, SettingsState>(
