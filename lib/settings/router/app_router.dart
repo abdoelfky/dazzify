@@ -125,44 +125,54 @@ class AppRouter extends RootStackRouter {
                   initial: true,
                   children: [
                     CustomRoute(
-                      page: HomeRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: HomeRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                       initial: true,
                     ),
                     CustomRoute(
-                      page: MyFavoriteRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: MyFavoriteRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: BookingStatusRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: BookingStatusRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: CategoryRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: CategoryRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: PopularBrandsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: PopularBrandsRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: TopRatedBrandsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: TopRatedBrandsRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: PopularServicesRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: PopularServicesRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: NotificationsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: NotificationsRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: TopRatedServicesRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: TopRatedServicesRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: TransactionRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: TransactionRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                   ],
@@ -172,7 +182,8 @@ class AppRouter extends RootStackRouter {
                   children: [
                     CustomRoute(
                       initial: true,
-                      page: ReelsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: ReelsRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                   ],
@@ -181,11 +192,13 @@ class AppRouter extends RootStackRouter {
                   page: SearchTabRoute.page,
                   children: [
                     CustomRoute(
-                      page: SearchRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: SearchRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: ReelViewerRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: ReelViewerRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                   ],
@@ -195,7 +208,8 @@ class AppRouter extends RootStackRouter {
                   children: [
                     CustomRoute(
                       initial: true,
-                      page: ConversationsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: ConversationsRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                   ],
@@ -204,46 +218,56 @@ class AppRouter extends RootStackRouter {
                   page: ProfileTabRoute.page,
                   children: [
                     CustomRoute(
-                      page: ProfileRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: ProfileRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                       initial: true,
                     ),
                     CustomRoute(
-                      page: MyFavoriteRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: MyFavoriteRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: BookingsHistoryRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: BookingsHistoryRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: BookingStatusRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: BookingStatusRoute.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                     ),
                     CustomRoute(
-                      page: IssueRoutes.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: IssueRoutes.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                       children: [
                         CustomRoute(
-                          page: IssueRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                          page: IssueRoute.page,
+                          transitionsBuilder: TransitionsBuilders.fadeIn,
                           durationInMilliseconds: 300,
                         ),
                         CustomRoute(
-                          page: IssueStatusRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                          page: IssueStatusRoute.page,
+                          transitionsBuilder: TransitionsBuilders.fadeIn,
                           durationInMilliseconds: 300,
                         ),
                       ],
                     ),
                     CustomRoute(
-                      page: PaymentRoutes.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                      page: PaymentRoutes.page,
+                      transitionsBuilder: TransitionsBuilders.fadeIn,
                       durationInMilliseconds: 300,
                       children: [
                         CustomRoute(
-                          page: TransactionRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                          page: TransactionRoute.page,
+                          transitionsBuilder: TransitionsBuilders.fadeIn,
                           durationInMilliseconds: 300,
                         ),
                         CustomRoute(
-                          page: PaymentMethodRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+                          page: PaymentMethodRoute.page,
+                          transitionsBuilder: TransitionsBuilders.fadeIn,
                           durationInMilliseconds: 300,
                         ),
                       ],
@@ -253,71 +277,88 @@ class AppRouter extends RootStackRouter {
               ],
             ),
             CustomRoute(
-              page: ChatRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: ChatRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: UserLocationRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: UserLocationRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: ViewLocationRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: ViewLocationRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: DazzifyPhotoViewerRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: DazzifyPhotoViewerRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: BrandProfileRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: BrandProfileRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: BrandPostsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: BrandPostsRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: SearchPostRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: SearchPostRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: BrandReelsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: BrandReelsRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: ServiceDetailsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: ServiceDetailsRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: SeeAllReviewsRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: SeeAllReviewsRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: ServiceBookingConfirmationRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: ServiceBookingConfirmationRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: BrandServiceBookingRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: BrandServiceBookingRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: ServiceAvailabilityRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: ServiceAvailabilityRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: MultipleServiceAvailabilityRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: MultipleServiceAvailabilityRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: ServiceInvoiceRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: ServiceInvoiceRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: PaymentWebViewRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: PaymentWebViewRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
             CustomRoute(
-              page: WebViewRoute.page,              transitionsBuilder: TransitionsBuilders.fadeIn,
+              page: WebViewRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
               durationInMilliseconds: 300,
             ),
           ],
