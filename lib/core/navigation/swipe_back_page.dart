@@ -84,8 +84,16 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
   }
 
   void _handleDragStart(DragStartDetails details) {
-    // Only allow swipe-back from the left edge of the screen
-    if (details.localPosition.dx > 50) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final textDirection = Directionality.of(context);
+    final startPosition = details.localPosition.dx;
+    
+    // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
+    final isValidSwipePosition = textDirection == TextDirection.rtl
+        ? startPosition > screenWidth - 50  // Right edge for RTL
+        : startPosition < 50;                // Left edge for LTR
+    
+    if (!isValidSwipePosition) {
       _canPop = false;
       return;
     }
@@ -95,8 +103,15 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
   void _handleDragUpdate(DragUpdateDetails details) {
     if (!_canPop) return;
 
+    final textDirection = Directionality.of(context);
+    final delta = details.primaryDelta ?? 0;
+
     setState(() {
-      _dragDistance += details.primaryDelta ?? 0;
+      // For RTL, drag left (negative delta) means going back
+      // For LTR, drag right (positive delta) means going back
+      final dragValue = textDirection == TextDirection.rtl ? -delta : delta;
+      _dragDistance += dragValue;
+      
       // Clamp drag distance to prevent negative values
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
       
@@ -115,9 +130,14 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     final screenWidth = MediaQuery.of(context).size.width;
     final threshold = screenWidth * 0.3; // 30% of screen width
     final velocity = details.primaryVelocity ?? 0;
+    final textDirection = Directionality.of(context);
+    
+    // For RTL, negative velocity means swiping left (back gesture)
+    // For LTR, positive velocity means swiping right (back gesture)
+    final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
 
     // Pop if dragged beyond threshold or if velocity is high enough
-    if (_dragDistance > threshold || velocity > 500) {
+    if (_dragDistance > threshold || effectiveVelocity > 500) {
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
           Navigator.of(context).pop();
@@ -141,14 +161,24 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Translucent behavior allows underlying widgets to receive gestures
+      behavior: HitTestBehavior.translucent,
       onHorizontalDragStart: _handleDragStart,
       onHorizontalDragUpdate: _handleDragUpdate,
       onHorizontalDragEnd: _handleDragEnd,
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          final textDirection = Directionality.of(context);
+          
+          // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
+          final offset = textDirection == TextDirection.rtl
+              ? -(_controller.value * screenWidth)
+              : _controller.value * screenWidth;
+          
           return Transform.translate(
-            offset: Offset(_controller.value * MediaQuery.of(context).size.width, 0),
+            offset: Offset(offset, 0),
             child: child,
           );
         },
@@ -229,8 +259,16 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
   }
 
   void _handleDragStart(DragStartDetails details) {
-    // Only allow swipe-back from the left 50 pixels of the screen
-    if (details.globalPosition.dx > 50) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final textDirection = Directionality.of(context);
+    final startPosition = details.globalPosition.dx;
+    
+    // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
+    final isValidSwipePosition = textDirection == TextDirection.rtl
+        ? startPosition > screenWidth - 50  // Right edge for RTL
+        : startPosition < 50;                // Left edge for LTR
+    
+    if (!isValidSwipePosition) {
       _canPop = false;
       return;
     }
@@ -250,8 +288,15 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
   void _handleDragUpdate(DragUpdateDetails details) {
     if (!_canPop || !_isDragging) return;
 
+    final textDirection = Directionality.of(context);
+    final delta = details.primaryDelta ?? 0;
+    
     setState(() {
-      _dragDistance += details.primaryDelta ?? 0;
+      // For RTL, drag left (negative delta) means going back
+      // For LTR, drag right (positive delta) means going back
+      final dragValue = textDirection == TextDirection.rtl ? -delta : delta;
+      _dragDistance += dragValue;
+      
       // Clamp drag distance to prevent negative values
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
       
@@ -272,9 +317,14 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     final screenWidth = MediaQuery.of(context).size.width;
     final threshold = screenWidth * 0.35; // 35% of screen width
     final velocity = details.primaryVelocity ?? 0;
+    final textDirection = Directionality.of(context);
+    
+    // For RTL, negative velocity means swiping left (back gesture)
+    // For LTR, positive velocity means swiping right (back gesture)
+    final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
 
     // Pop if dragged beyond threshold or if velocity is high enough
-    if (_dragDistance > threshold || velocity > 700) {
+    if (_dragDistance > threshold || effectiveVelocity > 700) {
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
@@ -304,6 +354,9 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Translucent behavior allows underlying widgets (ScrollViews, etc.) to receive gestures
+      // The gesture only activates when starting from the screen edge (50px)
+      behavior: HitTestBehavior.translucent,
       onHorizontalDragStart: _handleDragStart,
       onHorizontalDragUpdate: _handleDragUpdate,
       onHorizontalDragEnd: _handleDragEnd,
@@ -311,7 +364,12 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
         animation: _controller,
         builder: (context, child) {
           final screenWidth = MediaQuery.of(context).size.width;
-          final offset = _controller.value * screenWidth;
+          final textDirection = Directionality.of(context);
+          
+          // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
+          final offset = textDirection == TextDirection.rtl
+              ? -(_controller.value * screenWidth)
+              : _controller.value * screenWidth;
           
           return Stack(
             children: [
