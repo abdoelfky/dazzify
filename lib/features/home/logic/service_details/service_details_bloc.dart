@@ -75,7 +75,7 @@ class ServiceDetailsBloc
       (service) {
         // Track service view for TikTok
         TikTokSdkService.instance.logViewContent(
-          contentId: service.id,
+          contentId: service!.id,
           contentName: service.title,
           contentCategory: service.brand.name,
         );

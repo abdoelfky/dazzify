@@ -217,7 +217,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
       (unit) {
         // Track booking completion for TikTok
         TikTokSdkService.instance.logPurchase(
-          value: state.invoice.totalAmount.toDouble(),
+          value: state.invoice.totalPrice.toDouble(),
           currency: 'EGP',
           contentId: services.join(','),
           contentName: 'Booking Service',
