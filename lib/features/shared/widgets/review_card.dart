@@ -27,7 +27,7 @@ class ReviewCard extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       child: Container(
         width: 328.w,
-        height: 180.h,
+        // height: 180.h,
         decoration: BoxDecoration(
           color: context.colorScheme.onInverseSurface,
           borderRadius: BorderRadius.circular(20).r,
@@ -105,11 +105,13 @@ class ReviewCard extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: DText(
                   reviewDescription,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                  // maxLines: 3,
+                  // overflow: TextOverflow.ellipsis,
                   style: context.textTheme.bodySmall,
                 ),
-              )
+              ),
+              SizedBox(height: reviewDescription.isEmpty ? 12.h : 12.h),
+
             ],
           ),
         ),
