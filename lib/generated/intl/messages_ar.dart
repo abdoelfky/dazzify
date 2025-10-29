@@ -172,7 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "هل انت متأكد انك تريد مسح التعليق ؟"),
         "deleteReview": MessageLookupByLibrary.simpleMessage(
             "هل انت متأكد انك تريد مسح التقييم ؟"),
-        "deliferyFees": MessageLookupByLibrary.simpleMessage("رسوم التوصيل"),
+        "deliferyFees": MessageLookupByLibrary.simpleMessage("رسوم النقل"),
         "downPayment": MessageLookupByLibrary.simpleMessage("دفعة مبدئية"),
         "duration": MessageLookupByLibrary.simpleMessage("المدة"),
         "eWallet": MessageLookupByLibrary.simpleMessage("محفظة"),
@@ -400,6 +400,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "priceRange": MessageLookupByLibrary.simpleMessage("النطاق السعري"),
         "proceed": MessageLookupByLibrary.simpleMessage("تابع"),
         "progress": MessageLookupByLibrary.simpleMessage("قيد التنفيذ"),
+        "providerNotDeliver": MessageLookupByLibrary.simpleMessage(
+            "المزود لا يقدم الخدمة في أي منطقة حالياً."),
         "qalyubia": MessageLookupByLibrary.simpleMessage("القليوبية"),
         "qena": MessageLookupByLibrary.simpleMessage("قنا"),
         "rate": MessageLookupByLibrary.simpleMessage("التقييم"),

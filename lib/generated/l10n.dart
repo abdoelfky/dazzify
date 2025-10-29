@@ -2320,10 +2320,10 @@ class S {
     );
   }
 
-  /// `Delivery fees`
+  /// `Transportation Fees`
   String get deliferyFees {
     return Intl.message(
-      'Delivery fees',
+      'Transportation Fees',
       name: 'deliferyFees',
       desc: '',
       args: [],
@@ -3856,6 +3856,16 @@ class S {
     return Intl.message(
       'Please apply the coupon code before confirming',
       name: 'pleaseApplyCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The provider does not offer the service in any area at the moment.`
+  String get providerNotDeliver {
+    return Intl.message(
+      'The provider does not offer the service in any area at the moment.',
+      name: 'providerNotDeliver',
       desc: '',
       args: [],
     );

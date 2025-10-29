@@ -179,7 +179,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to Delete this Comment ?"),
         "deleteReview": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to Delete this Review ?"),
-        "deliferyFees": MessageLookupByLibrary.simpleMessage("Delivery fees"),
+        "deliferyFees":
+            MessageLookupByLibrary.simpleMessage("Transportation Fees"),
         "downPayment": MessageLookupByLibrary.simpleMessage("Down Payment"),
         "duration": MessageLookupByLibrary.simpleMessage("Duration"),
         "eWallet": MessageLookupByLibrary.simpleMessage("E-Wallet"),
@@ -401,6 +402,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "priceRange": MessageLookupByLibrary.simpleMessage("Price Range"),
         "proceed": MessageLookupByLibrary.simpleMessage("Proceed"),
         "progress": MessageLookupByLibrary.simpleMessage("Progress"),
+        "providerNotDeliver": MessageLookupByLibrary.simpleMessage(
+            "The provider does not offer the service in any area at the moment."),
         "qalyubia": MessageLookupByLibrary.simpleMessage("Qalyubia"),
         "qena": MessageLookupByLibrary.simpleMessage("Qena"),
         "rate": MessageLookupByLibrary.simpleMessage("Rate"),

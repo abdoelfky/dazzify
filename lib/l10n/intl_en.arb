@@ -245,7 +245,7 @@
   "apply": "Apply",
   "servicePrice": "Service price",
   "couponDisc": "Coupon disc",
-  "deliferyFees": "Delivery fees",
+  "deliferyFees": "Transportation Fees",
   "appFees": "App fees",
   "totalPrice": "Total price",
   "outBranch": "Out branch",
@@ -405,6 +405,8 @@
   "writeNotes": "Write Notes For Provider",
   "notes": "Notes",
   "iAgreeToTerms": "I agree to the terms",
-  "pleaseApplyCoupon": "Please apply the coupon code before confirming"
+  "pleaseApplyCoupon": "Please apply the coupon code before confirming",
+  "providerNotDeliver": "The provider does not offer the service in any area at the moment."
+
 
 }

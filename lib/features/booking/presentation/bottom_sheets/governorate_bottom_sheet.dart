@@ -8,6 +8,7 @@ import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_inv
 import 'package:dazzify/features/booking/presentation/widgets/governorate_bottom_sheet/governorate_item.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
+import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
@@ -71,23 +72,34 @@ class _GovernorateBottomSheetState extends State<GovernoratesBottomSheet> {
                     message: state.errorMessage,
                   );
                 case UiState.success:
-                  return ListView.separated(
-                    itemCount: state.deliveryFeesList.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 16).r,
-                    itemBuilder: (context, index) {
-                      return GovernorateItem(
-                          index: index,
-                          governorateIndex: state.deliveryFeesList[index].gov,
-                          onPressed: () {
-                            _onPressed(state.deliveryFeesList[index], context);
-                          });
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 16.h,
-                      );
-                    },
-                  );
+                  if (state.deliveryFeesList.isEmpty) {
+                    return Expanded(
+                      child: Center(
+                        child: EmptyDataWidget(
+                          message: context.tr.providerNotDeliver,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return ListView.separated(
+                      itemCount: state.deliveryFeesList.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 16).r,
+                      itemBuilder: (context, index) {
+                        return GovernorateItem(
+                            index: index,
+                            governorateIndex: state.deliveryFeesList[index].gov,
+                            onPressed: () {
+                              _onPressed(
+                                  state.deliveryFeesList[index], context);
+                            });
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: 16.h,
+                        );
+                      },
+                    );
+                  }
               }
             },
           ),

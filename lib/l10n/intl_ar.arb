@@ -244,7 +244,7 @@
   "apply": "تقدم",
   "servicePrice": "سعر الخدمة",
   "couponDisc": "خصم الكوبون",
-  "deliferyFees": "رسوم التوصيل",
+  "deliferyFees": "رسوم النقل",
   "appFees": "رسوم التطبيق",
   "totalPrice": "السعر الإجمالي",
   "outBranch": "خارج الفرع",
@@ -405,6 +405,8 @@
   "notes": "الملاحظات",
   "iAgreeToTerms": "أوافق على الشروط والأحكام",
   "noServicesAtThisCategory": "لا توجد خدمات حالياً في هذا القسم",
-  "pleaseApplyCoupon": "يرجى تطبيق رمز الكوبون قبل التأكيد"
+  "pleaseApplyCoupon": "يرجى تطبيق رمز الكوبون قبل التأكيد",
+  "providerNotDeliver": "المزود لا يقدم الخدمة في أي منطقة حالياً."
+
 
 }
