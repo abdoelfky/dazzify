@@ -1,4 +1,5 @@
 import 'package:dazzify/core/services/meta_sdk_service.dart';
+import 'package:dazzify/core/services/tiktok_sdk_service.dart';
 import 'package:dazzify/features/auth/data/models/auth_model.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/data/requests/add_user_info_request.dart';
@@ -128,8 +129,9 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (failure) => emit(AuthAddUserInfoFailureState(failure.message)),
       (success) {
-        // Track app install and registration completion for Meta
+        // Track app install and registration completion for Meta and TikTok
         MetaSdkService.instance.logAppInstall();
+        TikTokSdkService.instance.logRegistration(method: 'phone');
         emit(AuthAddUserInfoSuccessState());
         _appNotificationsCubit.subscribeToNotifications();
       },

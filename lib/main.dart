@@ -4,6 +4,7 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/fcm_notifications.dart';
 import 'package:dazzify/core/services/hive_service.dart';
 import 'package:dazzify/core/services/meta_sdk_service.dart';
+import 'package:dazzify/core/services/tiktok_sdk_service.dart';
 import 'package:dazzify/dazzify_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,9 @@ Future<void> main() async {
 
   // Initialize Meta SDK for tracking app events and conversions
   await MetaSdkService.instance.initialize();
+  
+  // Initialize TikTok SDK for tracking app events and conversions
+  await TikTokSdkService.instance.initialize();
 
   Bloc.observer = MyBlocObserver();
   await Future.wait([

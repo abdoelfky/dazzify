@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/errors/failures.dart';
+import 'package:dazzify/core/services/tiktok_sdk_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/booking/data/models/brand_delivery_fees_model.dart';
 import 'package:dazzify/features/booking/data/models/coupon_model.dart';
@@ -213,11 +214,21 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
           creatingBookingState: UiState.failure,
         ),
       ),
-      (unit) => emit(
-        state.copyWith(
-          creatingBookingState: UiState.success,
-        ),
-      ),
+      (unit) {
+        // Track booking completion for TikTok
+        TikTokSdkService.instance.logPurchase(
+          value: state.invoice.totalAmount.toDouble(),
+          currency: 'EGP',
+          contentId: services.join(','),
+          contentName: 'Booking Service',
+        );
+        
+        emit(
+          state.copyWith(
+            creatingBookingState: UiState.success,
+          ),
+        );
+      },
     );
   }
 

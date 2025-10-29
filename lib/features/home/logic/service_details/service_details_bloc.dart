@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dazzify/core/services/tiktok_sdk_service.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/data/repositories/home_repository.dart';
@@ -71,12 +72,21 @@ class ServiceDetailsBloc
           errorCode: failure.errorCode,
         ),
       ),
-      (service) => emit(
-        state.copyWith(
-          blocState: UiState.success,
-          service: service,
-        ),
-      ),
+      (service) {
+        // Track service view for TikTok
+        TikTokSdkService.instance.logViewContent(
+          contentId: service.id,
+          contentName: service.title,
+          contentCategory: service.brand.name,
+        );
+        
+        emit(
+          state.copyWith(
+            blocState: UiState.success,
+            service: service,
+          ),
+        );
+      },
     );
   }
 
