@@ -21,7 +21,9 @@ import restart
       GeneratedPluginRegistrant.register(with: registry)
     }
     GMSServices.provideAPIKey("AIzaSyBFsVXmS0RqDzHJB5aH-mi7vxcLbfCWswc")
+    
     GeneratedPluginRegistrant.register(with: self)
+    
     // Retrieve the link from parameters
           if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
             // We have a link, propagate it to your Flutter app or not

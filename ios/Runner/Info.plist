@@ -87,5 +87,9 @@
         <string>fbauth2</string>
         <string>fbshareextension</string>
     </array>
+    <key>TikTokAppID</key>
+    <string>7565017967432450049</string>
+    <key>TikTokAppSecret</key>
+    <string>TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF</string>
 </dict>
 </plist>
