@@ -1,28 +1,27 @@
 package com.dazzify.app
 
 import android.os.Bundle
+import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import com.tiktok.appevents.TikTokAppEventLogger
-import com.tiktok.appevents.contents.TikTokAppEvent
-import com.tiktok.appevents.contents.TikTokAppEventProperties
-import org.json.JSONObject
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.dazzify.app/tiktok"
-    private var tiktokLogger: TikTokAppEventLogger? = null
+    private val TAG = "TikTokChannel"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         
-        // Initialize TikTok App Events SDK
-        tiktokLogger = TikTokAppEventLogger.getInstance(context)
+        // TikTok SDK is not available - using logging as placeholder
+        // Consider implementing TikTok Events API server-side if tracking is needed
         
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
                 "initialize" -> {
                     try {
+                        Log.d(TAG, "TikTok SDK initialization called (SDK not available)")
+                        // Return success to prevent Flutter side errors
                         result.success(true)
                     } catch (e: Exception) {
                         result.error("INIT_ERROR", e.message, null)
@@ -34,16 +33,12 @@ class MainActivity : FlutterActivity() {
                         val parameters = call.argument<Map<String, Any>>("parameters")
                         
                         if (eventName != null) {
-                            val properties = TikTokAppEventProperties()
-                            parameters?.forEach { (key, value) ->
-                                when (value) {
-                                    is String -> properties.addProperty(key, value)
-                                    is Number -> properties.addProperty(key, value.toDouble())
-                                    is Boolean -> properties.addProperty(key, value)
-                                }
-                            }
+                            // Log event details for debugging
+                            Log.d(TAG, "TikTok Event: $eventName with parameters: $parameters")
                             
-                            tiktokLogger?.logEvent(eventName, properties)
+                            // TODO: Implement server-side TikTok Events API call here if needed
+                            // https://business-api.tiktok.com/portal/docs?id=1741601162187777
+                            
                             result.success(true)
                         } else {
                             result.error("INVALID_ARGUMENT", "Event name is required", null)
