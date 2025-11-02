@@ -2,7 +2,7 @@ name: dazzify
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.0.5+20
+version: 2.0.5+21
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
@@ -149,5 +149,5 @@ flutter_intl:
 
 
 
-
+# flutter build appbundle --release --flavor=prod --dart-define=env=prod
 #  flutter build ios --config-only --release --flavor=prod --dart-define=env=prod
