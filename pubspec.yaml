@@ -149,5 +149,5 @@ flutter_intl:
 
 
 
-# flutter build appbundle --release --flavor=prod --dart-define=env=prod
+#  flutter build appbundle --release --flavor=prod --dart-define=env=prod
 #  flutter build ios --config-only --release --flavor=prod --dart-define=env=prod
