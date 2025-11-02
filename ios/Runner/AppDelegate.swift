@@ -24,10 +24,8 @@ import TikTokBusinessSDK
     GMSServices.provideAPIKey("AIzaSyBFsVXmS0RqDzHJB5aH-mi7vxcLbfCWswc")
     
     // Initialize TikTok Business SDK
-    let config = TikTokBusinessConfig()
-    config.appId = "7565017967432450049"
-    config.appSecret = "TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF"
-    TikTokBusiness.initializeSdk(config)
+    let config = TikTokConfig(appId: "7565017967432450049")
+    TikTokBusiness.configureSdk(config)
     
     GeneratedPluginRegistrant.register(with: self)
     
