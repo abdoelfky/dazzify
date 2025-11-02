@@ -23,6 +23,11 @@
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="@string/facebook_client_token"/>
+        
+        <!-- TikTok App Events SDK -->
+        <meta-data
+            android:name="com.tiktok.appevents.APP_ID"
+            android:value="7565143569418190864" />
 
         <activity
             android:name=".MainActivity"

@@ -1,5 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
 
 /// Service class to manage TikTok SDK integration
 /// This service tracks app events and conversions for TikTok Analytics
@@ -7,29 +6,20 @@ class TikTokSdkService {
   TikTokSdkService._();
   static final TikTokSdkService instance = TikTokSdkService._();
 
-  late final Dio _dio;
-  late final String _apiKey;
+  static const MethodChannel _channel = MethodChannel('com.dazzify.app/tiktok');
+  bool _isInitialized = false;
 
   /// Initialize TikTok SDK
   /// Should be called once during app initialization
   Future<void> initialize() async {
     try {
-      _apiKey = dotenv.env['TIKTOK_API_KEY'] ?? '';
+      final result = await _channel.invokeMethod('initialize');
+      _isInitialized = result == true;
       
-      _dio = Dio(
-        BaseOptions(
-          baseUrl: 'https://business-api.tiktok.com/open_api/v1.3',
-          headers: {
-            'Access-Token': _apiKey,
-            'Content-Type': 'application/json',
-          },
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-        ),
-      );
-
-      // Track app install event
-      await logAppInstall();
+      if (_isInitialized) {
+        // Track app install event
+        await logAppInstall();
+      }
     } catch (e) {
       // Log error but don't crash the app
       print('TikTok SDK initialization error: $e');
@@ -182,31 +172,17 @@ class TikTokSdkService {
     required String eventName,
     Map<String, dynamic>? parameters,
   }) async {
-    if (_apiKey.isEmpty) {
-      print('TikTok API key not configured');
+    if (!_isInitialized) {
+      print('TikTok SDK not initialized');
       return;
     }
 
     try {
-      final eventData = {
-        'event': eventName,
-        'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-        'context': {
-          'ad': {},
-          'page': {},
-          'user': {},
-        },
-        'properties': parameters ?? {},
-      };
-
-      // Note: This is a placeholder implementation
-      // In production, you would send this to TikTok's Events API
-      // The actual endpoint and payload structure may vary based on TikTok's API version
-      print('TikTok Event: $eventName');
-      print('Parameters: $parameters');
-      
-      // Uncomment when TikTok pixel/event endpoint is properly configured
-      // await _dio.post('/event/track', data: eventData);
+      await _channel.invokeMethod('logEvent', {
+        'eventName': eventName,
+        'parameters': parameters ?? {},
+      });
+      print('TikTok Event logged: $eventName');
     } catch (e) {
       print('TikTok SDK log event error: $e');
     }
