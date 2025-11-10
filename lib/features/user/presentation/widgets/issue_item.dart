@@ -120,6 +120,8 @@ void onCardTap({
           );
         });
   } else {
+    print(issue.status);
+    print(issue.reply);
     context.pushRoute(
       IssueStatusRoute(
         status: issue.status,

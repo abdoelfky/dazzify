@@ -75,7 +75,8 @@ class FCMNotificationImpl extends FCMNotification {
   Future<void> init() async {
     kPrint('🔧 Initializing FCMConfig...');
     await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+        .setForegroundNotificationPresentationOptions(
+            alert: true, badge: true, sound: true);
 
     // Initialize FCM with foreground notification display enabled for iOS
     await FCMConfig.instance.init(
@@ -89,10 +90,7 @@ class FCMNotificationImpl extends FCMNotification {
         importance: Importance.high,
         sound: RawResourceAndroidNotificationSound('sound_alert'),
       ),
-      // Enable foreground notifications for iOS
-      iosPresentAlert: true,
-      iosPresentBadge: true,
-      iosPresentSound: true,
+
     );
 
     // Initialize local notifications plugin and handle notification taps
@@ -127,6 +125,13 @@ class FCMNotificationImpl extends FCMNotification {
       kPrint('🔍 Initial Notification Data: ${initialMessage.data}');
       await onReceived(message: initialMessage);
     }
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
   @override
@@ -142,7 +147,8 @@ class FCMNotificationImpl extends FCMNotification {
       kPrint('  From: ${message.from}');
       kPrint('  Sent Time: ${message.sentTime}');
       kPrint('  Data: ${message.data}');
-      kPrint('  Notification: ${message.notification?.title} - ${message.notification?.body}');
+      kPrint(
+          '  Notification: ${message.notification?.title} - ${message.notification?.body}');
 
       // ✅ Check for nested 'data' key
       dynamic type;
@@ -198,9 +204,7 @@ class FCMNotificationImpl extends FCMNotification {
         case NotificationTypeEnum.issueStatus:
           kPrint('➡️ Navigating to issues ...');
           appRouter.navigate(
-            const ProfileTabRoute(
-              children: [ProfileRoute(), IssueRoute()],
-            ),
+            const IssueRoute(),
           );
           break;
 
