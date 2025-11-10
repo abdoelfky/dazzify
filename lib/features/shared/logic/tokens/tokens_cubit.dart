@@ -2,10 +2,12 @@ import 'package:dazzify/core/api/dio_tokens_interceptor.dart';
 import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/fcm_notifications.dart';
 import 'package:dazzify/core/services/meta_sdk_service.dart';
 import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/auth/data/repositories/auth_repository.dart';
 import 'package:dazzify/features/auth/logic/auth_cubit.dart';
+import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/check_for_app_update.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:equatable/equatable.dart';
@@ -16,9 +18,13 @@ part 'tokens_state.dart';
 
 class TokensCubit extends Cubit<TokensState> {
   final AuthRepository _authRepository;
+  final AppNotificationsCubit _appNotificationsCubit;
   String _userAccessToken = '';
 
-  TokensCubit(this._authRepository) : super(TokensInitialState());
+  TokensCubit(
+    this._authRepository,
+    this._appNotificationsCubit,
+  ) : super(TokensInitialState());
 
   Future<void> isUserAuthenticated() async {
     emit(TokensLoadingState());
@@ -55,6 +61,10 @@ class TokensCubit extends Cubit<TokensState> {
   Future<void> deleteUserTokens() async {
     emit(TokensLoadingState());
     debugPrint(state.toString());
+    // Unsubscribe from notifications before logging out to prevent cross-account notifications
+    await _appNotificationsCubit.unSubscribeFromNotifications();
+    // Clear all local notifications from the device
+    await getIt<FCMNotification>().clearAllNotifications();
     await _authRepository.deleteUserTokens();
     getIt<DioTokenInterceptor>().logoutReset();
     emit(LogoutState());

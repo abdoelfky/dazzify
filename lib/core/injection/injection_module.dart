@@ -90,12 +90,15 @@ abstract class FeaturesModule {
       );
 
   @singleton
-  TokensCubit get tokensCubit => TokensCubit(authRepository);
-
-  @singleton
   AppNotificationsCubit get appNotificationsCubit => AppNotificationsCubit(
         notificationsRepository,
         authRepository,
+      );
+
+  @singleton
+  TokensCubit get tokensCubit => TokensCubit(
+        authRepository,
+        appNotificationsCubit,
       );
 
   @lazySingleton
