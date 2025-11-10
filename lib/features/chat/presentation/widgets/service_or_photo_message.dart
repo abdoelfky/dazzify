@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
@@ -19,6 +21,11 @@ class ServiceOrPhotoMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPending = message.sendStatus == 'pending' || message.sendStatus == 'uploading';
+    final isUploading = message.sendStatus == 'uploading';
+    final isFailed = message.sendStatus == 'failed';
+    final uploadProgress = message.uploadProgress ?? 0.0;
+    
     return Align(
       alignment: message.sender == Sender.user.name
           ? AlignmentDirectional.centerEnd
@@ -50,27 +57,93 @@ class ServiceOrPhotoMessage extends StatelessWidget {
                     SizedBox(
                       width: 230.w,
                       height: 200.h,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (message.messageType == MessageType.photo.name) {
-                            context.pushRoute(DazzifyPhotoViewerRoute(
-                              name:
-                                  TimeManager.dateTimeOrTime(message.createdAt),
-                              imageUrl: message.content.image!,
-                              heroAnimationKey: AssetsManager.avatar,
-                              isProfilePicture: true,
-                            ));
-                          }
-                        },
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(8),
-                          ).r,
-                          child: DazzifyCachedNetworkImage(
-                            imageUrl: message.content.image!,
-                            fit: BoxFit.cover,
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (message.messageType == MessageType.photo.name && 
+                                  !isPending) {
+                                context.pushRoute(DazzifyPhotoViewerRoute(
+                                  name:
+                                      TimeManager.dateTimeOrTime(message.createdAt),
+                                  imageUrl: message.content.image!,
+                                  heroAnimationKey: AssetsManager.avatar,
+                                  isProfilePicture: true,
+                                ));
+                              }
+                            },
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8),
+                              ).r,
+                              child: isPending && message.localFilePath != null
+                                  ? Image.file(
+                                      File(message.localFilePath!),
+                                      fit: BoxFit.cover,
+                                      width: 230.w,
+                                      height: 200.h,
+                                    )
+                                  : DazzifyCachedNetworkImage(
+                                      imageUrl: message.content.image!,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
                           ),
-                        ),
+                          // Loading overlay for uploading images
+                          if (isUploading)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(8),
+                                ).r,
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 50.w,
+                                      height: 50.h,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 4,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white,
+                                        ),
+                                        value: uploadProgress > 0 ? uploadProgress : null,
+                                      ),
+                                    ),
+                                    if (uploadProgress > 0) ...[
+                                      SizedBox(height: 8.h),
+                                      Text(
+                                        '${(uploadProgress * 100).toInt()}%',
+                                        style: context.textTheme.bodySmall!.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          // Failed overlay
+                          if (isFailed)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(8),
+                                ).r,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 50.sp,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 5.h),
@@ -84,11 +157,38 @@ class ServiceOrPhotoMessage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4.h),
-            Text(
-              TimeManager.to12HFormat(TimeManager.toLocal(message.createdAt)),
-              style: context.textTheme.labelSmall!.copyWith(
-                color: context.colorScheme.primaryContainer,
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isFailed && message.sender == Sender.user.name) ...[
+                  Icon(
+                    Icons.error_outline,
+                    size: 14.sp,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 4.w),
+                ],
+                if (isUploading && message.sender == Sender.user.name) ...[
+                  Icon(
+                    Icons.upload,
+                    size: 14.sp,
+                    color: context.colorScheme.primaryContainer,
+                  ),
+                  SizedBox(width: 4.w),
+                ],
+                Text(
+                  isFailed 
+                      ? 'Failed to send'
+                      : isUploading
+                          ? 'Uploading...'
+                          : TimeManager.to12HFormat(TimeManager.toLocal(message.createdAt)),
+                  style: context.textTheme.labelSmall!.copyWith(
+                    color: isFailed 
+                        ? Colors.red 
+                        : context.colorScheme.primaryContainer,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
