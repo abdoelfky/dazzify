@@ -132,10 +132,19 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
         (brandImages) {
           final hasPhotosReachedMax =
               brandImages.isEmpty || brandImages.length < _brandImagesLimit;
+          final allPhotos = List.of(state.photos)..addAll(brandImages);
+          
+          // Sort images by aspect ratio
+          allPhotos.sort((a, b) {
+            final ratioA = _parseAspectRatioToDouble(a.aspectRatio ?? "");
+            final ratioB = _parseAspectRatioToDouble(b.aspectRatio ?? "");
+            return ratioA.compareTo(ratioB);
+          });
+          
           emit(
             state.copyWith(
               photosState: UiState.success,
-              photos: List.of(state.photos)..addAll(brandImages),
+              photos: allPhotos,
               hasPhotosReachedMax: hasPhotosReachedMax,
             ),
           );
@@ -270,5 +279,25 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
     add(GetBrandImagesEvent(state.brandDetails.id));
     add(GetBrandReelsEvent(state.brandDetails.id));
     add(GetBrandReviewsEvent(state.brandDetails.id));
+  }
+
+  /// Parse aspect ratio string (e.g., "4:5") to double value for sorting
+  double _parseAspectRatioToDouble(String aspectRatio) {
+    if (aspectRatio.isEmpty) return 0.0;
+    
+    try {
+      final parts = aspectRatio.split(':');
+      if (parts.length == 2) {
+        final width = double.tryParse(parts[0]) ?? 0.0;
+        final height = double.tryParse(parts[1]) ?? 0.0;
+        if (height != 0) {
+          return width / height;
+        }
+      }
+    } catch (e) {
+      return 0.0;
+    }
+    
+    return 0.0;
   }
 }
