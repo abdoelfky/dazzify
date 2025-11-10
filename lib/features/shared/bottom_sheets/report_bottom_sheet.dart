@@ -24,6 +24,7 @@ class ReportBottomSheet extends StatelessWidget {
     return BlocConsumer<ReportCubit, ReportState>(
       listener: (context, state) {
         if (state.uiState == UiState.success) {
+          FocusManager.instance.primaryFocus?.unfocus();
           DazzifyToastBar.showSuccess(message: context.tr.reported);
           context.pop();
         }
