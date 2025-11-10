@@ -86,12 +86,42 @@ class ChatCubit extends Cubit<ChatState> {
       Function(MessageModel message)? onMessageSent}) async {
     File? image;
     emit(state.copyWith(sendingMessageState: UiState.loading));
+    
+    // Pick image if message type is photo
     if (messageType == MessageType.photo.name) {
       image = await _imagePickingService.pickImage(
         imageSource: ImageSource.gallery,
       );
+      
+      // If user cancelled image selection, return early
+      if (image == null) {
+        emit(state.copyWith(sendingMessageState: UiState.initial));
+        return;
+      }
     }
 
+    // Create a temporary pending message to show in UI immediately
+    final pendingMessage = MessageModel(
+      sender: 'user',
+      messageType: messageType,
+      content: MessageContentModel(
+        message: text ?? '',
+        image: image?.path ?? '', // Use local path temporarily
+      ),
+      createdAt: DateTime.now().toIso8601String(),
+      sendStatus: messageType == MessageType.photo.name ? 'uploading' : 'pending',
+      uploadProgress: messageType == MessageType.photo.name ? 0.0 : null,
+      localFilePath: image?.path,
+    );
+
+    // Add pending message to UI immediately
+    List<MessageModel> messagesWithPending = [pendingMessage, ...state.messages];
+    emit(state.copyWith(
+      messages: messagesWithPending,
+      sendingMessageState: UiState.loading,
+    ));
+
+    // Send the message
     Either<Failure, MessageModel> result = await _chatRepository.sendMessage(
       request: SendMessageRequest(
         branchId: branchId,
@@ -103,25 +133,43 @@ class ChatCubit extends Cubit<ChatState> {
     );
 
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          errorMessage: failure.message,
-          sendingMessageState: UiState.failure,
-        ),
-      ),
-      (lastMessage) {
-        List<MessageModel> newMessages = [lastMessage, ...state.messages];
-        if (onMessageSent != null) onMessageSent(lastMessage);
+      (failure) {
+        // Update pending message to failed status
+        final updatedMessages = state.messages.map((msg) {
+          if (msg == pendingMessage) {
+            return msg.copyWith(sendStatus: 'failed');
+          }
+          return msg;
+        }).toList();
+        
+        emit(
+          state.copyWith(
+            errorMessage: failure.message,
+            sendingMessageState: UiState.failure,
+            messages: updatedMessages,
+          ),
+        );
+      },
+      (sentMessage) {
+        // Replace pending message with the actual sent message
+        final updatedMessages = state.messages.map((msg) {
+          if (msg == pendingMessage) {
+            return sentMessage.copyWith(sendStatus: 'sent');
+          }
+          return msg;
+        }).toList();
+        
+        if (onMessageSent != null) onMessageSent(sentMessage);
         conversationsCubit.updateLastMessage(
           branchMessage: BranchMessageModel(
             branchId: branchId,
-            message: lastMessage,
+            message: sentMessage,
           ),
         );
 
         emit(
           state.copyWith(
-            messages: newMessages,
+            messages: updatedMessages,
             sendingMessageState: UiState.success,
           ),
         );
