@@ -15,6 +15,8 @@ abstract class FCMNotification {
   void onClick({required RemoteMessage message});
 
   Future<void> onReceived({required RemoteMessage message});
+
+  Future<void> clearAllNotifications();
 }
 
 @pragma('vm:entry-point')
@@ -26,6 +28,11 @@ Future<void> onMessagingBackground(RemoteMessage message) async {
         "Get the latest notifications about Dazzify's offers and messages",
     importance: Importance.high,
     sound: RawResourceAndroidNotificationSound('sound_alert'),
+    // Always show full notification body
+    styleInformation: BigTextStyleInformation(
+      message.notification?.body ?? '',
+      contentTitle: message.notification?.title ?? '',
+    ),
   );
 
   final ios = DarwinNotificationDetails(
@@ -70,7 +77,7 @@ class FCMNotificationImpl extends FCMNotification {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
 
-    // Initialize FCM
+    // Initialize FCM with foreground notification display enabled for iOS
     await FCMConfig.instance.init(
       options: DefaultFirebaseOptions.currentPlatform,
       onBackgroundMessage: onMessagingBackground,
@@ -82,6 +89,10 @@ class FCMNotificationImpl extends FCMNotification {
         importance: Importance.high,
         sound: RawResourceAndroidNotificationSound('sound_alert'),
       ),
+      // Enable foreground notifications for iOS
+      iosPresentAlert: true,
+      iosPresentBadge: true,
+      iosPresentSound: true,
     );
 
     // Initialize local notifications plugin and handle notification taps
@@ -209,5 +220,15 @@ class FCMNotificationImpl extends FCMNotification {
     kPrint('📨 onDataReceive called with: $data');
     final message = RemoteMessage(data: data);
     onReceived(message: message);
+  }
+
+  @override
+  Future<void> clearAllNotifications() async {
+    try {
+      await flutterLocalNotificationsPlugin.cancelAll();
+      kPrint('✅ All notifications cleared successfully.');
+    } catch (e) {
+      kPrint('❌ Error clearing notifications: $e');
+    }
   }
 }
