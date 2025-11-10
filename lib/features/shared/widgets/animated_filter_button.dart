@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/reels/logic/reels_bloc.dart';
@@ -98,35 +99,41 @@ class _AnimatedFilterButtonState extends State<AnimatedFilterButton>
                 duration: const Duration(seconds: 1),
                 curve: Curves.easeInOut,
                 height: _isIconRotated.value ? 280.h : 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.inversePrimary
-                        .withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10).r,
-                  ),
-                  child: ListView.builder(
-                    itemCount: mainCategories.length,
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0).r,
-                        child: ValueListenableBuilder(
-                          valueListenable: _selectedIndex,
-                          builder: (context, value, child) =>
-                              CategorySelectableButton(
-                            imagePath: mainCategories[index].image,
-                            title: mainCategories[index].name,
-                            isAnimated: _isIconRotated.value,
-                            isSelected: _selectedIndex.value == index,
-                            onTap: () {
-                              _onCategoryTap(index);
-                              widget.onItemTap(index);
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10).r,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.inversePrimary
+                            .withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(10).r,
+                      ),
+                      child: ListView.builder(
+                        itemCount: mainCategories.length,
+                        scrollDirection: Axis.vertical,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0).r,
+                            child: ValueListenableBuilder(
+                              valueListenable: _selectedIndex,
+                              builder: (context, value, child) =>
+                                  CategorySelectableButton(
+                                imagePath: mainCategories[index].image,
+                                title: mainCategories[index].name,
+                                isAnimated: _isIconRotated.value,
+                                isSelected: _selectedIndex.value == index,
+                                onTap: () {
+                                  _onCategoryTap(index);
+                                  widget.onItemTap(index);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),

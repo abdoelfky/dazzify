@@ -40,8 +40,20 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                   ),
                 );
               },
-              child: DazzifyRoundedPicture(
-                imageUrl: widget.reel.brand.logo,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: DazzifyRoundedPicture(
+                  imageUrl: widget.reel.brand.logo,
+                ),
               ),
             ),
             SizedBox(width: 16.h),
@@ -68,6 +80,13 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                                   widget.reel.brand.name,
                                   style: context.textTheme.bodyLarge!.copyWith(
                                     color: Colors.white,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -90,7 +109,14 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                         child: DText(
                           widget.reel.brand.name,
                           style: context.textTheme.bodyLarge!.copyWith(
-                            color: context.colorScheme.primary,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                         ),
                       ),

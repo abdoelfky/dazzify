@@ -85,11 +85,22 @@ class ChatCubit extends Cubit<ChatState> {
       String? serviceId,
       Function(MessageModel message)? onMessageSent}) async {
     File? image;
-    emit(state.copyWith(sendingMessageState: UiState.loading));
+    emit(state.copyWith(
+      sendingMessageState: UiState.loading,
+      sendingMessageType: messageType,
+    ));
     if (messageType == MessageType.photo.name) {
       image = await _imagePickingService.pickImage(
         imageSource: ImageSource.gallery,
       );
+      // If user canceled image selection, reset the state
+      if (image == null) {
+        emit(state.copyWith(
+          sendingMessageState: UiState.initial,
+          sendingMessageType: null,
+        ));
+        return;
+      }
     }
 
     Either<Failure, MessageModel> result = await _chatRepository.sendMessage(
@@ -107,6 +118,7 @@ class ChatCubit extends Cubit<ChatState> {
         state.copyWith(
           errorMessage: failure.message,
           sendingMessageState: UiState.failure,
+          sendingMessageType: null,
         ),
       ),
       (lastMessage) {
@@ -123,6 +135,7 @@ class ChatCubit extends Cubit<ChatState> {
           state.copyWith(
             messages: newMessages,
             sendingMessageState: UiState.success,
+            sendingMessageType: null,
           ),
         );
       },

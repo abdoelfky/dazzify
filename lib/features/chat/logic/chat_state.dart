@@ -6,6 +6,7 @@ class ChatState extends Equatable {
   final String errorMessage;
   final List<MessageModel> messages;
   final UiState socketState;
+  final String? sendingMessageType;
 
   const ChatState({
     this.fetchingMessagesState = UiState.initial,
@@ -13,15 +14,17 @@ class ChatState extends Equatable {
     this.socketState = UiState.initial,
     this.errorMessage = '',
     this.messages = const [],
+    this.sendingMessageType,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         fetchingMessagesState,
         sendingMessageState,
         socketState,
         errorMessage,
         messages,
+        sendingMessageType,
       ];
 
   ChatState copyWith({
@@ -30,6 +33,7 @@ class ChatState extends Equatable {
     String? errorMessage,
     List<MessageModel>? messages,
     UiState? socketState,
+    String? sendingMessageType,
   }) {
     return ChatState(
       fetchingMessagesState:
@@ -38,6 +42,7 @@ class ChatState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       messages: messages ?? this.messages,
       socketState: socketState ?? this.socketState,
+      sendingMessageType: sendingMessageType ?? this.sendingMessageType,
     );
   }
 }

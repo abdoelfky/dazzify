@@ -47,10 +47,21 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        BlocConsumer<LikesCubit, LikesState>(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20).r,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          BlocConsumer<LikesCubit, LikesState>(
           listener: (context, state) {
             // final currentMediaId = _likesCubit.currentMediaId;
             //
@@ -234,7 +245,8 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
             color: Colors.white,
           ),
         ),
-      ],
+        ],
+      ),
     );
   }
 }

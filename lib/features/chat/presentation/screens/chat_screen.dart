@@ -7,6 +7,7 @@ import 'package:dazzify/dazzify_app.dart';
 import 'package:dazzify/features/chat/logic/chat_cubit.dart';
 import 'package:dazzify/features/chat/logic/conversations_cubit.dart';
 import 'package:dazzify/features/chat/presentation/widgets/date_widget.dart';
+import 'package:dazzify/features/chat/presentation/widgets/loading_message_shimmer.dart';
 import 'package:dazzify/features/chat/presentation/widgets/service_or_photo_message.dart';
 import 'package:dazzify/features/chat/presentation/widgets/text_message.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
@@ -230,23 +231,36 @@ class _ChatScreenState extends State<ChatScreen> {
                             duration: const Duration(milliseconds: 700),
                             child: ListView.builder(
                               padding: const EdgeInsets.only(top: 16).r,
-                              itemCount: state.messages.length,
+                              itemCount: state.messages.length + 
+                                  (state.sendingMessageState == UiState.loading ? 1 : 0),
                               reverse: true,
                               itemBuilder: (context, index) {
-                                if (state.messages[index].runtimeType ==
+                                // Show loading shimmer at the top (index 0) when sending
+                                if (index == 0 && state.sendingMessageState == UiState.loading) {
+                                  return LoadingMessageShimmer(
+                                    isTextMessage: state.sendingMessageType == MessageType.txt.name,
+                                  );
+                                }
+                                
+                                // Adjust index if shimmer is showing
+                                final messageIndex = state.sendingMessageState == UiState.loading 
+                                    ? index - 1 
+                                    : index;
+                                    
+                                if (state.messages[messageIndex].runtimeType ==
                                     String) {
                                   return DateWidget(
-                                    date: state.messages[index].messageSentTime,
+                                    date: state.messages[messageIndex].messageSentTime,
                                   );
                                 } else {
-                                  if (state.messages[index].messageType !=
+                                  if (state.messages[messageIndex].messageType !=
                                       MessageType.txt.name) {
                                     return ServiceOrPhotoMessage(
-                                      message: state.messages[index],
+                                      message: state.messages[messageIndex],
                                     );
                                   } else {
                                     return TextMessage(
-                                      message: state.messages[index],
+                                      message: state.messages[messageIndex],
                                     );
                                   }
                                 }
