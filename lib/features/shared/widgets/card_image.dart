@@ -9,6 +9,7 @@ class CardImage extends StatelessWidget {
   final String imageUrl;
   final bool isAlbum;
   final void Function()? onTap;
+  final String? aspectRatio;
 
   const CardImage({
     super.key,
@@ -16,6 +17,7 @@ class CardImage extends StatelessWidget {
     required this.imageUrl,
     this.onTap,
     required this.isAlbum,
+    this.aspectRatio,
   });
 
   @override
