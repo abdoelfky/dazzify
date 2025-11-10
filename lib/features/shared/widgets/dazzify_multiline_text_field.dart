@@ -35,6 +35,7 @@ class DazzifyMultilineTextField extends StatelessWidget {
     return FormField(
       validator: validator,
       onSaved: onSaved,
+      autovalidateMode: autoValidateMode ?? AutovalidateMode.onUserInteraction,
       builder: (state) {
         return SizedBox(
           width: fullWidth ?? context.width,
@@ -60,7 +61,12 @@ class DazzifyMultilineTextField extends StatelessWidget {
                     fontSize: 14.r,
                     // color: Theme.of(context).colorScheme.scrim,
                   ),
-                  onChanged: onChanged,
+                  onChanged: (value) {
+                    state.didChange(value);
+                    if (onChanged != null) {
+                      onChanged!(value);
+                    }
+                  },
                   decoration: InputDecoration(
                     hintText: hintText,
                     hintStyle: TextStyle(
