@@ -11,6 +11,7 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class BrandPhotosTab extends StatefulWidget {
   final String brandId;
@@ -55,6 +56,25 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
     }
   }
 
+  double _parseAspectRatio(String aspectRatio) {
+    if (aspectRatio.isEmpty) return 1.0;
+    
+    try {
+      final parts = aspectRatio.split(':');
+      if (parts.length == 2) {
+        final width = double.tryParse(parts[0]) ?? 1.0;
+        final height = double.tryParse(parts[1]) ?? 1.0;
+        if (height != 0) {
+          return width / height;
+        }
+      }
+    } catch (e) {
+      return 1.0;
+    }
+    
+    return 1.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -82,17 +102,13 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
                 message: context.tr.emptyVendorImages,
               );
             } else {
-              return GridView.builder(
-                // controller: _scrollController,
+              return MasonryGridView.count(
                 itemCount: state.photos.length + 1,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16).r,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisExtent: 150.h,
-                  crossAxisSpacing: 10.w,
-                  mainAxisSpacing: 10.h,
-                ),
+                crossAxisCount: 3,
+                crossAxisSpacing: 10.w,
+                mainAxisSpacing: 10.h,
                 itemBuilder: (context, index) {
                   if (index >= state.photos.length && state.photos.isNotEmpty) {
                     if (state.hasPhotosReachedMax) {
@@ -110,41 +126,50 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
                   } else {
                     final card = state.photos[index];
                     final cardImageType = getCardImageType(card.type);
+                    final aspectRatio = _parseAspectRatio(card.aspectRatio ?? "");
 
                     switch (cardImageType) {
                       case CardImageType.none:
                         return const SizedBox.shrink();
                       case CardImageType.photo:
-                        return CardImage(
-                          index: index,
-                          imageUrl: card.thumbnail,
-                          isAlbum: false,
-                          onTap: () {
-                            context.pushRoute(
-                              BrandPostsRoute(
-                                brandBloc: brandBloc,
-                                brandId: widget.brandId,
-                                brandName: widget.brandName,
-                                photoIndex: index,
-                              ),
-                            );
-                          },
+                        return AspectRatio(
+                          aspectRatio: aspectRatio,
+                          child: CardImage(
+                            index: index,
+                            imageUrl: card.thumbnail,
+                            isAlbum: false,
+                            aspectRatio: card.aspectRatio,
+                            onTap: () {
+                              context.pushRoute(
+                                BrandPostsRoute(
+                                  brandBloc: brandBloc,
+                                  brandId: widget.brandId,
+                                  brandName: widget.brandName,
+                                  photoIndex: index,
+                                ),
+                              );
+                            },
+                          ),
                         );
                       case CardImageType.album:
-                        return CardImage(
-                          index: index,
-                          imageUrl: card.thumbnail,
-                          isAlbum: true,
-                          onTap: () {
-                            context.pushRoute(
-                              BrandPostsRoute(
-                                brandBloc: brandBloc,
-                                brandId: widget.brandId,
-                                brandName: widget.brandName,
-                                photoIndex: index,
-                              ),
-                            );
-                          },
+                        return AspectRatio(
+                          aspectRatio: aspectRatio,
+                          child: CardImage(
+                            index: index,
+                            imageUrl: card.thumbnail,
+                            isAlbum: true,
+                            aspectRatio: card.aspectRatio,
+                            onTap: () {
+                              context.pushRoute(
+                                BrandPostsRoute(
+                                  brandBloc: brandBloc,
+                                  brandId: widget.brandId,
+                                  brandName: widget.brandName,
+                                  photoIndex: index,
+                                ),
+                              );
+                            },
+                          ),
                         );
                     }
                   }
