@@ -1,9 +1,10 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/home/presentation/widgets/custom_rating_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
-import 'package:dazzify/features/shared/widgets/dazzify_text_form_field.dart';
+import 'package:dazzify/features/shared/widgets/dazzify_multiline_text_field.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 
@@ -17,15 +18,23 @@ class AddReviewSheet extends StatefulWidget {
 class _AddReviewSheetState extends State<AddReviewSheet> {
   late final BookingCubit bookingCubit;
   late final GlobalKey<FormState> formKey;
+  late final TextEditingController _reviewController;
   bool isLoading = false;
-  late double rating;
-  late String reviewComment;
+  double rating = 0;
 
   @override
   void initState() {
     bookingCubit = context.read<BookingCubit>();
     formKey = GlobalKey<FormState>();
+    _reviewController = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    formKey.currentState?.dispose();
+    _reviewController.dispose();
+    super.dispose();
   }
 
   @override
@@ -66,63 +75,62 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
               ),
               Form(
                 key: formKey,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24).r,
-                      child: DazzifyTextFormField(
-                        height: 46,
-                        textInputType: TextInputType.text,
-                        borderRadius: 12,
-                        hintText: context.tr.reviewComment,
-                        maxLength: 200,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return context.tr.textIsRequired;
-                          } else if (value.length < 3) {
-                            return context.tr.textIsTooShort;
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          reviewComment = value;
-                        },
-                        onSaved: (value) {
-                          if (value != null) {
-                            reviewComment = value;
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 62.h),
-                    BlocListener<BookingCubit, BookingState>(
-                      listener: (context, state) {
-                        if (state.createReviewState == UiState.loading) {
-                          isLoading = true;
-                        } else if (state.createReviewState == UiState.success) {
-                          isLoading = false;
-                          context.maybePop();
-                          DazzifyToastBar.showSuccess(
-                            message: context.tr.reviewCreated,
-                          );
-                        } else {
-                          isLoading = false;
-                        }
-                      },
-                      child: PrimaryButton(
-                        isLoading: isLoading,
-                        onTap: () {
-                          if (formKey.currentState!.validate()) {
-                            bookingCubit.createReview(
-                              comment: reviewComment,
-                              rate: rating,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 8,
+                        ).r,
+                        child: DazzifyMultilineTextField(
+                          maxLength: 200,
+                          controller: _reviewController,
+                          hintText: context.tr.reviewComment,
+                          validator: (value) {
+                            return ValidationManager.hasData(
+                              data: _reviewController.text,
+                              errorMessage: context.tr.textIsTooShort,
                             );
+                          },
+                          onSaved: (value) {
+                            if (value != null) {
+                              _reviewController.text = value;
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 62.h),
+                      BlocListener<BookingCubit, BookingState>(
+                        listener: (context, state) {
+                          if (state.createReviewState == UiState.loading) {
+                            isLoading = true;
+                          } else if (state.createReviewState == UiState.success) {
+                            isLoading = false;
+                            context.maybePop();
+                            DazzifyToastBar.showSuccess(
+                              message: context.tr.reviewCreated,
+                            );
+                          } else {
+                            isLoading = false;
                           }
                         },
-                        title: context.tr.createReview,
+                        child: PrimaryButton(
+                          isLoading: isLoading,
+                          onTap: () {
+                            if (formKey.currentState!.validate()) {
+                              bookingCubit.createReview(
+                                comment: _reviewController.text,
+                                rate: rating,
+                              );
+                            }
+                          },
+                          title: context.tr.createReview,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

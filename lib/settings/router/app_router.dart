@@ -423,16 +423,18 @@ class Authenticated extends AutoRouter implements AutoRouteWrapper {
       ],
       child: BlocListener<BookingReviewCubit, BookingReviewState>(
         listener: (context, state) {
-          if (state.bookingReviewRequestState == UiState.success) {
-            // Check if the review sheet is not already open to prevent duplicates
-            final currentRoute = ModalRoute.of(context)?.settings.name;
-            if (currentRoute != "ServiceSelectionBottomSheet") {
-              showBookingReviewSheet(
-                userModel: context.read<UserCubit>().state.userModel,
-                context: context,
-                bookingReviewCubit: context.read<BookingReviewCubit>(),
-              );
-            }
+          if (state.bookingReviewRequestState == UiState.success && !state.isSheetShowing) {
+            // Mark sheet as showing to prevent duplicates
+            context.read<BookingReviewCubit>().setSheetShowing(true);
+            
+            showBookingReviewSheet(
+              userModel: context.read<UserCubit>().state.userModel,
+              context: context,
+              bookingReviewCubit: context.read<BookingReviewCubit>(),
+            ).then((_) {
+              // Reset when sheet is dismissed
+              context.read<BookingReviewCubit>().resetReviewRequest();
+            });
           }
           if (state.addReviewState == UiState.success) {
             context.maybePop();

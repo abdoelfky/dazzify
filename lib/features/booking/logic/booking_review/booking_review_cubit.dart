@@ -88,14 +88,29 @@ class BookingReviewCubit extends Cubit<BookingReviewState> {
     
     _socketSubscription = webSocketRepository.socketEventPass().listen((WebSocketResponse response) {
       if (response.type == WebSocketDataType.review) {
-        final BookingReviewRequestModel bookingReviewRequest = response.data;
-        emit(
-          state.copyWith(
-              bookingReviewRequestState: UiState.success,
-              bookingReviewRequest: bookingReviewRequest),
-        );
+        // Only emit if sheet is not already showing
+        if (!state.isSheetShowing) {
+          final BookingReviewRequestModel bookingReviewRequest = response.data;
+          emit(
+            state.copyWith(
+                bookingReviewRequestState: UiState.success,
+                bookingReviewRequest: bookingReviewRequest),
+          );
+        }
       }
     });
+  }
+
+  void setSheetShowing(bool isShowing) {
+    emit(state.copyWith(isSheetShowing: isShowing));
+  }
+
+  void resetReviewRequest() {
+    emit(state.copyWith(
+      bookingReviewRequestState: UiState.initial,
+      bookingReviewRequest: BookingReviewRequestModel.empty(),
+      isSheetShowing: false,
+    ));
   }
 
   @override
