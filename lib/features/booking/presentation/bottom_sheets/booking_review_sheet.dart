@@ -52,7 +52,10 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        widget.bookingReviewCubit.setNotInterestedToReview();
+        if (didPop) {
+          widget.bookingReviewCubit.setNotInterestedToReview();
+          widget.bookingReviewCubit.resetReviewRequest();
+        }
       },
       child: BlocBuilder<BookingReviewCubit, BookingReviewState>(
         buildWhen: (previous, current) =>

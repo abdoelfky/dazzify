@@ -5,12 +5,14 @@ class BookingReviewState extends Equatable {
   final UiState bookingReviewRequestState;
   final UiState addReviewState;
   final String addReviewError;
+  final bool isSheetShowing;
 
   const BookingReviewState({
     this.bookingReviewRequest = const BookingReviewRequestModel.empty(),
     this.bookingReviewRequestState = UiState.initial,
     this.addReviewState = UiState.initial,
     this.addReviewError = "",
+    this.isSheetShowing = false,
   });
 
   @override
@@ -19,6 +21,7 @@ class BookingReviewState extends Equatable {
         bookingReviewRequestState,
         addReviewState,
         addReviewError,
+        isSheetShowing,
       ];
 
   BookingReviewState copyWith({
@@ -26,6 +29,7 @@ class BookingReviewState extends Equatable {
     UiState? bookingReviewRequestState,
     UiState? addReviewState,
     String? addReviewError,
+    bool? isSheetShowing,
   }) {
     return BookingReviewState(
       bookingReviewRequest: bookingReviewRequest ?? this.bookingReviewRequest,
@@ -33,6 +37,7 @@ class BookingReviewState extends Equatable {
           bookingReviewRequestState ?? this.bookingReviewRequestState,
       addReviewState: addReviewState ?? this.addReviewState,
       addReviewError: addReviewError ?? this.addReviewError,
+      isSheetShowing: isSheetShowing ?? this.isSheetShowing,
     );
   }
 }
