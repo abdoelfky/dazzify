@@ -27,7 +27,7 @@
         <!-- TikTok App Events SDK -->
         <meta-data
             android:name="com.tiktok.appevents.APP_ID"
-            android:value="7565143569418190864" />
+            android:value="TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF" />
 
         <activity
             android:name=".MainActivity"
@@ -111,5 +111,8 @@
         <!-- Facebook queries for deep linking -->
         <package android:name="com.facebook.katana" />
         <package android:name="com.facebook.orca" />
+        <!-- TikTok queries for deep linking and sharing -->
+        <package android:name="com.zhiliaoapp.musically" />
+        <package android:name="com.ss.android.ugc.trill" />
     </queries>
 </manifest>
