@@ -1,5 +1,9 @@
 # TikTok Integration Bug Fixes
 
+> **UPDATE (Nov 13, 2025):** TikTok Open SDK has been removed from Android build due to dependency availability issues. 
+> Events are now logged locally for debugging. For production, implement server-side TikTok Events API. 
+> See `TIKTOK_SDK_RESOLUTION.md` for complete details and implementation guide.
+
 ## Issues Identified
 
 Based on the TikTok Events Manager screenshot, the following bugs were found:
