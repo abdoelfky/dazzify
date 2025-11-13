@@ -1,5 +1,7 @@
 # TikTok Integration Bugs - Fixed ✅
 
+> **UPDATE (Nov 13, 2025):** TikTok SDK dependencies have been removed due to unavailability in public Maven repositories. See `TIKTOK_SDK_RESOLUTION.md` for details.
+
 ## 🐛 Bugs Identified from Screenshot
 
 Looking at your TikTok Events Manager screenshot, I identified **5 critical bugs**:

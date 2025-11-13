@@ -5,26 +5,21 @@ import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import com.tiktok.open.sdk.share.Share
 import org.json.JSONObject
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.dazzify.app/tiktok"
     private val TAG = "TikTokChannel"
     private val TIKTOK_APP_ID = "TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF"
-    private var isInitialized = false
+    private var isInitialized = true // Always true since we're using local logging
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Initialize TikTok SDK
-        try {
-            Share.init(this, TIKTOK_APP_ID)
-            isInitialized = true
-            Log.d(TAG, "TikTok SDK initialized successfully with App ID: $TIKTOK_APP_ID")
-        } catch (e: Exception) {
-            Log.e(TAG, "TikTok SDK initialization error: ${e.message}")
-        }
+        // TikTok SDK removed - not available in public Maven repositories
+        // Events are logged locally for debugging purposes
+        // For production event tracking, implement server-side TikTok Events API
+        Log.d(TAG, "TikTok event tracking initialized (local logging mode) with App ID: $TIKTOK_APP_ID")
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -34,8 +29,8 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
                 "initialize" -> {
                     try {
-                        // SDK already initialized in onCreate
-                        Log.d(TAG, "TikTok SDK initialization confirmed: $isInitialized")
+                        // Local logging mode - always initialized
+                        Log.d(TAG, "TikTok event tracking confirmed (local mode): $isInitialized")
                         result.success(isInitialized)
                     } catch (e: Exception) {
                         Log.e(TAG, "Initialization check error: ${e.message}")
@@ -44,20 +39,14 @@ class MainActivity : FlutterActivity() {
                 }
                 "logEvent" -> {
                     try {
-                        if (!isInitialized) {
-                            Log.w(TAG, "TikTok SDK not initialized, cannot log event")
-                            result.success(false)
-                            return@setMethodCallHandler
-                        }
-                        
                         val eventName = call.argument<String>("eventName")
                         val parameters = call.argument<Map<String, Any>>("parameters")
                         
                         if (eventName != null) {
-                            // Log event to TikTok Business SDK
+                            // Log event locally (TikTok SDK not available)
                             logTikTokEvent(eventName, parameters ?: emptyMap())
                             
-                            Log.d(TAG, "TikTok Event tracked: $eventName with parameters: $parameters")
+                            Log.d(TAG, "TikTok Event logged locally: $eventName with parameters: $parameters")
                             result.success(true)
                         } else {
                             result.error("INVALID_ARGUMENT", "Event name is required", null)
@@ -74,25 +63,32 @@ class MainActivity : FlutterActivity() {
     
     private fun logTikTokEvent(eventName: String, parameters: Map<String, Any>) {
         try {
-            // Convert parameters to JSON for TikTok event tracking
+            // Convert parameters to JSON for logging
             val eventData = JSONObject()
             parameters.forEach { (key, value) ->
                 eventData.put(key, value)
             }
             
-            // Track event using TikTok SDK
-            // Note: TikTok's Android SDK primarily focuses on sharing functionality
-            // For comprehensive event tracking, consider implementing TikTok Events API server-side
+            // Log event locally - TikTok Open SDK not available in public Maven repositories
+            // For production event tracking, implement server-side TikTok Events API
             // https://business-api.tiktok.com/portal/docs?id=1741601162187777
             
-            Log.i(TAG, "TikTok Event Data: $eventName - $eventData")
+            Log.i(TAG, "TikTok Event Data (local logging): $eventName - $eventData")
             
-            // TODO: If full event tracking is needed, implement server-side TikTok Events API
-            // This would involve sending events from your backend server to TikTok's Business API
-            // with proper authentication and pixel code
+            // RECOMMENDED: Implement server-side TikTok Events API for production
+            // Benefits:
+            // - More reliable tracking
+            // - Better privacy compliance  
+            // - No dependency on client SDK availability
+            // - Consistent tracking across platforms
+            //
+            // Implementation:
+            // 1. Send events from Flutter app to your backend server
+            // 2. Backend forwards events to TikTok Events API with proper authentication
+            // 3. Use TikTok Pixel Code and Access Token for authentication
             
         } catch (e: Exception) {
-            Log.e(TAG, "Error tracking TikTok event: ${e.message}")
+            Log.e(TAG, "Error logging TikTok event: ${e.message}")
         }
     }
 }
