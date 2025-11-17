@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:dazzify/core/util/extensions.dart';
 
 /// Custom page route builder that enables swipe-back navigation on all platforms.
 /// On iOS: Uses native Cupertino swipe-back gesture
@@ -98,7 +99,8 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _canPop = false;
       return;
     }
-    _canPop = Navigator.of(context).canPop();
+    // Use AutoRouter to check if we can pop, which handles nested navigation correctly
+    _canPop = context.router.canPop();
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -141,7 +143,8 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     if (_dragDistance > threshold || effectiveVelocity > 500) {
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
-          Navigator.of(context).pop();
+          // Use AutoRouter's maybePop for proper nested navigation handling
+          context.maybePop();
         }
       });
     } else {
@@ -275,9 +278,8 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       return;
     }
 
-    // Check if we can actually pop
-    final navigator = Navigator.maybeOf(context);
-    _canPop = navigator != null && navigator.canPop();
+    // Use AutoRouter to check if we can pop, which handles nested navigation correctly
+    _canPop = context.router.canPop();
     
     if (_canPop) {
       setState(() {
@@ -330,10 +332,8 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
-          final navigator = Navigator.maybeOf(context);
-          if (navigator != null && navigator.canPop()) {
-            navigator.pop();
-          }
+          // Use AutoRouter's maybePop for proper nested navigation handling
+          context.maybePop();
           _resetDrag();
         }
       });
