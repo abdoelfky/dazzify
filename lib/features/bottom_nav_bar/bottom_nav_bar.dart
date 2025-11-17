@@ -122,8 +122,8 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(context) {
-    return SwipeBackScope(
-      enabled: false, // Disable swipe-back for main navigation screen
+    return SwipeBackNavigator(
+      // enabled: false, // Disable swipe-back for main navigation screen
       child: MultiBlocListener(
         listeners: [
           BlocListener<TokensCubit, TokensState>(
