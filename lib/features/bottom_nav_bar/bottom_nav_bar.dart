@@ -46,7 +46,7 @@ class _BottomNavBarState extends State<BottomNavBar>
     const ProfileRoute(),
   ];
   late BookingCubit bookingCubit;
-  
+
   // Swipe back animation controller
   late AnimationController _swipeController;
   double _dragDistance = 0.0;
@@ -85,7 +85,7 @@ class _BottomNavBarState extends State<BottomNavBar>
       socketCubit.connectToWebSocket();
       bookingReviewCubit.getMissedBookingReview();
     }
-    
+
     DeepLinkingHelper.init();
     // NotificationsService.onClickNotification.stream.listen((event) {
     //   _handleNotificationClick(event);
@@ -138,7 +138,7 @@ class _BottomNavBarState extends State<BottomNavBar>
         ),
         BlocListener<UserCubit, UserState>(
           listenWhen: (previous, current) =>
-              previous.userState != current.userState,
+          previous.userState != current.userState,
           listener: (context, state) {
             if (state.userState == UiState.success) {
               if (state.userModel.deletedAt.isNotEmpty) {
@@ -153,9 +153,10 @@ class _BottomNavBarState extends State<BottomNavBar>
           },
         ),
       ],
-      child: AutoTabsBuilder(
+      child: AutoTabsRouter(
         routes: routes,
-        builder: (context, child, tabsRouter) {
+        builder: (context, child) {
+          final tabsRouter = context.tabsRouter;
           return BackButtonListener(
             onBackButtonPressed: () async {
               // If not on first tab, go to previous tab
@@ -175,100 +176,100 @@ class _BottomNavBarState extends State<BottomNavBar>
                 builder: (context, scaffoldChild) {
                   final screenWidth = MediaQuery.of(context).size.width;
                   final textDirection = Directionality.of(context);
-                  
+
                   // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
                   final offset = textDirection == TextDirection.rtl
                       ? -(_swipeController.value * screenWidth)
                       : _swipeController.value * screenWidth;
-                  
+
                   return Transform.translate(
                     offset: Offset(offset, 0),
                     child: scaffoldChild,
                   );
                 },
                 child: Scaffold(
-                    resizeToAvoidBottomInset: false,
-                    extendBody: true,
-                    body: child,
-                    bottomNavigationBar: ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 15,
-                          sigmaY: 15,
-                        ),
-                        child: SizedBox(
-                          height: 60.h,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: SingleChildScrollView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: BottomNavigationBar(
-                                currentIndex: tabsRouter.activeIndex,
-                                onTap: (value) {
-                                  handleNavbarItemTap(
-                                    value: value,
-                                    tabsRouter: tabsRouter,
-                                  );
-                                },
-                                items: [
-                                  BottomNavigationBarItem(
-                                    icon: Icon(
-                                      SolarIconsOutline.home,
-                                      size: 26.r,
-                                    ),
-                                    label: '',
+                  resizeToAvoidBottomInset: false,
+                  extendBody: true,
+                  body: child,
+                  bottomNavigationBar: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 15,
+                        sigmaY: 15,
+                      ),
+                      child: SizedBox(
+                        height: 60.h,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SingleChildScrollView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            child: BottomNavigationBar(
+                              currentIndex: tabsRouter.activeIndex,
+                              onTap: (value) {
+                                handleNavbarItemTap(
+                                  value: value,
+                                  tabsRouter: tabsRouter,
+                                );
+                              },
+                              items: [
+                                BottomNavigationBarItem(
+                                  icon: Icon(
+                                    SolarIconsOutline.home,
+                                    size: 26.r,
                                   ),
-                                  BottomNavigationBarItem(
-                                    icon: Icon(
-                                      SolarIconsOutline.videoLibrary,
-                                      size: 26.r,
-                                    ),
-                                    label: '',
+                                  label: '',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(
+                                    SolarIconsOutline.videoLibrary,
+                                    size: 26.r,
                                   ),
-                                  BottomNavigationBarItem(
-                                    icon: Icon(
-                                      SolarIconsOutline.magnifier,
-                                      size: 26.r,
-                                    ),
-                                    label: '',
+                                  label: '',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(
+                                    SolarIconsOutline.magnifier,
+                                    size: 26.r,
                                   ),
-                                  BottomNavigationBarItem(
-                                    icon: Icon(
-                                      SolarIconsOutline.chatRoundLine,
-                                      size: 26.r,
-                                    ),
-                                    label: '',
+                                  label: '',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(
+                                    SolarIconsOutline.chatRoundLine,
+                                    size: 26.r,
                                   ),
-                                  BottomNavigationBarItem(
-                                    icon: BlocBuilder<UserCubit, UserState>(
-                                      builder: (BuildContext context, UserState state) {
-                                        return SizedBox(
+                                  label: '',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: BlocBuilder<UserCubit, UserState>(
+                                    builder: (BuildContext context, UserState state) {
+                                      return SizedBox(
+                                        width: 32.r,
+                                        height: 32.r,
+                                        child: DazzifyRoundedPicture(
+                                          imageUrl: state.userModel.picture,
                                           width: 32.r,
                                           height: 32.r,
-                                          child: DazzifyRoundedPicture(
-                                            imageUrl: state.userModel.picture,
-                                            width: 32.r,
-                                            height: 32.r,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    label: '',
-                                    activeIcon: BlocBuilder<UserCubit, UserState>(
-                                      builder: (context, state) =>
-                                          NavActiveProfilePicture(
-                                        imagePath: state.userModel.picture ?? "",
-                                      ),
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ],
-                              ),
+                                  label: '',
+                                  activeIcon: BlocBuilder<UserCubit, UserState>(
+                                    builder: (context, state) =>
+                                        NavActiveProfilePicture(
+                                          imagePath: state.userModel.picture ?? "",
+                                        ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
+                ),
               ),
             ),
           );
@@ -289,16 +290,16 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   void _handleDragStart(DragStartDetails details, TabsRouter tabsRouter) {
     if (tabsRouter.activeIndex == 0) return; // Can't go back from first tab
-    
+
     final screenWidth = MediaQuery.of(context).size.width;
     final textDirection = Directionality.of(context);
     final startPosition = details.globalPosition.dx;
-    
+
     // For RTL, swipe from right edge. For LTR, swipe from left edge
     final isValidSwipePosition = textDirection == TextDirection.rtl
         ? startPosition > screenWidth - 80  // Right edge for RTL
         : startPosition < 80;                // Left edge for LTR
-    
+
     if (isValidSwipePosition) {
       setState(() {
         _isDragging = true;
@@ -312,16 +313,16 @@ class _BottomNavBarState extends State<BottomNavBar>
 
     final textDirection = Directionality.of(context);
     final delta = details.primaryDelta ?? 0;
-    
+
     setState(() {
       // For RTL, drag left (negative delta) means going back
       // For LTR, drag right (positive delta) means going back
       final dragValue = textDirection == TextDirection.rtl ? -delta : delta;
       _dragDistance += dragValue;
-      
+
       // Clamp drag distance to prevent negative values
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
-      
+
       // Update animation controller based on drag progress
       final screenWidth = MediaQuery.of(context).size.width;
       _swipeController.value = (_dragDistance / screenWidth).clamp(0.0, 1.0);
@@ -335,7 +336,7 @@ class _BottomNavBarState extends State<BottomNavBar>
     final threshold = screenWidth * 0.25; // 25% of screen width
     final velocity = details.primaryVelocity ?? 0;
     final textDirection = Directionality.of(context);
-    
+
     // For RTL, negative velocity means swiping left (back gesture)
     // For LTR, positive velocity means swiping right (back gesture)
     final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
