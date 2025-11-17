@@ -139,27 +139,27 @@ class _BookingStatusHeaderComponentState
       width: 130.w,
       height: 35.h,
       onTap: () {
-        bookingCubit.state.singleBooking.rating.rate!=0.0
-            ? null
-            : showModalBottomSheet(
-                context: context,
-                useRootNavigator: true,
-                isScrollControlled: true,
-                routeSettings: const RouteSettings(
-                  name: "ReviewSheet",
-                ),
-                builder: (context) {
-                  return BlocProvider.value(
-                    value: bookingCubit,
-                    child: const AddReviewSheet(),
-                  );
-                },
+        if (bookingCubit.state.singleBooking.rating.rate == 0.0) {
+          showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            routeSettings: const RouteSettings(
+              name: "ReviewSheet",
+            ),
+            builder: (context) {
+              return BlocProvider.value(
+                value: bookingCubit,
+                child: const AddReviewSheet(),
               );
+            },
+          );
+        }
       },
-      title: bookingCubit.state.singleBooking.rating.rate!=0.0
+      title: bookingCubit.state.singleBooking.rating.rate != 0.0
           ? bookingCubit.state.singleBooking.rating.rate.toString()
           : context.tr.rateService,
-      prefixWidget: bookingCubit.state.singleBooking.rating.rate!=0.0
+      prefixWidget: bookingCubit.state.singleBooking.rating.rate != 0.0
           ? SvgPicture.asset(
               AssetsManager.rateStarBold,
               height: 16.h,
