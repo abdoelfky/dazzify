@@ -4,6 +4,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// Inherited widget to control swipe-back behavior for specific screens
+class SwipeBackScope extends InheritedWidget {
+  final bool enabled;
+
+  const SwipeBackScope({
+    super.key,
+    required this.enabled,
+    required super.child,
+  });
+
+  static bool of(BuildContext context) {
+    final scope = context.dependOnInheritedWidgetOfExactType<SwipeBackScope>();
+    return scope?.enabled ?? true;
+  }
+
+  @override
+  bool updateShouldNotify(SwipeBackScope oldWidget) {
+    return enabled != oldWidget.enabled;
+  }
+}
+
 /// Custom page route builder that enables swipe-back navigation on all platforms.
 /// On iOS: Uses native Cupertino swipe-back gesture
 /// On Android and other platforms: Implements custom swipe-back gesture
@@ -259,14 +280,22 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
   }
 
   void _handleDragStart(DragStartDetails details) {
+    // Check if swipe-back is enabled for this screen
+    final swipeBackEnabled = SwipeBackScope.of(context);
+    if (!swipeBackEnabled) {
+      _canPop = false;
+      return;
+    }
+
     final screenWidth = MediaQuery.of(context).size.width;
     final textDirection = Directionality.of(context);
     final startPosition = details.globalPosition.dx;
     
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
+    // Increased edge detection zone to 80px for better UX
     final isValidSwipePosition = textDirection == TextDirection.rtl
-        ? startPosition > screenWidth - 50  // Right edge for RTL
-        : startPosition < 50;                // Left edge for LTR
+        ? startPosition > screenWidth - 80  // Right edge for RTL
+        : startPosition < 80;                // Left edge for LTR
     
     if (!isValidSwipePosition) {
       _canPop = false;
@@ -315,7 +344,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final threshold = screenWidth * 0.35; // 35% of screen width
+    final threshold = screenWidth * 0.25; // Reduced to 25% for easier swipe
     final velocity = details.primaryVelocity ?? 0;
     final textDirection = Directionality.of(context);
     
@@ -324,7 +353,8 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
 
     // Pop if dragged beyond threshold or if velocity is high enough
-    if (_dragDistance > threshold || effectiveVelocity > 700) {
+    // Reduced velocity threshold to 500 for more responsive feel
+    if (_dragDistance > threshold || effectiveVelocity > 500) {
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
@@ -373,17 +403,23 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
           
           return Stack(
             children: [
-              // Previous screen shadow/overlay
-              if (_controller.value > 0)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3 * (1 - _controller.value)),
-                  ),
-                ),
-              // Current screen
+              // Current screen with slide animation
               Transform.translate(
                 offset: Offset(offset, 0),
-                child: child,
+                child: Container(
+                  decoration: _controller.value > 0
+                      ? BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3 * _controller.value),
+                              blurRadius: 10 * _controller.value,
+                              spreadRadius: 0,
+                            ),
+                          ],
+                        )
+                      : null,
+                  child: child,
+                ),
               ),
             ],
           );
