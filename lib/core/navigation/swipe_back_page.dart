@@ -89,9 +89,10 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     final startPosition = details.localPosition.dx;
     
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
+    // Increased swipe area from 50px to 80px for easier gesture activation
     final isValidSwipePosition = textDirection == TextDirection.rtl
-        ? startPosition > screenWidth - 50  // Right edge for RTL
-        : startPosition < 50;                // Left edge for LTR
+        ? startPosition > screenWidth - 80  // Right edge for RTL
+        : startPosition < 80;                // Left edge for LTR
     
     if (!isValidSwipePosition) {
       _canPop = false;
@@ -128,7 +129,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     }
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final threshold = screenWidth * 0.3; // 30% of screen width
+    final threshold = screenWidth * 0.25; // 25% of screen width (reduced for easier activation)
     final velocity = details.primaryVelocity ?? 0;
     final textDirection = Directionality.of(context);
     
@@ -264,9 +265,10 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     final startPosition = details.globalPosition.dx;
     
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
+    // Increased swipe area from 50px to 80px for easier gesture activation
     final isValidSwipePosition = textDirection == TextDirection.rtl
-        ? startPosition > screenWidth - 50  // Right edge for RTL
-        : startPosition < 50;                // Left edge for LTR
+        ? startPosition > screenWidth - 80  // Right edge for RTL
+        : startPosition < 80;                // Left edge for LTR
     
     if (!isValidSwipePosition) {
       _canPop = false;
@@ -315,7 +317,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final threshold = screenWidth * 0.35; // 35% of screen width
+    final threshold = screenWidth * 0.25; // 25% of screen width (reduced for easier activation)
     final velocity = details.primaryVelocity ?? 0;
     final textDirection = Directionality.of(context);
     
@@ -324,7 +326,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
 
     // Pop if dragged beyond threshold or if velocity is high enough
-    if (_dragDistance > threshold || effectiveVelocity > 700) {
+    if (_dragDistance > threshold || effectiveVelocity > 500) {
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {

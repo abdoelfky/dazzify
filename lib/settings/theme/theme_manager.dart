@@ -8,6 +8,15 @@ class ThemeManager {
       fontFamily: AppConstants.fontFamily,
       colorScheme: ColorsSchemeManager.light,
       scaffoldBackgroundColor: ColorsSchemeManager.light.surface,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+        },
+      ),
       textTheme: TextTheme(
         displayLarge: TextStyle(
           fontSize: 57.r,
@@ -102,6 +111,15 @@ class ThemeManager {
       fontFamily: AppConstants.fontFamily,
       colorScheme: ColorsSchemeManager.dark,
       scaffoldBackgroundColor: ColorsSchemeManager.dark.surface,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+        },
+      ),
       textTheme: TextTheme(
         displayLarge: TextStyle(
           fontSize: 57,
