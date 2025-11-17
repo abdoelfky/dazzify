@@ -32,7 +32,10 @@ class InvoiceWidget extends StatelessWidget {
             ? service.quantity
             : services.fold<int>(0, (sum, s) => sum + s.quantity);
         final deliveryFees = state.deliveryInfo.selectedDeliveryFees;
-        final appFees = state.invoice.totalPrice - totalPrice - deliveryFees + state.invoice.discountAmount;
+        final isRangeType = state.deliveryInfo.isRangeType;
+        final appFees = !isRangeType 
+            ? state.invoice.totalPrice - totalPrice - deliveryFees + state.invoice.discountAmount
+            : 0.0;
 
         return Column(
           children: [
@@ -66,36 +69,149 @@ class InvoiceWidget extends StatelessWidget {
               title: '${context.tr.servicePrice} ($totalCount ${context.tr.services})',
               amount: totalPrice,
             ),
-            // InvoiceLine(
-            //   title: '${context.tr.servicePrice} (${services.isEmpty ? 1 : services.length} ${context.tr.services})',
-            //   amount: totalPrice,
-            // ),
             InvoiceLine(
               title: context.tr.couponDisc,
               amount: state.invoice.discountAmount,
               isWithBraces: true,
             ),
-            InvoiceLine(
-              title: context.tr.deliferyFees,
-              amount: deliveryFees,
-            ),
-            InvoiceLine(
-              title: context.tr.appFees,
-              amount: double.parse(appFees.toStringAsFixed(2)),
-            ),
+            if (!isRangeType) ...[
+              InvoiceLine(
+                title: context.tr.deliferyFees,
+                amount: deliveryFees,
+              ),
+              InvoiceLine(
+                title: context.tr.appFees,
+                amount: double.parse(appFees.toStringAsFixed(2)),
+              ),
+            ],
+            if (isRangeType) ...[
+              _buildRangeTransportationLine(context, state),
+              _buildPendingAppFeesLine(context),
+            ],
             DottedLine(
               lineWidth: context.screenWidth,
               lineColor: context.colorScheme.onSurface,
             ),
             SizedBox(height: 24.h),
-            InvoiceLine(
-              title: context.tr.totalPrice,
-              amount: state.invoice.totalPrice,
-            ),
+            if (!isRangeType)
+              InvoiceLine(
+                title: context.tr.totalPrice,
+                amount: state.invoice.totalPrice,
+              ),
+            if (isRangeType)
+              _buildPendingTotalLine(context, state),
+            if (isRangeType) ...[
+              SizedBox(height: 8.h),
+              _buildPendingNote(context),
+            ],
             SizedBox(height: 8.h),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildRangeTransportationLine(BuildContext context, ServiceInvoiceState state) {
+    final min = state.deliveryInfo.minDeliveryFees ?? 0;
+    final max = state.deliveryInfo.maxDeliveryFees ?? 0;
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0).r,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          DText(
+            context.tr.deliferyFees,
+            style: context.textTheme.bodyMedium,
+          ),
+          DText(
+            "${reformatPriceWithCommas(min)}-${reformatPriceWithCommas(max)} ${context.tr.egp}",
+            style: context.textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPendingAppFeesLine(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0).r,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          DText(
+            context.tr.appFees,
+            style: context.textTheme.bodyMedium,
+          ),
+          DText(
+            context.tr.willBeCalculated,
+            style: context.textTheme.bodySmall!.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPendingTotalLine(BuildContext context, ServiceInvoiceState state) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0).r,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          DText(
+            context.tr.totalPrice,
+            style: context.textTheme.titleMedium,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              DText(
+                "${reformatPriceWithCommas(state.invoice.totalPrice)} ${context.tr.egp}",
+                style: context.textTheme.titleMedium,
+              ),
+              SizedBox(height: 4.h),
+              DText(
+                context.tr.plusTransportationAndFees,
+                style: context.textTheme.bodySmall!.copyWith(
+                  color: context.colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPendingNote(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12).r,
+      decoration: BoxDecoration(
+        color: context.colorScheme.inversePrimary.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(8).r,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            SolarIconsOutline.infoCircle,
+            size: 16.r,
+            color: context.colorScheme.primary,
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: DText(
+              context.tr.finalPriceAfterProviderAccepts,
+              style: context.textTheme.bodySmall!.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

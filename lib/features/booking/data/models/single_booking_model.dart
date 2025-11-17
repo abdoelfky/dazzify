@@ -9,6 +9,30 @@ import 'package:json_annotation/json_annotation.dart';
 part 'single_booking_model.g.dart';
 
 @JsonSerializable()
+class DeliveryFeesRange {
+  @JsonKey(defaultValue: 0)
+  final num from;
+
+  @JsonKey(defaultValue: 0)
+  final num to;
+
+  const DeliveryFeesRange({
+    required this.from,
+    required this.to,
+  });
+
+  const DeliveryFeesRange.empty({
+    this.from = 0,
+    this.to = 0,
+  });
+
+  factory DeliveryFeesRange.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryFeesRangeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DeliveryFeesRangeToJson(this);
+}
+
+@JsonSerializable()
 class SingleBookingModel {
   @JsonKey(defaultValue: "")
   final String id;
@@ -36,6 +60,8 @@ class SingleBookingModel {
 
   @JsonKey(defaultValue: 0)
   final int deliveryFees;
+
+  final DeliveryFeesRange? deliveryFeesRange;
 
   @JsonKey(defaultValue: 0)
   final int totalPrice;
@@ -74,6 +100,7 @@ class SingleBookingModel {
     required this.couponDis,
     required this.fees,
     required this.deliveryFees,
+    this.deliveryFeesRange,
     required this.totalPrice,
     required this.status,
     required this.isFinished,
@@ -98,6 +125,7 @@ class SingleBookingModel {
     this.couponDis = 0,
     this.fees = 0,
     this.deliveryFees = 0,
+    this.deliveryFeesRange,
     this.totalPrice = 0,
     this.status = '',
     this.isFinished = false,
@@ -127,6 +155,7 @@ class SingleBookingModel {
     this.couponDis = 0,
     this.fees = 0,
     this.deliveryFees = 0,
+    this.deliveryFeesRange,
     this.totalPrice = 0,
     this.status = '',
     this.isFinished = false,
@@ -151,6 +180,7 @@ class SingleBookingModel {
     int? couponDis,
     int? fees,
     int? deliveryFees,
+    DeliveryFeesRange? deliveryFeesRange,
     int? totalPrice,
     String? status,
     bool? isFinished,
@@ -174,6 +204,7 @@ class SingleBookingModel {
       couponDis: couponDis ?? this.couponDis,
       fees: fees ?? this.fees,
       deliveryFees: deliveryFees ?? this.deliveryFees,
+      deliveryFeesRange: deliveryFeesRange ?? this.deliveryFeesRange,
       totalPrice: totalPrice ?? this.totalPrice,
       status: status ?? this.status,
       isFinished: isFinished ?? this.isFinished,
@@ -187,4 +218,6 @@ class SingleBookingModel {
       payments: payments ?? this.payments,
     );
   }
+
+  bool get hasRangeDeliveryFees => deliveryFeesRange != null;
 }
