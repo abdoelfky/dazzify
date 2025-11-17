@@ -12,7 +12,7 @@ class TransactionModel {
   @JsonKey(defaultValue: "")
   String status;
   @JsonKey(defaultValue: 0)
-  final int amount;
+  final double amount;
   @JsonKey(defaultValue: 0)
   final int refundAmount;
   @JsonKey(defaultValue: "", name: "expAt")

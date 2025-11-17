@@ -11,7 +11,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String? ?? '',
       bookingId: json['bookingId'] as String? ?? '',
       status: json['status'] as String? ?? '',
-      amount: (json['amount'] as num?)?.toInt() ?? 0,
+      amount: (json['amount'] as num?)?.toDouble() ?? 0,
       refundAmount: (json['refundAmount'] as num?)?.toInt() ?? 0,
       expiredAt: json['expAt'] as String? ?? '',
       createdAt: json['createdAt'] as String? ?? '',
