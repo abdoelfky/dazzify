@@ -6,6 +6,18 @@ part of 'single_booking_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+DeliveryFeesRange _$DeliveryFeesRangeFromJson(Map<String, dynamic> json) =>
+    DeliveryFeesRange(
+      from: json['from'] as num? ?? 0,
+      to: json['to'] as num? ?? 0,
+    );
+
+Map<String, dynamic> _$DeliveryFeesRangeToJson(DeliveryFeesRange instance) =>
+    <String, dynamic>{
+      'from': instance.from,
+      'to': instance.to,
+    };
+
 SingleBookingModel _$SingleBookingModelFromJson(Map<String, dynamic> json) =>
     SingleBookingModel(
       id: json['id'] as String? ?? '',
@@ -18,6 +30,10 @@ SingleBookingModel _$SingleBookingModelFromJson(Map<String, dynamic> json) =>
       couponDis: (json['couponDis'] as num?)?.toInt() ?? 0,
       fees: (json['fees'] as num?)?.toInt() ?? 0,
       deliveryFees: (json['deliveryFees'] as num?)?.toInt() ?? 0,
+      deliveryFeesRange: json['deliveryFeesRange'] == null
+          ? null
+          : DeliveryFeesRange.fromJson(
+              json['deliveryFeesRange'] as Map<String, dynamic>),
       totalPrice: (json['totalPrice'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? '',
       isFinished: json['isFinished'] as bool? ?? false,
@@ -49,6 +65,7 @@ Map<String, dynamic> _$SingleBookingModelToJson(SingleBookingModel instance) =>
       'couponDis': instance.couponDis,
       'fees': instance.fees,
       'deliveryFees': instance.deliveryFees,
+      'deliveryFeesRange': instance.deliveryFeesRange,
       'totalPrice': instance.totalPrice,
       'status': instance.status,
       'notes': instance.notes,

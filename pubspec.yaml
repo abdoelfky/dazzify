@@ -97,7 +97,6 @@ dev_dependencies:
 
 flutter:
 
-
   uses-material-design: true
 
   assets:
@@ -138,7 +137,7 @@ flutter_intl:
 #  cd ios && \
 #  pod update && \
 #  cd ..
-# dart run build_runner --delete-conflicting-outputs
+#  flutter pub run build_runner build --delete-conflicting-outputs
 
 # flutter run --flavor=dev --dart-define=env=dev --split-per-abi
 # flutter build ipa --flavor=prod --dart-define=env=prod

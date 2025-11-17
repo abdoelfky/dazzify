@@ -214,9 +214,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i361.Dio>(() => featuresModule.dioClient);
     gh.factory<_i183.ImagePicker>(() => featuresModule.imagePicker);
     gh.factory<_i183.ImageCropper>(() => featuresModule.imageCropper);
-    gh.singleton<_i462.TokensCubit>(() => featuresModule.tokensCubit);
     gh.singleton<_i162.AppNotificationsCubit>(
         () => featuresModule.appNotificationsCubit);
+    gh.singleton<_i462.TokensCubit>(() => featuresModule.tokensCubit);
     gh.lazySingleton<_i161.InternetConnection>(
         () => featuresModule.internetConnection);
     gh.lazySingleton<_i694.AuthRepository>(() => featuresModule.authRepository);
