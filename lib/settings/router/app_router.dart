@@ -77,7 +77,7 @@ part 'app_router.gr.dart';
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
 class AppRouter extends RootStackRouter {
   @override
-  RouteType get defaultRouteType => RouteType.cupertino();
+  RouteType get defaultRouteType => const RouteType.cupertino();
 
   @override
   List<AutoRoute> get routes => [
@@ -85,38 +85,28 @@ class AppRouter extends RootStackRouter {
           page: UnAuthenticatedRoute.page,
           initial: true,
           children: [
-            CustomRoute(
+            AutoRoute(
               initial: true,
               page: SplashRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: AuthRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: MaintenanceRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: OtpVerifyRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: UserInfoRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
           ],
         ),
         AutoRoute(
           page: AuthenticatedRoute.page,
           children: [
-            CustomRoute(
+            AutoRoute(
               page: BottomNavBarRoute.page,
               initial: true,
               children: [
@@ -124,242 +114,146 @@ class AppRouter extends RootStackRouter {
                   page: HomeTabRoute.page,
                   initial: true,
                   children: [
-                    CustomRoute(
+                    AutoRoute(
                       page: HomeRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                      initial: true,
-                    ),
-                    CustomRoute(
-                      page: MyFavoriteRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: BookingStatusRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: CategoryRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: PopularBrandsRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: TopRatedBrandsRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: PopularServicesRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: NotificationsRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: TopRatedServicesRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
-                    CustomRoute(
-                      page: TransactionRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
-                    ),
+                      initial: true),
+                    AutoRoute(
+                      page: MyFavoriteRoute.page),
+                    AutoRoute(
+                      page: BookingStatusRoute.page),
+                    AutoRoute(
+                      page: CategoryRoute.page),
+                    AutoRoute(
+                      page: PopularBrandsRoute.page),
+                    AutoRoute(
+                      page: TopRatedBrandsRoute.page),
+                    AutoRoute(
+                      page: PopularServicesRoute.page),
+                    AutoRoute(
+                      page: NotificationsRoute.page),
+                    AutoRoute(
+                      page: TopRatedServicesRoute.page),
+                    AutoRoute(
+                      page: TransactionRoute.page),
                   ],
                 ),
                 AutoRoute(
                   page: ReelsTabRoute.page,
                   children: [
-                    CustomRoute(
+                    AutoRoute(
                       initial: true,
                       page: ReelsRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
                   ],
                 ),
                 AutoRoute(
                   page: SearchTabRoute.page,
                   children: [
-                    CustomRoute(
+                    AutoRoute(
                       page: SearchRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: ReelViewerRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
                   ],
                 ),
                 AutoRoute(
                   page: ChatTabRoute.page,
                   children: [
-                    CustomRoute(
+                    AutoRoute(
                       initial: true,
                       page: ConversationsRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
                   ],
                 ),
                 AutoRoute(
                   page: ProfileTabRoute.page,
                   children: [
-                    CustomRoute(
+                    AutoRoute(
                       page: ProfileRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                       initial: true,
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: MyFavoriteRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: BookingsHistoryRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: BookingStatusRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: IssueRoutes.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                       children: [
-                        CustomRoute(
-                          page: IssueRoute.page,
-                          transitionsBuilder: TransitionsBuilders.fadeIn,
-                          durationInMilliseconds: 300,
-                        ),
-                        CustomRoute(
-                          page: IssueStatusRoute.page,
-                          transitionsBuilder: TransitionsBuilders.fadeIn,
-                          durationInMilliseconds: 300,
-                        ),
+                        AutoRoute(
+                          page: IssueRoute.page),
+                        AutoRoute(
+                          page: IssueStatusRoute.page),
                       ],
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: PaymentRoutes.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
                       children: [
-                        CustomRoute(
-                          page: TransactionRoute.page,
-                          transitionsBuilder: TransitionsBuilders.fadeIn,
-                          durationInMilliseconds: 300,
-                        ),
-                        CustomRoute(
-                          page: PaymentMethodRoute.page,
-                          transitionsBuilder: TransitionsBuilders.fadeIn,
-                          durationInMilliseconds: 300,
-                        ),
+                        AutoRoute(
+                          page: TransactionRoute.page),
+                        AutoRoute(
+                          page: PaymentMethodRoute.page),
                       ],
                     ),
                   ],
                 ),
               ],
             ),
-            CustomRoute(
+            AutoRoute(
               page: ChatRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: UserLocationRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: ViewLocationRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: DazzifyPhotoViewerRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: BrandProfileRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: BrandPostsRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: SearchPostRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: BrandReelsRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: ServiceDetailsRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: SeeAllReviewsRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: ServiceBookingConfirmationRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: BrandServiceBookingRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: ServiceAvailabilityRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: MultipleServiceAvailabilityRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: ServiceInvoiceRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: PaymentWebViewRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
-            CustomRoute(
+            AutoRoute(
               page: WebViewRoute.page,
-              transitionsBuilder: TransitionsBuilders.fadeIn,
-              durationInMilliseconds: 300,
             ),
           ],
         )

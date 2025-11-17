@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
-import 'package:dazzify/core/navigation/swipe_back_page.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
@@ -62,24 +60,19 @@ class _DazzifyAppState extends State<DazzifyApp> {
               BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
               return GestureDetector(
+                // Allow underlying gestures (swipe-back) to work
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   FocusScope.of(context).unfocus();
                 },
                 child: MaterialApp.router(
                   debugShowCheckedModeBanner: false,
                   builder: (context, child) {
-                    Widget wrappedChild = child!;
-
-                    // Enable swipe-back gesture on all platforms
-                    if (!kIsWeb) {
-                      wrappedChild = SwipeBackNavigator(child: wrappedChild);
-                    }
-
                     return MediaQuery(
                       data: MediaQuery.of(context).copyWith(
                         textScaler: TextScaler.noScaling,
                       ),
-                      child: wrappedChild,
+                      child: child!,
                     );
                   },
                   routerConfig: getIt<AppRouter>().config(
