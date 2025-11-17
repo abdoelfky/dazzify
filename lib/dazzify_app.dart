@@ -70,8 +70,8 @@ class _DazzifyAppState extends State<DazzifyApp> {
                   builder: (context, child) {
                     Widget wrappedChild = child!;
 
-                    // On Android and other non-iOS platforms, wrap with swipe-back gesture
-                    if (!kIsWeb && !Platform.isIOS) {
+                    // Enable swipe-back gesture on all platforms
+                    if (!kIsWeb) {
                       wrappedChild = SwipeBackNavigator(child: wrappedChild);
                     }
 
