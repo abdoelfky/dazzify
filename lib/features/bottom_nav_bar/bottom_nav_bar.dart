@@ -30,7 +30,7 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   late DateTime timeNow;
   late AppNotificationsCubit notificationsCubit;
   late TokensCubit tokensCubit;
@@ -47,6 +47,11 @@ class _BottomNavBarState extends State<BottomNavBar>
     const ProfileRoute(),
   ];
   late BookingCubit bookingCubit;
+  
+  // Swipe back animation controller
+  late AnimationController _swipeController;
+  double _dragDistance = 0.0;
+  bool _isDragging = false;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -62,6 +67,10 @@ class _BottomNavBarState extends State<BottomNavBar>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    _swipeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
     notificationsCubit = context.read<AppNotificationsCubit>();
     bookingCubit = context.read<BookingCubit>();
     tokensCubit = context.read<TokensCubit>();
@@ -88,6 +97,7 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   void dispose() {
+    _swipeController.dispose();
     mainCategories.clear();
     socketCubit.disconnectWebSocket();
     super.dispose();
@@ -122,125 +132,149 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(context) {
-    return SwipeBackNavigator(
-      // enabled: false, // Disable swipe-back for main navigation screen
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<TokensCubit, TokensState>(
-            listener: (context, state) {},
-          ),
-          BlocListener<UserCubit, UserState>(
-            listenWhen: (previous, current) =>
-                previous.userState != current.userState,
-            listener: (context, state) {
-              if (state.userState == UiState.success) {
-                if (state.userModel.deletedAt.isNotEmpty) {
-                  tokensCubit.emitSessionExpired();
-                } else if (state.userModel.languagePreference !=
-                    settingsCubit.currentLanguageCode) {
-                  userCubit.updateProfileLang(
-                    lang: settingsCubit.currentLanguageCode,
-                  );
-                }
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<TokensCubit, TokensState>(
+          listener: (context, state) {},
+        ),
+        BlocListener<UserCubit, UserState>(
+          listenWhen: (previous, current) =>
+              previous.userState != current.userState,
+          listener: (context, state) {
+            if (state.userState == UiState.success) {
+              if (state.userModel.deletedAt.isNotEmpty) {
+                tokensCubit.emitSessionExpired();
+              } else if (state.userModel.languagePreference !=
+                  settingsCubit.currentLanguageCode) {
+                userCubit.updateProfileLang(
+                  lang: settingsCubit.currentLanguageCode,
+                );
               }
-            },
-          ),
-        ],
-        child: AutoTabsScaffold(
-        resizeToAvoidBottomInset: false,
-        extendBody: true,
+            }
+          },
+        ),
+      ],
+      child: AutoTabsBuilder(
         routes: routes,
-        homeIndex: 0,
-        bottomNavigationBuilder: (_, tabsRouter) {
-          return PopScope(
-            canPop: tabsRouter.activeIndex < 1,
-            onPopInvokedWithResult: (didPop, result) {
-              if (tabsRouter.activeIndex != 0) {
+        builder: (context, child, tabsRouter) {
+          return BackButtonListener(
+            onBackButtonPressed: () async {
+              // If not on first tab, go to previous tab
+              if (tabsRouter.activeIndex > 0) {
                 tabsRouter.setActiveIndex(tabsRouter.activeIndex - 1);
+                return true; // Prevent default back behavior
               }
+              return false; // Allow default back behavior (exit app)
             },
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: 15,
-                  sigmaY: 15,
-                ),
-                child: SizedBox(
-                  height: 60.h,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      child: BottomNavigationBar(
-                        currentIndex: tabsRouter.activeIndex,
-                        onTap: (value) {
-                          handleNavbarItemTap(
-                            value: value,
-                            tabsRouter: tabsRouter,
-                          );
-                        },
-                        items: [
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.home,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.videoLibrary,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.magnifier,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.chatRoundLine,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: BlocBuilder<UserCubit, UserState>(
-                              builder: (BuildContext context, UserState state) {
-                                return SizedBox(
-                                  width: 32.r,
-                                  height: 32.r,
-                                  child: DazzifyRoundedPicture(
-                                    imageUrl: state.userModel.picture,
-                                    width: 32.r,
-                                    height: 32.r,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onHorizontalDragStart: (details) => _handleDragStart(details, tabsRouter),
+              onHorizontalDragUpdate: _handleDragUpdate,
+              onHorizontalDragEnd: (details) => _handleDragEnd(details, tabsRouter),
+              child: AnimatedBuilder(
+                animation: _swipeController,
+                builder: (context, scaffoldChild) {
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  final textDirection = Directionality.of(context);
+                  
+                  // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
+                  final offset = textDirection == TextDirection.rtl
+                      ? -(_swipeController.value * screenWidth)
+                      : _swipeController.value * screenWidth;
+                  
+                  return Transform.translate(
+                    offset: Offset(offset, 0),
+                    child: scaffoldChild,
+                  );
+                },
+                child: Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    extendBody: true,
+                    body: child,
+                    bottomNavigationBar: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 15,
+                          sigmaY: 15,
+                        ),
+                        child: SizedBox(
+                          height: 60.h,
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: SingleChildScrollView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              child: BottomNavigationBar(
+                                currentIndex: tabsRouter.activeIndex,
+                                onTap: (value) {
+                                  handleNavbarItemTap(
+                                    value: value,
+                                    tabsRouter: tabsRouter,
+                                  );
+                                },
+                                items: [
+                                  BottomNavigationBarItem(
+                                    icon: Icon(
+                                      SolarIconsOutline.home,
+                                      size: 26.r,
+                                    ),
+                                    label: '',
                                   ),
-                                );
-                              },
-                            ),
-                            label: '',
-                            activeIcon: BlocBuilder<UserCubit, UserState>(
-                              builder: (context, state) =>
-                                  NavActiveProfilePicture(
-                                imagePath: state.userModel.picture ?? "",
+                                  BottomNavigationBarItem(
+                                    icon: Icon(
+                                      SolarIconsOutline.videoLibrary,
+                                      size: 26.r,
+                                    ),
+                                    label: '',
+                                  ),
+                                  BottomNavigationBarItem(
+                                    icon: Icon(
+                                      SolarIconsOutline.magnifier,
+                                      size: 26.r,
+                                    ),
+                                    label: '',
+                                  ),
+                                  BottomNavigationBarItem(
+                                    icon: Icon(
+                                      SolarIconsOutline.chatRoundLine,
+                                      size: 26.r,
+                                    ),
+                                    label: '',
+                                  ),
+                                  BottomNavigationBarItem(
+                                    icon: BlocBuilder<UserCubit, UserState>(
+                                      builder: (BuildContext context, UserState state) {
+                                        return SizedBox(
+                                          width: 32.r,
+                                          height: 32.r,
+                                          child: DazzifyRoundedPicture(
+                                            imageUrl: state.userModel.picture,
+                                            width: 32.r,
+                                            height: 32.r,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    label: '',
+                                    activeIcon: BlocBuilder<UserCubit, UserState>(
+                                      builder: (context, state) =>
+                                          NavActiveProfilePicture(
+                                        imagePath: state.userModel.picture ?? "",
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
               ),
             ),
           );
         },
       ),
-      ), // Close SwipeBackScope
     );
   }
 
@@ -252,5 +286,83 @@ class _BottomNavBarState extends State<BottomNavBar>
     } else {
       tabsRouter.setActiveIndex(value);
     }
+  }
+
+  void _handleDragStart(DragStartDetails details, TabsRouter tabsRouter) {
+    if (tabsRouter.activeIndex == 0) return; // Can't go back from first tab
+    
+    final screenWidth = MediaQuery.of(context).size.width;
+    final textDirection = Directionality.of(context);
+    final startPosition = details.globalPosition.dx;
+    
+    // For RTL, swipe from right edge. For LTR, swipe from left edge
+    final isValidSwipePosition = textDirection == TextDirection.rtl
+        ? startPosition > screenWidth - 80  // Right edge for RTL
+        : startPosition < 80;                // Left edge for LTR
+    
+    if (isValidSwipePosition) {
+      setState(() {
+        _isDragging = true;
+        _dragDistance = 0.0;
+      });
+    }
+  }
+
+  void _handleDragUpdate(DragUpdateDetails details) {
+    if (!_isDragging) return;
+
+    final textDirection = Directionality.of(context);
+    final delta = details.primaryDelta ?? 0;
+    
+    setState(() {
+      // For RTL, drag left (negative delta) means going back
+      // For LTR, drag right (positive delta) means going back
+      final dragValue = textDirection == TextDirection.rtl ? -delta : delta;
+      _dragDistance += dragValue;
+      
+      // Clamp drag distance to prevent negative values
+      _dragDistance = _dragDistance.clamp(0.0, double.infinity);
+      
+      // Update animation controller based on drag progress
+      final screenWidth = MediaQuery.of(context).size.width;
+      _swipeController.value = (_dragDistance / screenWidth).clamp(0.0, 1.0);
+    });
+  }
+
+  void _handleDragEnd(DragEndDetails details, TabsRouter tabsRouter) {
+    if (!_isDragging) return;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final threshold = screenWidth * 0.25; // 25% of screen width
+    final velocity = details.primaryVelocity ?? 0;
+    final textDirection = Directionality.of(context);
+    
+    // For RTL, negative velocity means swiping left (back gesture)
+    // For LTR, positive velocity means swiping right (back gesture)
+    final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
+
+    // Navigate back if dragged beyond threshold or if velocity is high enough
+    if (_dragDistance > threshold || effectiveVelocity > 500) {
+      // Animate to completion and then navigate back
+      _swipeController.animateTo(1.0, curve: Curves.easeOut).then((_) {
+        if (mounted && tabsRouter.activeIndex > 0) {
+          tabsRouter.setActiveIndex(tabsRouter.activeIndex - 1);
+        }
+        _resetDrag();
+      });
+    } else {
+      _resetDrag();
+    }
+  }
+
+  void _resetDrag() {
+    _swipeController.animateTo(0.0, curve: Curves.easeOut).then((_) {
+      if (mounted) {
+        setState(() {
+          _dragDistance = 0.0;
+          _isDragging = false;
+        });
+      }
+    });
   }
 }
