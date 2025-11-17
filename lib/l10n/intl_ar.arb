@@ -406,7 +406,10 @@
   "iAgreeToTerms": "أوافق على الشروط والأحكام",
   "noServicesAtThisCategory": "لا توجد خدمات حالياً في هذا القسم",
   "pleaseApplyCoupon": "يرجى تطبيق رمز الكوبون قبل التأكيد",
-  "providerNotDeliver": "المزود لا يقدم الخدمة في أي منطقة حالياً."
+  "providerNotDeliver": "المزود لا يقدم الخدمة في أي منطقة حالياً.",
+  "willBeCalculated": "سيتم حسابه",
+  "plusTransportationAndFees": "بالإضافة إلى رسوم النقل والخدمات",
+  "finalPriceAfterProviderAccepts": "السعر النهائي بعد قبول مزود الخدمة"
 
 
 }
