@@ -6,12 +6,14 @@ class TransactionButton extends StatefulWidget {
   final String status;
   final String serviceName;
   final String transactionId;
+  final double? amount;
 
   const TransactionButton({
     super.key,
     required this.status,
     required this.serviceName,
     required this.transactionId,
+    this.amount,
   });
 
   @override
@@ -34,8 +36,12 @@ class _TransactionButtonState extends State<TransactionButton> {
       case PaymentStatus.cancelled:
         return const SizedBox.shrink();
       case PaymentStatus.notPaid:
+        final String buttonTitle = widget.amount != null
+            ? '${context.tr.pay} ${widget.amount!.toInt()} ${context.tr.egp}'
+            : context.tr.pay;
+        
         return PrimaryButton(
-          width: 100.w,
+          width: widget.amount != null ? null : 100.w,
           height: 40.h,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(8),
@@ -43,9 +49,8 @@ class _TransactionButtonState extends State<TransactionButton> {
             bottomRight: Radius.circular(8),
             bottomLeft: Radius.circular(32),
           ).r,
-          title: context.tr.pay,
+          title: buttonTitle,
           onTap: () {
-
             context
                 .pushRoute(
               PaymentMethodRoute(
@@ -54,9 +59,6 @@ class _TransactionButtonState extends State<TransactionButton> {
               ),
             )
                 .then((onValue) {
-              print('ddddd');
-              // final updatedStatus = await context.read<TransactionBloc>().getStatus(widget.transactionId);
-
               setState(() {
                 paymentStatus = getPaymentStatus(widget.status);
               });
