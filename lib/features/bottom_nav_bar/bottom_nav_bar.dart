@@ -153,9 +153,10 @@ class _BottomNavBarState extends State<BottomNavBar>
           },
         ),
       ],
-      child: AutoTabsBuilder(
+      child: AutoTabsRouter(
         routes: routes,
-        builder: (context, child, tabsRouter) {
+        builder: (context, child) {
+          final tabsRouter = context.tabsRouter;
           return BackButtonListener(
             onBackButtonPressed: () async {
               // If not on first tab, go to previous tab
