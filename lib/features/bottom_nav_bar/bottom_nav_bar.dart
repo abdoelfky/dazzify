@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/navigation/swipe_back_page.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
@@ -121,29 +122,31 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<TokensCubit, TokensState>(
-          listener: (context, state) {},
-        ),
-        BlocListener<UserCubit, UserState>(
-          listenWhen: (previous, current) =>
-              previous.userState != current.userState,
-          listener: (context, state) {
-            if (state.userState == UiState.success) {
-              if (state.userModel.deletedAt.isNotEmpty) {
-                tokensCubit.emitSessionExpired();
-              } else if (state.userModel.languagePreference !=
-                  settingsCubit.currentLanguageCode) {
-                userCubit.updateProfileLang(
-                  lang: settingsCubit.currentLanguageCode,
-                );
+    return SwipeBackScope(
+      enabled: false, // Disable swipe-back for main navigation screen
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<TokensCubit, TokensState>(
+            listener: (context, state) {},
+          ),
+          BlocListener<UserCubit, UserState>(
+            listenWhen: (previous, current) =>
+                previous.userState != current.userState,
+            listener: (context, state) {
+              if (state.userState == UiState.success) {
+                if (state.userModel.deletedAt.isNotEmpty) {
+                  tokensCubit.emitSessionExpired();
+                } else if (state.userModel.languagePreference !=
+                    settingsCubit.currentLanguageCode) {
+                  userCubit.updateProfileLang(
+                    lang: settingsCubit.currentLanguageCode,
+                  );
+                }
               }
-            }
-          },
-        ),
-      ],
-      child: AutoTabsScaffold(
+            },
+          ),
+        ],
+        child: AutoTabsScaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
         routes: routes,
@@ -237,6 +240,7 @@ class _BottomNavBarState extends State<BottomNavBar>
           );
         },
       ),
+      ), // Close SwipeBackScope
     );
   }
 
