@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/navigation/swipe_back_page.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
@@ -72,7 +73,9 @@ class _DazzifyAppState extends State<DazzifyApp> {
                       data: MediaQuery.of(context).copyWith(
                         textScaler: TextScaler.noScaling,
                       ),
-                      child: child!,
+                      child: SwipeBackNavigator(
+                        child: child!,
+                      ),
                     );
                   },
                   routerConfig: getIt<AppRouter>().config(
