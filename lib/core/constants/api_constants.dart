@@ -47,8 +47,8 @@ class ApiConstants {
       "/review/not-interested-to-review";
   static const String getMissedReviews = "/review/missed-review";
 
-  static String getBrandDeliveryFees(String brandId) =>
-      "/brand/$brandId/delivery-fees";
+  static String getBrandTransportationFees(String brandId) =>
+      "/brand/$brandId/transportation-fees";
 
   static String validateCoupn(String brandId) => "/brand/$brandId/coupon-valid";
 

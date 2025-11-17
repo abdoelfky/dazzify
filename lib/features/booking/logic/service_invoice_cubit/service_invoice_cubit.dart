@@ -108,6 +108,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
   void updateInvoice({
     List<num>? price,
     num? deliveryFees,
+    TransportationFeesRange? transportationFeesRange,
     num? discountAmount,
     List<num>? appFees,
   }) {
@@ -117,6 +118,7 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
           price: price,
           appFees: appFees,
           deliveryFees: deliveryFees,
+          transportationFeesRange: transportationFeesRange,
           discountAmount: discountAmount,
         ),
       ),

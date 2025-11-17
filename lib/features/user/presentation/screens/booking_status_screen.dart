@@ -424,6 +424,8 @@ Widget bookingInfo(BookingCubit booking, int currentServiceIndex) {
 
 Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
   final priceInfo = booking.state.singleBooking;
+  final hasRange = priceInfo.hasRangeDeliveryFees;
+  final deliveryRange = priceInfo.deliveryFeesRange;
 
   return Column(
     children: [
@@ -446,23 +448,85 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
         price: "(${priceInfo.couponDis} ${DazzifyApp.tr.egp})",
       ),
       SizedBox(height: 16.h),
-      PriceInfoItem(
-        title: DazzifyApp.tr.deliferyFees,
-        price: "${priceInfo.deliveryFees} ${DazzifyApp.tr.egp}",
-      ),
-      SizedBox(height: 16.h),
-      PriceInfoItem(
-        title: DazzifyApp.tr.appFees,
-        price: "${priceInfo.fees} ${DazzifyApp.tr.egp}",
-      ),
+      if (!hasRange) ...[
+        PriceInfoItem(
+          title: DazzifyApp.tr.deliferyFees,
+          price: "${priceInfo.deliveryFees} ${DazzifyApp.tr.egp}",
+        ),
+        SizedBox(height: 16.h),
+        PriceInfoItem(
+          title: DazzifyApp.tr.appFees,
+          price: "${priceInfo.fees} ${DazzifyApp.tr.egp}",
+        ),
+      ],
+      if (hasRange && deliveryRange != null) ...[
+        PriceInfoItem(
+          title: DazzifyApp.tr.deliferyFees,
+          price: "${reformatPriceWithCommas(deliveryRange.from)}-${reformatPriceWithCommas(deliveryRange.to)} ${DazzifyApp.tr.egp}",
+        ),
+        SizedBox(height: 16.h),
+        PriceInfoItem(
+          title: DazzifyApp.tr.appFees,
+          price: DazzifyApp.tr.willBeCalculated,
+        ),
+      ],
       SizedBox(height: 16.h),
       customDivider(context),
       SizedBox(height: 24.h),
-      PriceInfoItem(
-        title: DazzifyApp.tr.totalPrice,
-        price:
-            "${reformatPriceWithCommas(priceInfo.totalPrice)} ${DazzifyApp.tr.egp}",
-      ),
+      if (!hasRange)
+        PriceInfoItem(
+          title: DazzifyApp.tr.totalPrice,
+          price:
+              "${reformatPriceWithCommas(priceInfo.totalPrice)} ${DazzifyApp.tr.egp}",
+        ),
+      if (hasRange)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PriceInfoItem(
+              title: DazzifyApp.tr.totalPrice,
+              price:
+                  "${reformatPriceWithCommas(priceInfo.price - priceInfo.couponDis)} ${DazzifyApp.tr.egp}",
+            ),
+            SizedBox(height: 8.h),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
+              child: DText(
+                DazzifyApp.tr.plusTransportationAndFees,
+                style: context.textTheme.bodySmall!.copyWith(
+                  color: context.colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Container(
+              padding: const EdgeInsets.all(12).r,
+              decoration: BoxDecoration(
+                color: context.colorScheme.inversePrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8).r,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    SolarIconsOutline.infoCircle,
+                    size: 16.r,
+                    color: context.colorScheme.primary,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: DText(
+                      DazzifyApp.tr.finalPriceAfterProviderAccepts,
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
     ],
   );
 }

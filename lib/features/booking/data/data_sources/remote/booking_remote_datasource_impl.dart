@@ -74,7 +74,7 @@ class BookingRemoteDatasourceImpl extends BookingRemoteDatasource {
     required String brandId,
   }) async {
     return await _apiConsumer.get<BrandDeliveryFeesModel>(
-      ApiConstants.getBrandDeliveryFees(brandId),
+      ApiConstants.getBrandTransportationFees(brandId),
       responseReturnType: ResponseReturnType.fromJsonList,
       fromJsonMethod: BrandDeliveryFeesModel.fromJson,
     );

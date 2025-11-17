@@ -4,6 +4,7 @@ import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/data/models/brand_delivery_fees_model.dart';
 import 'package:dazzify/features/booking/data/models/delivery_info_model.dart';
+import 'package:dazzify/features/booking/data/models/service_invoice_model.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/widgets/governorate_bottom_sheet/governorate_item.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
@@ -109,13 +110,28 @@ class _GovernorateBottomSheetState extends State<GovernoratesBottomSheet> {
   }
 
   void _onPressed(BrandDeliveryFeesModel deliveryModel, BuildContext context) {
+    final isRange = deliveryModel.isRangeType;
+    
     _invoiceCubit.updateDeliveryInfo(
         deliveryInfo: DeliveryInfoModel(
       selectedDeliveryFees: deliveryModel.deliveryFees,
       selectedGov: deliveryModel.gov,
+      isRangeType: isRange,
+      minDeliveryFees: isRange ? deliveryModel.minTransportationFees : null,
+      maxDeliveryFees: isRange ? deliveryModel.maxTransportationFees : null,
     ));
 
-    _invoiceCubit.updateInvoice(deliveryFees: deliveryModel.deliveryFees);
+    if (isRange) {
+      _invoiceCubit.updateInvoice(
+        deliveryFees: 0,
+        transportationFeesRange: TransportationFeesRange(
+          min: deliveryModel.minTransportationFees ?? 0,
+          max: deliveryModel.maxTransportationFees ?? 0,
+        ),
+      );
+    } else {
+      _invoiceCubit.updateInvoice(deliveryFees: deliveryModel.deliveryFees);
+    }
 
     context.maybePop();
 

@@ -176,14 +176,16 @@ Widget priceAndStatus({
   required BuildContext context,
   required IssueModel issue,
 }) {
+  final hasPrice = issue.price > 0;
+  
   return Row(
     children: [
-      SizedBox(
-        width: context.screenWidth * 0.47,
-
-        child: DText("${reformatPriceWithCommas(issue.price)} ${context.tr.egp}",
-            style: context.textTheme.bodyMedium),
-      ),
+      if (hasPrice)
+        SizedBox(
+          width: context.screenWidth * 0.47,
+          child: DText("${reformatPriceWithCommas(issue.price)} ${context.tr.egp}",
+              style: context.textTheme.bodyMedium),
+        ),
       if (issue.status.isNotEmpty)
         DText(
           getIssueStatus(issue.status).name,
