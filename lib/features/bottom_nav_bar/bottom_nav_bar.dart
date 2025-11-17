@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
-import 'package:dazzify/core/navigation/swipe_back_page.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
