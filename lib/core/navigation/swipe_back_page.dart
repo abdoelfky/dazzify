@@ -144,7 +144,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          context.maybePop();
+          context.router.maybePop();
         }
       });
     } else {
@@ -333,7 +333,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          context.maybePop();
+          context.router.maybePop();
           _resetDrag();
         }
       });
