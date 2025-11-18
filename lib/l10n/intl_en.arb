@@ -413,7 +413,17 @@
   "qrCodeScanner": "QR Code Scanner",
   "scanQrCode": "Scan QR Code",
   "pointCameraAtQr": "Point camera at QR code",
-  "qrCodeDetected": "QR Code Detected"
+  "qrCodeDetected": "QR Code Detected",
+  "coupons": "Coupons",
+  "discount": "Discount",
+  "locked": "Locked",
+  "startWithFirstCoupon": "Start with the first coupon to open the next offer",
+  "redeemYourCoupon": "Redeem your coupon",
+  "forDiscount": "for discount",
+  "couponDetails": "Coupon details:",
+  "noCouponsAvailable": "No coupons available",
+  "retry": "Retry",
+  "invalidQrCode": "Invalid QR Code"
 
 
 }

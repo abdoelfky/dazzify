@@ -413,7 +413,17 @@
   "qrCodeScanner": "ماسح رمز الاستجابة السريعة",
   "scanQrCode": "امسح رمز الاستجابة السريعة",
   "pointCameraAtQr": "وجه الكاميرا إلى رمز الاستجابة السريعة",
-  "qrCodeDetected": "تم اكتشاف رمز الاستجابة السريعة"
+  "qrCodeDetected": "تم اكتشاف رمز الاستجابة السريعة",
+  "coupons": "الكوبونات",
+  "discount": "خصم",
+  "locked": "مقفل",
+  "startWithFirstCoupon": "ابدأ بالكوبون الأول لفتح العرض التالي",
+  "redeemYourCoupon": "استخدم كوبون الخصم الخاص بك",
+  "forDiscount": "للحصول على خصم",
+  "couponDetails": "تفاصيل الكوبون:",
+  "noCouponsAvailable": "لا توجد كوبونات متاحة",
+  "retry": "إعادة المحاولة",
+  "invalidQrCode": "رمز QR غير صالح"
 
 
 }

@@ -61,6 +61,7 @@ import 'package:dazzify/features/shared/widgets/maintenance_screen.dart';
 import 'package:dazzify/features/shared/widgets/splash_screen.dart';
 import 'package:dazzify/features/shared/widgets/web_view_screen.dart';
 import 'package:dazzify/features/user/logic/issue/issue_bloc.dart';
+import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/features/user/presentation/screens/booking_status_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/bookings_history_screen.dart';
@@ -69,6 +70,7 @@ import 'package:dazzify/features/user/presentation/screens/issue_status_screen.d
 import 'package:dazzify/features/user/presentation/screens/my_favorite_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/profile_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/qr_scanner_screen.dart';
+import 'package:dazzify/features/user/presentation/screens/tiered_coupon_rewards_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/user_locations_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -179,6 +181,9 @@ class AppRouter extends RootStackRouter {
                     ),
                     AutoRoute(
                       page: QrScannerRoute.page,
+                    ),
+                    AutoRoute(
+                      page: TieredCouponRewardsWrapperRoute.page,
                     ),
                     AutoRoute(
                       page: BookingsHistoryRoute.page,
@@ -451,4 +456,22 @@ class Issue extends AutoRouter implements AutoRouteWrapper {
 @RoutePage(name: "PaymentRoutes")
 class Payment extends AutoRouter {
   const Payment({super.key});
+}
+
+@RoutePage(name: "TieredCouponRewardsWrapperRoute")
+class TieredCouponRewardsWrapper extends StatelessWidget implements AutoRouteWrapper {
+  const TieredCouponRewardsWrapper({super.key});
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<TieredCouponCubit>(),
+      child: const TieredCouponRewardsScreen(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return this;
+  }
 }

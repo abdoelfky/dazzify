@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
+import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -21,10 +22,38 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     torchEnabled: false,
   );
 
+  bool _hasScanned = false;
+
   @override
   void dispose() {
     cameraController.dispose();
     super.dispose();
+  }
+
+  void _handleQrCode(String qrCode) {
+    if (_hasScanned) return;
+    
+    _hasScanned = true;
+    
+    // Check if the QR code matches the tiered coupon rewards URL
+    if (qrCode == 'https://www.dazzifyapp.com/tiered-coupon-rewards') {
+      // Navigate to tiered coupon rewards screen
+      context.pushRoute(const TieredCouponRewardsWrapperRoute());
+    } else {
+      // Show invalid QR code message
+      DazzifyToastBar.showError(
+        message: context.tr.invalidQrCode,
+      );
+      
+      // Reset after a delay to allow scanning again
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            _hasScanned = false;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -46,14 +75,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                     onDetect: (capture) {
                       final List<Barcode> barcodes = capture.barcodes;
                       for (final barcode in barcodes) {
-                        if (barcode.rawValue != null) {
-                          // Show the scanned QR code
-                          DazzifyToastBar.showSuccess(
-                            message:
-                                '${context.tr.qrCodeDetected}: ${barcode.rawValue}',
-                          );
-                          // You can handle the QR code data here
-                          // For example, navigate to another screen or process the data
+                        if (barcode.rawValue != null && !_hasScanned) {
+                          _handleQrCode(barcode.rawValue!);
                         }
                       }
                     },

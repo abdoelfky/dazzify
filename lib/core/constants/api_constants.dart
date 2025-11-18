@@ -134,4 +134,6 @@ class ApiConstants {
 
   static String addPaymentMethod({required String transactionId}) =>
       "/transaction/$transactionId/pay";
+
+  static const String getTieredCouponRewards = "/user/tiered-coupon-rewards";
 }

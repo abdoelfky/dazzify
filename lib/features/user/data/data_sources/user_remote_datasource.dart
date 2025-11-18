@@ -3,6 +3,7 @@ import 'package:dazzify/features/shared/data/models/comments/comment_model.dart'
 import 'package:dazzify/features/shared/data/models/favorite_model.dart';
 import 'package:dazzify/features/shared/data/requests/report_request.dart';
 import 'package:dazzify/features/user/data/models/issue/issue_model.dart';
+import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/data/models/user/user_model.dart';
 import 'package:dazzify/features/user/data/requests/add_comment_request.dart';
 import 'package:dazzify/features/user/data/requests/add_reply_request.dart';
@@ -111,4 +112,6 @@ abstract class UserRemoteDataSource {
   Future<Unit> report({
     required ReportRequest request,
   });
+
+  Future<List<TieredCouponModel>> getTieredCouponRewards();
 }

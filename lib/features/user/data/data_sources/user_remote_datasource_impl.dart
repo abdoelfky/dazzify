@@ -8,6 +8,7 @@ import 'package:dazzify/features/shared/data/models/favorite_model.dart';
 import 'package:dazzify/features/shared/data/requests/report_request.dart';
 import 'package:dazzify/features/user/data/data_sources/user_remote_datasource.dart';
 import 'package:dazzify/features/user/data/models/issue/issue_model.dart';
+import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/data/models/user/user_model.dart';
 import 'package:dazzify/features/user/data/requests/add_comment_request.dart';
 import 'package:dazzify/features/user/data/requests/add_reply_request.dart';
@@ -312,6 +313,15 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
       ApiConstants.report,
       body: request.toJson(),
       responseReturnType: ResponseReturnType.unit,
+    );
+  }
+
+  @override
+  Future<List<TieredCouponModel>> getTieredCouponRewards() async {
+    return await _apiConsumer.get<TieredCouponModel>(
+      ApiConstants.getTieredCouponRewards,
+      responseReturnType: ResponseReturnType.fromJsonList,
+      fromJsonMethod: TieredCouponModel.fromJson,
     );
   }
 }

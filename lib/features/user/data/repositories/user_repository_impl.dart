@@ -6,6 +6,7 @@ import 'package:dazzify/features/shared/data/models/favorite_model.dart';
 import 'package:dazzify/features/shared/data/requests/report_request.dart';
 import 'package:dazzify/features/user/data/data_sources/user_remote_datasource.dart';
 import 'package:dazzify/features/user/data/models/issue/issue_model.dart';
+import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/data/models/user/user_model.dart';
 import 'package:dazzify/features/user/data/repositories/user_repository.dart';
 import 'package:dazzify/features/user/data/requests/add_comment_request.dart';
@@ -343,6 +344,16 @@ class UserRepositoryImpl implements UserRepository {
         request: request,
       );
       return Right(report);
+    } on ServerException catch (e) {
+      return Left(ApiFailure(message: e.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TieredCouponModel>>> getTieredCouponRewards() async {
+    try {
+      final coupons = await _remoteDataSource.getTieredCouponRewards();
+      return Right(coupons);
     } on ServerException catch (e) {
       return Left(ApiFailure(message: e.message!));
     }
