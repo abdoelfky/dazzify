@@ -35,6 +35,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
     final bodyColor = _parseColor(coupon.color?.bodyBackground ?? '#3FD6A6');
 
     return SafeArea(
+      top: false,
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -45,6 +46,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
+              SizedBox(height: 20.h,),
               DazzifyAppBar(
                 isLeading: true,
                 title: context.tr.coupons,
@@ -215,7 +217,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                         context.tr.copyCouponCoded,
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w800,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -227,13 +229,13 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                       style: context.textTheme.headlineLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 45.sp,
+                        fontSize: 35.sp,
                       ),
                     ),
                     SizedBox(height: 6.h),
                     
                     // Coupon code with scratch overlay
-                    if (coupon.code != null)
+                    // if (coupon.code != null)
                       shouldShowScratch
                         ? ScratchOverlayWidget(
                             onThresholdReached: () {
@@ -241,8 +243,8 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   .read<TieredCouponCubit>()
                                   .markCouponAsOpened(couponIndex);
                             },
-                            overlayColor: bodyColor,
-                            width: 220.w,
+                            overlayColor: Colors.white,
+                            width: 200.w,
                             height: 46.h,
                             child: Container(
                               width: 220.w,
@@ -264,7 +266,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  coupon.code!,
+                                  coupon.code??'XXXXX',
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -286,12 +288,12 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                             },
                             child: Container(
                               constraints: BoxConstraints(
-                                maxWidth: 240.w,
+                                maxWidth: 200.w,
                                 minWidth: 160.w,
                               ),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 40.w,
-                                vertical: 10.h,
+                                vertical: 8.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -310,7 +312,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16.sp,
+                                    fontSize: 18.sp,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),

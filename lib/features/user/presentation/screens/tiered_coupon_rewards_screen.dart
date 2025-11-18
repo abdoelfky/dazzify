@@ -31,6 +31,7 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -41,6 +42,8 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
           ),
           child: Column(
             children: [
+              SizedBox(height: 20.h,),
+
               DazzifyAppBar(
                 isLeading: true,
                 title: context.tr.coupons,
@@ -124,7 +127,6 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                             // Coupons list
                             ...List.generate(state.coupons.length, (index) {
                               final coupon = state.coupons[index];
-
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.h),
                                 child: ConstrainedBox(

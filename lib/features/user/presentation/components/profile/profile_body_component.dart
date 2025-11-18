@@ -101,7 +101,9 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         },
                       );
                     } else {
-                      context.pushRoute(const QrScannerRoute());
+                      context.pushRoute(const TieredCouponRewardsWrapperRoute());
+                      // QrScannerRoute
+
                     }
                   },
                 ),

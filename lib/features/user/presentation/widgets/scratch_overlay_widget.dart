@@ -34,7 +34,8 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
     final scratchWidget = Scratcher(
       brushSize: 40,
       threshold: 60,
-      color: widget.overlayColor.withOpacity(0.9),
+      image: Image(image: AssetImage('assets/images/scratcher.png')),
+      // color: widget.overlayColor.withOpacity(0.9),
       onChange: (value) {
         // Optional: Track scratching progress
       },

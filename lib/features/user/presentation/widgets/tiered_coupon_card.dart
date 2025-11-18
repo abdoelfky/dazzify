@@ -83,17 +83,18 @@ class TieredCouponCard extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           )
-                        else if (!coupon.locked && !coupon.opened)
-                          Text(
-                            context.tr.scratchToRedeem,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                        else
+                          if (!coupon.locked && !coupon.opened)
+                            Text(
+                              context.tr.scratchToRedeem,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
                         if (!coupon.locked) SizedBox(height: 5.h),
-                        
+
                         // Discount percentage
                         Text(
                           '${coupon.discountPercentage}%',
@@ -104,9 +105,43 @@ class TieredCouponCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 5.h),
-                        
+                        if (shouldShowScratch)
+                        // Scratch only on code area
+                          ScratchOverlayWidget(
+                            onThresholdReached: () {
+                              if (onScratchComplete != null) {
+                                onScratchComplete!();
+                              }
+                            },
+                            overlayColor: Colors.white,
+                            width: 180.w,
+                            height: 38.h,
+                            child: Container(
+                              width: 180.w,
+                              height: 38.h,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24.w,
+                                vertical: 6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  coupon.code??'XXXXX',
+                                  style: context.textTheme.bodyLarge?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.sp,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          )
                         // Coupon code or locked message
-                        if (coupon.locked)
+                        else if (coupon.locked)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -125,22 +160,16 @@ class TieredCouponCard extends StatelessWidget {
                               ),
                             ],
                           )
-                        else if (coupon.code != null && shouldShowScratch)
-                          // Scratch only on code area
-                          ScratchOverlayWidget(
-                            onThresholdReached: () {
-                              if (onScratchComplete != null) {
-                                onScratchComplete!();
-                              }
-                            },
-                            overlayColor: bodyColor,
-                            width: 180.w,
-                            height: 38.h,
-                            child: Container(
-                              width: 180.w,
-                              height: 38.h,
+
+                        else
+                          if (coupon.code != null)
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 200.w,
+                                minWidth: 120.w,
+                              ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 24.w,
+                                horizontal: 32.w,
                                 vertical: 6.h,
                               ),
                               decoration: BoxDecoration(
@@ -159,33 +188,6 @@ class TieredCouponCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          )
-                        else if (coupon.code != null)
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth: 200.w,
-                              minWidth: 120.w,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 32.w,
-                              vertical: 6.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                coupon.code!,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
                       ],
                     ),
                   ),
@@ -225,7 +227,8 @@ class TicketPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
+    final paint = Paint()
+      ..style = PaintingStyle.fill;
     final double cutoutRadius = 12;
     final double cutoutSpacing = 30;
 
