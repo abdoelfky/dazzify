@@ -156,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "couponCopied": MessageLookupByLibrary.simpleMessage(
       "تم نسخ الكود إلى الحافظة",
     ),
+    "couponDetails": MessageLookupByLibrary.simpleMessage("تفاصيل الكوبون:"),
     "couponDisc": MessageLookupByLibrary.simpleMessage("خصم الكوبون"),
     "couponNotValidated": MessageLookupByLibrary.simpleMessage(
       "كوبون غير صالح",
@@ -163,6 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "couponValidated": MessageLookupByLibrary.simpleMessage(
       "تم الخصم عن طريق الكوبون",
     ),
+    "coupons": MessageLookupByLibrary.simpleMessage("الكوبونات"),
     "createIssue": MessageLookupByLibrary.simpleMessage("إنشاء المشكلة"),
     "createReview": MessageLookupByLibrary.simpleMessage("اضف تقييمك"),
     "creditCard": MessageLookupByLibrary.simpleMessage("بطاقة إئتمان"),
@@ -190,6 +192,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "هل انت متأكد انك تريد مسح التقييم ؟",
     ),
     "deliferyFees": MessageLookupByLibrary.simpleMessage("رسوم النقل"),
+    "discount": MessageLookupByLibrary.simpleMessage("خصم"),
     "downPayment": MessageLookupByLibrary.simpleMessage("دفعة مبدئية"),
     "duration": MessageLookupByLibrary.simpleMessage("المدة"),
     "eWallet": MessageLookupByLibrary.simpleMessage("محفظة"),
@@ -221,6 +224,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "finalPriceAfterProviderAccepts": MessageLookupByLibrary.simpleMessage(
       "سيتم حساب السعر النهائي بعد قبول مزود الخدمة",
     ),
+    "forDiscount": MessageLookupByLibrary.simpleMessage("للحصول على خصم"),
     "forsaInstallment": MessageLookupByLibrary.simpleMessage("Forsa"),
     "from": MessageLookupByLibrary.simpleMessage("من"),
     "fromGallery": MessageLookupByLibrary.simpleMessage("اختر من المعرض"),
@@ -262,6 +266,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "رقم الهاتف غير صحيح",
     ),
+    "invalidQrCode": MessageLookupByLibrary.simpleMessage("رمز QR غير صالح"),
     "ismailia": MessageLookupByLibrary.simpleMessage("الإسماعيلية"),
     "issue": MessageLookupByLibrary.simpleMessage("مشكلة"),
     "issueChecked": MessageLookupByLibrary.simpleMessage(
@@ -289,6 +294,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "يجب ان تمنحنا صلاحيات الموقع\n من خلال الإعدادات.",
     ),
     "locationUpdated": MessageLookupByLibrary.simpleMessage("تم تحديث موقعك"),
+    "locked": MessageLookupByLibrary.simpleMessage("مقفل"),
     "logOut": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "logOutMessage": MessageLookupByLibrary.simpleMessage(
       " هل انت متأكد انك تريد تسجيل الخروج ؟",
@@ -334,6 +340,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noCategories": MessageLookupByLibrary.simpleMessage("لا يوجد فئات متاحة"),
     "noConversations": MessageLookupByLibrary.simpleMessage(
       "لا توجد محادثات حتى الآن، حدد أي بائع لبدء الدردشة معه",
+    ),
+    "noCouponsAvailable": MessageLookupByLibrary.simpleMessage(
+      "لا توجد كوبونات متاحة",
     ),
     "noData": MessageLookupByLibrary.simpleMessage(
       "لا توجد بيانات، حاول مرة أخرى لاحقًا",
@@ -496,6 +505,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "redSea": MessageLookupByLibrary.simpleMessage("البحر الأحمر"),
     "redeemIt": MessageLookupByLibrary.simpleMessage("استبدل النقاط"),
     "redeemPoints": MessageLookupByLibrary.simpleMessage("استبدال\nالنقاط"),
+    "redeemYourCoupon": MessageLookupByLibrary.simpleMessage(
+      "استخدم كوبون الخصم الخاص بك",
+    ),
     "refund": MessageLookupByLibrary.simpleMessage("مسترد"),
     "refundAmount": MessageLookupByLibrary.simpleMessage("المبلغ المسترد"),
     "refunded": MessageLookupByLibrary.simpleMessage("تم استرداده"),
@@ -577,6 +589,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "souhoolaInstallment": MessageLookupByLibrary.simpleMessage("Souhoola"),
     "southSinai": MessageLookupByLibrary.simpleMessage("جنوب سيناء"),
     "spent": MessageLookupByLibrary.simpleMessage("تم صرفة"),
+    "startWithFirstCoupon": MessageLookupByLibrary.simpleMessage(
+      "ابدأ بالكوبون الأول لفتح العرض التالي",
+    ),
     "step1": MessageLookupByLibrary.simpleMessage("خطوة 1"),
     "step2": MessageLookupByLibrary.simpleMessage("خطوة 2"),
     "step3": MessageLookupByLibrary.simpleMessage("خطوة 3"),

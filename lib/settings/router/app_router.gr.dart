@@ -1611,6 +1611,44 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TieredCouponRewardsScreen]
+class TieredCouponRewardsRoute extends PageRouteInfo<void> {
+  const TieredCouponRewardsRoute({List<PageRouteInfo>? children})
+      : super(
+          TieredCouponRewardsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TieredCouponRewardsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TieredCouponRewardsScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [TieredCouponRewardsWrapper]
+class TieredCouponRewardsWrapperRoute extends PageRouteInfo<void> {
+  const TieredCouponRewardsWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          TieredCouponRewardsWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TieredCouponRewardsWrapperRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const TieredCouponRewardsWrapper());
+    },
+  );
+}
+
+/// generated route for
 /// [TopRatedBrandsScreen]
 class TopRatedBrandsRoute extends PageRouteInfo<void> {
   const TopRatedBrandsRoute({List<PageRouteInfo>? children})

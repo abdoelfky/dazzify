@@ -3052,6 +3052,81 @@ class S {
       args: [],
     );
   }
+
+  /// `Coupons`
+  String get coupons {
+    return Intl.message('Coupons', name: 'coupons', desc: '', args: []);
+  }
+
+  /// `Discount`
+  String get discount {
+    return Intl.message('Discount', name: 'discount', desc: '', args: []);
+  }
+
+  /// `Locked`
+  String get locked {
+    return Intl.message('Locked', name: 'locked', desc: '', args: []);
+  }
+
+  /// `Start with the first coupon to open the next offer`
+  String get startWithFirstCoupon {
+    return Intl.message(
+      'Start with the first coupon to open the next offer',
+      name: 'startWithFirstCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Redeem your coupon`
+  String get redeemYourCoupon {
+    return Intl.message(
+      'Redeem your coupon',
+      name: 'redeemYourCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `for discount`
+  String get forDiscount {
+    return Intl.message(
+      'for discount',
+      name: 'forDiscount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coupon details:`
+  String get couponDetails {
+    return Intl.message(
+      'Coupon details:',
+      name: 'couponDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No coupons available`
+  String get noCouponsAvailable {
+    return Intl.message(
+      'No coupons available',
+      name: 'noCouponsAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid QR Code`
+  String get invalidQrCode {
+    return Intl.message(
+      'Invalid QR Code',
+      name: 'invalidQrCode',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

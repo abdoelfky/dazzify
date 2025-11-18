@@ -162,6 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "couponCopied": MessageLookupByLibrary.simpleMessage(
       "Code copied to clipboard",
     ),
+    "couponDetails": MessageLookupByLibrary.simpleMessage("Coupon details:"),
     "couponDisc": MessageLookupByLibrary.simpleMessage("Coupon disc"),
     "couponNotValidated": MessageLookupByLibrary.simpleMessage(
       "Invalid coupon code.",
@@ -169,6 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "couponValidated": MessageLookupByLibrary.simpleMessage(
       "Discount added by coupon",
     ),
+    "coupons": MessageLookupByLibrary.simpleMessage("Coupons"),
     "createIssue": MessageLookupByLibrary.simpleMessage("Create Issue"),
     "createReview": MessageLookupByLibrary.simpleMessage("Create Review"),
     "creditCard": MessageLookupByLibrary.simpleMessage("Credit card"),
@@ -198,6 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Are you sure you want to Delete this Review ?",
     ),
     "deliferyFees": MessageLookupByLibrary.simpleMessage("Transportation Fees"),
+    "discount": MessageLookupByLibrary.simpleMessage("Discount"),
     "downPayment": MessageLookupByLibrary.simpleMessage("Down Payment"),
     "duration": MessageLookupByLibrary.simpleMessage("Duration"),
     "eWallet": MessageLookupByLibrary.simpleMessage("E-Wallet"),
@@ -227,6 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "finalPriceAfterProviderAccepts": MessageLookupByLibrary.simpleMessage(
       "Final price will be calculated after provider accepts",
     ),
+    "forDiscount": MessageLookupByLibrary.simpleMessage("for discount"),
     "forsaInstallment": MessageLookupByLibrary.simpleMessage("Forsa"),
     "from": MessageLookupByLibrary.simpleMessage("From"),
     "fromGallery": MessageLookupByLibrary.simpleMessage("From Gallery"),
@@ -268,6 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Invalid Phone Number",
     ),
+    "invalidQrCode": MessageLookupByLibrary.simpleMessage("Invalid QR Code"),
     "ismailia": MessageLookupByLibrary.simpleMessage("Ismailia"),
     "issue": MessageLookupByLibrary.simpleMessage("Issue"),
     "issueChecked": MessageLookupByLibrary.simpleMessage(
@@ -295,6 +300,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationUpdated": MessageLookupByLibrary.simpleMessage(
       "Your location was updated",
     ),
+    "locked": MessageLookupByLibrary.simpleMessage("Locked"),
     "logOut": MessageLookupByLibrary.simpleMessage("Log Out"),
     "logOutMessage": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to log out of your account ?",
@@ -338,6 +344,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noCategories": MessageLookupByLibrary.simpleMessage("No Categories Found"),
     "noConversations": MessageLookupByLibrary.simpleMessage(
       "There are no conversations yet, select any vendor to start chatting with",
+    ),
+    "noCouponsAvailable": MessageLookupByLibrary.simpleMessage(
+      "No coupons available",
     ),
     "noData": MessageLookupByLibrary.simpleMessage("No Data, try again later"),
     "noFavorites": MessageLookupByLibrary.simpleMessage(
@@ -488,6 +497,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "redSea": MessageLookupByLibrary.simpleMessage("RedSea"),
     "redeemIt": MessageLookupByLibrary.simpleMessage("Redeem it"),
     "redeemPoints": MessageLookupByLibrary.simpleMessage("Redeem\nPoints"),
+    "redeemYourCoupon": MessageLookupByLibrary.simpleMessage(
+      "Redeem your coupon",
+    ),
     "refund": MessageLookupByLibrary.simpleMessage("Refund"),
     "refundAmount": MessageLookupByLibrary.simpleMessage("Refund Amount"),
     "refunded": MessageLookupByLibrary.simpleMessage("Refunded"),
@@ -575,6 +587,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "souhoolaInstallment": MessageLookupByLibrary.simpleMessage("Souhoola"),
     "southSinai": MessageLookupByLibrary.simpleMessage("SouthSinai"),
     "spent": MessageLookupByLibrary.simpleMessage("Spent"),
+    "startWithFirstCoupon": MessageLookupByLibrary.simpleMessage(
+      "Start with the first coupon to open the next offer",
+    ),
     "step1": MessageLookupByLibrary.simpleMessage("Step 1"),
     "step2": MessageLookupByLibrary.simpleMessage("Step 2"),
     "step3": MessageLookupByLibrary.simpleMessage("Step 3"),

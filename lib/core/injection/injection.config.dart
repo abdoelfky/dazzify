@@ -161,6 +161,8 @@ import 'package:dazzify/features/user/logic/booking_history/booking_history_bloc
 import 'package:dazzify/features/user/logic/issue/issue_bloc.dart' as _i303;
 import 'package:dazzify/features/user/logic/location/location_cubit.dart'
     as _i683;
+import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.dart'
+    as _i632;
 import 'package:dazzify/features/user/logic/user/user_cubit.dart' as _i968;
 import 'package:dazzify/settings/router/app_router.dart' as _i892;
 import 'package:dio/dio.dart' as _i361;
@@ -349,6 +351,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i316.SearchBloc(gh<_i660.HomeRepository>()));
     gh.factory<_i852.ServicesBloc>(
         () => _i852.ServicesBloc(gh<_i660.HomeRepository>()));
+    gh.factory<_i632.TieredCouponCubit>(
+        () => _i632.TieredCouponCubit(gh<_i499.UserRepository>()));
     gh.factory<_i435.CommentsBloc>(
         () => _i435.CommentsBloc(gh<_i499.UserRepository>()));
     gh.factory<_i149.BookingHistoryBloc>(
