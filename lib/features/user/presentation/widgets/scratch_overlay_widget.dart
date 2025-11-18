@@ -32,9 +32,9 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
   @override
   Widget build(BuildContext context) {
     final scratchWidget = Scratcher(
-      brushSize: 35,
-      threshold: 55,
-      color: Colors.grey.shade800,
+      brushSize: 40,
+      threshold: 60,
+      color: widget.overlayColor.withOpacity(0.9),
       onChange: (value) {
         // Optional: Track scratching progress
       },
@@ -43,48 +43,39 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-          color: Colors.grey.shade800.withOpacity(0.05),
+          color: widget.overlayColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Stack(
           children: [
             widget.child,
-            // Vintage scratch overlay with pattern
+            // Scratch overlay with darker color matching the card
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                color: widget.overlayColor.withOpacity(0.85),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+            // Scratch pattern overlay for texture
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.r),
                 gradient: LinearGradient(
                   colors: [
-                    Colors.grey.shade700.withOpacity(0.3),
-                    Colors.grey.shade800.withOpacity(0.3),
+                    Colors.white.withOpacity(0.1),
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.1),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-              ),
-            ),
-            // Scratch hint overlay
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.touch_app,
-                    color: Colors.white70,
-                    size: 18.r,
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    context.tr.scratchToRedeem,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 8.sp,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
               ),
             ),
           ],

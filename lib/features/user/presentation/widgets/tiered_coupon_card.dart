@@ -82,8 +82,17 @@ class TieredCouponCard extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
+                          )
+                        else if (!coupon.locked && !coupon.opened)
+                          Text(
+                            context.tr.scratchToRedeem,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                        if (!coupon.locked && coupon.opened) SizedBox(height: 5.h),
+                        if (!coupon.locked) SizedBox(height: 5.h),
                         
                         // Discount percentage
                         Text(
@@ -115,32 +124,6 @@ class TieredCouponCard extends StatelessWidget {
                                 size: 20.r,
                               ),
                             ],
-                          )
-                        else if (coupon.code != null )
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth: 200.w,
-                              minWidth: 120.w,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 32.w,
-                              vertical: 6.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                coupon.code!,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
                           )
                         else if (coupon.code != null && shouldShowScratch)
                           // Scratch only on code area
@@ -174,6 +157,32 @@ class TieredCouponCard extends StatelessWidget {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
+                              ),
+                            ),
+                          )
+                        else if (coupon.code != null)
+                          Container(
+                            constraints: BoxConstraints(
+                              maxWidth: 200.w,
+                              minWidth: 120.w,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Center(
+                              child: Text(
+                                coupon.code!,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
