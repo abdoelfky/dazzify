@@ -99,7 +99,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _canPop = false;
       return;
     }
-    
+
     // Safely check if we can pop by ensuring Navigator exists in context
     try {
       _canPop = context.router.canPop();
