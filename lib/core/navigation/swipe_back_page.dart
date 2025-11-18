@@ -68,6 +68,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
   late AnimationController _controller;
   double _dragDistance = 0.0;
   bool _canPop = true;
+  BuildContext? _routerContext;
 
   @override
   void initState() {
@@ -84,9 +85,9 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     super.dispose();
   }
 
-  void _handleDragStart(DragStartDetails details) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final textDirection = Directionality.of(context);
+  void _handleDragStart(DragStartDetails details, BuildContext routerContext) {
+    final screenWidth = MediaQuery.of(routerContext).size.width;
+    final textDirection = Directionality.of(routerContext);
     final startPosition = details.localPosition.dx;
 
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
@@ -100,13 +101,13 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       return;
     }
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    _canPop = context.router.canPop();
+    _canPop = routerContext.router.canPop();
   }
 
-  void _handleDragUpdate(DragUpdateDetails details) {
+  void _handleDragUpdate(DragUpdateDetails details, BuildContext routerContext) {
     if (!_canPop) return;
 
-    final textDirection = Directionality.of(context);
+    final textDirection = Directionality.of(routerContext);
     final delta = details.primaryDelta ?? 0;
 
     setState(() {
@@ -119,21 +120,21 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
 
       // Update animation controller based on drag progress
-      final screenWidth = MediaQuery.of(context).size.width;
+      final screenWidth = MediaQuery.of(routerContext).size.width;
       _controller.value = (_dragDistance / screenWidth).clamp(0.0, 1.0);
     });
   }
 
-  void _handleDragEnd(DragEndDetails details) {
+  void _handleDragEnd(DragEndDetails details, BuildContext routerContext) {
     if (!_canPop) {
       _resetDrag();
       return;
     }
 
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(routerContext).size.width;
     final threshold = screenWidth * 0.25; // 25% of screen width (reduced for easier activation)
     final velocity = details.primaryVelocity ?? 0;
-    final textDirection = Directionality.of(context);
+    final textDirection = Directionality.of(routerContext);
 
     // For RTL, negative velocity means swiping left (back gesture)
     // For LTR, positive velocity means swiping right (back gesture)
@@ -142,9 +143,9 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     // Pop if dragged beyond threshold or if velocity is high enough
     if (_dragDistance > threshold || effectiveVelocity > 500) {
       _controller.animateTo(1.0).then((_) {
-        if (mounted) {
+        if (mounted && _routerContext != null) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          context.maybePop();
+          _routerContext!.maybePop();
         }
       });
     } else {
@@ -164,30 +165,38 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // Translucent behavior allows underlying widgets to receive gestures
-      behavior: HitTestBehavior.translucent,
-      onHorizontalDragStart: _handleDragStart,
-      onHorizontalDragUpdate: _handleDragUpdate,
-      onHorizontalDragEnd: _handleDragEnd,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          final screenWidth = MediaQuery.of(context).size.width;
-          final textDirection = Directionality.of(context);
+    // Wrap child with Builder to get a context that has access to AutoRouter
+    return Builder(
+      builder: (routerContext) {
+        // Store the router context for use in gesture handlers
+        _routerContext = routerContext;
+        
+        return GestureDetector(
+          // Translucent behavior allows underlying widgets to receive gestures
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragStart: (details) => _handleDragStart(details, routerContext),
+          onHorizontalDragUpdate: (details) => _handleDragUpdate(details, routerContext),
+          onHorizontalDragEnd: (details) => _handleDragEnd(details, routerContext),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final textDirection = Directionality.of(context);
 
-          // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
-          final offset = textDirection == TextDirection.rtl
-              ? -(_controller.value * screenWidth)
-              : _controller.value * screenWidth;
+              // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
+              final offset = textDirection == TextDirection.rtl
+                  ? -(_controller.value * screenWidth)
+                  : _controller.value * screenWidth;
 
-          return Transform.translate(
-            offset: Offset(offset, 0),
-            child: child,
-          );
-        },
-        child: widget.child,
-      ),
+              return Transform.translate(
+                offset: Offset(offset, 0),
+                child: child,
+              );
+            },
+            child: widget.child,
+          ),
+        );
+      },
     );
   }
 }
@@ -246,6 +255,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
   double _dragDistance = 0.0;
   bool _isDragging = false;
   bool _canPop = true;
+  BuildContext? _routerContext;
 
   @override
   void initState() {
@@ -262,9 +272,9 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     super.dispose();
   }
 
-  void _handleDragStart(DragStartDetails details) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final textDirection = Directionality.of(context);
+  void _handleDragStart(DragStartDetails details, BuildContext routerContext) {
+    final screenWidth = MediaQuery.of(routerContext).size.width;
+    final textDirection = Directionality.of(routerContext);
     final startPosition = details.globalPosition.dx;
 
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
@@ -279,7 +289,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
 
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    _canPop = context.router.canPop();
+    _canPop = routerContext.router.canPop();
 
     if (_canPop) {
       setState(() {
@@ -289,10 +299,10 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
   }
 
-  void _handleDragUpdate(DragUpdateDetails details) {
+  void _handleDragUpdate(DragUpdateDetails details, BuildContext routerContext) {
     if (!_canPop || !_isDragging) return;
 
-    final textDirection = Directionality.of(context);
+    final textDirection = Directionality.of(routerContext);
     final delta = details.primaryDelta ?? 0;
 
     setState(() {
@@ -305,12 +315,12 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
 
       // Update animation controller based on drag progress
-      final screenWidth = MediaQuery.of(context).size.width;
+      final screenWidth = MediaQuery.of(routerContext).size.width;
       _controller.value = (_dragDistance / screenWidth).clamp(0.0, 1.0);
     });
   }
 
-  void _handleDragEnd(DragEndDetails details) {
+  void _handleDragEnd(DragEndDetails details, BuildContext routerContext) {
     if (!_canPop || !_isDragging) {
       setState(() {
         _isDragging = false;
@@ -318,10 +328,10 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       return;
     }
 
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(routerContext).size.width;
     final threshold = screenWidth * 0.25; // 25% of screen width (reduced for easier activation)
     final velocity = details.primaryVelocity ?? 0;
-    final textDirection = Directionality.of(context);
+    final textDirection = Directionality.of(routerContext);
 
     // For RTL, negative velocity means swiping left (back gesture)
     // For LTR, positive velocity means swiping right (back gesture)
@@ -331,9 +341,9 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     if (_dragDistance > threshold || effectiveVelocity > 500) {
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
-        if (mounted) {
+        if (mounted && _routerContext != null) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          context.maybePop();
+          _routerContext!.maybePop();
           _resetDrag();
         }
       });
@@ -355,43 +365,51 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // Translucent behavior allows underlying widgets (ScrollViews, etc.) to receive gestures
-      // The gesture only activates when starting from the screen edge (50px)
-      behavior: HitTestBehavior.translucent,
-      onHorizontalDragStart: _handleDragStart,
-      onHorizontalDragUpdate: _handleDragUpdate,
-      onHorizontalDragEnd: _handleDragEnd,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          final screenWidth = MediaQuery.of(context).size.width;
-          final textDirection = Directionality.of(context);
+    // Wrap child with Builder to get a context that has access to AutoRouter
+    return Builder(
+      builder: (routerContext) {
+        // Store the router context for use in gesture handlers
+        _routerContext = routerContext;
+        
+        return GestureDetector(
+          // Translucent behavior allows underlying widgets (ScrollViews, etc.) to receive gestures
+          // The gesture only activates when starting from the screen edge (50px)
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragStart: (details) => _handleDragStart(details, routerContext),
+          onHorizontalDragUpdate: (details) => _handleDragUpdate(details, routerContext),
+          onHorizontalDragEnd: (details) => _handleDragEnd(details, routerContext),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final textDirection = Directionality.of(context);
 
-          // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
-          final offset = textDirection == TextDirection.rtl
-              ? -(_controller.value * screenWidth)
-              : _controller.value * screenWidth;
+              // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
+              final offset = textDirection == TextDirection.rtl
+                  ? -(_controller.value * screenWidth)
+                  : _controller.value * screenWidth;
 
-          return Stack(
-            children: [
-              // Previous screen shadow/overlay
-              if (_controller.value > 0)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3 * (1 - _controller.value)),
+              return Stack(
+                children: [
+                  // Previous screen shadow/overlay
+                  if (_controller.value > 0)
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.black.withOpacity(0.3 * (1 - _controller.value)),
+                      ),
+                    ),
+                  // Current screen
+                  Transform.translate(
+                    offset: Offset(offset, 0),
+                    child: child,
                   ),
-                ),
-              // Current screen
-              Transform.translate(
-                offset: Offset(offset, 0),
-                child: child,
-              ),
-            ],
-          );
-        },
-        child: widget.child,
-      ),
+                ],
+              );
+            },
+            child: widget.child,
+          ),
+        );
+      },
     );
   }
 }
