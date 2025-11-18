@@ -1,14 +1,19 @@
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
+import 'package:dazzify/features/user/presentation/widgets/scratch_overlay_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TieredCouponDetailsCard extends StatelessWidget {
   final TieredCouponModel coupon;
+  final VoidCallback? onScratchComplete;
+  final int? couponIndex;
 
   const TieredCouponDetailsCard({
     super.key,
     required this.coupon,
+    this.onScratchComplete,
+    this.couponIndex,
   });
 
   Color _parseColor(String hexColor) {
@@ -24,8 +29,9 @@ class TieredCouponDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final sideColor = _parseColor(coupon.color?.sideBackground ?? '#B47FF0');
     final bodyColor = _parseColor(coupon.color?.bodyBackground ?? '#3FD6A6');
+    final bool shouldShowScratch = !coupon.opened && !coupon.locked;
 
-    return Container(
+    final detailsCard = Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16.r),
@@ -64,8 +70,72 @@ class TieredCouponDetailsCard extends StatelessWidget {
           
           SizedBox(height: 20.h),
 
-          // Coupon card with ticket style
-          CustomPaint(
+          // Coupon card with ticket style (wrapped in scratch if needed)
+          _buildCouponCard(context, sideColor, bodyColor, shouldShowScratch),
+
+          SizedBox(height: 20.h),
+
+          // Coupon details section
+          if (coupon.opened)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Coupon details header
+                  Text(
+                    context.tr.couponDetails,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF7B3FF2),
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+
+                  // Instructions list
+                  ...coupon.instructions.asMap().entries.map((entry) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 8.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '• ',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: const Color(0xFF7B3FF2),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              entry.value,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: const Color(0xFF7B3FF2),
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+
+    return detailsCard;
+  }
+
+  Widget _buildCouponCard(
+    BuildContext context,
+    Color sideColor,
+    Color bodyColor,
+    bool shouldShowScratch,
+  ) {
+    final couponCard = CustomPaint(
             painter: TicketPainter(
               sideColor: sideColor,
               bodyColor: bodyColor,
@@ -106,15 +176,16 @@ class TieredCouponDetailsCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           // Header text
-                          Text(
-                            context.tr.copyCouponCoded,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                          if (coupon.opened)
+                            Text(
+                              context.tr.copyCouponCoded,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 8.h),
+                          if (coupon.opened) SizedBox(height: 8.h),
                           
                           // Discount percentage
                           Text(
@@ -128,7 +199,7 @@ class TieredCouponDetailsCard extends StatelessWidget {
                           SizedBox(height: 12.h),
                           
                           // Coupon code
-                          if (coupon.code != null)
+                          if (coupon.code != null && coupon.opened)
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 32.w,
@@ -153,60 +224,24 @@ class TieredCouponDetailsCard extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
-
-          SizedBox(height: 20.h),
-
-          // Coupon details section
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Coupon details header
-                Text(
-                  context.tr.couponDetails,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF7B3FF2),
-                  ),
-                ),
-                SizedBox(height: 12.h),
-
-                // Instructions list
-                ...coupon.instructions.asMap().entries.map((entry) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 8.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '• ',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: const Color(0xFF7B3FF2),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            entry.value,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFF7B3FF2),
-                              height: 1.4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
+
+    // Wrap with scratch overlay if needed
+    if (shouldShowScratch) {
+      return ScratchOverlayWidget(
+        onThresholdReached: () {
+          if (onScratchComplete != null) {
+            onScratchComplete!();
+          }
+        },
+        overlayColor: bodyColor,
+        child: couponCard,
+      );
+    }
+
+    return couponCard;
   }
 }
 

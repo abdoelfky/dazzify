@@ -49,4 +49,23 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
   void clearSelection() {
     emit(state.copyWith(clearSelection: true));
   }
+
+  void markCouponAsOpened(int index) {
+    final updatedCoupons = List<TieredCouponModel>.from(state.coupons);
+    final coupon = updatedCoupons[index];
+    
+    // Create a new coupon with opened = true
+    final openedCoupon = TieredCouponModel(
+      code: coupon.code,
+      opened: true,
+      locked: coupon.locked,
+      levelNumber: coupon.levelNumber,
+      discountPercentage: coupon.discountPercentage,
+      color: coupon.color,
+      instructions: coupon.instructions,
+    );
+    
+    updatedCoupons[index] = openedCoupon;
+    emit(state.copyWith(coupons: updatedCoupons));
+  }
 }

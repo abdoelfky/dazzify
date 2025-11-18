@@ -1,14 +1,19 @@
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
+import 'package:dazzify/features/user/presentation/widgets/scratch_overlay_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TieredCouponCard extends StatelessWidget {
   final TieredCouponModel coupon;
+  final VoidCallback? onScratchComplete;
+  final int? couponIndex;
 
   const TieredCouponCard({
     super.key,
     required this.coupon,
+    this.onScratchComplete,
+    this.couponIndex,
   });
 
   Color _parseColor(String hexColor) {
@@ -24,9 +29,9 @@ class TieredCouponCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final sideColor = _parseColor(coupon.color?.sideBackground ?? '#B47FF0');
     final bodyColor = _parseColor(coupon.color?.bodyBackground ?? '#3FD6A6');
-    final bool isScratchCard = coupon.levelNumber > 1 && !coupon.locked;
+    final bool shouldShowScratch = !coupon.opened && !coupon.locked;
 
-    return CustomPaint(
+    final couponCard = CustomPaint(
       painter: TicketPainter(
         sideColor: sideColor.withOpacity(coupon.locked ? 0.5 : 1.0),
         bodyColor: bodyColor.withOpacity(coupon.locked ? 0.5 : 1.0),
@@ -69,18 +74,16 @@ class TieredCouponCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Header text
-                        if (!coupon.locked)
+                        if (!coupon.locked && coupon.opened)
                           Text(
-                            isScratchCard 
-                                ? context.tr.scratchToRedeem 
-                                : context.tr.copyCouponCoded,
+                            context.tr.copyCouponCoded,
                             style: context.textTheme.bodyMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        if (!coupon.locked) SizedBox(height: 8.h),
+                        if (!coupon.locked && coupon.opened) SizedBox(height: 8.h),
                         
                         // Discount percentage
                         Text(
@@ -113,7 +116,7 @@ class TieredCouponCard extends StatelessWidget {
                               ),
                             ],
                           )
-                        else if (coupon.code != null && !isScratchCard)
+                        else if (coupon.code != null && coupon.opened)
                           Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 24.w,
@@ -154,6 +157,21 @@ class TieredCouponCard extends StatelessWidget {
         ),
       ),
     );
+
+    // Wrap with scratch overlay if needed
+    if (shouldShowScratch) {
+      return ScratchOverlayWidget(
+        onThresholdReached: () {
+          if (onScratchComplete != null) {
+            onScratchComplete!();
+          }
+        },
+        overlayColor: bodyColor,
+        child: couponCard,
+      );
+    }
+
+    return couponCard;
   }
 }
 

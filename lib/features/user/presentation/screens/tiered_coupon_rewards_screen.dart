@@ -138,8 +138,24 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                                 }
                               },
                               child: isSelected
-                                  ? TieredCouponDetailsCard(coupon: coupon)
-                                  : TieredCouponCard(coupon: coupon),
+                                  ? TieredCouponDetailsCard(
+                                      coupon: coupon,
+                                      onScratchComplete: () {
+                                        context
+                                            .read<TieredCouponCubit>()
+                                            .markCouponAsOpened(index);
+                                      },
+                                      couponIndex: index,
+                                    )
+                                  : TieredCouponCard(
+                                      coupon: coupon,
+                                      onScratchComplete: () {
+                                        context
+                                            .read<TieredCouponCubit>()
+                                            .markCouponAsOpened(index);
+                                      },
+                                      couponIndex: index,
+                                    ),
                             ),
                           );
                         }),
