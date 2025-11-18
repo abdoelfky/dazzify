@@ -94,66 +94,79 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                     );
                   }
 
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 16.h,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header text
-                        Center(
-                          child: Text(
-                            context.tr.startWithFirstCoupon,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF7B3FF2),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
                         ),
-                        SizedBox(height: 20.h),
-                        
-                        // Coupons list
-                        ...List.generate(state.coupons.length, (index) {
-                          final coupon = state.coupons[index];
-
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 16.h),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (!coupon.locked) {
-                                  // Capture the cubit before entering the builder
-                                  final cubit = context.read<TieredCouponCubit>();
-                                  // Navigate to details screen
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => BlocProvider.value(
-                                        value: cubit,
-                                        child: TieredCouponDetailsScreen(
-                                          coupon: coupon,
-                                          couponIndex: index,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: TieredCouponCard(
-                                coupon: coupon,
-                                onScratchComplete: () {
-                                  context
-                                      .read<TieredCouponCubit>()
-                                      .markCouponAsOpened(index);
-                                },
-                                couponIndex: index,
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Header text
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: constraints.maxWidth * 0.9,
+                              ),
+                              child: Text(
+                                context.tr.startWithFirstCoupon,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF7B3FF2),
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          );
-                        }),
-                      ],
-                    ),
+                            SizedBox(height: 20.h),
+                            
+                            // Coupons list
+                            ...List.generate(state.coupons.length, (index) {
+                              final coupon = state.coupons[index];
+
+                              return Padding(
+                                padding: EdgeInsets.only(bottom: 16.h),
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: 600.w,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (!coupon.locked) {
+                                        // Capture the cubit before entering the builder
+                                        final cubit = context.read<TieredCouponCubit>();
+                                        // Navigate to details screen
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => BlocProvider.value(
+                                              value: cubit,
+                                              child: TieredCouponDetailsScreen(
+                                                coupon: coupon,
+                                                couponIndex: index,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: TieredCouponCard(
+                                      coupon: coupon,
+                                      onScratchComplete: () {
+                                        context
+                                            .read<TieredCouponCubit>()
+                                            .markCouponAsOpened(index);
+                                      },
+                                      couponIndex: index,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      );
+                    },
                   );
                   },
                 ),

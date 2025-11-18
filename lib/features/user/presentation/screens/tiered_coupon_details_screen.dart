@@ -50,95 +50,109 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                 title: context.tr.coupons,
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 16.h,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Header section with logo and text
-                      Text(
-                        'da dazzify',
-                        style: TextStyle(
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF7B3FF2),
-                          letterSpacing: 1.2,
-                        ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 16.h,
                       ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        context.tr.redeemYourCoupon,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF7B3FF2),
-                        ),
-                      ),
-                      Text(
-                        context.tr.forDiscount,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFF7B3FF2),
-                        ),
-                      ),
-                      
-                      SizedBox(height: 20.h),
-
-                      // Coupon card with ticket style
-                      _buildCouponCard(context, sideColor, bodyColor),
-
-                      SizedBox(height: 20.h),
-
-                      // Coupon details section
-                      if (coupon.opened && coupon.instructions.isNotEmpty)
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      physics: const BouncingScrollPhysics(),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 600.w,
+                          ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Coupon details header
+                              // Header section with logo and text
                               Text(
-                                context.tr.couponDetails,
-                                style: context.textTheme.titleMedium?.copyWith(
+                                'da dazzify',
+                                style: TextStyle(
+                                  fontSize: 28.sp,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xFF7B3FF2),
+                                  letterSpacing: 1.2,
                                 ),
                               ),
-                              SizedBox(height: 12.h),
+                              SizedBox(height: 8.h),
+                              Text(
+                                context.tr.redeemYourCoupon,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF7B3FF2),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                context.tr.forDiscount,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: const Color(0xFF7B3FF2),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              
+                              SizedBox(height: 20.h),
 
-                              // Instructions list
-                              ...coupon.instructions.asMap().entries.map((entry) {
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: 8.h),
-                                  child: Row(
+                              // Coupon card with ticket style
+                              _buildCouponCard(context, sideColor, bodyColor),
+
+                              SizedBox(height: 20.h),
+
+                              // Coupon details section
+                              if (coupon.opened && coupon.instructions.isNotEmpty)
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                  child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      // Coupon details header
                                       Text(
-                                        '• ',
-                                        style: context.textTheme.bodyMedium?.copyWith(
-                                          color: const Color(0xFF7B3FF2),
+                                        context.tr.couponDetails,
+                                        style: context.textTheme.titleMedium?.copyWith(
                                           fontWeight: FontWeight.bold,
+                                          color: const Color(0xFF7B3FF2),
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Text(
-                                          entry.value,
-                                          style: context.textTheme.bodyMedium?.copyWith(
-                                            color: const Color(0xFF7B3FF2),
-                                            height: 1.4,
+                                      SizedBox(height: 12.h),
+
+                                      // Instructions list
+                                      ...coupon.instructions.asMap().entries.map((entry) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(bottom: 8.h),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '• ',
+                                                style: context.textTheme.bodyMedium?.copyWith(
+                                                  color: const Color(0xFF7B3FF2),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  entry.value,
+                                                  style: context.textTheme.bodyMedium?.copyWith(
+                                                    color: const Color(0xFF7B3FF2),
+                                                    height: 1.4,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ),
+                                        );
+                                      }),
                                     ],
                                   ),
-                                );
-                              }),
+                                ),
                             ],
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -228,11 +242,11 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   .markCouponAsOpened(couponIndex);
                             },
                             overlayColor: bodyColor,
-                            width: 200.w,
-                            height: 44.h,
+                            width: 220.w,
+                            height: 46.h,
                             child: Container(
-                              width: 200.w,
-                              height: 44.h,
+                              width: 220.w,
+                              height: 46.h,
                               padding: EdgeInsets.symmetric(
                                 horizontal: 32.w,
                                 vertical: 10.h,
@@ -240,6 +254,13 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: Center(
                                 child: Text(
@@ -264,20 +285,34 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 240.w,
+                                minWidth: 160.w,
+                              ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 60.w,
-                                vertical: 8.h,
+                                horizontal: 40.w,
+                                vertical: 10.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                              child: Text(
-                                coupon.code!,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.sp,
+                              child: Center(
+                                child: Text(
+                                  coupon.code!,
+                                  style: context.textTheme.bodyLarge?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

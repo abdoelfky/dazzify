@@ -31,7 +31,7 @@ class TieredCouponCard extends StatelessWidget {
     final bodyColor = _parseColor(coupon.color?.bodyBackground ?? '#3FD6A6');
     final bool shouldShowScratch = !coupon.opened && !coupon.locked;
 
-    final couponCard = CustomPaint(
+    return CustomPaint(
       painter: TicketPainter(
         sideColor: sideColor.withOpacity(coupon.locked ? 0.5 : 1.0),
         bodyColor: bodyColor.withOpacity(coupon.locked ? 0.5 : 1.0),
@@ -118,19 +118,62 @@ class TieredCouponCard extends StatelessWidget {
                           )
                         else if (coupon.code != null && coupon.opened)
                           Container(
+                            constraints: BoxConstraints(
+                              maxWidth: 200.w,
+                              minWidth: 120.w,
+                            ),
                             padding: EdgeInsets.symmetric(
-                              horizontal: 60.w,
-                              vertical: 5.h,
+                              horizontal: 32.w,
+                              vertical: 6.h,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8.r),
                             ),
-                            child: Text(
-                              coupon.code!,
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                            child: Center(
+                              child: Text(
+                                coupon.code!,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        else if (coupon.code != null && shouldShowScratch)
+                          // Scratch only on code area
+                          ScratchOverlayWidget(
+                            onThresholdReached: () {
+                              if (onScratchComplete != null) {
+                                onScratchComplete!();
+                              }
+                            },
+                            overlayColor: bodyColor,
+                            width: 180.w,
+                            height: 38.h,
+                            child: Container(
+                              width: 180.w,
+                              height: 38.h,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24.w,
+                                vertical: 6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  coupon.code!,
+                                  style: context.textTheme.bodyLarge?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.sp,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ),
@@ -157,21 +200,6 @@ class TieredCouponCard extends StatelessWidget {
         ),
       ),
     );
-
-    // Wrap with scratch overlay if needed
-    if (shouldShowScratch) {
-      return ScratchOverlayWidget(
-        onThresholdReached: () {
-          if (onScratchComplete != null) {
-            onScratchComplete!();
-          }
-        },
-        overlayColor: bodyColor,
-        child: couponCard,
-      );
-    }
-
-    return couponCard;
   }
 }
 

@@ -9,6 +9,7 @@ class ScratchOverlayWidget extends StatefulWidget {
   final Color overlayColor;
   final double? width;
   final double? height;
+  final bool preventScroll;
 
   const ScratchOverlayWidget({
     super.key,
@@ -17,6 +18,7 @@ class ScratchOverlayWidget extends StatefulWidget {
     this.overlayColor = const Color(0xFF7B3FF2),
     this.width,
     this.height,
+    this.preventScroll = true,
   });
 
   @override
@@ -25,72 +27,98 @@ class ScratchOverlayWidget extends StatefulWidget {
 
 class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
   bool _isScratching = false;
+  final ScrollController? _scrollController = null;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanStart: (_) {
+    final scratchWidget = Scratcher(
+      brushSize: 35,
+      threshold: 55,
+      color: Colors.grey.shade800,
+      onChange: (value) {
+        // Optional: Track scratching progress
+      },
+      onThreshold: widget.onThresholdReached,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade800.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        child: Stack(
+          children: [
+            widget.child,
+            // Vintage scratch overlay with pattern
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.grey.shade700.withOpacity(0.3),
+                    Colors.grey.shade800.withOpacity(0.3),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+            // Scratch hint overlay
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.touch_app,
+                    color: Colors.white70,
+                    size: 18.r,
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    context.tr.scratchToRedeem,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 8.sp,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (!widget.preventScroll) {
+      return scratchWidget;
+    }
+
+    // Wrap with gesture detector to prevent scrolling during scratch
+    return Listener(
+      onPointerDown: (_) {
         setState(() {
           _isScratching = true;
         });
       },
-      onPanEnd: (_) {
+      onPointerUp: (_) {
         setState(() {
           _isScratching = false;
         });
       },
-      onPanCancel: () {
+      onPointerCancel: (_) {
         setState(() {
           _isScratching = false;
         });
       },
-      child: AbsorbPointer(
-        absorbing: _isScratching,
-        child: Scratcher(
-          brushSize: 40,
-          threshold: 50,
-          color: widget.overlayColor.withOpacity(0.9),
-          onChange: (value) {
-            // Optional: Track scratching progress
-          },
-          onThreshold: widget.onThresholdReached,
-          child: Container(
-            width: widget.width,
-            height: widget.height,
-            decoration: BoxDecoration(
-              color: widget.overlayColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Stack(
-              children: [
-                widget.child,
-                // Scratch hint overlay
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.touch_app,
-                        color: Colors.white,
-                        size: 24.r,
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        context.tr.scratchToRedeem,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          // Prevent scroll when scratching
+          return _isScratching;
+        },
+        child: scratchWidget,
       ),
     );
   }
