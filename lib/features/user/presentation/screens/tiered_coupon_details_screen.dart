@@ -46,10 +46,12 @@ class TieredCouponDetailsScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              SizedBox(height: 20.h,),
-              DazzifyAppBar(
-                isLeading: true,
-                title: context.tr.coupons,
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: DazzifyAppBar(
+                  isLeading: true,
+                  title: context.tr.coupons,
+                ),
               ),
               Expanded(
                 child: LayoutBuilder(
