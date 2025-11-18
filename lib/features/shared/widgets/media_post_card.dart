@@ -99,6 +99,23 @@ class _MediaPostCardState extends State<MediaPostCard> {
             (right) => didAddView = true,
           );
         }
+        
+        // Auto-play first video when post comes into view
+        if (visibilityInfo.visibleFraction > 0.5) {
+          final firstItem = widget.brandMedia.mediaItems[_indicatorIndex.value];
+          if (firstItem.itemType == "video" && 
+              _videoControllers[_indicatorIndex.value] != null &&
+              _videoControllers[_indicatorIndex.value]!.value.isInitialized) {
+            _videoControllers[_indicatorIndex.value]!.play();
+          }
+        } else {
+          // Pause all videos when post goes out of view
+          for (int i = 0; i < _videoControllers.length; i++) {
+            if (_videoControllers[i] != null) {
+              _videoControllers[i]!.pause();
+            }
+          }
+        }
       },
       child: Stack(
         children: [
@@ -287,7 +304,7 @@ class _MediaPostCardState extends State<MediaPostCard> {
                         _videoControllers[index]!.value.isInitialized) {
                       return VisibilityDetector(
                         onVisibilityChanged: (visibility) {
-                          if (visibility.visibleFraction > 0.0) {
+                          if (visibility.visibleFraction > 0.0 && _indicatorIndex.value == index) {
                             _videoControllers[index]!.play();
                           } else {
                             _videoControllers[index]!.pause();
@@ -325,7 +342,18 @@ class _MediaPostCardState extends State<MediaPostCard> {
                   initialPage: 0,
                   enableInfiniteScroll: false,
                   onPageChanged: (index, reason) {
+                    // Pause all videos first
+                    for (int i = 0; i < _videoControllers.length; i++) {
+                      if (_videoControllers[i] != null) {
+                        _videoControllers[i]!.pause();
+                      }
+                    }
                     _indicatorIndex.value = index;
+                    // Auto-play the current video if it's a video
+                    if (widget.brandMedia.mediaItems[index].itemType == "video" &&
+                        _videoControllers[index] != null) {
+                      _videoControllers[index]!.play();
+                    }
                   },
                 ),
               ),
@@ -367,22 +395,70 @@ class _MediaPostCardState extends State<MediaPostCard> {
         ],
       );
     } else {
-      return Column(
-        children: [
-          SizedBox(height: 8.h),
-          AspectRatio(
-            // aspectRatio: 1,
-            aspectRatio:
-                _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7,
-            child: DazzifyCachedNetworkImage(
-              width: context.screenWidth,
-              imageUrl: widget.brandMedia.mediaItems[0].itemUrl,
-              fit: BoxFit.cover,
+      // Single media item
+      final mediaItem = widget.brandMedia.mediaItems[0];
+      if (mediaItem.itemType == "photo") {
+        return Column(
+          children: [
+            SizedBox(height: 8.h),
+            AspectRatio(
+              aspectRatio:
+                  _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7,
+              child: DazzifyCachedNetworkImage(
+                width: context.screenWidth,
+                imageUrl: mediaItem.itemUrl,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          SizedBox(height: 8.h),
-        ],
-      );
+            SizedBox(height: 8.h),
+          ],
+        );
+      } else {
+        // Single video
+        _initializeVideoController(0);
+        return Column(
+          children: [
+            SizedBox(height: 8.h),
+            if (_chewieControllers[0] != null &&
+                _videoControllers[0]!.value.isInitialized)
+              VisibilityDetector(
+                onVisibilityChanged: (visibility) {
+                  if (visibility.visibleFraction > 0.5) {
+                    _videoControllers[0]!.play();
+                  } else {
+                    _videoControllers[0]!.pause();
+                  }
+                },
+                key: ValueKey<String>(mediaItem.itemUrl),
+                child: AspectRatio(
+                  aspectRatio:
+                      _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7,
+                  child: Chewie(
+                    controller: _chewieControllers[0]!,
+                  ),
+                ),
+              )
+            else
+              Shimmer.fromColors(
+                baseColor: context.isDarkTheme
+                    ? ColorsManager.baseShimmerDark
+                    : ColorsManager.baseShimmerLight,
+                highlightColor: context.isDarkTheme
+                    ? ColorsManager.highlightShimmerDark
+                    : ColorsManager.highlightShimmerLight,
+                child: AspectRatio(
+                  aspectRatio:
+                      _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7,
+                  child: Container(
+                    width: context.screenWidth,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            SizedBox(height: 8.h),
+          ],
+        );
+      }
     }
   }
 
