@@ -158,13 +158,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "contactInstallment": MessageLookupByLibrary.simpleMessage("Contact"),
     "continueButton": MessageLookupByLibrary.simpleMessage("Continue"),
     "conversationsAppBarTitle": MessageLookupByLibrary.simpleMessage("Chats"),
+    "copyCouponCoded": MessageLookupByLibrary.simpleMessage(
+      "Copy coupon coded",
+    ),
     "countServiceSelected": m0,
     "couponCopied": MessageLookupByLibrary.simpleMessage(
       "Code copied to clipboard",
     ),
     "couponDetails": MessageLookupByLibrary.simpleMessage("Coupon details:"),
     "couponDisc": MessageLookupByLibrary.simpleMessage("Coupon disc"),
-    "copyCouponCoded": MessageLookupByLibrary.simpleMessage("Copy coupon coded"),
     "couponNotValidated": MessageLookupByLibrary.simpleMessage(
       "Invalid coupon code.",
     ),
@@ -172,7 +174,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Discount added by coupon",
     ),
     "coupons": MessageLookupByLibrary.simpleMessage("Coupons"),
-    "scratchToRedeem": MessageLookupByLibrary.simpleMessage("Scratch to redeem your discount"),
     "createIssue": MessageLookupByLibrary.simpleMessage("Create Issue"),
     "createReview": MessageLookupByLibrary.simpleMessage("Create Review"),
     "creditCard": MessageLookupByLibrary.simpleMessage("Credit card"),
@@ -531,6 +532,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Review Created Successfully",
     ),
     "scanQrCode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
+    "scratchToRedeem": MessageLookupByLibrary.simpleMessage(
+      "Scratch to redeem your discount",
+    ),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "seeAllReviews": MessageLookupByLibrary.simpleMessage("See All Reviews"),
     "selectAndAddComment": MessageLookupByLibrary.simpleMessage(

@@ -152,13 +152,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversationsAppBarTitle": MessageLookupByLibrary.simpleMessage(
       "المحادثات",
     ),
+    "copyCouponCoded": MessageLookupByLibrary.simpleMessage("انسخ رمز الكوبون"),
     "countServiceSelected": m0,
     "couponCopied": MessageLookupByLibrary.simpleMessage(
       "تم نسخ الكود إلى الحافظة",
     ),
     "couponDetails": MessageLookupByLibrary.simpleMessage("تفاصيل الكوبون:"),
     "couponDisc": MessageLookupByLibrary.simpleMessage("خصم الكوبون"),
-    "copyCouponCoded": MessageLookupByLibrary.simpleMessage("انسخ رمز الكوبون"),
     "couponNotValidated": MessageLookupByLibrary.simpleMessage(
       "كوبون غير صالح",
     ),
@@ -166,7 +166,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم الخصم عن طريق الكوبون",
     ),
     "coupons": MessageLookupByLibrary.simpleMessage("الكوبونات"),
-    "scratchToRedeem": MessageLookupByLibrary.simpleMessage("اكشط لاستخدام خصمك"),
     "createIssue": MessageLookupByLibrary.simpleMessage("إنشاء المشكلة"),
     "createReview": MessageLookupByLibrary.simpleMessage("اضف تقييمك"),
     "creditCard": MessageLookupByLibrary.simpleMessage("بطاقة إئتمان"),
@@ -534,6 +533,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "scanQrCode": MessageLookupByLibrary.simpleMessage(
       "امسح رمز الاستجابة السريعة",
+    ),
+    "scratchToRedeem": MessageLookupByLibrary.simpleMessage(
+      "اكشط لاستخدام خصمك",
     ),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
     "seeAllReviews": MessageLookupByLibrary.simpleMessage(

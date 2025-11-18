@@ -3108,26 +3108,6 @@ class S {
     );
   }
 
-  /// `Copy coupon coded`
-  String get copyCouponCoded {
-    return Intl.message(
-      'Copy coupon coded',
-      name: 'copyCouponCoded',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Scratch to redeem your discount`
-  String get scratchToRedeem {
-    return Intl.message(
-      'Scratch to redeem your discount',
-      name: 'scratchToRedeem',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `No coupons available`
   String get noCouponsAvailable {
     return Intl.message(
@@ -3143,6 +3123,26 @@ class S {
     return Intl.message(
       'Invalid QR Code',
       name: 'invalidQrCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy coupon coded`
+  String get copyCouponCoded {
+    return Intl.message(
+      'Copy coupon coded',
+      name: 'copyCouponCoded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scratch to redeem your discount`
+  String get scratchToRedeem {
+    return Intl.message(
+      'Scratch to redeem your discount',
+      name: 'scratchToRedeem',
       desc: '',
       args: [],
     );
