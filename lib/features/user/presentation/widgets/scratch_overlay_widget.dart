@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scratcher/scratcher.dart';
 
-class ScratchOverlayWidget extends StatelessWidget {
+class ScratchOverlayWidget extends StatefulWidget {
   final Widget child;
   final VoidCallback onThresholdReached;
   final Color overlayColor;
@@ -20,63 +20,76 @@ class ScratchOverlayWidget extends StatelessWidget {
   });
 
   @override
+  State<ScratchOverlayWidget> createState() => _ScratchOverlayWidgetState();
+}
+
+class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
+  bool _isScratching = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Scratcher(
-      brushSize: 40,
-      threshold: 50,
-      color: overlayColor.withOpacity(0.9),
-      onChange: (value) {
-        // Optional: Track scratching progress
+    return GestureDetector(
+      onPanStart: (_) {
+        setState(() {
+          _isScratching = true;
+        });
       },
-      onThreshold: onThresholdReached,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: overlayColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        child: Stack(
-          children: [
-            child,
-            // Scratch hint overlay
-            Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24.w,
-                  vertical: 12.h,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                    width: 2,
+      onPanEnd: (_) {
+        setState(() {
+          _isScratching = false;
+        });
+      },
+      onPanCancel: () {
+        setState(() {
+          _isScratching = false;
+        });
+      },
+      child: AbsorbPointer(
+        absorbing: _isScratching,
+        child: Scratcher(
+          brushSize: 40,
+          threshold: 50,
+          color: widget.overlayColor.withOpacity(0.9),
+          onChange: (value) {
+            // Optional: Track scratching progress
+          },
+          onThreshold: widget.onThresholdReached,
+          child: Container(
+            width: widget.width,
+            height: widget.height,
+            decoration: BoxDecoration(
+              color: widget.overlayColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Stack(
+              children: [
+                widget.child,
+                // Scratch hint overlay
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.touch_app,
+                        color: Colors.white,
+                        size: 24.r,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        context.tr.scratchToRedeem,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.touch_app,
-                      color: Colors.white,
-                      size: 32.r,
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      context.tr.scratchToRedeem,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

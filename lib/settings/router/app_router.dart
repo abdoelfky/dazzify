@@ -70,6 +70,7 @@ import 'package:dazzify/features/user/presentation/screens/issue_status_screen.d
 import 'package:dazzify/features/user/presentation/screens/my_favorite_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/profile_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/qr_scanner_screen.dart';
+import 'package:dazzify/features/user/presentation/screens/tiered_coupon_details_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/tiered_coupon_rewards_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/user_locations_screen.dart';
 import 'package:flutter/material.dart';
@@ -184,6 +185,9 @@ class AppRouter extends RootStackRouter {
                     ),
                     AutoRoute(
                       page: TieredCouponRewardsWrapperRoute.page,
+                    ),
+                    AutoRoute(
+                      page: TieredCouponDetailsRoute.page,
                     ),
                     AutoRoute(
                       page: BookingsHistoryRoute.page,

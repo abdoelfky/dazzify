@@ -5,8 +5,8 @@ import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_overlay_loading.dart';
 import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.dart';
 import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_state.dart';
+import 'package:dazzify/features/user/presentation/screens/tiered_coupon_details_screen.dart';
 import 'package:dazzify/features/user/presentation/widgets/tiered_coupon_card.dart';
-import 'package:dazzify/features/user/presentation/widgets/tiered_coupon_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -118,44 +118,35 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                         // Coupons list
                         ...List.generate(state.coupons.length, (index) {
                           final coupon = state.coupons[index];
-                          final isSelected =
-                              state.selectedCouponIndex == index;
 
                           return Padding(
                             padding: EdgeInsets.only(bottom: 16.h),
                             child: GestureDetector(
                               onTap: () {
                                 if (!coupon.locked) {
-                                  if (isSelected) {
-                                    context
-                                        .read<TieredCouponCubit>()
-                                        .clearSelection();
-                                  } else {
-                                    context
-                                        .read<TieredCouponCubit>()
-                                        .selectCoupon(index);
-                                  }
+                                  // Navigate to details screen
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider.value(
+                                        value: context.read<TieredCouponCubit>(),
+                                        child: TieredCouponDetailsScreen(
+                                          coupon: coupon,
+                                          couponIndex: index,
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 }
                               },
-                              child: isSelected
-                                  ? TieredCouponDetailsCard(
-                                      coupon: coupon,
-                                      onScratchComplete: () {
-                                        context
-                                            .read<TieredCouponCubit>()
-                                            .markCouponAsOpened(index);
-                                      },
-                                      couponIndex: index,
-                                    )
-                                  : TieredCouponCard(
-                                      coupon: coupon,
-                                      onScratchComplete: () {
-                                        context
-                                            .read<TieredCouponCubit>()
-                                            .markCouponAsOpened(index);
-                                      },
-                                      couponIndex: index,
-                                    ),
+                              child: TieredCouponCard(
+                                coupon: coupon,
+                                onScratchComplete: () {
+                                  context
+                                      .read<TieredCouponCubit>()
+                                      .markCouponAsOpened(index);
+                                },
+                                couponIndex: index,
+                              ),
                             ),
                           );
                         }),
