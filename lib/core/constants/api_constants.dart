@@ -136,4 +136,5 @@ class ApiConstants {
       "/transaction/$transactionId/pay";
 
   static const String getTieredCouponRewards = "/user/tiered-coupon-rewards";
+  static const String openNewRewardLevel = "/user/open-new-reward-level";
 }

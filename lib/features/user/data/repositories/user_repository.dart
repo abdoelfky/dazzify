@@ -115,4 +115,6 @@ abstract class UserRepository {
   });
 
   Future<Either<Failure, List<TieredCouponModel>>> getTieredCouponRewards();
+  
+  Future<Either<Failure, TieredCouponModel>> openNewRewardLevel();
 }
