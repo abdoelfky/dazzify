@@ -41,7 +41,6 @@ class _ReelPlayerState extends State<ReelPlayer>
   late final ValueNotifier<bool> _hasControllerInitialized;
   late final ValueNotifier<bool> _hasTheUserTappedPause;
   late final ValueNotifier<bool> _hasTheUserOpenedComments;
-  late final ValueNotifier<bool> _showHeart;
 
   @override
   bool get wantKeepAlive => true;
@@ -53,7 +52,6 @@ class _ReelPlayerState extends State<ReelPlayer>
     _hasControllerInitialized = ValueNotifier(false);
     _hasTheUserTappedPause = ValueNotifier(false);
     _hasTheUserOpenedComments = ValueNotifier(false);
-    _showHeart = ValueNotifier(false);
     _initReelsPlayer();
     context.read<ReelsBloc>().add(
           AddViewForReelEvent(
@@ -101,21 +99,7 @@ class _ReelPlayerState extends State<ReelPlayer>
               }
             },
             onDoubleTap: () {
-              if (AuthLocalDatasourceImpl().checkGuestMode()) {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: false,
-                  builder: (context) {
-                    return GuestModeBottomSheet();
-                  },
-                );
-              } else {
-                widget.onLikeTap();
-                _showHeart.value = true;
-                Future.delayed(const Duration(milliseconds: 700), () {
-                  _showHeart.value = false;
-                });
-              }
+              widget.onLikeTap();
             },
             child: Stack(
               children: [
@@ -125,8 +109,9 @@ class _ReelPlayerState extends State<ReelPlayer>
                     key: ValueKey<String>(widget.videoUrl),
                     onVisibilityChanged: (visibility) {
                       if (visibility.visibleFraction > 0.0 &&
-                          !_hasTheUserTappedPause.value &&
                           !_hasTheUserOpenedComments.value) {
+                        // Reset pause state when swiping to a new reel
+                        _hasTheUserTappedPause.value = false;
                         _controller.play();
                       } else {
                         _controller.pause();
@@ -159,32 +144,6 @@ class _ReelPlayerState extends State<ReelPlayer>
                                 },
                               )
                             : const SizedBox.shrink(),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  top: 0,
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _showHeart,
-                    builder: (context, isVisible, _) {
-                      return AnimatedOpacity(
-                        opacity: isVisible ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 300),
-                        child: Icon(
-                          Icons.favorite,
-                          color: Colors.red.withOpacity(0.85),
-                          size: 90,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.5),
-                            )
-                          ],
-                        ),
-                      );
-                    },
                   ),
                 ),
                 PositionedDirectional(
@@ -258,7 +217,6 @@ class _ReelPlayerState extends State<ReelPlayer>
     _hasTheUserOpenedComments.dispose();
     _hasTheUserTappedPause.dispose();
     _showPlayIcon.dispose();
-    _showHeart.dispose();
   }
 }
 double? _parseAspectRatio(String? ratioString) {

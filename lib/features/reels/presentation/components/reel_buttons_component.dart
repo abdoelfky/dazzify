@@ -63,42 +63,24 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
         children: [
           BlocConsumer<LikesCubit, LikesState>(
           listener: (context, state) {
-            // final currentMediaId = _likesCubit.currentMediaId;
-            //
-            // if (currentMediaId != widget.reel.id) return;
-            //
-            // if (state.addLikeState == UiState.loading) {
-            //   _likesCount++;
-            // } else if (state.removeLikeState == UiState.loading) {
-            //   _likesCount--;
-            // }
-            // if (state.addLikeState == UiState.loading) {
-            //   if (widget.reel.likesCount != null) {
-            //     _likesCount++;
-            //   }
-            // } else if (state.removeLikeState == UiState.loading &&
-            //     _likesCubit.currentMediaId == widget.reel.id) {
-            //   if (widget.reel.likesCount != null) {
-            //     _likesCount--;
-            //   }
-            // }
-            // if (state.addLikeState == UiState.loading &&
-            //     _likesCubit.currentMediaId == widget.reel.id) {
-            //   _likesCount++;
-            //
-            //   if (widget.reel.likesCount != null) {
-            //     widget.reel.likesCount! + 1;
-            //
-            //   }
-            // } else if (state.removeLikeState == UiState.loading &&
-            //     _likesCubit.currentMediaId == widget.reel.id) {
-            //   _likesCount--;
-            //
-            //   if (widget.reel.likesCount != null) {
-            //     widget.reel.likesCount! - 1;
-            //
-            //   }
-            // }
+            // Check if this is the current reel being liked/unliked
+            if (_likesCubit.currentMediaId == widget.reel.id) {
+              final isCurrentlyLiked = state.likesIds.contains(widget.reel.id);
+              
+              // Only update if there's a change in like status
+              if (isCurrentlyLiked != _isLiked) {
+                setState(() {
+                  if (isCurrentlyLiked && !_isLiked) {
+                    // Was unliked, now liked
+                    _likesCount++;
+                  } else if (!isCurrentlyLiked && _isLiked) {
+                    // Was liked, now unliked
+                    _likesCount--;
+                  }
+                  _isLiked = isCurrentlyLiked;
+                });
+              }
+            }
           },
           builder: (context, state) {
             return Row(
@@ -128,16 +110,8 @@ class _ReelsButtonComponentState extends State<ReelsButtonComponent> {
                         },
                       );
                     } else {
-                      setState(() {
-                        if (_isLiked) {
-                          _likesCount--;
-                        } else {
-                          _likesCount++;
-                        }
-                        _isLiked = !_isLiked;
-                      });
-
-                      widget.onLikeTap(); // هذا يستدعي cubit
+                      // Let the BlocConsumer listener handle the state update
+                      widget.onLikeTap();
                     }
                   },
                   isFavorite: state.likesIds.contains(widget.reel.id),
