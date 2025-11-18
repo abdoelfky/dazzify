@@ -324,4 +324,12 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
       fromJsonMethod: TieredCouponModel.fromJson,
     );
   }
+
+  @override
+  Future<String> openNewRewardLevel() async {
+    return await _apiConsumer.post<String>(
+      ApiConstants.openNewRewardLevel,
+      responseReturnType: ResponseReturnType.primitive,
+    );
+  }
 }

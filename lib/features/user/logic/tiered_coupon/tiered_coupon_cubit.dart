@@ -51,6 +51,37 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
     emit(state.copyWith(clearSelection: true));
   }
 
+  Future<String?> openNewRewardLevel(int index) async {
+    final result = await _userRepository.openNewRewardLevel();
+    
+    return result.fold(
+      (failure) {
+        // Return null on failure
+        return null;
+      },
+      (couponCode) {
+        // Update the coupon with the received code and mark as opened
+        final updatedCoupons = List<TieredCouponModel>.from(state.coupons);
+        final coupon = updatedCoupons[index];
+        
+        final openedCoupon = TieredCouponModel(
+          code: couponCode,
+          opened: true,
+          locked: coupon.locked,
+          levelNumber: coupon.levelNumber,
+          discountPercentage: coupon.discountPercentage,
+          color: coupon.color,
+          instructions: coupon.instructions,
+        );
+        
+        updatedCoupons[index] = openedCoupon;
+        emit(state.copyWith(coupons: updatedCoupons));
+        
+        return couponCode;
+      },
+    );
+  }
+
   void markCouponAsOpened(int index) {
     final updatedCoupons = List<TieredCouponModel>.from(state.coupons);
     final coupon = updatedCoupons[index];
