@@ -100,12 +100,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       return;
     }
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    // Wrap in try-catch to handle cases where Navigator is not available in context
-    try {
-      _canPop = context.router.canPop();
-    } catch (e) {
-      _canPop = false;
-    }
+    _canPop = context.router.canPop();
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -149,12 +144,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          try {
-            context.maybePop();
-          } catch (e) {
-            // Navigator not available in context, just reset
-            _resetDrag();
-          }
+          context.router.maybePop();
         }
       });
     } else {
@@ -289,12 +279,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
 
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    // Wrap in try-catch to handle cases where Navigator is not available in context
-    try {
-      _canPop = context.router.canPop();
-    } catch (e) {
-      _canPop = false;
-    }
+    _canPop = context.router.canPop();
 
     if (_canPop) {
       setState(() {
@@ -348,11 +333,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          try {
-            context.maybePop();
-          } catch (e) {
-            // Navigator not available in context, just reset
-          }
+          context.router.maybePop();
           _resetDrag();
         }
       });
