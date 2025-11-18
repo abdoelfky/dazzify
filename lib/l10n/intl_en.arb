@@ -409,7 +409,11 @@
   "notes": "Notes",
   "iAgreeToTerms": "I agree to the terms",
   "pleaseApplyCoupon": "Please apply the coupon code before confirming",
-  "providerNotDeliver": "The provider does not offer the service in any area at the moment."
+  "providerNotDeliver": "The provider does not offer the service in any area at the moment.",
+  "qrCodeScanner": "QR Code Scanner",
+  "scanQrCode": "Scan QR Code",
+  "pointCameraAtQr": "Point camera at QR code",
+  "qrCodeDetected": "QR Code Detected"
 
 
 }

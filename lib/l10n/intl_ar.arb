@@ -409,7 +409,11 @@
   "iAgreeToTerms": "أوافق على الشروط والأحكام",
   "noServicesAtThisCategory": "لا توجد خدمات حالياً في هذا القسم",
   "pleaseApplyCoupon": "يرجى تطبيق رمز الكوبون قبل التأكيد",
-  "providerNotDeliver": "المزود لا يقدم الخدمة في أي منطقة حالياً."
+  "providerNotDeliver": "المزود لا يقدم الخدمة في أي منطقة حالياً.",
+  "qrCodeScanner": "ماسح رمز الاستجابة السريعة",
+  "scanQrCode": "امسح رمز الاستجابة السريعة",
+  "pointCameraAtQr": "وجه الكاميرا إلى رمز الاستجابة السريعة",
+  "qrCodeDetected": "تم اكتشاف رمز الاستجابة السريعة"
 
 
 }
