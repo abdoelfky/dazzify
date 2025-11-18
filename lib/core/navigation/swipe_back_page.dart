@@ -100,11 +100,11 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       return;
     }
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    // Fall back to Navigator if AutoRouter is not available in this context
+    // Wrap in try-catch to handle cases where Navigator is not available in context
     try {
       _canPop = context.router.canPop();
     } catch (e) {
-      _canPop = Navigator.of(context).canPop();
+      _canPop = false;
     }
   }
 
@@ -149,7 +149,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          context.maybePop();
+          try {
+            context.maybePop();
+          } catch (e) {
+            // Navigator not available in context, just reset
+            _resetDrag();
+          }
         }
       });
     } else {
@@ -284,11 +289,11 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
 
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    // Fall back to Navigator if AutoRouter is not available in this context
+    // Wrap in try-catch to handle cases where Navigator is not available in context
     try {
       _canPop = context.router.canPop();
     } catch (e) {
-      _canPop = Navigator.of(context).canPop();
+      _canPop = false;
     }
 
     if (_canPop) {
@@ -343,7 +348,11 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
           // Use AutoRouter's maybePop for proper nested navigation handling
-          context.maybePop();
+          try {
+            context.maybePop();
+          } catch (e) {
+            // Navigator not available in context, just reset
+          }
           _resetDrag();
         }
       });
