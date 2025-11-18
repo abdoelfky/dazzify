@@ -358,4 +358,14 @@ class UserRepositoryImpl implements UserRepository {
       return Left(ApiFailure(message: e.message!));
     }
   }
+
+  @override
+  Future<Either<Failure, TieredCouponModel>> openNewRewardLevel() async {
+    try {
+      final coupon = await _remoteDataSource.openNewRewardLevel();
+      return Right(coupon);
+    } on ServerException catch (e) {
+      return Left(ApiFailure(message: e.message!));
+    }
+  }
 }
