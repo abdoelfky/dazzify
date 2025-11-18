@@ -99,11 +99,13 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _canPop = false;
       return;
     }
-    // Try to use AutoRouter if available, otherwise fall back to Navigator
+    
+    // Safely check if we can pop by ensuring Navigator exists in context
     try {
       _canPop = context.router.canPop();
     } catch (e) {
-      _canPop = Navigator.of(context).canPop();
+      // If router/navigator is not available, don't allow pop
+      _canPop = false;
     }
   }
 
@@ -147,11 +149,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     if (_dragDistance > threshold || effectiveVelocity > 500) {
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
-          // Try to use AutoRouter's maybePop, otherwise fall back to Navigator
+          // Use AutoRouter's maybePop for proper nested navigation handling
           try {
             context.maybePop();
           } catch (e) {
-            Navigator.of(context).maybePop();
+            // If navigation fails, just reset
+            _resetDrag();
           }
         }
       });
@@ -286,11 +289,13 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       return;
     }
 
-    // Try to use AutoRouter if available, otherwise fall back to Navigator
+    // Safely check if we can pop by ensuring Navigator exists in context
     try {
       _canPop = context.router.canPop();
     } catch (e) {
-      _canPop = Navigator.of(context).canPop();
+      // If router/navigator is not available, don't allow pop
+      _canPop = false;
+      return;
     }
 
     if (_canPop) {
@@ -344,11 +349,13 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
-          // Try to use AutoRouter's maybePop, otherwise fall back to Navigator
+          // Use AutoRouter's maybePop for proper nested navigation handling
           try {
             context.maybePop();
           } catch (e) {
-            Navigator.of(context).maybePop();
+            // If navigation fails, just reset
+            _resetDrag();
+            return;
           }
           _resetDrag();
         }
