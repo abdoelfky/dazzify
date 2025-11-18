@@ -30,15 +30,19 @@ class ScratchOverlayWidget extends StatefulWidget {
 class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
   bool _isScratching = false;
   bool _hasStartedScratching = false;
-  final ScrollController? _scrollController = null;
 
   @override
   Widget build(BuildContext context) {
     final scratchWidget = Scratcher(
       brushSize: 40,
       threshold: 60,
-      image: Image(image: AssetImage('assets/images/scratcher.png')),
-      // color: widget.overlayColor.withOpacity(0.9),
+      enabled: true,
+      // Use both image and color for better scratch effect and gesture detection
+      image: Image(
+        image: AssetImage('assets/images/scratcher.png'),
+        fit: BoxFit.cover,
+      ),
+      color: widget.overlayColor.withOpacity(0.3),
       onChange: (value) {
         // Call onScratchStart only once when scratching begins
         if (!_hasStartedScratching && value > 0) {
@@ -95,19 +99,28 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       return scratchWidget;
     }
 
-    // Wrap with gesture detector to prevent scrolling during scratch
+    // Use Listener to track scratching without interfering with gesture detection
+    // Listener doesn't participate in gesture arena, so it won't conflict with Scratcher
     return Listener(
-      onPointerDown: (_) {
+      onPointerDown: (event) {
         setState(() {
           _isScratching = true;
         });
       },
-      onPointerUp: (_) {
+      onPointerMove: (event) {
+        // Keep scratching state active
+        if (!_isScratching) {
+          setState(() {
+            _isScratching = true;
+          });
+        }
+      },
+      onPointerUp: (event) {
         setState(() {
           _isScratching = false;
         });
       },
-      onPointerCancel: (_) {
+      onPointerCancel: (event) {
         setState(() {
           _isScratching = false;
         });
