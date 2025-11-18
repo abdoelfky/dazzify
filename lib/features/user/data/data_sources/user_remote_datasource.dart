@@ -114,4 +114,6 @@ abstract class UserRemoteDataSource {
   });
 
   Future<List<TieredCouponModel>> getTieredCouponRewards();
+  
+  Future<Map<String, dynamic>> openNewRewardLevel({required int levelNumber});
 }

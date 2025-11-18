@@ -50,4 +50,24 @@ class TieredCouponModel {
       _$TieredCouponModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$TieredCouponModelToJson(this);
+
+  TieredCouponModel copyWith({
+    String? code,
+    bool? opened,
+    bool? locked,
+    int? levelNumber,
+    int? discountPercentage,
+    CouponColorModel? color,
+    List<String>? instructions,
+  }) {
+    return TieredCouponModel(
+      code: code ?? this.code,
+      opened: opened ?? this.opened,
+      locked: locked ?? this.locked,
+      levelNumber: levelNumber ?? this.levelNumber,
+      discountPercentage: discountPercentage ?? this.discountPercentage,
+      color: color ?? this.color,
+      instructions: instructions ?? this.instructions,
+    );
+  }
 }
