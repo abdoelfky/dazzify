@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/presentation/widgets/scratch_overlay_widget.dart';
@@ -83,16 +85,15 @@ class TieredCouponCard extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           )
-                        else
-                          if (!coupon.locked && !coupon.opened)
-                            Text(
-                              context.tr.scratchToRedeem,
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
+                        else if (!coupon.locked && !coupon.opened)
+                          Text(
+                            context.tr.scratchToRedeem,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             ),
+                            textAlign: TextAlign.center,
+                          ),
                         if (!coupon.locked) SizedBox(height: 5.h),
 
                         // Discount percentage
@@ -106,7 +107,7 @@ class TieredCouponCard extends StatelessWidget {
                         ),
                         SizedBox(height: 5.h),
                         if (shouldShowScratch)
-                        // Scratch only on code area
+                          // Scratch only on code area
                           ScratchOverlayWidget(
                             onThresholdReached: () {
                               if (onScratchComplete != null) {
@@ -129,7 +130,7 @@ class TieredCouponCard extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  coupon.code??'XXXXX',
+                                  coupon.code ?? 'XXXXX',
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -160,34 +161,32 @@ class TieredCouponCard extends StatelessWidget {
                               ),
                             ],
                           )
-
-                        else
-                          if (coupon.code != null)
-                            Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 200.w,
-                                minWidth: 120.w,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 32.w,
-                                vertical: 6.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  coupon.code!,
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.sp,
-                                  ),
-                                  textAlign: TextAlign.center,
+                        else if (coupon.code != null)
+                          Container(
+                            constraints: BoxConstraints(
+                              maxWidth: 200.w,
+                              minWidth: 120.w,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Center(
+                              child: Text(
+                                coupon.code!,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
+                          ),
                       ],
                     ),
                   ),
@@ -200,13 +199,17 @@ class TieredCouponCard extends StatelessWidget {
               Positioned.fill(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 4.0,
+                      sigmaY: 4.0,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                   ),
                 ),
-              ),
+              )
           ],
         ),
       ),
@@ -227,8 +230,7 @@ class TicketPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill;
+    final paint = Paint()..style = PaintingStyle.fill;
     final double cutoutRadius = 12;
     final double cutoutSpacing = 30;
 
