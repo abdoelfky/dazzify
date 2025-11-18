@@ -1,8 +1,7 @@
 import 'package:dazzify/core/util/extensions.dart';
-import 'package:flutter/gestures.dart';
+import 'package:dazzify/core/widgets/custom_scratcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:scratcher/scratcher.dart';
 
 class ScratchOverlayWidget extends StatefulWidget {
   final Widget child;
@@ -33,7 +32,7 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final scratchWidget = Scratcher(
+    final scratchWidget = CustomScratcher(
       brushSize: 40,
       threshold: 60,
       enabled: true,
@@ -96,21 +95,8 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       ),
     );
 
-    if (!widget.preventScroll) {
-      return scratchWidget;
-    }
-
-    // Wrap with RawGestureDetector using EagerGestureRecognizer
-    // This wins the gesture arena immediately, allowing scratch in all directions
-    return RawGestureDetector(
-      gestures: <Type, GestureRecognizerFactory>{
-        EagerGestureRecognizer: GestureRecognizerFactoryWithHandlers<EagerGestureRecognizer>(
-          () => EagerGestureRecognizer(),
-          (EagerGestureRecognizer instance) {},
-        ),
-      },
-      behavior: HitTestBehavior.opaque,
-      child: scratchWidget,
-    );
+    // CustomScratcher already handles gesture arena correctly
+    // No need for additional wrappers
+    return scratchWidget;
   }
 }
