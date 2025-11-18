@@ -15,34 +15,34 @@ class SwipeBackPageRouteBuilder<T> extends PageRouteBuilder<T> {
     bool fullscreenDialog = false,
     Duration transitionDuration = const Duration(milliseconds: 300),
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            // On non-iOS platforms, wrap with swipe-back gesture detector
-            if (!_isIOS) {
-              return SwipeBackWrapper(
-                child: child,
-              );
-            }
-            return child;
-          },
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Use Cupertino-style slide transition on all platforms
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOut;
-
-            var tween = Tween(begin: begin, end: end).chain(
-              CurveTween(curve: curve),
-            );
-
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-          transitionDuration: transitionDuration,
-          settings: settings,
-          fullscreenDialog: fullscreenDialog,
+    pageBuilder: (context, animation, secondaryAnimation) {
+      // On non-iOS platforms, wrap with swipe-back gesture detector
+      if (!_isIOS) {
+        return SwipeBackWrapper(
+          child: child,
         );
+      }
+      return child;
+    },
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      // Use Cupertino-style slide transition on all platforms
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+
+      var tween = Tween(begin: begin, end: end).chain(
+        CurveTween(curve: curve),
+      );
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: transitionDuration,
+    settings: settings,
+    fullscreenDialog: fullscreenDialog,
+  );
 
   static bool get _isIOS {
     if (kIsWeb) return false;
@@ -88,13 +88,13 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     final screenWidth = MediaQuery.of(context).size.width;
     final textDirection = Directionality.of(context);
     final startPosition = details.localPosition.dx;
-    
+
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
     // Increased swipe area from 50px to 80px for easier gesture activation
     final isValidSwipePosition = textDirection == TextDirection.rtl
         ? startPosition > screenWidth - 80  // Right edge for RTL
         : startPosition < 80;                // Left edge for LTR
-    
+
     if (!isValidSwipePosition) {
       _canPop = false;
       return;
@@ -114,10 +114,10 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       // For LTR, drag right (positive delta) means going back
       final dragValue = textDirection == TextDirection.rtl ? -delta : delta;
       _dragDistance += dragValue;
-      
+
       // Clamp drag distance to prevent negative values
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
-      
+
       // Update animation controller based on drag progress
       final screenWidth = MediaQuery.of(context).size.width;
       _controller.value = (_dragDistance / screenWidth).clamp(0.0, 1.0);
@@ -134,7 +134,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     final threshold = screenWidth * 0.25; // 25% of screen width (reduced for easier activation)
     final velocity = details.primaryVelocity ?? 0;
     final textDirection = Directionality.of(context);
-    
+
     // For RTL, negative velocity means swiping left (back gesture)
     // For LTR, positive velocity means swiping right (back gesture)
     final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
@@ -175,12 +175,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
         builder: (context, child) {
           final screenWidth = MediaQuery.of(context).size.width;
           final textDirection = Directionality.of(context);
-          
+
           // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
           final offset = textDirection == TextDirection.rtl
               ? -(_controller.value * screenWidth)
               : _controller.value * screenWidth;
-          
+
           return Transform.translate(
             offset: Offset(offset, 0),
             child: child,
@@ -221,7 +221,7 @@ extension SwipeBackRouteType on RouteType {
     if (!kIsWeb && Platform.isIOS) {
       return const RouteType.cupertino();
     }
-    
+
     // On other platforms, use custom route with swipe-back gesture
     return swipeBackRouteType();
   }
@@ -266,13 +266,13 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     final screenWidth = MediaQuery.of(context).size.width;
     final textDirection = Directionality.of(context);
     final startPosition = details.globalPosition.dx;
-    
+
     // For RTL (Arabic), swipe from right edge. For LTR (English), swipe from left edge
     // Increased swipe area from 50px to 80px for easier gesture activation
     final isValidSwipePosition = textDirection == TextDirection.rtl
         ? startPosition > screenWidth - 80  // Right edge for RTL
         : startPosition < 80;                // Left edge for LTR
-    
+
     if (!isValidSwipePosition) {
       _canPop = false;
       return;
@@ -280,7 +280,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
 
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
     _canPop = context.router.canPop();
-    
+
     if (_canPop) {
       setState(() {
         _isDragging = true;
@@ -294,16 +294,16 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
 
     final textDirection = Directionality.of(context);
     final delta = details.primaryDelta ?? 0;
-    
+
     setState(() {
       // For RTL, drag left (negative delta) means going back
       // For LTR, drag right (positive delta) means going back
       final dragValue = textDirection == TextDirection.rtl ? -delta : delta;
       _dragDistance += dragValue;
-      
+
       // Clamp drag distance to prevent negative values
       _dragDistance = _dragDistance.clamp(0.0, double.infinity);
-      
+
       // Update animation controller based on drag progress
       final screenWidth = MediaQuery.of(context).size.width;
       _controller.value = (_dragDistance / screenWidth).clamp(0.0, 1.0);
@@ -322,7 +322,7 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     final threshold = screenWidth * 0.25; // 25% of screen width (reduced for easier activation)
     final velocity = details.primaryVelocity ?? 0;
     final textDirection = Directionality.of(context);
-    
+
     // For RTL, negative velocity means swiping left (back gesture)
     // For LTR, positive velocity means swiping right (back gesture)
     final effectiveVelocity = textDirection == TextDirection.rtl ? -velocity : velocity;
@@ -367,12 +367,12 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
         builder: (context, child) {
           final screenWidth = MediaQuery.of(context).size.width;
           final textDirection = Directionality.of(context);
-          
+
           // For RTL, slide to the left (negative). For LTR, slide to the right (positive)
           final offset = textDirection == TextDirection.rtl
               ? -(_controller.value * screenWidth)
               : _controller.value * screenWidth;
-          
+
           return Stack(
             children: [
               // Previous screen shadow/overlay
