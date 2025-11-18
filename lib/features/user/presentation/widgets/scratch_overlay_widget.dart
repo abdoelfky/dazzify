@@ -6,6 +6,7 @@ import 'package:scratcher/scratcher.dart';
 class ScratchOverlayWidget extends StatefulWidget {
   final Widget child;
   final VoidCallback onThresholdReached;
+  final VoidCallback? onScratchStart;
   final Color overlayColor;
   final double? width;
   final double? height;
@@ -15,6 +16,7 @@ class ScratchOverlayWidget extends StatefulWidget {
     super.key,
     required this.child,
     required this.onThresholdReached,
+    this.onScratchStart,
     this.overlayColor = const Color(0xFF7B3FF2),
     this.width,
     this.height,
@@ -27,6 +29,7 @@ class ScratchOverlayWidget extends StatefulWidget {
 
 class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
   bool _isScratching = false;
+  bool _hasStartedScratching = false;
   final ScrollController? _scrollController = null;
 
   @override
@@ -37,7 +40,11 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       image: Image(image: AssetImage('assets/images/scratcher.png')),
       // color: widget.overlayColor.withOpacity(0.9),
       onChange: (value) {
-        // Optional: Track scratching progress
+        // Call onScratchStart only once when scratching begins
+        if (!_hasStartedScratching && value > 0) {
+          _hasStartedScratching = true;
+          widget.onScratchStart?.call();
+        }
       },
       onThreshold: widget.onThresholdReached,
       child: Container(
