@@ -1,4 +1,5 @@
 import 'package:dazzify/core/util/extensions.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scratcher/scratcher.dart';
@@ -28,7 +29,6 @@ class ScratchOverlayWidget extends StatefulWidget {
 }
 
 class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
-  bool _isScratching = false;
   bool _hasStartedScratching = false;
 
   @override
@@ -37,7 +37,8 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       brushSize: 40,
       threshold: 60,
       enabled: true,
-      // Use both image and color for better scratch effect and gesture detection
+      accuracy: ScratchAccuracy.medium,
+      // Use image for visual effect
       image: Image(
         image: AssetImage('assets/images/scratcher.png'),
         fit: BoxFit.cover,
@@ -99,39 +100,17 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       return scratchWidget;
     }
 
-    // Use Listener to track scratching without interfering with gesture detection
-    // Listener doesn't participate in gesture arena, so it won't conflict with Scratcher
-    return Listener(
-      onPointerDown: (event) {
-        setState(() {
-          _isScratching = true;
-        });
+    // Wrap with RawGestureDetector using EagerGestureRecognizer
+    // This wins the gesture arena immediately, allowing scratch in all directions
+    return RawGestureDetector(
+      gestures: <Type, GestureRecognizerFactory>{
+        EagerGestureRecognizer: GestureRecognizerFactoryWithHandlers<EagerGestureRecognizer>(
+          () => EagerGestureRecognizer(),
+          (EagerGestureRecognizer instance) {},
+        ),
       },
-      onPointerMove: (event) {
-        // Keep scratching state active
-        if (!_isScratching) {
-          setState(() {
-            _isScratching = true;
-          });
-        }
-      },
-      onPointerUp: (event) {
-        setState(() {
-          _isScratching = false;
-        });
-      },
-      onPointerCancel: (event) {
-        setState(() {
-          _isScratching = false;
-        });
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          // Prevent scroll when scratching
-          return _isScratching;
-        },
-        child: scratchWidget,
-      ),
+      behavior: HitTestBehavior.opaque,
+      child: scratchWidget,
     );
   }
 }
