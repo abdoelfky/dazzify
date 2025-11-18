@@ -100,7 +100,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       return;
     }
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    _canPop = context.router.canPop();
+    // Fall back to Navigator if AutoRouter is not available in this context
+    try {
+      _canPop = context.router.canPop();
+    } catch (e) {
+      _canPop = Navigator.of(context).canPop();
+    }
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -279,7 +284,12 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     }
 
     // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    _canPop = context.router.canPop();
+    // Fall back to Navigator if AutoRouter is not available in this context
+    try {
+      _canPop = context.router.canPop();
+    } catch (e) {
+      _canPop = Navigator.of(context).canPop();
+    }
 
     if (_canPop) {
       setState(() {
