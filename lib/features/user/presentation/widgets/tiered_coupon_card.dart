@@ -32,11 +32,12 @@ class TieredCouponCard extends StatelessWidget {
     final sideColor = _parseColor(coupon.color?.sideBackground ?? '#B47FF0');
     final bodyColor = _parseColor(coupon.color?.bodyBackground ?? '#3FD6A6');
     final bool shouldShowScratch = !coupon.opened && !coupon.locked;
+    final bool shouldShowBlur = coupon.locked && !coupon.opened;
 
     return CustomPaint(
       painter: TicketPainter(
-        sideColor: sideColor.withOpacity(coupon.locked ? 0.5 : 1.0),
-        bodyColor: bodyColor.withOpacity(coupon.locked ? 0.5 : 1.0),
+        sideColor: sideColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
+        bodyColor: bodyColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
         sideWidth: 50.w,
       ),
       child: Container(
@@ -76,7 +77,7 @@ class TieredCouponCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Header text
-                        if (!coupon.locked && coupon.opened)
+                        if (!shouldShowBlur && coupon.opened)
                           Text(
                             context.tr.copyCouponCoded,
                             style: context.textTheme.bodyMedium?.copyWith(
@@ -85,7 +86,7 @@ class TieredCouponCard extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           )
-                        else if (!coupon.locked && !coupon.opened)
+                        else if (!shouldShowBlur && !coupon.opened)
                           Text(
                             context.tr.scratchToRedeem,
                             style: context.textTheme.bodyMedium?.copyWith(
@@ -94,7 +95,7 @@ class TieredCouponCard extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        if (!coupon.locked) SizedBox(height: 5.h),
+                        if (!shouldShowBlur) SizedBox(height: 5.h),
 
                         // Discount percentage
                         Text(
@@ -142,7 +143,7 @@ class TieredCouponCard extends StatelessWidget {
                             ),
                           )
                         // Coupon code or locked message
-                        else if (coupon.locked)
+                        else if (shouldShowBlur)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -195,7 +196,7 @@ class TieredCouponCard extends StatelessWidget {
             ),
 
             // Lock overlay with blur for locked coupons
-            if (coupon.locked)
+            if (shouldShowBlur)
               Positioned.fill(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
