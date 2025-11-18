@@ -99,8 +99,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
       _canPop = false;
       return;
     }
-    // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    _canPop = context.router.canPop();
+    // Try to use AutoRouter if available, otherwise fall back to Navigator
+    try {
+      _canPop = context.router.canPop();
+    } catch (e) {
+      _canPop = Navigator.of(context).canPop();
+    }
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -143,8 +147,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     if (_dragDistance > threshold || effectiveVelocity > 500) {
       _controller.animateTo(1.0).then((_) {
         if (mounted) {
-          // Use AutoRouter's maybePop for proper nested navigation handling
-          context.router.maybePop();
+          // Try to use AutoRouter's maybePop, otherwise fall back to Navigator
+          try {
+            context.maybePop();
+          } catch (e) {
+            Navigator.of(context).maybePop();
+          }
         }
       });
     } else {
@@ -278,8 +286,12 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       return;
     }
 
-    // Use AutoRouter to check if we can pop, which handles nested navigation correctly
-    _canPop = context.router.canPop();
+    // Try to use AutoRouter if available, otherwise fall back to Navigator
+    try {
+      _canPop = context.router.canPop();
+    } catch (e) {
+      _canPop = Navigator.of(context).canPop();
+    }
 
     if (_canPop) {
       setState(() {
@@ -332,8 +344,12 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
       // Animate to completion and then pop
       _controller.animateTo(1.0, curve: Curves.easeOut).then((_) {
         if (mounted) {
-          // Use AutoRouter's maybePop for proper nested navigation handling
-          context.router.maybePop();
+          // Try to use AutoRouter's maybePop, otherwise fall back to Navigator
+          try {
+            context.maybePop();
+          } catch (e) {
+            Navigator.of(context).maybePop();
+          }
           _resetDrag();
         }
       });
