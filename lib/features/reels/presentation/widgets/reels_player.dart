@@ -98,6 +98,9 @@ class _ReelPlayerState extends State<ReelPlayer>
                 _hasTheUserTappedPause.value = true;
               }
             },
+            onDoubleTap: () {
+              widget.onLikeTap();
+            },
             child: Stack(
               children: [
                 Container(color: Colors.black,),
