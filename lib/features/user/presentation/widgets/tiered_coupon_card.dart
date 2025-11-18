@@ -83,7 +83,7 @@ class TieredCouponCard extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        if (!coupon.locked && coupon.opened) SizedBox(height: 8.h),
+                        if (!coupon.locked && coupon.opened) SizedBox(height: 5.h),
                         
                         // Discount percentage
                         Text(
@@ -91,10 +91,10 @@ class TieredCouponCard extends StatelessWidget {
                           style: context.textTheme.headlineLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 40.sp,
+                            fontSize: 30.sp,
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 5.h),
                         
                         // Coupon code or locked message
                         if (coupon.locked)
@@ -119,8 +119,8 @@ class TieredCouponCard extends StatelessWidget {
                         else if (coupon.code != null && coupon.opened)
                           Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 24.w,
-                              vertical: 8.h,
+                              horizontal: 60.w,
+                              vertical: 5.h,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white,

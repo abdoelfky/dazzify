@@ -205,7 +205,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                    if (coupon.opened) SizedBox(height: 8.h),
+                    if (coupon.opened) SizedBox(height: 6.h),
                     
                     // Discount percentage
                     Text(
@@ -213,10 +213,10 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                       style: context.textTheme.headlineLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 48.sp,
+                        fontSize: 45.sp,
                       ),
                     ),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: 6.h),
                     
                     // Coupon code with scratch overlay
                     if (coupon.code != null)
@@ -265,8 +265,8 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 32.w,
-                                vertical: 10.h,
+                                horizontal: 60.w,
+                                vertical: 8.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
