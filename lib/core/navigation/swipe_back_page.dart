@@ -104,8 +104,9 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     try {
       _canPop = context.router.canPop();
     } catch (e) {
-      // If router/navigator is not available, don't allow pop
-      _canPop = false;
+      // Fallback to checking with Navigator directly if router is not available
+      final navigator = Navigator.maybeOf(context);
+      _canPop = navigator?.canPop() ?? false;
     }
   }
 
@@ -153,8 +154,13 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
           try {
             context.maybePop();
           } catch (e) {
-            // If navigation fails, just reset
-            _resetDrag();
+            // Fallback to Navigator if AutoRouter is not available
+            try {
+              Navigator.of(context).maybePop();
+            } catch (_) {
+              // If navigation fails, just reset
+              _resetDrag();
+            }
           }
         }
       });
@@ -293,9 +299,9 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
     try {
       _canPop = context.router.canPop();
     } catch (e) {
-      // If router/navigator is not available, don't allow pop
-      _canPop = false;
-      return;
+      // Fallback to checking with Navigator directly if router is not available
+      final navigator = Navigator.maybeOf(context);
+      _canPop = navigator?.canPop() ?? false;
     }
 
     if (_canPop) {
@@ -353,9 +359,14 @@ class _SwipeBackNavigatorState extends State<SwipeBackNavigator>
           try {
             context.maybePop();
           } catch (e) {
-            // If navigation fails, just reset
-            _resetDrag();
-            return;
+            // Fallback to Navigator if AutoRouter is not available
+            try {
+              Navigator.of(context).maybePop();
+            } catch (_) {
+              // If navigation fails, just reset
+              _resetDrag();
+              return;
+            }
           }
           _resetDrag();
         }
