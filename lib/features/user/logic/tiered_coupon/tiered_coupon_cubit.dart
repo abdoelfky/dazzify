@@ -1,4 +1,5 @@
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/data/repositories/user_repository.dart';
 import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

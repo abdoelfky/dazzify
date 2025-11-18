@@ -225,8 +225,7 @@ class TieredCouponDetailsCard extends StatelessWidget {
                 ],
               ),
         ),
-      ),
-    );
+      );
 
     // Wrap with scratch overlay if needed
     if (shouldShowScratch) {
