@@ -1,7 +1,7 @@
 import 'package:dazzify/core/util/extensions.dart';
+import 'package:dazzify/core/widgets/custom_scratcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:scratcher/scratcher.dart';
 
 class ScratchOverlayWidget extends StatefulWidget {
   final Widget child;
@@ -28,17 +28,21 @@ class ScratchOverlayWidget extends StatefulWidget {
 }
 
 class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
-  bool _isScratching = false;
   bool _hasStartedScratching = false;
-  final ScrollController? _scrollController = null;
 
   @override
   Widget build(BuildContext context) {
-    final scratchWidget = Scratcher(
+    final scratchWidget = CustomScratcher(
       brushSize: 40,
       threshold: 60,
-      image: Image(image: AssetImage('assets/images/scratcher.png')),
-      // color: widget.overlayColor.withOpacity(0.9),
+      enabled: true,
+      accuracy: ScratchAccuracy.medium,
+      // Use image for visual effect
+      image: Image(
+        image: AssetImage('assets/images/scratcher.png'),
+        fit: BoxFit.cover,
+      ),
+      color: widget.overlayColor.withOpacity(0.3),
       onChange: (value) {
         // Call onScratchStart only once when scratching begins
         if (!_hasStartedScratching && value > 0) {
@@ -91,34 +95,8 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       ),
     );
 
-    if (!widget.preventScroll) {
-      return scratchWidget;
-    }
-
-    // Wrap with gesture detector to prevent scrolling during scratch
-    return Listener(
-      onPointerDown: (_) {
-        setState(() {
-          _isScratching = true;
-        });
-      },
-      onPointerUp: (_) {
-        setState(() {
-          _isScratching = false;
-        });
-      },
-      onPointerCancel: (_) {
-        setState(() {
-          _isScratching = false;
-        });
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          // Prevent scroll when scratching
-          return _isScratching;
-        },
-        child: scratchWidget,
-      ),
-    );
+    // CustomScratcher already handles gesture arena correctly
+    // No need for additional wrappers
+    return scratchWidget;
   }
 }

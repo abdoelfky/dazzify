@@ -62,7 +62,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                         horizontal: 16.w,
                         vertical: 16.h,
                       ),
-                      physics: const BouncingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
