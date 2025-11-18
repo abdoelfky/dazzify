@@ -2,8 +2,11 @@ import 'dart:ui';
 
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
+import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.dart';
+import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_state.dart';
 import 'package:dazzify/features/user/presentation/widgets/scratch_overlay_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TieredCouponCard extends StatelessWidget {
@@ -109,38 +112,57 @@ class TieredCouponCard extends StatelessWidget {
                         SizedBox(height: 5.h),
                         if (shouldShowScratch)
                           // Scratch only on code area
-                          ScratchOverlayWidget(
-                            onThresholdReached: () {
-                              if (onScratchComplete != null) {
-                                onScratchComplete!();
-                              }
-                            },
-                            overlayColor: Colors.white,
-                            width: 180.w,
-                            height: 38.h,
-                            child: Container(
-                              width: 180.w,
-                              height: 38.h,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24.w,
-                                vertical: 6.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  coupon.code ?? 'XXXXX',
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.sp,
+                          BlocBuilder<TieredCouponCubit, TieredCouponState>(
+                            builder: (context, state) {
+                              // Get the latest coupon data from state
+                              final latestCoupon = couponIndex != null && couponIndex! < state.coupons.length
+                                  ? state.coupons[couponIndex!]
+                                  : coupon;
+                              
+                              return ScratchOverlayWidget(
+                                onScratchStart: () {
+                                  // Fetch real code immediately when scratch starts
+                                  if (couponIndex != null) {
+                                    context.read<TieredCouponCubit>().fetchCouponCodeOnScratchStart(couponIndex!);
+                                  }
+                                },
+                                onThresholdReached: () {
+                                  // Mark as opened when threshold reached
+                                  if (couponIndex != null) {
+                                    context.read<TieredCouponCubit>().markCouponAsOpenedOnThreshold(couponIndex!);
+                                  }
+                                  if (onScratchComplete != null) {
+                                    onScratchComplete!();
+                                  }
+                                },
+                                overlayColor: Colors.white,
+                                width: 180.w,
+                                height: 38.h,
+                                child: Container(
+                                  width: 180.w,
+                                  height: 38.h,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24.w,
+                                    vertical: 6.h,
                                   ),
-                                  textAlign: TextAlign.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      latestCoupon.code ?? 'XXXXX',
+                                      style: context.textTheme.bodyLarge?.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           )
                         // Coupon code or locked message
                         else if (shouldShowBlur)

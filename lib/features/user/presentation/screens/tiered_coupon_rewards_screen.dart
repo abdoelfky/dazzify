@@ -155,11 +155,6 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                                     },
                                     child: TieredCouponCard(
                                       coupon: coupon,
-                                      onScratchComplete: () {
-                                        context
-                                            .read<TieredCouponCubit>()
-                                            .openNewRewardLevel(index);
-                                      },
                                       couponIndex: index,
                                     ),
                                   ),
