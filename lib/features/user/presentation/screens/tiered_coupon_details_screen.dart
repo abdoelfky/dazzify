@@ -3,6 +3,7 @@ import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.dart';
+import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_state.dart';
 import 'package:dazzify/features/user/presentation/widgets/scratch_overlay_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
