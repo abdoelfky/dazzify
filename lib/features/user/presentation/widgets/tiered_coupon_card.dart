@@ -116,7 +116,7 @@ class TieredCouponCard extends StatelessWidget {
                               ),
                             ],
                           )
-                        else if (coupon.code != null && coupon.opened)
+                        else if (coupon.code != null )
                           Container(
                             constraints: BoxConstraints(
                               maxWidth: 200.w,
