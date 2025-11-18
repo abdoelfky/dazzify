@@ -92,7 +92,17 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.qrCode,
                   title: context.tr.qrCodeScanner,
                   onTap: () {
-                    context.pushRoute(const QrScannerRoute());
+                    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false,
+                        builder: (context) {
+                          return GuestModeBottomSheet();
+                        },
+                      );
+                    } else {
+                      context.pushRoute(const QrScannerRoute());
+                    }
                   },
                 ),
               ],
