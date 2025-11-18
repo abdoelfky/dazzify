@@ -237,44 +237,55 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                     // Coupon code with scratch overlay
                     // if (coupon.code != null)
                       shouldShowScratch
-                        ? ScratchOverlayWidget(
-                            onThresholdReached: () {
-                              context
-                                  .read<TieredCouponCubit>()
-                                  .markCouponAsOpened(couponIndex);
-                            },
-                            overlayColor: Colors.white,
-                            width: 200.w,
-                            height: 46.h,
-                            child: Container(
-                              width: 220.w,
-                              height: 46.h,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 32.w,
-                                vertical: 10.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.r),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
+                        ? BlocBuilder<TieredCouponCubit, TieredCouponState>(
+                            builder: (context, state) {
+                              final updatedCoupon = state.coupons[couponIndex];
+                              return ScratchOverlayWidget(
+                                onScratchStart: () async {
+                                  // Call API when scratch starts
+                                  await context
+                                      .read<TieredCouponCubit>()
+                                      .openNewRewardLevel(couponIndex);
+                                },
+                                onThresholdReached: () {
+                                  context
+                                      .read<TieredCouponCubit>()
+                                      .markCouponAsOpened(couponIndex);
+                                },
+                                overlayColor: Colors.white,
+                                width: 200.w,
+                                height: 46.h,
+                                child: Container(
+                                  width: 220.w,
+                                  height: 46.h,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 32.w,
+                                    vertical: 10.h,
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  coupon.code??'XXXXX',
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.sp,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      updatedCoupon.code ?? 'XXXXX',
+                                      style: context.textTheme.bodyLarge?.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.sp,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           )
                         : GestureDetector(
                             onTap: () {
