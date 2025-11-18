@@ -68,6 +68,7 @@ import 'package:dazzify/features/user/presentation/screens/issue_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/issue_status_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/my_favorite_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/profile_screen.dart';
+import 'package:dazzify/features/user/presentation/screens/qr_scanner_screen.dart';
 import 'package:dazzify/features/user/presentation/screens/user_locations_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -175,6 +176,9 @@ class AppRouter extends RootStackRouter {
                     ),
                     AutoRoute(
                       page: MyFavoriteRoute.page,
+                    ),
+                    AutoRoute(
+                      page: QrScannerRoute.page,
                     ),
                     AutoRoute(
                       page: BookingsHistoryRoute.page,

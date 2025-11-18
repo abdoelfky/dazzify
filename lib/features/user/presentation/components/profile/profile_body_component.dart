@@ -88,6 +88,13 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                     context.pushRoute(const MyFavoriteRoute());
                   },
                 ),
+                ProfileCustomListTile(
+                  iconData: SolarIconsOutline.qrCode,
+                  title: context.tr.qrCodeScanner,
+                  onTap: () {
+                    context.pushRoute(const QrScannerRoute());
+                  },
+                ),
               ],
             ),
           ),

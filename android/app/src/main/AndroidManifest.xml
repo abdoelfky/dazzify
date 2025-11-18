@@ -3,6 +3,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Read storage permission for Android 12 and lower -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- Camera permission for QR scanner -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <!--
       Granular media permissions for Android 13 and newer.
       See https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions
