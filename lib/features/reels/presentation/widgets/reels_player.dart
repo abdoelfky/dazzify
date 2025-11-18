@@ -106,8 +106,9 @@ class _ReelPlayerState extends State<ReelPlayer>
                     key: ValueKey<String>(widget.videoUrl),
                     onVisibilityChanged: (visibility) {
                       if (visibility.visibleFraction > 0.0 &&
-                          !_hasTheUserTappedPause.value &&
                           !_hasTheUserOpenedComments.value) {
+                        // Reset pause state when swiping to a new reel
+                        _hasTheUserTappedPause.value = false;
                         _controller.play();
                       } else {
                         _controller.pause();
