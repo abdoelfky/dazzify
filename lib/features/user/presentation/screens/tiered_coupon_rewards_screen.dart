@@ -124,11 +124,13 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 if (!coupon.locked) {
+                                  // Capture the cubit before entering the builder
+                                  final cubit = context.read<TieredCouponCubit>();
                                   // Navigate to details screen
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => BlocProvider.value(
-                                        value: context.read<TieredCouponCubit>(),
+                                        value: cubit,
                                         child: TieredCouponDetailsScreen(
                                           coupon: coupon,
                                           couponIndex: index,
