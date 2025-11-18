@@ -124,11 +124,12 @@ class _ReelPlayerState extends State<ReelPlayer>
                   child: VisibilityDetector(
                     key: ValueKey<String>(widget.videoUrl),
                     onVisibilityChanged: (visibility) {
-                      if (visibility.visibleFraction > 0.0 &&
-                          !_hasTheUserTappedPause.value &&
-                          !_hasTheUserOpenedComments.value) {
+                      if (visibility.visibleFraction > 0.8) {
+                        // Reset pause state when reel becomes fully visible
+                        _hasTheUserTappedPause.value = false;
+                        _hasTheUserOpenedComments.value = false;
                         _controller.play();
-                      } else {
+                      } else if (visibility.visibleFraction < 0.2) {
                         _controller.pause();
                       }
                     },
