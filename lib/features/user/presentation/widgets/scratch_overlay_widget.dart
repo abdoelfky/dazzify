@@ -28,17 +28,14 @@ class ScratchOverlayWidget extends StatefulWidget {
 }
 
 class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
-  bool _isScratching = false;
   bool _hasStartedScratching = false;
-  final ScrollController? _scrollController = null;
 
   @override
   Widget build(BuildContext context) {
     final scratchWidget = Scratcher(
-      brushSize: 40,
-      threshold: 60,
-      image: Image(image: AssetImage('assets/images/scratcher.png')),
-      // color: widget.overlayColor.withOpacity(0.9),
+      brushSize: 50,
+      threshold: 45,
+      color: widget.overlayColor.withOpacity(0.95),
       onChange: (value) {
         // Call onScratchStart only once when scratching begins
         if (!_hasStartedScratching && value > 0) {
@@ -51,74 +48,14 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-          color: widget.overlayColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8.r),
         ),
-        child: Stack(
-          children: [
-            widget.child,
-            // Scratch overlay with darker color matching the card
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.r),
-                color: widget.overlayColor.withOpacity(0.85),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-            ),
-            // Scratch pattern overlay for texture
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.r),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.1),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: widget.child,
       ),
     );
 
-    if (!widget.preventScroll) {
-      return scratchWidget;
-    }
-
-    // Wrap with gesture detector to prevent scrolling during scratch
-    return Listener(
-      onPointerDown: (_) {
-        setState(() {
-          _isScratching = true;
-        });
-      },
-      onPointerUp: (_) {
-        setState(() {
-          _isScratching = false;
-        });
-      },
-      onPointerCancel: (_) {
-        setState(() {
-          _isScratching = false;
-        });
-      },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          // Prevent scroll when scratching
-          return _isScratching;
-        },
-        child: scratchWidget,
-      ),
-    );
+    // Return the scratch widget directly without scroll prevention
+    // The Scratcher widget handles gestures internally
+    return scratchWidget;
   }
 }
