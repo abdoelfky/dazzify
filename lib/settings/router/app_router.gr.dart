@@ -1098,6 +1098,25 @@ class ProfileTabRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [QrScannerScreen]
+class QrScannerRoute extends PageRouteInfo<void> {
+  const QrScannerRoute({List<PageRouteInfo>? children})
+      : super(
+          QrScannerRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'QrScannerRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const QrScannerScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ReelViewerScreen]
 class ReelViewerRoute extends PageRouteInfo<ReelViewerRouteArgs> {
   ReelViewerRoute({

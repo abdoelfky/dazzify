@@ -443,6 +443,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "+ Transportation & app fees",
     ),
     "point": MessageLookupByLibrary.simpleMessage(" Points"),
+    "pointCameraAtQr": MessageLookupByLibrary.simpleMessage(
+      "Point camera at QR code",
+    ),
     "pointsStatement": MessageLookupByLibrary.simpleMessage(
       "\"Use your points towards exclusive offers and limited-edition services.\"",
     ),
@@ -465,6 +468,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "qalyubia": MessageLookupByLibrary.simpleMessage("Qalyubia"),
     "qena": MessageLookupByLibrary.simpleMessage("Qena"),
+    "qrCodeDetected": MessageLookupByLibrary.simpleMessage("QR Code Detected"),
+    "qrCodeScanner": MessageLookupByLibrary.simpleMessage("QR Code Scanner"),
     "rate": MessageLookupByLibrary.simpleMessage("Rate"),
     "rateService": MessageLookupByLibrary.simpleMessage("Rate Service"),
     "rateSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -511,6 +516,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reviewCreatedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Review Created Successfully",
     ),
+    "scanQrCode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "seeAllReviews": MessageLookupByLibrary.simpleMessage("See All Reviews"),
     "selectAndAddComment": MessageLookupByLibrary.simpleMessage(

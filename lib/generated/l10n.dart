@@ -3017,6 +3017,41 @@ class S {
       args: [],
     );
   }
+
+  /// `QR Code Scanner`
+  String get qrCodeScanner {
+    return Intl.message(
+      'QR Code Scanner',
+      name: 'qrCodeScanner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan QR Code`
+  String get scanQrCode {
+    return Intl.message('Scan QR Code', name: 'scanQrCode', desc: '', args: []);
+  }
+
+  /// `Point camera at QR code`
+  String get pointCameraAtQr {
+    return Intl.message(
+      'Point camera at QR code',
+      name: 'pointCameraAtQr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QR Code Detected`
+  String get qrCodeDetected {
+    return Intl.message(
+      'QR Code Detected',
+      name: 'qrCodeDetected',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

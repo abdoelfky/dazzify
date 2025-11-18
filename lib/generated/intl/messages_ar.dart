@@ -445,6 +445,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "+ رسوم النقل والتطبيق",
     ),
     "point": MessageLookupByLibrary.simpleMessage("نقطة"),
+    "pointCameraAtQr": MessageLookupByLibrary.simpleMessage(
+      "وجه الكاميرا إلى رمز الاستجابة السريعة",
+    ),
     "pointsStatement": MessageLookupByLibrary.simpleMessage(
       "\"استخدم نقاطك في العروض الحصرية والخدمات ذات الإصدار المحدود.\"",
     ),
@@ -471,6 +474,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "qalyubia": MessageLookupByLibrary.simpleMessage("القليوبية"),
     "qena": MessageLookupByLibrary.simpleMessage("قنا"),
+    "qrCodeDetected": MessageLookupByLibrary.simpleMessage(
+      "تم اكتشاف رمز الاستجابة السريعة",
+    ),
+    "qrCodeScanner": MessageLookupByLibrary.simpleMessage(
+      "ماسح رمز الاستجابة السريعة",
+    ),
     "rate": MessageLookupByLibrary.simpleMessage("التقييم"),
     "rateService": MessageLookupByLibrary.simpleMessage("قيم الخدمة"),
     "rateSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -508,6 +517,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reviewCreated": MessageLookupByLibrary.simpleMessage("نحن نقدّر تقييمك"),
     "reviewCreatedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "تم التقييم بنجاح",
+    ),
+    "scanQrCode": MessageLookupByLibrary.simpleMessage(
+      "امسح رمز الاستجابة السريعة",
     ),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
     "seeAllReviews": MessageLookupByLibrary.simpleMessage(
