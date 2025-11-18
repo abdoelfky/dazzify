@@ -1611,6 +1611,59 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TieredCouponDetailsScreen]
+class TieredCouponDetailsRoute
+    extends PageRouteInfo<TieredCouponDetailsRouteArgs> {
+  TieredCouponDetailsRoute({
+    Key? key,
+    required TieredCouponModel coupon,
+    required int couponIndex,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TieredCouponDetailsRoute.name,
+          args: TieredCouponDetailsRouteArgs(
+            key: key,
+            coupon: coupon,
+            couponIndex: couponIndex,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TieredCouponDetailsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<TieredCouponDetailsRouteArgs>();
+      return TieredCouponDetailsScreen(
+        key: args.key,
+        coupon: args.coupon,
+        couponIndex: args.couponIndex,
+      );
+    },
+  );
+}
+
+class TieredCouponDetailsRouteArgs {
+  const TieredCouponDetailsRouteArgs({
+    this.key,
+    required this.coupon,
+    required this.couponIndex,
+  });
+
+  final Key? key;
+
+  final TieredCouponModel coupon;
+
+  final int couponIndex;
+
+  @override
+  String toString() {
+    return 'TieredCouponDetailsRouteArgs{key: $key, coupon: $coupon, couponIndex: $couponIndex}';
+  }
+}
+
+/// generated route for
 /// [TieredCouponRewardsScreen]
 class TieredCouponRewardsRoute extends PageRouteInfo<void> {
   const TieredCouponRewardsRoute({List<PageRouteInfo>? children})

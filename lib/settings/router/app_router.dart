@@ -60,6 +60,7 @@ import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/maintenance_screen.dart';
 import 'package:dazzify/features/shared/widgets/splash_screen.dart';
 import 'package:dazzify/features/shared/widgets/web_view_screen.dart';
+import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
 import 'package:dazzify/features/user/logic/issue/issue_bloc.dart';
 import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
