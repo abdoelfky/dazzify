@@ -77,18 +77,19 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
       (failure) {
         // Handle error silently or you can emit error state if needed
       },
-      (coupon) {
+      (response) {
         final updatedCoupons = List<TieredCouponModel>.from(state.coupons);
+        final currentCoupon = updatedCoupons[index];
         
-        // Create a new coupon with the returned data and mark as opened
+        // Create a new coupon with the code from API and mark as opened
         final openedCoupon = TieredCouponModel(
-          code: coupon.code,
+          code: response.code,
           opened: true,
-          locked: coupon.locked,
-          levelNumber: coupon.levelNumber,
-          discountPercentage: coupon.discountPercentage,
-          color: coupon.color,
-          instructions: coupon.instructions,
+          locked: currentCoupon.locked,
+          levelNumber: currentCoupon.levelNumber,
+          discountPercentage: currentCoupon.discountPercentage,
+          color: currentCoupon.color,
+          instructions: currentCoupon.instructions,
         );
         
         updatedCoupons[index] = openedCoupon;
