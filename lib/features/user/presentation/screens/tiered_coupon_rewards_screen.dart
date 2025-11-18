@@ -32,14 +32,21 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            DazzifyAppBar(
-              isLeading: true,
-              title: context.tr.coupons,
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/couponsBackground.png'),
+              fit: BoxFit.cover,
             ),
-            Expanded(
-              child: BlocBuilder<TieredCouponCubit, TieredCouponState>(
+          ),
+          child: Column(
+            children: [
+              DazzifyAppBar(
+                isLeading: true,
+                title: context.tr.coupons,
+              ),
+              Expanded(
+                child: BlocBuilder<TieredCouponCubit, TieredCouponState>(
                 builder: (context, state) {
                   if (state.uiState == UiState.loading) {
                     return const DazzifyOverlayLoading(
@@ -96,10 +103,14 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Header text
-                        Text(
-                          context.tr.startWithFirstCoupon,
-                          style: context.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                        Center(
+                          child: Text(
+                            context.tr.startWithFirstCoupon,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF7B3FF2),
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         SizedBox(height: 20.h),
@@ -135,10 +146,11 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                       ],
                     ),
                   );
-                },
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

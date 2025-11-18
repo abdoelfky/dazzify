@@ -423,7 +423,9 @@
   "couponDetails": "تفاصيل الكوبون:",
   "noCouponsAvailable": "لا توجد كوبونات متاحة",
   "retry": "إعادة المحاولة",
-  "invalidQrCode": "رمز QR غير صالح"
+  "invalidQrCode": "رمز QR غير صالح",
+  "copyCouponCoded": "انسخ رمز الكوبون",
+  "scratchToRedeem": "اكشط لاستخدام خصمك"
 
 
 }

@@ -164,6 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "couponDetails": MessageLookupByLibrary.simpleMessage("Coupon details:"),
     "couponDisc": MessageLookupByLibrary.simpleMessage("Coupon disc"),
+    "copyCouponCoded": MessageLookupByLibrary.simpleMessage("Copy coupon coded"),
     "couponNotValidated": MessageLookupByLibrary.simpleMessage(
       "Invalid coupon code.",
     ),
@@ -171,6 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Discount added by coupon",
     ),
     "coupons": MessageLookupByLibrary.simpleMessage("Coupons"),
+    "scratchToRedeem": MessageLookupByLibrary.simpleMessage("Scratch to redeem your discount"),
     "createIssue": MessageLookupByLibrary.simpleMessage("Create Issue"),
     "createReview": MessageLookupByLibrary.simpleMessage("Create Review"),
     "creditCard": MessageLookupByLibrary.simpleMessage("Credit card"),

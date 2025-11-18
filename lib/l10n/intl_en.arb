@@ -423,7 +423,9 @@
   "couponDetails": "Coupon details:",
   "noCouponsAvailable": "No coupons available",
   "retry": "Retry",
-  "invalidQrCode": "Invalid QR Code"
+  "invalidQrCode": "Invalid QR Code",
+  "copyCouponCoded": "Copy coupon coded",
+  "scratchToRedeem": "Scratch to redeem your discount"
 
 
 }
