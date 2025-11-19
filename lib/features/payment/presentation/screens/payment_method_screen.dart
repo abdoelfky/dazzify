@@ -71,12 +71,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen>
         return SafeArea(
           child: DazzifyOverlayLoading(
             isLoading: isLoading,
-            child: Column(
-              children: [
-                DazzifyAppBar(
-                    isLeading: true,
-                    title: "${widget.serviceName} - ${context.tr.pay}"),
-                TabBar(
+            child: Material(
+              color: context.colorScheme.surface,
+              child: Column(
+                children: [
+                  DazzifyAppBar(
+                      isLeading: true,
+                      title: "${widget.serviceName} - ${context.tr.pay}"),
+                  TabBar(
                   onTap: (index) {},
                   controller: _tabController,
                   unselectedLabelColor: context.colorScheme.outline,
@@ -122,6 +124,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen>
                   ),
                 ),
               ],
+              ),
             ),
           ),
         );
