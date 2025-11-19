@@ -210,8 +210,6 @@ class AppRouter extends RootStackRouter {
                       children: [
                         AutoRoute(
                           page: TransactionRoute.page),
-                        AutoRoute(
-                          page: PaymentMethodRoute.page),
                       ],
                     ),
                   ],
