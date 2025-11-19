@@ -94,11 +94,27 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                         Column(
                           children: [
                             SizedBox(height: 8.w),
+                            if (quantity > 1)
+                              DText(
+                                context.tr.totalPrice,
+                                style: context.textTheme.labelSmall!.copyWith(
+                                  color: context.colorScheme.onSurfaceVariant,
+                                  fontSize: 10.sp,
+                                ),
+                              ),
                             DText(
-                              '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+                              '${reformatPriceWithCommas(widget.price * quantity)} ${context.tr.egp}',
                               style: context.textTheme.labelLarge!
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
+                            if (quantity > 1)
+                              DText(
+                                '${reformatPriceWithCommas(widget.price)} × $quantity',
+                                style: context.textTheme.labelSmall!.copyWith(
+                                  color: context.colorScheme.onSurfaceVariant,
+                                  fontSize: 10.sp,
+                                ),
+                              ),
                           ],
                         ),
                     ],
@@ -145,17 +161,23 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                             if ((widget.isMultipleService &&
                                 widget.isAllowMultipleServicesCount &&
                                 !widget.isBooked)||!widget.isAllowMultipleServicesCount)
-                              SizedBox(
-                                width: 62.r,
-                                height: 16.r,
-                                child: FittedBox(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: DText(
-                                    '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
-                                    style: context.textTheme.labelLarge!
-                                        .copyWith(fontWeight: FontWeight.bold),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: 62.r,
+                                    height: 16.r,
+                                    child: FittedBox(
+                                      alignment: AlignmentDirectional.centerStart,
+                                      child: DText(
+                                        '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+                                        style: context.textTheme.labelLarge!
+                                            .copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             if ((widget.isAllowMultipleServicesCount &&
                                     widget.isBooked) ||
