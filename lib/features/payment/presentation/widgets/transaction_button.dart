@@ -51,7 +51,7 @@ class _TransactionButtonState extends State<TransactionButton> {
           ).r,
           title: buttonTitle,
           onTap: () {
-            context.router
+            context.router.root
                 .push(
               PaymentMethodRoute(
                 serviceName: widget.serviceName,
