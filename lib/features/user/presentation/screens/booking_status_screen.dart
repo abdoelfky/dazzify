@@ -168,7 +168,6 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                           .r,
                                       child: const Divider(),
                                     ),
-
                                     priceInfo(
                                         context,
                                         bookingCubit,
@@ -176,95 +175,109 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                             .services.length),
                                     SizedBox(height: 35.h),
                                     if (state.singleBooking.payments.isNotEmpty)
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: TransactionBar(
-                                                  transaction: TransactionModel(
-                                                      id: state
-                                                          .singleBooking
-                                                          .payments
-                                                          .first
-                                                          .transactionId,
-                                                      bookingId: state
-                                                          .singleBooking.id,
-                                                      status: "not paid",
-                                                      amount: state
-                                                          .singleBooking
-                                                          .payments
-                                                          .first
-                                                          .amount,
-                                                      refundAmount: 0,
-                                                      expiredAt: state
-                                                          .singleBooking
-                                                          .payments
-                                                          .first
-                                                          .expAt,
-                                                      createdAt: state
-                                                          .singleBooking
-                                                          .payments
-                                                          .first
-                                                          .createdAt,
-                                                      type: state
-                                                          .singleBooking
-                                                          .payments
-                                                          .first
-                                                          .type,
-                                                      services: []),
-                                                  onTimerFinish: () {
-                                                    bookingCubit.getSingleBooking(
-                                                        widget.bookingId);
-                                                  },
+                                      Container(
+                                        padding: EdgeInsetsGeometry.symmetric(vertical: 10.h,horizontal: 10.w),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color:
+                                                context.colorScheme.onTertiary),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.data_usage_outlined,
+                                                      color: context
+                                                          .colorScheme.primary,
+                                                      size: 16.r,
+                                                    ),
+                                                    SizedBox(width: 8.w),
+                                                    DText(
+                                                      context.tr.downPayment,
+                                                      style: context
+                                                          .textTheme.bodyMedium,
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 16.h),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    SolarIconsOutline
-                                                        .downloadMinimalistic,
-                                                    color: context.colorScheme
-                                                        .primary,
-                                                    size: 16.r,
+                                              ],
+                                            ),
+                                            SizedBox(height: 10.h),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  flex: 9,
+                                                  child: TransactionBar(
+                                                    transaction: TransactionModel(
+                                                        id: state
+                                                            .singleBooking
+                                                            .payments
+                                                            .first
+                                                            .transactionId,
+                                                        bookingId: state
+                                                            .singleBooking.id,
+                                                        status: "not paid",
+                                                        amount: state
+                                                            .singleBooking
+                                                            .payments
+                                                            .first
+                                                            .amount,
+                                                        refundAmount: 0,
+                                                        expiredAt: state
+                                                            .singleBooking
+                                                            .payments
+                                                            .first
+                                                            .expAt,
+                                                        createdAt: state
+                                                            .singleBooking
+                                                            .payments
+                                                            .first
+                                                            .createdAt,
+                                                        type: state
+                                                            .singleBooking
+                                                            .payments
+                                                            .first
+                                                            .type,
+                                                        services: []),
+                                                    onTimerFinish: () {
+                                                      bookingCubit
+                                                          .getSingleBooking(
+                                                              widget.bookingId);
+                                                    },
                                                   ),
-                                                  SizedBox(width: 8.w),
-                                                  DText(
-                                                    context.tr.downPayment,
-                                                    style: context
-                                                        .textTheme.bodyMedium,
-                                                  ),
-                                                ],
-                                              ),
-                                              TransactionButton(
-                                                status: "not paid",
-                                                serviceName: state.singleBooking
-                                                    .services[0].title,
-                                                transactionId: state
-                                                    .singleBooking
-                                                    .payments
-                                                    .first
-                                                    .transactionId,
-                                                amount: state.singleBooking
-                                                    .payments.first.amount,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 35.h),
-                                        ],
-                                      ),
+                                                ),
 
+                                                Expanded(
+                                                  flex: 4,
+                                                  child: TransactionButton(
+                                                    status: "not paid",
+                                                    serviceName: state
+                                                        .singleBooking
+                                                        .services[0]
+                                                        .title,
+                                                    transactionId: state
+                                                        .singleBooking
+                                                        .payments
+                                                        .first
+                                                        .transactionId,
+                                                    amount: state.singleBooking
+                                                        .payments.first.amount,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     DText(
                                       context.tr.readyForService,
                                       style: context.textTheme.titleMedium,
@@ -462,7 +475,8 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       if (hasRange && deliveryRange != null) ...[
         PriceInfoItem(
           title: DazzifyApp.tr.deliferyFees,
-          price: "${reformatPriceWithCommas(deliveryRange.from)}-${reformatPriceWithCommas(deliveryRange.to)} ${DazzifyApp.tr.egp}",
+          price:
+              "${reformatPriceWithCommas(deliveryRange.from)}-${reformatPriceWithCommas(deliveryRange.to)} ${DazzifyApp.tr.egp}",
         ),
         SizedBox(height: 16.h),
         PriceInfoItem(
@@ -503,7 +517,8 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
             Container(
               padding: const EdgeInsets.all(12).r,
               decoration: BoxDecoration(
-                color: context.colorScheme.inversePrimary.withValues(alpha: 0.2),
+                color:
+                    context.colorScheme.inversePrimary.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8).r,
               ),
               child: Row(
