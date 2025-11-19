@@ -267,6 +267,9 @@ class AppRouter extends RootStackRouter {
               page: PaymentWebViewRoute.page,
             ),
             AutoRoute(
+              page: PaymentMethodRoute.page,
+            ),
+            AutoRoute(
               page: WebViewRoute.page,
             ),
           ],
