@@ -173,6 +173,9 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
       updatedServices[category] = updatedServices[category]!.map((service) {
         if (service.id == serviceId) {
           return service.copyWith(quantity: quantity);
+        } else if (quantity > 1) {
+          // Reset all other services to quantity 1 when current service quantity > 1
+          return service.copyWith(quantity: 1);
         }
         return service;
       }).toList();
@@ -181,6 +184,9 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
     final updatedSelected = state.selectedBrandServices.map((s) {
       if (s.id == serviceId) {
         return s.copyWith(quantity: quantity);
+      } else if (quantity > 1) {
+        // Reset all other selected services to quantity 1
+        return s.copyWith(quantity: 1);
       }
       return s;
     }).toList();
