@@ -259,26 +259,22 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
   Widget buildSingleServiceTotalPrice() {
     return BlocBuilder<ServiceSelectionCubit, ServiceSelectionState>(
       builder: (context, state) {
-        // Find any service with quantity > 1
-        ServiceDetailsModel? serviceWithQuantity;
+        // Calculate total quantity and total price for all services with quantity > 1
+        int totalQuantity = 0;
+        num totalPrice = 0;
+        
         for (var services in state.brandServices.values) {
           for (var service in services) {
             if (service.quantity > 1) {
-              serviceWithQuantity = service;
-              break;
+              totalQuantity += service.quantity;
+              totalPrice += service.price * service.quantity;
             }
           }
-          if (serviceWithQuantity != null) break;
         }
-
-        // Calculate total price if we have a service with quantity > 1
-        final totalPrice = serviceWithQuantity != null
-            ? serviceWithQuantity.price * serviceWithQuantity.quantity
-            : 0;
 
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),
-          height: serviceWithQuantity != null ? 75.h : 0,
+          height: totalQuantity > 0 ? 75.h : 0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -289,10 +285,8 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     child: DText(
-                      key: ValueKey(serviceWithQuantity?.quantity ?? 0),
-                      context.tr.countServiceSelected(
-                        serviceWithQuantity?.quantity ?? 0,
-                      ),
+                      key: ValueKey(totalQuantity),
+                      context.tr.countServiceSelected(totalQuantity),
                       style: context.textTheme.bodyMedium,
                     ),
                   ),
