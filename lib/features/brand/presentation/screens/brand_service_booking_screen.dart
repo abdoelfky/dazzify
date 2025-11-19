@@ -259,21 +259,61 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
       //     previous.selectedBrandServices.length !=
       //     current.selectedBrandServices.length,
       builder: (context, state) {
+        // Calculate total price
+        final totalPrice = state.selectedBrandServices.fold<num>(
+          0,
+          (sum, service) => sum + (service.price * service.quantity),
+        );
+
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),
-          height: state.selectedBrandServices.isNotEmpty ? 58.h : 0,
+          height: state.selectedBrandServices.isNotEmpty ? 75.h : 0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
-                child: DText(
-                  key: ValueKey(state.selectedBrandServices.length),
-                  context.tr.countServiceSelected(
-                    state.selectedBrandServices.length,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: DText(
+                      key: ValueKey(state.selectedBrandServices.length),
+                      context.tr.countServiceSelected(
+                        state.selectedBrandServices.length,
+                      ),
+                      style: context.textTheme.bodyMedium,
+                    ),
                   ),
-                  style: context.textTheme.bodyMedium,
-                ),
+                  SizedBox(height: 4.h),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: Row(
+                      key: ValueKey(totalPrice),
+                      children: [
+                        DText(
+                          '${context.tr.totalPrice}: ',
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        DText(
+                          reformatPriceWithCommas(totalPrice),
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: context.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        DText(
+                          ' ${context.tr.egp}',
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               SizedBox(width: 24),
               PrimaryButton(
