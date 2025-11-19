@@ -51,6 +51,17 @@ class _ServiceWidgetState extends State<ServiceWidget> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(ServiceWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update local quantity when widget.quantity changes from parent
+    if (oldWidget.quantity != widget.quantity) {
+      setState(() {
+        quantity = widget.quantity;
+      });
+    }
+  }
+
   void _increment() {
     setState(() {
       quantity++;
