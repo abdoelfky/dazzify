@@ -69,59 +69,61 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen>
       },
       builder: (context, state) {
         return SafeArea(
-          child: DazzifyOverlayLoading(
-            isLoading: isLoading,
-            child: Column(
-              children: [
-                DazzifyAppBar(
-                    isLeading: true,
-                    title: "${widget.serviceName} - ${context.tr.pay}"),
-                TabBar(
-                  onTap: (index) {},
-                  controller: _tabController,
-                  unselectedLabelColor: context.colorScheme.outline,
-                  labelColor: context.colorScheme.primary,
-                  dividerColor: Colors.transparent,
-                  indicatorColor: Colors.transparent,
-                  padding: const EdgeInsets.only(bottom: 24).r,
-                  tabs: [
-                    Tab(
-                      icon: Icon(SolarIconsOutline.wallet, size: 22.sp),
-                      height: 50.h,
-                      text: context.tr.eWallet,
-                    ),
-                    Tab(
-                      icon: Icon(SolarIconsOutline.card, size: 22.sp),
-                      height: 50.h,
-                      text: context.tr.card,
-                    ),
-                    Tab(
-                      icon: Icon(SolarIconsOutline.banknote2, size: 22.sp),
-                      height: 50.h,
-                      text: context.tr.installment,
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
+          child: Scaffold(
+            body: DazzifyOverlayLoading(
+              isLoading: isLoading,
+              child: Column(
+                children: [
+                  DazzifyAppBar(
+                      isLeading: true,
+                      title: "${widget.serviceName} - ${context.tr.pay}"),
+                  TabBar(
+                    onTap: (index) {},
                     controller: _tabController,
-                    children: [
-                      EWalletTab(
-                        key: const PageStorageKey(AppConstants.eWalletTab),
-                        transactionId: widget.transactionId,
+                    unselectedLabelColor: context.colorScheme.outline,
+                    labelColor: context.colorScheme.primary,
+                    dividerColor: Colors.transparent,
+                    indicatorColor: Colors.transparent,
+                    padding: const EdgeInsets.only(bottom: 24).r,
+                    tabs: [
+                      Tab(
+                        icon: Icon(SolarIconsOutline.wallet, size: 22.sp),
+                        height: 50.h,
+                        text: context.tr.eWallet,
                       ),
-                      CardTab(
-                        key: const PageStorageKey(AppConstants.visaCardTab),
-                        transactionId: widget.transactionId,
+                      Tab(
+                        icon: Icon(SolarIconsOutline.card, size: 22.sp),
+                        height: 50.h,
+                        text: context.tr.card,
                       ),
-                      InstallmentTab(
-                        key: const PageStorageKey(AppConstants.installmentTab),
-                        transactionId: widget.transactionId,
+                      Tab(
+                        icon: Icon(SolarIconsOutline.banknote2, size: 22.sp),
+                        height: 50.h,
+                        text: context.tr.installment,
                       ),
                     ],
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        EWalletTab(
+                          key: const PageStorageKey(AppConstants.eWalletTab),
+                          transactionId: widget.transactionId,
+                        ),
+                        CardTab(
+                          key: const PageStorageKey(AppConstants.visaCardTab),
+                          transactionId: widget.transactionId,
+                        ),
+                        InstallmentTab(
+                          key: const PageStorageKey(AppConstants.installmentTab),
+                          transactionId: widget.transactionId,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
