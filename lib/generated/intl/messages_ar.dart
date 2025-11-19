@@ -418,6 +418,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "on": MessageLookupByLibrary.simpleMessage("في"),
     "oops": MessageLookupByLibrary.simpleMessage("عذرًا"),
     "openSettings": MessageLookupByLibrary.simpleMessage("فتح الإعدادات"),
+    "openToScratch": MessageLookupByLibrary.simpleMessage(
+      "افتح وامسح للحصول على كوبونك",
+    ),
     "orangeCash": MessageLookupByLibrary.simpleMessage("اورانج كاش"),
     "originalSound": MessageLookupByLibrary.simpleMessage("صوت أصلي"),
     "otherWallets": MessageLookupByLibrary.simpleMessage("المحافظ الاخري"),

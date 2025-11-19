@@ -425,7 +425,8 @@
   "retry": "Retry",
   "invalidQrCode": "Invalid QR Code",
   "copyCouponCoded": "Copy coupon coded",
-  "scratchToRedeem": "Scratch to redeem your discount"
+  "scratchToRedeem": "Scratch to redeem your discount",
+  "openToScratch": "Open to Scratch your Coupon"
 
 
 }

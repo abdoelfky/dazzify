@@ -425,7 +425,8 @@
   "retry": "إعادة المحاولة",
   "invalidQrCode": "رمز QR غير صالح",
   "copyCouponCoded": "انسخ رمز الكوبون",
-  "scratchToRedeem": "اكشط لاستخدام خصمك"
+  "scratchToRedeem": "اكشط لاستخدام خصمك",
 
+  "openToScratch": "افتح وامسح للحصول على كوبونك"
 
 }

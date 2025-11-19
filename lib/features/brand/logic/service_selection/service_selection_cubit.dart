@@ -144,8 +144,10 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
   void selectBookingService({
     required ServiceDetailsModel service,
   }) {
-    final selectedServices = List<ServiceDetailsModel>.from(state.selectedBrandServices);
-    final selectedServicesIds = List<String>.from(state.selectedBrandServicesIds);
+    final selectedServices =
+        List<ServiceDetailsModel>.from(state.selectedBrandServices);
+    final selectedServicesIds =
+        List<String>.from(state.selectedBrandServicesIds);
 
     final isSelected = selectedServicesIds.contains(service.id);
 
@@ -167,12 +169,16 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
     required String serviceId,
     required int quantity,
   }) {
-    final updatedServices = Map<String, List<ServiceDetailsModel>>.from(state.brandServices);
+    final updatedServices =
+        Map<String, List<ServiceDetailsModel>>.from(state.brandServices);
 
     for (var category in updatedServices.keys) {
       updatedServices[category] = updatedServices[category]!.map((service) {
         if (service.id == serviceId) {
           return service.copyWith(quantity: quantity);
+        } else if (quantity > 1) {
+          // Reset all other services to quantity 1 when current service quantity > 1
+          return service.copyWith(quantity: 1);
         }
         return service;
       }).toList();
@@ -181,6 +187,9 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
     final updatedSelected = state.selectedBrandServices.map((s) {
       if (s.id == serviceId) {
         return s.copyWith(quantity: quantity);
+      } else if (quantity > 1) {
+        // Reset all other selected services to quantity 1
+        return s.copyWith(quantity: 1);
       }
       return s;
     }).toList();
@@ -190,5 +199,4 @@ class ServiceSelectionCubit extends Cubit<ServiceSelectionState> {
       selectedBrandServices: updatedSelected,
     ));
   }
-
 }

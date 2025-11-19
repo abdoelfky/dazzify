@@ -3147,6 +3147,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Open to Scratch your Coupon`
+  String get openToScratch {
+    return Intl.message(
+      'Open to Scratch your Coupon',
+      name: 'openToScratch',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -418,6 +418,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "on": MessageLookupByLibrary.simpleMessage("On"),
     "oops": MessageLookupByLibrary.simpleMessage("Oooops"),
     "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
+    "openToScratch": MessageLookupByLibrary.simpleMessage(
+      "Open to Scratch your Coupon",
+    ),
     "orangeCash": MessageLookupByLibrary.simpleMessage("Orange Cash"),
     "originalSound": MessageLookupByLibrary.simpleMessage("Original sound"),
     "otherWallets": MessageLookupByLibrary.simpleMessage("Other Wallets"),

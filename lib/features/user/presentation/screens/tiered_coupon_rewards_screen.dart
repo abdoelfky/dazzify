@@ -7,6 +7,7 @@ import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_cubit.da
 import 'package:dazzify/features/user/logic/tiered_coupon/tiered_coupon_state.dart';
 import 'package:dazzify/features/user/presentation/screens/tiered_coupon_details_screen.dart';
 import 'package:dazzify/features/user/presentation/widgets/tiered_coupon_card.dart';
+import 'package:dazzify/settings/theme/colors_scheme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -117,8 +118,9 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                               child: Text(
                                 context.tr.startWithFirstCoupon,
                                 style: context.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF7B3FF2),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 22,
+                                  color: ColorsSchemeManager.light.primary,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
