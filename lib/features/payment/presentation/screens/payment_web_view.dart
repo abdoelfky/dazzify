@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/features/payment/logic/transactions/transaction_bloc.dart';
+import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,6 +68,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     return BlocProvider.value(
       value: widget.transactionBloc,
       child: SafeArea(
+        top: false,
         child: Scaffold(
           body: WebViewWidget(
             controller: controller,

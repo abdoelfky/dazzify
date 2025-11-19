@@ -39,7 +39,7 @@ class _TransactionButtonState extends State<TransactionButton> {
         final String buttonTitle = widget.amount != null
             ? '${context.tr.pay} ${widget.amount!.toInt()} ${context.tr.egp}'
             : context.tr.pay;
-        
+
         return PrimaryButton(
           width: widget.amount != null ? null : 100.w,
           height: 40.h,
@@ -51,8 +51,8 @@ class _TransactionButtonState extends State<TransactionButton> {
           ).r,
           title: buttonTitle,
           onTap: () {
-            context
-                .pushRoute(
+            context.router.root
+                .push(
               PaymentMethodRoute(
                 serviceName: widget.serviceName,
                 transactionId: widget.transactionId,

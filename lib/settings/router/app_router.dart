@@ -119,27 +119,16 @@ class AppRouter extends RootStackRouter {
                   page: HomeTabRoute.page,
                   initial: true,
                   children: [
-                    AutoRoute(
-                      page: HomeRoute.page,
-                      initial: true),
-                    AutoRoute(
-                      page: MyFavoriteRoute.page),
-                    AutoRoute(
-                      page: BookingStatusRoute.page),
-                    AutoRoute(
-                      page: CategoryRoute.page),
-                    AutoRoute(
-                      page: PopularBrandsRoute.page),
-                    AutoRoute(
-                      page: TopRatedBrandsRoute.page),
-                    AutoRoute(
-                      page: PopularServicesRoute.page),
-                    AutoRoute(
-                      page: NotificationsRoute.page),
-                    AutoRoute(
-                      page: TopRatedServicesRoute.page),
-                    AutoRoute(
-                      page: TransactionRoute.page),
+                    AutoRoute(page: HomeRoute.page, initial: true),
+                    AutoRoute(page: MyFavoriteRoute.page),
+                    AutoRoute(page: BookingStatusRoute.page),
+                    AutoRoute(page: CategoryRoute.page),
+                    AutoRoute(page: PopularBrandsRoute.page),
+                    AutoRoute(page: TopRatedBrandsRoute.page),
+                    AutoRoute(page: PopularServicesRoute.page),
+                    AutoRoute(page: NotificationsRoute.page),
+                    AutoRoute(page: TopRatedServicesRoute.page),
+                    AutoRoute(page: TransactionRoute.page),
                   ],
                 ),
                 AutoRoute(
@@ -199,19 +188,15 @@ class AppRouter extends RootStackRouter {
                     AutoRoute(
                       page: IssueRoutes.page,
                       children: [
-                        AutoRoute(
-                          page: IssueRoute.page),
-                        AutoRoute(
-                          page: IssueStatusRoute.page),
+                        AutoRoute(page: IssueRoute.page),
+                        AutoRoute(page: IssueStatusRoute.page),
                       ],
                     ),
                     AutoRoute(
                       page: PaymentRoutes.page,
                       children: [
-                        AutoRoute(
-                          page: TransactionRoute.page),
-                        AutoRoute(
-                          page: PaymentMethodRoute.page),
+                        AutoRoute(page: TransactionRoute.page),
+                        AutoRoute(page: PaymentMethodRoute.page),
                       ],
                     ),
                   ],
@@ -265,6 +250,9 @@ class AppRouter extends RootStackRouter {
             ),
             AutoRoute(
               page: PaymentWebViewRoute.page,
+            ),
+            AutoRoute(
+              page: PaymentMethodRoute.page,
             ),
             AutoRoute(
               page: WebViewRoute.page,
@@ -331,10 +319,11 @@ class Authenticated extends AutoRouter implements AutoRouteWrapper {
       ],
       child: BlocListener<BookingReviewCubit, BookingReviewState>(
         listener: (context, state) {
-          if (state.bookingReviewRequestState == UiState.success && !state.isSheetShowing) {
+          if (state.bookingReviewRequestState == UiState.success &&
+              !state.isSheetShowing) {
             // Mark sheet as showing to prevent duplicates
             context.read<BookingReviewCubit>().setSheetShowing(true);
-            
+
             showBookingReviewSheet(
               userModel: context.read<UserCubit>().state.userModel,
               context: context,
@@ -464,7 +453,8 @@ class Payment extends AutoRouter {
 }
 
 @RoutePage(name: "TieredCouponRewardsWrapperRoute")
-class TieredCouponRewardsWrapper extends StatelessWidget implements AutoRouteWrapper {
+class TieredCouponRewardsWrapper extends StatelessWidget
+    implements AutoRouteWrapper {
   const TieredCouponRewardsWrapper({super.key});
 
   @override
