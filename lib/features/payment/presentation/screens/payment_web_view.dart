@@ -67,6 +67,15 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     return BlocProvider.value(
       value: widget.transactionBloc,
       child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.router.pop();
+            },
+          ),
+          title: const Text('Payment'),
+        ),
         body: WebViewWidget(
           controller: controller,
         ),
