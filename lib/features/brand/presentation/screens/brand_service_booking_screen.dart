@@ -75,7 +75,10 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
               child: buildCategoriesList(),
             ),
             buildServiceBookingList(),
-            if (widget.isMultipleBooking) buildMultipleServiceBooking(),
+            if (widget.isMultipleBooking) 
+              buildMultipleServiceBooking()
+            else
+              buildSingleServiceTotalPrice(),
           ],
         ),
       ),
@@ -249,6 +252,83 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
               );
             }
         }
+      },
+    );
+  }
+
+  Widget buildSingleServiceTotalPrice() {
+    return BlocBuilder<ServiceSelectionCubit, ServiceSelectionState>(
+      builder: (context, state) {
+        // Find any service with quantity > 1
+        ServiceDetailsModel? serviceWithQuantity;
+        for (var services in state.brandServices.values) {
+          for (var service in services) {
+            if (service.quantity > 1) {
+              serviceWithQuantity = service;
+              break;
+            }
+          }
+          if (serviceWithQuantity != null) break;
+        }
+
+        // Calculate total price if we have a service with quantity > 1
+        final totalPrice = serviceWithQuantity != null
+            ? serviceWithQuantity.price * serviceWithQuantity.quantity
+            : 0;
+
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: serviceWithQuantity != null ? 75.h : 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: DText(
+                      key: ValueKey(serviceWithQuantity?.quantity ?? 0),
+                      context.tr.countServiceSelected(
+                        serviceWithQuantity?.quantity ?? 0,
+                      ),
+                      style: context.textTheme.bodyMedium,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: Row(
+                      key: ValueKey(totalPrice),
+                      children: [
+                        DText(
+                          '${context.tr.totalPrice}: ',
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        DText(
+                          reformatPriceWithCommas(totalPrice),
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: context.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        DText(
+                          ' ${context.tr.egp}',
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       },
     );
   }

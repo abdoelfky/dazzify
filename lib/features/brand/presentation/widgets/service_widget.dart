@@ -94,27 +94,11 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                         Column(
                           children: [
                             SizedBox(height: 8.w),
-                            if (quantity > 1)
-                              DText(
-                                context.tr.totalPrice,
-                                style: context.textTheme.labelSmall!.copyWith(
-                                  color: context.colorScheme.onSurfaceVariant,
-                                  fontSize: 10.sp,
-                                ),
-                              ),
                             DText(
-                              '${reformatPriceWithCommas(widget.price * quantity)} ${context.tr.egp}',
+                              '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
                               style: context.textTheme.labelLarge!
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
-                            if (quantity > 1)
-                              DText(
-                                '${reformatPriceWithCommas(widget.price)} × $quantity',
-                                style: context.textTheme.labelSmall!.copyWith(
-                                  color: context.colorScheme.onSurfaceVariant,
-                                  fontSize: 10.sp,
-                                ),
-                              ),
                           ],
                         ),
                     ],
