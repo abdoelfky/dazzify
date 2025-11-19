@@ -109,32 +109,32 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                 return SizedBox(width: 8.w);
               } else {
                 return ListView.separated(
-                padding: EdgeInsetsDirectional.only(start: 16, bottom: 8),
-                itemCount: state.brandCategories.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return BlocBuilder<ServiceSelectionCubit,
-                      ServiceSelectionState>(
-                    buildWhen: (previous, current) =>
-                        previous.selectedCategoryId !=
-                        current.selectedCategoryId,
-                    builder: (context, state) {
-                      final category = state.brandCategories[index];
-                      return BrandCategoryItem(
-                        key: ValueKey(category.id),
-                        image: category.image,
-                        name: category.name,
-                        isSelected: category.id == state.selectedCategoryId,
-                        onTap: () {
-                          _serviceSelectionCubit.selectCategory(
-                              brandCategory: category);
-                        },
-                      );
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(width: 8.w),
-              );
+                  padding: EdgeInsetsDirectional.only(start: 16, bottom: 8),
+                  itemCount: state.brandCategories.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return BlocBuilder<ServiceSelectionCubit,
+                        ServiceSelectionState>(
+                      buildWhen: (previous, current) =>
+                          previous.selectedCategoryId !=
+                          current.selectedCategoryId,
+                      builder: (context, state) {
+                        final category = state.brandCategories[index];
+                        return BrandCategoryItem(
+                          key: ValueKey(category.id),
+                          image: category.image,
+                          name: category.name,
+                          isSelected: category.id == state.selectedCategoryId,
+                          onTap: () {
+                            _serviceSelectionCubit.selectCategory(
+                                brandCategory: category);
+                          },
+                        );
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(width: 8.w),
+                );
               }
           }
         },
@@ -259,21 +259,59 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
       //     previous.selectedBrandServices.length !=
       //     current.selectedBrandServices.length,
       builder: (context, state) {
+        final totalPrice = state.selectedBrandServices.fold<num>(
+          0,
+          (sum, service) => sum + (service.price * service.quantity),
+        );
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),
-          height: state.selectedBrandServices.isNotEmpty ? 58.h : 0,
+          height: state.selectedBrandServices.isNotEmpty ? 90.h : 0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
-                child: DText(
-                  key: ValueKey(state.selectedBrandServices.length),
-                  context.tr.countServiceSelected(
-                    state.selectedBrandServices.length,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: DText(
+                      key: ValueKey(state.selectedBrandServices.length),
+                      context.tr.countServiceSelected(
+                        state.selectedBrandServices.length,
+                      ),
+                      style: context.textTheme.bodyMedium,
+                    ),
                   ),
-                  style: context.textTheme.bodyMedium,
-                ),
+                  SizedBox(height: 2.h),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: Row(
+                      key: ValueKey(totalPrice),
+                      children: [
+                        DText(
+                          '${context.tr.totalPrice}: ',
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        DText(
+                          reformatPriceWithCommas(totalPrice),
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: context.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        DText(
+                          ' ${context.tr.egp}',
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               SizedBox(width: 24),
               PrimaryButton(
