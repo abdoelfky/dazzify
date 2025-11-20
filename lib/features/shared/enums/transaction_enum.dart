@@ -12,6 +12,8 @@ enum PaymentStatus {
   notPaid,
   refunded,
   cancelled,
+  pendingRefund,
+  refundInReview,
 }
 
 extension TransactionTypeExtension on TransactionType {
@@ -52,6 +54,10 @@ PaymentStatus getPaymentStatus(String value) {
       return PaymentStatus.refunded;
     case "cancelled":
       return PaymentStatus.cancelled;
+    case "pending_refund":
+      return PaymentStatus.pendingRefund;
+    case "refund_in_review":
+      return PaymentStatus.refundInReview;
     default:
       return PaymentStatus.none;
   }
@@ -70,6 +76,10 @@ extension PaymentStatusExtension on PaymentStatus {
         return "refunded";
       case PaymentStatus.cancelled:
         return "cancelled";
+      case PaymentStatus.pendingRefund:
+        return "pending_refund";
+      case PaymentStatus.refundInReview:
+        return "refund_in_review";
     }
   }
 }

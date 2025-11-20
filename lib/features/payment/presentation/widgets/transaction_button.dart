@@ -83,6 +83,42 @@ class _TransactionButtonState extends State<TransactionButton> {
             ),
           ],
         );
+      case PaymentStatus.pendingRefund:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              SolarIconsOutline.clockCircle,
+              color: context.colorScheme.secondary,
+              size: 12.r,
+            ),
+            SizedBox(width: 2.w),
+            DText(
+              context.tr.pendingRefund,
+              style: context.textTheme.bodySmall!.copyWith(
+                color: context.colorScheme.secondary,
+              ),
+            ),
+          ],
+        );
+      case PaymentStatus.refundInReview:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              SolarIconsOutline.documentText,
+              color: context.colorScheme.tertiary,
+              size: 12.r,
+            ),
+            SizedBox(width: 2.w),
+            DText(
+              context.tr.refundInReview,
+              style: context.textTheme.bodySmall!.copyWith(
+                color: context.colorScheme.tertiary,
+              ),
+            ),
+          ],
+        );
       case PaymentStatus.paid:
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,

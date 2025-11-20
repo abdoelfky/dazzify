@@ -103,6 +103,8 @@ class _TransactionBarState extends State<TransactionBar> {
           ],
         );
       case PaymentStatus.refunded:
+      case PaymentStatus.pendingRefund:
+      case PaymentStatus.refundInReview:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

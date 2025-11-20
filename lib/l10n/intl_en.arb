@@ -359,6 +359,8 @@
   "paid": "Paid",
   "refunded": "Refunded",
   "cancelled": "Cancelled",
+  "pendingRefund": "Pending Refund",
+  "refundInReview": "Refund In Review",
   "vodafoneCash": "Vodafone Cash",
   "etisalatCash": "Etisalat Cash",
   "wePay": "We Pay",

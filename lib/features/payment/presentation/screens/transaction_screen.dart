@@ -177,6 +177,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
           },
           child: DText(context.tr.cancelled),
         ),
+        PopupMenuItem(
+          onTap: () {
+            filterTransactions(PaymentStatus.pendingRefund.name);
+          },
+          child: DText(context.tr.pendingRefund),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            filterTransactions(PaymentStatus.refundInReview.name);
+          },
+          child: DText(context.tr.refundInReview),
+        ),
       ],
     );
   }

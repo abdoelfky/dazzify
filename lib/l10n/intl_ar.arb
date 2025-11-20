@@ -358,6 +358,8 @@
   "paid": "مدفوع",
   "refunded": "تم استرداده",
   "cancelled": "تم إلغاءه",
+  "pendingRefund": "في انتظار الاسترداد",
+  "refundInReview": "الاسترداد قيد المراجعة",
   "vodafoneCash": "فودافون كاش",
   "etisalatCash": "اتصالات كاش",
   "wePay": "وي باي",
