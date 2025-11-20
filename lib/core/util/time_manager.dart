@@ -306,6 +306,13 @@ class TimeManager {
     This Method Adds Text Format Duration Timer
     - 00 D : 09 H : 34 M : 12 S
     */
+    // If duration is negative or zero, return zeros
+    if (duration.isNegative || duration.inSeconds <= 0) {
+      return '00 ${DazzifyApp.tr.daysShortcut} : '
+          '00 ${DazzifyApp.tr.hoursShortcut} : '
+          '00 ${DazzifyApp.tr.minShortcut}';
+    }
+    
     int days = duration.inDays;
     int hours = duration.inHours % 24;
     int minutes = duration.inMinutes % 60;
@@ -319,7 +326,19 @@ class TimeManager {
     required Duration totalDuration,
     required Duration remainingTime,
   }) {
-    return remainingTime.inMinutes / totalDuration.inMinutes;
+    // Handle edge cases to prevent division by zero or invalid progress values
+    if (totalDuration.inMinutes <= 0) {
+      return 0.0;
+    }
+    
+    if (remainingTime.isNegative || remainingTime.inSeconds <= 0) {
+      return 0.0;
+    }
+    
+    double progress = remainingTime.inMinutes / totalDuration.inMinutes;
+    
+    // Ensure progress is between 0 and 1
+    return progress.clamp(0.0, 1.0);
   }
 
   // static String getTimeRemaining(String dateTimeString) {

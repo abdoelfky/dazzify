@@ -43,16 +43,24 @@ class _TransactionBarState extends State<TransactionBar> {
 
     totalTime = expireTime.difference(startTime);
     remainingTime = expireTime.difference(currentTime);
+    
+    // If remaining time is already negative or zero, set it to zero
+    if (remainingTime.isNegative || remainingTime.inSeconds <= 0) {
+      remainingTime = Duration.zero;
+    }
   }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       if (mounted) {
         setState(() {
-          remainingTime = remainingTime - const Duration(minutes: 1);
-          if (remainingTime.inMinutes <= 0) {
+          // Check before subtracting to prevent negative values
+          if (remainingTime.inMinutes <= 1) {
+            remainingTime = Duration.zero;
             widget.onTimerFinish();
             _timer?.cancel();
+          } else {
+            remainingTime = remainingTime - const Duration(minutes: 1);
           }
         });
       }
