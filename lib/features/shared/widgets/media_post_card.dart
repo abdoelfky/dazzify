@@ -283,78 +283,75 @@ class _MediaPostCardState extends State<MediaPostCard> {
           SizedBox(height: 8.h),
           Stack(
             children: [
-              CarouselSlider.builder(
-                itemCount: widget.brandMedia.mediaItems.length,
-                itemBuilder: (context, index, realIndex) {
-                  final mediaItems = widget.brandMedia.mediaItems[index];
-                  if (mediaItems.itemType == "photo") {
-                    return AspectRatio(
-                      aspectRatio:
-                          _parseAspectRatio(widget.brandMedia.aspectRatio) ??
-                              0.7,
-                      child: DazzifyCachedNetworkImage(
+              AspectRatio(
+                aspectRatio:
+                    _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7,
+                child: CarouselSlider.builder(
+                  itemCount: widget.brandMedia.mediaItems.length,
+                  itemBuilder: (context, index, realIndex) {
+                    final mediaItems = widget.brandMedia.mediaItems[index];
+                    if (mediaItems.itemType == "photo") {
+                      return DazzifyCachedNetworkImage(
                         width: context.screenWidth,
                         imageUrl: widget.brandMedia.mediaItems[index].itemUrl,
                         fit: BoxFit.cover,
-                      ),
-                    );
-                  } else {
-                    _initializeVideoController(index);
-                    if (_chewieControllers[index] != null &&
-                        _videoControllers[index]!.value.isInitialized) {
-                      return VisibilityDetector(
-                        onVisibilityChanged: (visibility) {
-                          if (visibility.visibleFraction > 0.0 && _indicatorIndex.value == index) {
-                            _videoControllers[index]!.play();
-                          } else {
-                            _videoControllers[index]!.pause();
-                          }
-                        },
-                        key: ValueKey<String>(mediaItems.itemUrl),
-                        child: Chewie(
-                          controller: _chewieControllers[index]!,
-                        ),
                       );
                     } else {
-                      return Shimmer.fromColors(
-                        baseColor: context.isDarkTheme
-                            ? ColorsManager.baseShimmerDark
-                            : ColorsManager.baseShimmerLight,
-                        highlightColor: context.isDarkTheme
-                            ? ColorsManager.highlightShimmerDark
-                            : ColorsManager.highlightShimmerLight,
-                        child: Container(
-                          width: context.screenWidth,
-                          height: double.infinity,
-                          color: Colors.white,
-                        ),
-                      );
-                    }
-                  }
-                },
-                options: CarouselOptions(
-                  height: 250.h,
-                  viewportFraction: 1,
-                  autoPlay: false,
-                  aspectRatio: 1,
-                  autoPlayCurve: Curves.ease,
-                  enlargeCenterPage: false,
-                  initialPage: 0,
-                  enableInfiniteScroll: false,
-                  onPageChanged: (index, reason) {
-                    // Pause all videos first
-                    for (int i = 0; i < _videoControllers.length; i++) {
-                      if (_videoControllers[i] != null) {
-                        _videoControllers[i]!.pause();
+                      _initializeVideoController(index);
+                      if (_chewieControllers[index] != null &&
+                          _videoControllers[index]!.value.isInitialized) {
+                        return VisibilityDetector(
+                          onVisibilityChanged: (visibility) {
+                            if (visibility.visibleFraction > 0.0 && _indicatorIndex.value == index) {
+                              _videoControllers[index]!.play();
+                            } else {
+                              _videoControllers[index]!.pause();
+                            }
+                          },
+                          key: ValueKey<String>(mediaItems.itemUrl),
+                          child: Chewie(
+                            controller: _chewieControllers[index]!,
+                          ),
+                        );
+                      } else {
+                        return Shimmer.fromColors(
+                          baseColor: context.isDarkTheme
+                              ? ColorsManager.baseShimmerDark
+                              : ColorsManager.baseShimmerLight,
+                          highlightColor: context.isDarkTheme
+                              ? ColorsManager.highlightShimmerDark
+                              : ColorsManager.highlightShimmerLight,
+                          child: Container(
+                            width: context.screenWidth,
+                            height: double.infinity,
+                            color: Colors.white,
+                          ),
+                        );
                       }
                     }
-                    _indicatorIndex.value = index;
-                    // Auto-play the current video if it's a video
-                    if (widget.brandMedia.mediaItems[index].itemType == "video" &&
-                        _videoControllers[index] != null) {
-                      _videoControllers[index]!.play();
-                    }
                   },
+                  options: CarouselOptions(
+                    viewportFraction: 1,
+                    autoPlay: false,
+                    autoPlayCurve: Curves.ease,
+                    enlargeCenterPage: false,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) {
+                      // Pause all videos first
+                      for (int i = 0; i < _videoControllers.length; i++) {
+                        if (_videoControllers[i] != null) {
+                          _videoControllers[i]!.pause();
+                        }
+                      }
+                      _indicatorIndex.value = index;
+                      // Auto-play the current video if it's a video
+                      if (widget.brandMedia.mediaItems[index].itemType == "video" &&
+                          _videoControllers[index] != null) {
+                        _videoControllers[index]!.play();
+                      }
+                    },
+                  ),
                 ),
               ),
               ValueListenableBuilder(
