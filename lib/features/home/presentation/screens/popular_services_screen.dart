@@ -32,14 +32,18 @@ class PopularServicesScreen extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _PopularServicesScreenState extends State<PopularServicesScreen> {
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
   late final ServicesBloc servicesBloc;
 
   @override
   void initState() {
+    super.initState();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     servicesBloc = context.read<ServicesBloc>();
     _controller.addListener(_onScroll);
-    super.initState();
   }
 
   void _onScroll() async {
@@ -90,10 +94,13 @@ class _PopularServicesScreenState extends State<PopularServicesScreen> {
                           message: context.tr.noServices,
                         );
                       } else {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(8).r,
-                          controller: _controller,
-                          itemCount: state.popularServices.length + 1,
+                        return RepaintBoundary(
+                          child: GridView.builder(
+                            padding: const EdgeInsets.all(8).r,
+                            controller: _controller,
+                            physics: const BouncingScrollPhysics(),
+                            cacheExtent: 500.0,
+                            itemCount: state.popularServices.length + 1,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
@@ -114,22 +121,25 @@ class _PopularServicesScreenState extends State<PopularServicesScreen> {
                               }
                             } else {
                               final service = state.popularServices[index];
-                              return PopularServiceCard(
-                                service: service,
-                                nameStyle:
-                                    context.textTheme.bodySmall!.copyWith(
-                                  color: Colors.white,
+                              return RepaintBoundary(
+                                child: PopularServiceCard(
+                                  service: service,
+                                  nameStyle:
+                                      context.textTheme.bodySmall!.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                  iconTop: 5.h,
+                                  iconEnd: 5.w,
+                                  onTap: () {
+                                    context.router.push(
+                                      ServiceDetailsRoute(service: service),
+                                    );
+                                  },
                                 ),
-                                iconTop: 5.h,
-                                iconEnd: 5.w,
-                                onTap: () {
-                                  context.router.push(
-                                    ServiceDetailsRoute(service: service),
-                                  );
-                                },
                               );
                             }
                           },
+                          ),
                         );
                       }
                   }

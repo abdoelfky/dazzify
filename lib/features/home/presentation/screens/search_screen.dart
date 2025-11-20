@@ -30,17 +30,25 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _textController = TextEditingController();
-  final ScrollController _mediaScrollController = ScrollController();
-  final ScrollController _brandsScrollController = ScrollController();
+  late final ScrollController _mediaScrollController;
+  late final ScrollController _brandsScrollController;
   late final SearchBloc searchBloc;
   late MediaType mediaType;
 
   @override
   void initState() {
+    super.initState();
+    _mediaScrollController = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
+    _brandsScrollController = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     searchBloc = context.read<SearchBloc>();
     _mediaScrollController.addListener(_onMediaScroll);
     _brandsScrollController.addListener(_onBrandsScroll);
-    super.initState();
   }
 
   void _onMediaScroll() async {
@@ -146,15 +154,16 @@ class _SearchScreenState extends State<SearchScreen> {
                         } else {
                           return Expanded(
                             child: CustomFadeAnimation(
-                              child: MasonryGridView.builder(
-                                controller: _mediaScrollController,
-                                padding: const EdgeInsets.only(
-                                  top: 0,
-                                  bottom: 30,
-                                  right: 16,
-                                  left: 16,
-                                ).r,
-                                itemCount: state.media.length + 1,
+                              child: RepaintBoundary(
+                                child: MasonryGridView.builder(
+                                  controller: _mediaScrollController,
+                                  padding: const EdgeInsets.only(
+                                    top: 0,
+                                    bottom: 30,
+                                    right: 16,
+                                    left: 16,
+                                  ).r,
+                                  itemCount: state.media.length + 1,
                                 gridDelegate:
                                     const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3,
@@ -213,6 +222,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     }
                                   }
                                 },
+                                ),
                               ),
                             ),
                           );
@@ -226,15 +236,18 @@ class _SearchScreenState extends State<SearchScreen> {
                           );
                         } else {
                           return Expanded(
-                            child: ListView.separated(
-                              itemCount: state.brands.length + 1,
-                              padding: const EdgeInsets.only(
-                                top: 0,
-                                bottom: 90,
-                                right: 16,
-                                left: 16,
-                              ).r,
-                              controller: _brandsScrollController,
+                            child: RepaintBoundary(
+                              child: ListView.separated(
+                                physics: const BouncingScrollPhysics(),
+                                cacheExtent: 500.0,
+                                itemCount: state.brands.length + 1,
+                                padding: const EdgeInsets.only(
+                                  top: 0,
+                                  bottom: 90,
+                                  right: 16,
+                                  left: 16,
+                                ).r,
+                                controller: _brandsScrollController,
                               itemBuilder: (context, index) {
                                 if (index >= state.brands.length) {
                                   if (state.hasBrandsReachMax) {
@@ -250,21 +263,24 @@ class _SearchScreenState extends State<SearchScreen> {
                                     );
                                   }
                                 } else {
-                                  return BrandCard(
-                                    brand: state.brands[index],
-                                    onTap: () {
-                                      navigateToBrandProfile(
-                                        context: context,
-                                        brand: state.brands[index],
-                                        index: index,
-                                      );
-                                    },
+                                  return RepaintBoundary(
+                                    child: BrandCard(
+                                      brand: state.brands[index],
+                                      onTap: () {
+                                        navigateToBrandProfile(
+                                          context: context,
+                                          brand: state.brands[index],
+                                          index: index,
+                                        );
+                                      },
+                                    ),
                                   );
                                 }
                               },
                               separatorBuilder:
                                   (BuildContext context, int index) => SizedBox(
                                 height: 16.h,
+                              ),
                               ),
                             ),
                           );

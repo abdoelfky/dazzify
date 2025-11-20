@@ -67,7 +67,10 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _controller = ScrollController();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     _brandBloc = context.read<BrandBloc>();
 
     if (widget.brand != null) {
@@ -86,6 +89,7 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 

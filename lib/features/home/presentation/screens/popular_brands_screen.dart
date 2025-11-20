@@ -34,14 +34,18 @@ class PopularBrandsScreen extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
   late final HomeBrandsBloc allBrandsBloc;
 
   @override
   void initState() {
+    super.initState();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     allBrandsBloc = context.read<HomeBrandsBloc>();
     _controller.addListener(_onScroll);
-    super.initState();
   }
 
   void _onScroll() async {
@@ -97,14 +101,17 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
                           message: context.tr.noVendors,
                         );
                       } else {
-                        return ListView.separated(
-                          controller: _controller,
-                          itemCount: state.popularBrands.length + 1,
-                          padding: const EdgeInsets.only(
-                            top: 24,
-                            right: 16,
-                            left: 16,
-                          ).r,
+                        return RepaintBoundary(
+                          child: ListView.separated(
+                            controller: _controller,
+                            physics: const BouncingScrollPhysics(),
+                            cacheExtent: 500.0,
+                            itemCount: state.popularBrands.length + 1,
+                            padding: const EdgeInsets.only(
+                              top: 24,
+                              right: 16,
+                              left: 16,
+                            ).r,
                           itemBuilder: (context, index) {
                             if (state.popularBrands.isNotEmpty &&
                                 index >= state.popularBrands.length) {
@@ -121,20 +128,23 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
                                 );
                               }
                             } else {
-                              return BrandCard(
-                                brand: state.popularBrands[index],
-                                onTap: () {
-                                  context.router.push(
-                                    BrandProfileRoute(
-                                      brand: state.popularBrands[index],
-                                    ),
-                                  );
-                                },
+                              return RepaintBoundary(
+                                child: BrandCard(
+                                  brand: state.popularBrands[index],
+                                  onTap: () {
+                                    context.router.push(
+                                      BrandProfileRoute(
+                                        brand: state.popularBrands[index],
+                                      ),
+                                    );
+                                  },
+                                ),
                               );
                             }
                           },
                           separatorBuilder: (BuildContext context, int index) =>
                               SizedBox(height: 16.h),
+                          ),
                         );
                       }
                   }

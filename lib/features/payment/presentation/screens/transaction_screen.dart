@@ -18,7 +18,7 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   late final TransactionBloc transactionBloc;
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
 
   void _onScroll() async {
     final maxScroll = _controller.position.maxScrollExtent;
@@ -31,6 +31,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     transactionBloc = context.read<TransactionBloc>();
     transactionBloc.add(const ResetTransactionsEvent());
     _controller.addListener(_onScroll);
@@ -110,10 +114,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 },
                 child: CustomFadeAnimation(
                   duration: const Duration(milliseconds: 300),
-                  child: ListView.separated(
-                    controller: _controller,
-                    itemCount: state.transactions.length + 1,
-                    separatorBuilder: (context, index) => SizedBox(height: 8.h),
+                  child: RepaintBoundary(
+                    child: ListView.separated(
+                      controller: _controller,
+                      physics: const BouncingScrollPhysics(),
+                      cacheExtent: 500.0,
+                      itemCount: state.transactions.length + 1,
+                      separatorBuilder: (context, index) => SizedBox(height: 8.h),
                     itemBuilder: (context, index) {
                       if (index >= state.transactions.length) {
                         if (state.hasTransactionsReachedMax) {
@@ -126,11 +133,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           );
                         }
                       } else {
-                        return TransactionItem(
-                          transaction: state.transactions[index],
+                        return RepaintBoundary(
+                          child: TransactionItem(
+                            transaction: state.transactions[index],
+                          ),
                         );
                       }
                     },
+                    ),
                   ),
                 ),
               ),

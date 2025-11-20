@@ -16,11 +16,15 @@ class IssueScreen extends StatefulWidget {
 
 class _IssueScreenState extends State<IssueScreen> {
   late final IssueBloc issueBloc;
-  final ScrollController controller = ScrollController();
+  late final ScrollController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     issueBloc = context.read<IssueBloc>();
     controller.addListener(_onScroll);
   }
@@ -71,9 +75,12 @@ class _IssueScreenState extends State<IssueScreen> {
                             right: 16,
                             bottom: 16,
                           ).r,
-                          child: ListView.separated(
-                            controller: controller,
-                            itemCount: state.issueList.length + 1,
+                          child: RepaintBoundary(
+                            child: ListView.separated(
+                              controller: controller,
+                              physics: const BouncingScrollPhysics(),
+                              cacheExtent: 500.0,
+                              itemCount: state.issueList.length + 1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
                                 return Center(
@@ -102,8 +109,10 @@ class _IssueScreenState extends State<IssueScreen> {
                                   );
                                 }
                               } else {
-                                return IssueItem(
-                                  issue: state.issueList[index - 1],
+                                return RepaintBoundary(
+                                  child: IssueItem(
+                                    issue: state.issueList[index - 1],
+                                  ),
                                 );
                               }
                             },
@@ -121,6 +130,7 @@ class _IssueScreenState extends State<IssueScreen> {
                                 return SizedBox(height: 24.h);
                               }
                             },
+                            ),
                           ),
                         );
                       }

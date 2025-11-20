@@ -36,17 +36,20 @@ class TopRatedServicesScreen extends StatefulWidget
 
 class _SearchScreenState extends State<TopRatedServicesScreen>
     with SingleTickerProviderStateMixin {
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
   late final ServicesBloc servicesBloc;
   late final FavoriteCubit favoriteCubit;
 
   @override
   void initState() {
+    super.initState();
+    _scrollController = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     servicesBloc = context.read<ServicesBloc>();
     favoriteCubit = context.read<FavoriteCubit>();
     _scrollController.addListener(_onScroll);
-
-    super.initState();
   }
 
   void _onScroll() async {
@@ -105,14 +108,17 @@ class _SearchScreenState extends State<TopRatedServicesScreen>
                           message: context.tr.noServices,
                         );
                       } else {
-                        return GridView.builder(
-                          controller: _scrollController,
-                          itemCount: state.topRatedServices.length + 1,
-                          padding: const EdgeInsets.only(
-                            top: 24,
-                            right: 16,
-                            left: 16,
-                          ).r,
+                        return RepaintBoundary(
+                          child: GridView.builder(
+                            controller: _scrollController,
+                            physics: const BouncingScrollPhysics(),
+                            cacheExtent: 500.0,
+                            itemCount: state.topRatedServices.length + 1,
+                            padding: const EdgeInsets.only(
+                              top: 24,
+                              right: 16,
+                              left: 16,
+                            ).r,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
@@ -131,36 +137,39 @@ class _SearchScreenState extends State<TopRatedServicesScreen>
                                 );
                               }
                             } else {
-                              return TopRatedServiceCard(
-                                image: state.topRatedServices[index].image,
-                                title: state.topRatedServices[index].title,
-                                onTap: () {
-                                  context.pushRoute(
-                                    ServiceDetailsRoute(
-                                      service: state.topRatedServices[index],
-                                    ),
-                                  );
-                                },
-                                onFavoriteTap: () {
-                                  context
-                                      .read<FavoriteCubit>()
-                                      .addOrRemoveFromFavorite(
-                                        favoriteService: state
-                                            .topRatedServices[index]
-                                            .toFavoriteModel(),
-                                      );
-                                },
-                                isFavorite: context
-                                    .watch<FavoriteCubit>()
-                                    .state
-                                    .favoriteIds
-                                    .contains(
-                                      state.topRatedServices[index].id,
-                                    ),
-                                price: state.topRatedServices[index].price,
+                              return RepaintBoundary(
+                                child: TopRatedServiceCard(
+                                  image: state.topRatedServices[index].image,
+                                  title: state.topRatedServices[index].title,
+                                  onTap: () {
+                                    context.pushRoute(
+                                      ServiceDetailsRoute(
+                                        service: state.topRatedServices[index],
+                                      ),
+                                    );
+                                  },
+                                  onFavoriteTap: () {
+                                    context
+                                        .read<FavoriteCubit>()
+                                        .addOrRemoveFromFavorite(
+                                          favoriteService: state
+                                              .topRatedServices[index]
+                                              .toFavoriteModel(),
+                                        );
+                                  },
+                                  isFavorite: context
+                                      .watch<FavoriteCubit>()
+                                      .state
+                                      .favoriteIds
+                                      .contains(
+                                        state.topRatedServices[index].id,
+                                      ),
+                                  price: state.topRatedServices[index].price,
+                                ),
                               );
                             }
                           },
+                          ),
                         );
                       }
                   }

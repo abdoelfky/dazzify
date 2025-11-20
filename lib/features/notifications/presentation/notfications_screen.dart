@@ -31,7 +31,7 @@ class NotificationsScreen extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
   late final InAppNotificationsBloc inAppNotificationsBloc;
 
   void _onScroll() async {
@@ -53,10 +53,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   void initState() {
+    super.initState();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     inAppNotificationsBloc = context.read<InAppNotificationsBloc>();
     _controller.addListener(_onScroll);
     inAppNotificationsBloc.add(GetNotificationsList());
-    super.initState();
   }
 
   @override
@@ -100,15 +104,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ),
                         );
                       } else {
-                        return ListView.separated(
-                          controller: _controller,
-                          padding: const EdgeInsets.only(
-                            top: 24,
-                            bottom: 30,
-                            right: 16,
-                            left: 16,
-                          ).r,
-                          itemCount: state.notifications.length + 1,
+                        return RepaintBoundary(
+                          child: ListView.separated(
+                            controller: _controller,
+                            physics: const BouncingScrollPhysics(),
+                            cacheExtent: 500.0,
+                            padding: const EdgeInsets.only(
+                              top: 24,
+                              bottom: 30,
+                              right: 16,
+                              left: 16,
+                            ).r,
+                            itemCount: state.notifications.length + 1,
                           itemBuilder: (context, index) {
                             if (state.notifications.isNotEmpty &&
                                 index >= state.notifications.length) {
@@ -125,13 +132,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 );
                               }
                             } else {
-                              return NotificationsItem(
-                                notification: state.notifications[index],
+                              return RepaintBoundary(
+                                child: NotificationsItem(
+                                  notification: state.notifications[index],
+                                ),
                               );
                             }
                           },
                           separatorBuilder: (context, index) => SizedBox(
                             height: 16.h,
+                          ),
                           ),
                         );
                       }
