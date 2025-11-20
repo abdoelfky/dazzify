@@ -278,6 +278,9 @@ class _MediaPostCardState extends State<MediaPostCard> {
 
   Widget postMedia() {
     if (widget.brandMedia.mediaItems.length > 1) {
+      final aspectRatio = _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7;
+      final carouselHeight = context.screenWidth / aspectRatio;
+
       return Column(
         children: [
           SizedBox(height: 8.h),
@@ -333,6 +336,9 @@ class _MediaPostCardState extends State<MediaPostCard> {
                   options: CarouselOptions(
                     viewportFraction: 1,
                     autoPlay: false,
+                    height: carouselHeight,
+                    aspectRatio: aspectRatio,
+
                     autoPlayCurve: Curves.ease,
                     enlargeCenterPage: false,
                     initialPage: 0,
