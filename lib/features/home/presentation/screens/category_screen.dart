@@ -39,14 +39,20 @@ class CategoryScreen extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
   late final CategoryBloc categoryBloc;
 
   @override
   void initState() {
+    super.initState();
+    // Initialize ScrollController with initial scroll position at 0
+    // keepScrollOffset: false prevents saving scroll position
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     categoryBloc = context.read<CategoryBloc>();
     _controller.addListener(_onScroll);
-    super.initState();
   }
 
   void _onScroll() async {
@@ -106,9 +112,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                       );
                     } else {
-                      return ListView.separated(
-                        controller: _controller,
-                        itemCount: state.brands.length + 1,
+                      return RepaintBoundary(
+                        child: ListView.separated(
+                          // Remove PageStorageKey to prevent keeping scroll position
+                          controller: _controller,
+                          physics: const BouncingScrollPhysics(),
+                          primary: false,
+                          cacheExtent: 500.0,
+                          itemCount: state.brands.length + 1,
                         padding: const EdgeInsets.only(
                           top: 24,
                           bottom: 90,
@@ -131,20 +142,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               );
                             }
                           } else {
-                            return BrandCard(
-                              brand: state.brands[index],
-                              onTap: () {
-                                context.router.push(
-                                  BrandProfileRoute(
-                                    brand: state.brands[index],
-                                  ),
-                                );
-                              },
+                            return RepaintBoundary(
+                              child: BrandCard(
+                                brand: state.brands[index],
+                                onTap: () {
+                                  context.router.push(
+                                    BrandProfileRoute(
+                                      brand: state.brands[index],
+                                    ),
+                                  );
+                                },
+                              ),
                             );
                           }
                         },
                         separatorBuilder: (BuildContext context, int index) =>
                             SizedBox(height: 16.h),
+                        ),
                       );
                     }
                 }
