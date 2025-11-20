@@ -35,101 +35,102 @@ class _IssueScreenState extends State<IssueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            DazzifyAppBar(
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.issue,
             ),
-            Expanded(
-              child: BlocBuilder<IssueBloc, IssueState>(
-                builder: (context, state) {
-                  switch (state.getIssueState) {
-                    case UiState.initial:
-                    case UiState.loading:
-                      return const LoadingAnimation();
-                    case UiState.failure:
-                      return ErrorDataWidget(
-                          errorDataType: DazzifyErrorDataType.screen,
-                          message: state.errorMessage,
-                          onTap: () {
-                            issueBloc.add(const GetIssueEvent());
-                          });
-                    case UiState.success:
-                      if (state.issueList.isEmpty) {
-                        return Center(
-                          child: EmptyDataWidget(
-                            message: context.tr.noIssues,
-                          ),
-                        );
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ).r,
-                          child: ListView.separated(
-                            controller: controller,
-                            itemCount: state.issueList.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return Center(
-                                  child: DText(
-                                    context.tr.selectAndAddComment,
-                                    style:
-                                        context.textTheme.titleMedium!.copyWith(
-                                      color: context.colorScheme.outline,
-                                    ),
-                                    textAlign: TextAlign.center,
+          ),
+          Expanded(
+            child: BlocBuilder<IssueBloc, IssueState>(
+              builder: (context, state) {
+                switch (state.getIssueState) {
+                  case UiState.initial:
+                  case UiState.loading:
+                    return const LoadingAnimation();
+                  case UiState.failure:
+                    return ErrorDataWidget(
+                        errorDataType: DazzifyErrorDataType.screen,
+                        message: state.errorMessage,
+                        onTap: () {
+                          issueBloc.add(const GetIssueEvent());
+                        });
+                  case UiState.success:
+                    if (state.issueList.isEmpty) {
+                      return Center(
+                        child: EmptyDataWidget(
+                          message: context.tr.noIssues,
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          bottom: 16,
+                        ).r,
+                        child: ListView.separated(
+                          controller: controller,
+                          itemCount: state.issueList.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return Center(
+                                child: DText(
+                                  context.tr.selectAndAddComment,
+                                  style:
+                                      context.textTheme.titleMedium!.copyWith(
+                                    color: context.colorScheme.outline,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              );
+                            }
+                            if (index - 1 >= state.issueList.length &&
+                                state.issueList.isNotEmpty) {
+                              if (state.hasIssuesReachedMax) {
+                                return const SizedBox.shrink();
+                              } else {
+                                return SizedBox(
+                                  height: 70.h,
+                                  width: context.screenWidth,
+                                  child: LoadingAnimation(
+                                    height: 50.h,
+                                    width: 50.w,
                                   ),
                                 );
                               }
-                              if (index - 1 >= state.issueList.length &&
-                                  state.issueList.isNotEmpty) {
-                                if (state.hasIssuesReachedMax) {
-                                  return const SizedBox.shrink();
-                                } else {
-                                  return SizedBox(
-                                    height: 70.h,
-                                    width: context.screenWidth,
-                                    child: LoadingAnimation(
-                                      height: 50.h,
-                                      width: 50.w,
-                                    ),
-                                  );
-                                }
-                              } else {
-                                return IssueItem(
-                                  issue: state.issueList[index - 1],
-                                );
-                              }
-                            },
-                            separatorBuilder: (context, index) {
-                              if (index != 0) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16)
-                                          .r,
-                                  child: Divider(
-                                    color: context.colorScheme.outlineVariant,
-                                  ),
-                                );
-                              } else {
-                                return SizedBox(height: 24.h);
-                              }
-                            },
-                          ),
-                        );
-                      }
-                  }
-                },
-              ),
+                            } else {
+                              return IssueItem(
+                                issue: state.issueList[index - 1],
+                              );
+                            }
+                          },
+                          separatorBuilder: (context, index) {
+                            if (index != 0) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16)
+                                        .r,
+                                child: Divider(
+                                  color: context.colorScheme.outlineVariant,
+                                ),
+                              );
+                            } else {
+                              return SizedBox(height: 24.h);
+                            }
+                          },
+                        ),
+                      );
+                    }
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

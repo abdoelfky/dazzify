@@ -63,58 +63,59 @@ class _MultipleServiceAvailabilityScreenState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.only(),
-          children: [
-            DazzifyAppBar(
+    return Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.only(),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: DazzifyAppBar(
               isLeading: true,
               title: widget.branchName,
             ),
-            BlocConsumer<MultipleServiceAvailabilityCubit,
-                MultipleServiceAvailabilityState>(
-              listener: (context, state) {
-                if (state.blocState == UiState.success) {
-                  isShimmeringDateSelection = false;
-                }
-              },
-              builder: (context, state) {
-                switch (state.blocState) {
-                  case UiState.initial:
-                  case UiState.loading:
-                    return Column(
-                      children: [
-                        isShimmeringDateSelection
-                            ? dateSelectionShimmering()
-                            : MultipleServiceDateSelectionWidget(
-                                services: servicesIds,
-                                branchId: widget.branchId,
-                              ),
-                        timeSelectionAndButtonShimmering()
-                      ],
-                    );
-
-                  case UiState.success:
-                    return successAvailabilityBody(state, context);
-                  case UiState.failure:
-                    return ErrorDataWidget(
-                      onTap: () {
-                        context
-                            .read<MultipleServiceAvailabilityCubit>()
-                            .getAndProcessData(
-                              branchId: widget.branchId,
+          ),
+          BlocConsumer<MultipleServiceAvailabilityCubit,
+              MultipleServiceAvailabilityState>(
+            listener: (context, state) {
+              if (state.blocState == UiState.success) {
+                isShimmeringDateSelection = false;
+              }
+            },
+            builder: (context, state) {
+              switch (state.blocState) {
+                case UiState.initial:
+                case UiState.loading:
+                  return Column(
+                    children: [
+                      isShimmeringDateSelection
+                          ? dateSelectionShimmering()
+                          : MultipleServiceDateSelectionWidget(
                               services: servicesIds,
-                            );
-                      },
-                      errorDataType: DazzifyErrorDataType.screen,
-                      message: state.errorMessage,
-                    );
-                }
-              },
-            ),
-          ],
-        ),
+                              branchId: widget.branchId,
+                            ),
+                      timeSelectionAndButtonShimmering()
+                    ],
+                  );
+
+                case UiState.success:
+                  return successAvailabilityBody(state, context);
+                case UiState.failure:
+                  return ErrorDataWidget(
+                    onTap: () {
+                      context
+                          .read<MultipleServiceAvailabilityCubit>()
+                          .getAndProcessData(
+                            branchId: widget.branchId,
+                            services: servicesIds,
+                          );
+                    },
+                    errorDataType: DazzifyErrorDataType.screen,
+                    message: state.errorMessage,
+                  );
+              }
+            },
+          ),
+        ],
       ),
     );
   }

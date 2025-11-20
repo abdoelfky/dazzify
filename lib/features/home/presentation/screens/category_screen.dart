@@ -70,89 +70,90 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: Column(
-        children: [
-          DazzifyAppBar(
+    return Scaffold(
+        body: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 50.0),
+          child: DazzifyAppBar(
             isLeading: true,
             title: widget.categoryName,
             horizontalPadding: 16.r,
           ),
-          Expanded(
-            child: BlocBuilder<CategoryBloc, CategoryState>(
-              builder: (context, state) {
-                switch (state.blocState) {
-                  case UiState.initial:
-                  case UiState.loading:
-                    return const DazzifyLoadingShimmer(
-                      dazzifyLoadingType: DazzifyLoadingType.brands,
-                    );
-                  case UiState.failure:
-                    return ErrorDataWidget(
-                      errorDataType: DazzifyErrorDataType.screen,
-                      message: state.errorMessage,
-                      onTap: () {
-                        categoryBloc.add(
-                          GetCategoryBrandsEvent(categoryId: widget.categoryId),
-                        );
-                      },
-                    );
-                  case UiState.success:
-                    if (state.brands.isEmpty) {
-                      return Expanded(
-                        child: EmptyDataWidget(
-                          message: context.tr.noVendors,
-                        ),
+        ),
+        Expanded(
+          child: BlocBuilder<CategoryBloc, CategoryState>(
+            builder: (context, state) {
+              switch (state.blocState) {
+                case UiState.initial:
+                case UiState.loading:
+                  return const DazzifyLoadingShimmer(
+                    dazzifyLoadingType: DazzifyLoadingType.brands,
+                  );
+                case UiState.failure:
+                  return ErrorDataWidget(
+                    errorDataType: DazzifyErrorDataType.screen,
+                    message: state.errorMessage,
+                    onTap: () {
+                      categoryBloc.add(
+                        GetCategoryBrandsEvent(categoryId: widget.categoryId),
                       );
-                    } else {
-                      return ListView.separated(
-                        controller: _controller,
-                        itemCount: state.brands.length + 1,
-                        padding: const EdgeInsets.only(
-                          top: 24,
-                          bottom: 90,
-                          right: 16,
-                          left: 16,
-                        ).r,
-                        itemBuilder: (context, index) {
-                          debugPrint("INDEX : $index");
-                          if (index >= state.brands.length) {
-                            if (state.hasReachedMax) {
-                              return const SizedBox.shrink();
-                            } else {
-                              return SizedBox(
-                                height: 70.r,
-                                width: context.screenWidth,
-                                child: LoadingAnimation(
-                                  height: 50.h,
-                                  width: 50.w,
-                                ),
-                              );
-                            }
+                    },
+                  );
+                case UiState.success:
+                  if (state.brands.isEmpty) {
+                    return Expanded(
+                      child: EmptyDataWidget(
+                        message: context.tr.noVendors,
+                      ),
+                    );
+                  } else {
+                    return ListView.separated(
+                      controller: _controller,
+                      itemCount: state.brands.length + 1,
+                      padding: const EdgeInsets.only(
+                        top: 24,
+                        bottom: 90,
+                        right: 16,
+                        left: 16,
+                      ).r,
+                      itemBuilder: (context, index) {
+                        debugPrint("INDEX : $index");
+                        if (index >= state.brands.length) {
+                          if (state.hasReachedMax) {
+                            return const SizedBox.shrink();
                           } else {
-                            return BrandCard(
-                              brand: state.brands[index],
-                              onTap: () {
-                                context.router.push(
-                                  BrandProfileRoute(
-                                    brand: state.brands[index],
-                                  ),
-                                );
-                              },
+                            return SizedBox(
+                              height: 70.r,
+                              width: context.screenWidth,
+                              child: LoadingAnimation(
+                                height: 50.h,
+                                width: 50.w,
+                              ),
                             );
                           }
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            SizedBox(height: 16.h),
-                      );
-                    }
-                }
-              },
-            ),
+                        } else {
+                          return BrandCard(
+                            brand: state.brands[index],
+                            onTap: () {
+                              context.router.push(
+                                BrandProfileRoute(
+                                  brand: state.brands[index],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          SizedBox(height: 16.h),
+                    );
+                  }
+              }
+            },
           ),
-        ],
-      )),
-    );
+        ),
+      ],
+    ));
   }
 }

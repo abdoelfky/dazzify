@@ -135,29 +135,30 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: context.colorScheme.surface,
-        body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
-          listener: (context, state) =>
-              bookingFromMediaCubitListener(state, context),
-          builder: (BuildContext context, BookingFromMediaState state) {
-            return DazzifyOverlayLoading(
-              isLoading: isLoading,
-              child: Column(
-                children: [
-                  DazzifyAppBar(
+    return Scaffold(
+      backgroundColor: context.colorScheme.surface,
+      body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
+        listener: (context, state) =>
+            bookingFromMediaCubitListener(state, context),
+        builder: (BuildContext context, BookingFromMediaState state) {
+          return DazzifyOverlayLoading(
+            isLoading: isLoading,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: DazzifyAppBar(
                     isLeading: true,
                     title:
                         "${truncateText(widget.brandName, 25)} ${DazzifyApp.tr.posts}",
                     textStyle: context.textTheme.titleMedium,
                   ),
-                  brandPostsList(),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+                brandPostsList(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

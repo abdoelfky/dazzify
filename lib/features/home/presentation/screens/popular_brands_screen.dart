@@ -63,86 +63,87 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            DazzifyAppBar(
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.popularBrands,
               horizontalPadding: 16.r,
             ),
-            Expanded(
-              child: BlocBuilder<HomeBrandsBloc, HomeBrandsState>(
-                builder: (context, state) {
-                  switch (state.popularBrandsState) {
-                    case UiState.initial:
-                    case UiState.loading:
-                      return const DazzifyLoadingShimmer(
-                        dazzifyLoadingType: DazzifyLoadingType.brands,
+          ),
+          Expanded(
+            child: BlocBuilder<HomeBrandsBloc, HomeBrandsState>(
+              builder: (context, state) {
+                switch (state.popularBrandsState) {
+                  case UiState.initial:
+                  case UiState.loading:
+                    return const DazzifyLoadingShimmer(
+                      dazzifyLoadingType: DazzifyLoadingType.brands,
+                    );
+                  case UiState.failure:
+                    return ErrorDataWidget(
+                      errorDataType: DazzifyErrorDataType.screen,
+                      message: state.errorMessage,
+                      onTap: () {
+                        allBrandsBloc.add(const GetPopularBrandsEvent());
+                      },
+                    );
+                  case UiState.success:
+                    if (state.popularBrands.isEmpty) {
+                      return EmptyDataWidget(
+                        height: 10.r,
+                        width: 10.r,
+                        message: context.tr.noVendors,
                       );
-                    case UiState.failure:
-                      return ErrorDataWidget(
-                        errorDataType: DazzifyErrorDataType.screen,
-                        message: state.errorMessage,
-                        onTap: () {
-                          allBrandsBloc.add(const GetPopularBrandsEvent());
-                        },
-                      );
-                    case UiState.success:
-                      if (state.popularBrands.isEmpty) {
-                        return EmptyDataWidget(
-                          height: 10.r,
-                          width: 10.r,
-                          message: context.tr.noVendors,
-                        );
-                      } else {
-                        return ListView.separated(
-                          controller: _controller,
-                          itemCount: state.popularBrands.length + 1,
-                          padding: const EdgeInsets.only(
-                            top: 24,
-                            right: 16,
-                            left: 16,
-                          ).r,
-                          itemBuilder: (context, index) {
-                            if (state.popularBrands.isNotEmpty &&
-                                index >= state.popularBrands.length) {
-                              if (state.hasPopularReachedMax) {
-                                return const SizedBox.shrink();
-                              } else {
-                                return SizedBox(
-                                  height: 70.r,
-                                  width: context.screenWidth,
-                                  child: LoadingAnimation(
-                                    height: 50.h,
-                                    width: 50.w,
-                                  ),
-                                );
-                              }
+                    } else {
+                      return ListView.separated(
+                        controller: _controller,
+                        itemCount: state.popularBrands.length + 1,
+                        padding: const EdgeInsets.only(
+                          top: 24,
+                          right: 16,
+                          left: 16,
+                        ).r,
+                        itemBuilder: (context, index) {
+                          if (state.popularBrands.isNotEmpty &&
+                              index >= state.popularBrands.length) {
+                            if (state.hasPopularReachedMax) {
+                              return const SizedBox.shrink();
                             } else {
-                              return BrandCard(
-                                brand: state.popularBrands[index],
-                                onTap: () {
-                                  context.router.push(
-                                    BrandProfileRoute(
-                                      brand: state.popularBrands[index],
-                                    ),
-                                  );
-                                },
+                              return SizedBox(
+                                height: 70.r,
+                                width: context.screenWidth,
+                                child: LoadingAnimation(
+                                  height: 50.h,
+                                  width: 50.w,
+                                ),
                               );
                             }
-                          },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              SizedBox(height: 16.h),
-                        );
-                      }
-                  }
-                },
-              ),
+                          } else {
+                            return BrandCard(
+                              brand: state.popularBrands[index],
+                              onTap: () {
+                                context.router.push(
+                                  BrandProfileRoute(
+                                    brand: state.popularBrands[index],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                        separatorBuilder: (BuildContext context, int index) =>
+                            SizedBox(height: 16.h),
+                      );
+                    }
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

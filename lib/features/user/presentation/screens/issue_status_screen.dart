@@ -32,31 +32,32 @@ class _IssueStatusScreenState extends State<IssueStatusScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            DazzifyAppBar(
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.issueStatus,
             ),
-            IssueStepper(currentStep: _tabController.index),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  pendingTab(context),
-                  inProgressTab(context),
-                  replyTab(
-                    reply: widget.reply,
-                    context: context,
-                  ),
-                ],
-              ),
+          ),
+          IssueStepper(currentStep: _tabController.index),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                pendingTab(context),
+                inProgressTab(context),
+                replyTab(
+                  reply: widget.reply,
+                  context: context,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

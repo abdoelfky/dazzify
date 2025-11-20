@@ -44,32 +44,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            Row(
-              children: [
-                DazzifyAppBar(
+    return Scaffold(
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: DazzifyAppBar(
                   isLeading: true,
                   title: context.tr.transaction,
                 ),
-                const Spacer(),
-                IconButton(
-                  onPressed: () async {
-                    onTapFilter();
-                  },
-                  icon: Icon(
-                    SolarIconsOutline.sort,
-                    size: 24.r,
-                  ),
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () async {
+                  onTapFilter();
+                },
+                icon: Icon(
+                  SolarIconsOutline.sort,
+                  size: 24.r,
                 ),
-              ],
-            ),
-            SizedBox(height: 16.h),
-            _handleTransactionBody(),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          _handleTransactionBody(),
+        ],
       ),
     );
   }

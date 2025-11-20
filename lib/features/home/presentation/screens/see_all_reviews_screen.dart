@@ -54,59 +54,60 @@ class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            DazzifyAppBar(
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.allReviews,
             ),
-            BlocBuilder<ServiceDetailsBloc, ServiceDetailsState>(
-              builder: (context, state) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: state.serviceReview.length,
-                    itemBuilder: (context, index) {
-                      if (index >= state.serviceReview.length &&
-                          state.serviceReview.isNotEmpty) {
-                        if (state.hasReviewsReachedMax) {
-                          return const SizedBox.shrink();
-                        } else {
-                          return SizedBox(
-                            height: 70.h,
-                            width: context.screenWidth,
-                            child: LoadingAnimation(
-                              height: 50.h,
-                              width: 50.w,
-                            ),
-                          );
-                        }
+          ),
+          BlocBuilder<ServiceDetailsBloc, ServiceDetailsState>(
+            builder: (context, state) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: state.serviceReview.length,
+                  itemBuilder: (context, index) {
+                    if (index >= state.serviceReview.length &&
+                        state.serviceReview.isNotEmpty) {
+                      if (state.hasReviewsReachedMax) {
+                        return const SizedBox.shrink();
                       } else {
-                        final service = state.serviceReview[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 8.0,
-                            right: 8.0,
-                            left: 8.0,
-                          ).r,
-                          child: ReviewCard(
-                            reviewerImage: service.user.profileImage,
-                            reviewerName: service.user.fullName,
-                            reviewRating: service.rate,
-                            reviewDescription: service.comment,
-                            isLate: service.isLate,
-                            index: index,
+                        return SizedBox(
+                          height: 70.h,
+                          width: context.screenWidth,
+                          child: LoadingAnimation(
+                            height: 50.h,
+                            width: 50.w,
                           ),
                         );
                       }
-                    },
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+                    } else {
+                      final service = state.serviceReview[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 8.0,
+                          right: 8.0,
+                          left: 8.0,
+                        ).r,
+                        child: ReviewCard(
+                          reviewerImage: service.user.profileImage,
+                          reviewerName: service.user.fullName,
+                          reviewRating: service.rate,
+                          reviewDescription: service.comment,
+                          isLate: service.isLate,
+                          index: index,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

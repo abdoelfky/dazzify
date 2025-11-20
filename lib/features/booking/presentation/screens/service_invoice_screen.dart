@@ -197,26 +197,24 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ValueListenableBuilder(
-          valueListenable: _isCodeValidatingLoading,
-          builder: (context, isCodeValidatingLoading, child) =>
-              DazzifyOverlayLoading(
-                  isLoading: isCodeValidatingLoading,
-                  child: ValueListenableBuilder(
-                    valueListenable: _selectedButton,
-                    builder: (context, selectedButton, child) {
-                      return serviceInvoiceSuccess(
-                        context,
-                        selectedButton,
-                        widget.selectedDate,
-                        widget.selectedFromTime!,
-                        widget.selectedToTime!,
-                      );
-                    },
-                  )),
-        ),
+    return Scaffold(
+      body: ValueListenableBuilder(
+        valueListenable: _isCodeValidatingLoading,
+        builder: (context, isCodeValidatingLoading, child) =>
+            DazzifyOverlayLoading(
+                isLoading: isCodeValidatingLoading,
+                child: ValueListenableBuilder(
+                  valueListenable: _selectedButton,
+                  builder: (context, selectedButton, child) {
+                    return serviceInvoiceSuccess(
+                      context,
+                      selectedButton,
+                      widget.selectedDate,
+                      widget.selectedFromTime!,
+                      widget.selectedToTime!,
+                    );
+                  },
+                )),
       ),
     );
   }
@@ -225,10 +223,13 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       String selectedDate, String fromTime, String toTime) {
     return Column(
       children: [
-        DazzifyAppBar(
-          isLeading: true,
-          title: context.tr.confirmation,
-          verticalPadding: 10.h,
+        Padding(
+          padding: const EdgeInsets.only(top: 50.0),
+          child: DazzifyAppBar(
+            isLeading: true,
+            title: context.tr.confirmation,
+            verticalPadding: 10.h,
+          ),
         ),
         Expanded(
           child: ListView(
