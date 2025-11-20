@@ -72,7 +72,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                context.router.canPop();
+                context.pop();
               },
             ),
             title: Text(context.tr.payment),
