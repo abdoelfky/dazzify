@@ -437,8 +437,10 @@ Widget bookingInfo(BookingCubit booking, int currentServiceIndex) {
 
 Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
   final priceInfo = booking.state.singleBooking;
-  final hasRange = priceInfo.hasRangeDeliveryFees;
   final deliveryRange = priceInfo.deliveryFeesRange;
+  final hasDeliveryFees = priceInfo.deliveryFees != null;
+  final hasFees = priceInfo.fees != null;
+  final hasTotalPrice = priceInfo.totalPrice != null;
 
   return Column(
     children: [
@@ -461,39 +463,37 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
         price: "(${priceInfo.couponDis} ${DazzifyApp.tr.egp})",
       ),
       SizedBox(height: 16.h),
-      if (!hasRange) ...[
+      // Delivery Fees - Show value if available, otherwise show range
+      if (hasDeliveryFees)
         PriceInfoItem(
           title: DazzifyApp.tr.deliferyFees,
           price: "${priceInfo.deliveryFees} ${DazzifyApp.tr.egp}",
         ),
-        SizedBox(height: 16.h),
-        PriceInfoItem(
-          title: DazzifyApp.tr.appFees,
-          price: "${priceInfo.fees} ${DazzifyApp.tr.egp}",
-        ),
-      ],
-      if (hasRange && deliveryRange != null) ...[
+      if (!hasDeliveryFees && deliveryRange != null)
         PriceInfoItem(
           title: DazzifyApp.tr.deliferyFees,
           price:
               "${reformatPriceWithCommas(deliveryRange.from)}-${reformatPriceWithCommas(deliveryRange.to)} ${DazzifyApp.tr.egp}",
         ),
-        SizedBox(height: 16.h),
-        PriceInfoItem(
-          title: DazzifyApp.tr.appFees,
-          price: DazzifyApp.tr.willBeCalculated,
-        ),
-      ],
+      SizedBox(height: 16.h),
+      // App Fees - Show value if available, otherwise show "will be calculated"
+      PriceInfoItem(
+        title: DazzifyApp.tr.appFees,
+        price: hasFees
+            ? "${priceInfo.fees} ${DazzifyApp.tr.egp}"
+            : DazzifyApp.tr.willBeCalculated,
+      ),
       SizedBox(height: 16.h),
       customDivider(context),
       SizedBox(height: 24.h),
-      if (!hasRange)
+      // Total Price - Show value if available, otherwise show partial calculation with message
+      if (hasTotalPrice)
         PriceInfoItem(
           title: DazzifyApp.tr.totalPrice,
           price:
-              "${reformatPriceWithCommas(priceInfo.totalPrice)} ${DazzifyApp.tr.egp}",
+              "${reformatPriceWithCommas(priceInfo.totalPrice!)} ${DazzifyApp.tr.egp}",
         ),
-      if (hasRange)
+      if (!hasTotalPrice)
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -28,13 +28,13 @@ SingleBookingModel _$SingleBookingModelFromJson(Map<String, dynamic> json) =>
       isHasCoupon: json['isHasCoupon'] as bool? ?? false,
       price: (json['price'] as num?)?.toInt() ?? 0,
       couponDis: (json['couponDis'] as num?)?.toInt() ?? 0,
-      fees: (json['fees'] as num?)?.toInt() ?? 0,
-      deliveryFees: (json['deliveryFees'] as num?)?.toInt() ?? 0,
+      fees: (json['fees'] as num?)?.toInt(),
+      deliveryFees: (json['deliveryFees'] as num?)?.toInt(),
       deliveryFeesRange: json['deliveryFeesRange'] == null
           ? null
           : DeliveryFeesRange.fromJson(
               json['deliveryFeesRange'] as Map<String, dynamic>),
-      totalPrice: (json['totalPrice'] as num?)?.toInt() ?? 0,
+      totalPrice: (json['totalPrice'] as num?)?.toInt(),
       status: json['status'] as String? ?? '',
       isFinished: json['isFinished'] as bool? ?? false,
       isRate: json['isRate'] as bool? ?? false,

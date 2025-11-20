@@ -55,16 +55,13 @@ class SingleBookingModel {
   @JsonKey(defaultValue: 0)
   final int couponDis;
 
-  @JsonKey(defaultValue: 0)
-  final int fees;
+  final int? fees;
 
-  @JsonKey(defaultValue: 0)
-  final int deliveryFees;
+  final int? deliveryFees;
 
   final DeliveryFeesRange? deliveryFeesRange;
 
-  @JsonKey(defaultValue: 0)
-  final int totalPrice;
+  final int? totalPrice;
 
   @JsonKey(defaultValue: "")
   final String status;
@@ -98,10 +95,10 @@ class SingleBookingModel {
     required this.isHasCoupon,
     required this.price,
     required this.couponDis,
-    required this.fees,
-    required this.deliveryFees,
+    this.fees,
+    this.deliveryFees,
     this.deliveryFeesRange,
-    required this.totalPrice,
+    this.totalPrice,
     required this.status,
     required this.isFinished,
     required this.isRate,
@@ -123,10 +120,10 @@ class SingleBookingModel {
     this.isHasCoupon = false,
     this.price = 0,
     this.couponDis = 0,
-    this.fees = 0,
-    this.deliveryFees = 0,
+    this.fees,
+    this.deliveryFees,
     this.deliveryFeesRange,
-    this.totalPrice = 0,
+    this.totalPrice,
     this.status = '',
     this.isFinished = false,
     this.isRate = false,
@@ -153,10 +150,10 @@ class SingleBookingModel {
     this.isHasCoupon = false,
     this.price = 0,
     this.couponDis = 0,
-    this.fees = 0,
-    this.deliveryFees = 0,
+    this.fees,
+    this.deliveryFees,
     this.deliveryFeesRange,
-    this.totalPrice = 0,
+    this.totalPrice,
     this.status = '',
     this.isFinished = false,
     this.isRate = false,
