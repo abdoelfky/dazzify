@@ -33,11 +33,15 @@ class SeeAllReviewsScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
   late final ServiceDetailsBloc serviceDetailsBloc;
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     serviceDetailsBloc = context.read<ServiceDetailsBloc>();
     _scrollController.addListener(_onScroll);
   }
@@ -65,8 +69,12 @@ class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
             BlocBuilder<ServiceDetailsBloc, ServiceDetailsState>(
               builder: (context, state) {
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: state.serviceReview.length,
+                  child: RepaintBoundary(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      physics: const BouncingScrollPhysics(),
+                      cacheExtent: 500.0,
+                      itemCount: state.serviceReview.length,
                     itemBuilder: (context, index) {
                       if (index >= state.serviceReview.length &&
                           state.serviceReview.isNotEmpty) {
@@ -84,23 +92,26 @@ class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
                         }
                       } else {
                         final service = state.serviceReview[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 8.0,
-                            right: 8.0,
-                            left: 8.0,
-                          ).r,
-                          child: ReviewCard(
-                            reviewerImage: service.user.profileImage,
-                            reviewerName: service.user.fullName,
-                            reviewRating: service.rate,
-                            reviewDescription: service.comment,
-                            isLate: service.isLate,
-                            index: index,
+                        return RepaintBoundary(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 8.0,
+                              right: 8.0,
+                              left: 8.0,
+                            ).r,
+                            child: ReviewCard(
+                              reviewerImage: service.user.profileImage,
+                              reviewerName: service.user.fullName,
+                              reviewRating: service.rate,
+                              reviewDescription: service.comment,
+                              isLate: service.isLate,
+                              index: index,
+                            ),
                           ),
                         );
                       }
                     },
+                    ),
                   ),
                 );
               },

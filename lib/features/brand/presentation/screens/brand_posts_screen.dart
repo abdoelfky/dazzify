@@ -73,16 +73,19 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
 
   @override
   void initState() {
+    super.initState();
     likesCubit = context.read<LikesCubit>();
     brandBloc = widget.brandBloc;
     favoriteCubit = context.read<FavoriteCubit>();
     _bookingFromMediaCubit = context.read<BookingFromMediaCubit>();
 
-    _controller = ScrollController()..addListener(_onScroll);
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    )..addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _moveToIndex();
     });
-    super.initState();
   }
 
   @override
@@ -187,9 +190,12 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
         builder: (context, state) {
           return CustomFadeAnimation(
             duration: const Duration(milliseconds: 300),
-            child: ListView.separated(
-              controller: _controller,
-              itemCount: state.photos.length + 1,
+            child: RepaintBoundary(
+              child: ListView.separated(
+                controller: _controller,
+                physics: const BouncingScrollPhysics(),
+                cacheExtent: 500.0,
+                itemCount: state.photos.length + 1,
               itemBuilder: (context, index) {
                 if (index >= state.photos.length) {
                   if (state.hasPhotosReachedMax) {
@@ -202,7 +208,8 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                   }
                 } else {
                   final brandMedia = state.photos[index];
-                  return BlocConsumer<LikesCubit, LikesState>(
+                  return RepaintBoundary(
+                    child: BlocConsumer<LikesCubit, LikesState>(
                     listener: (context, state) =>
                         likesCubitListener(state, brandMedia),
                     builder: (context, state) {
@@ -264,12 +271,14 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                         },
                       );
                     },
+                    ),
                   );
                 }
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 8);
               },
+              ),
             ),
           );
         },

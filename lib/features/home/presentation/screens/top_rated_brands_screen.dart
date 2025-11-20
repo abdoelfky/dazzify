@@ -32,14 +32,18 @@ class TopRatedBrandsScreen extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
   late final HomeBrandsBloc homeBrandsBloc;
 
   @override
   void initState() {
+    super.initState();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     homeBrandsBloc = context.read<HomeBrandsBloc>();
     _controller.addListener(_onScroll);
-    super.initState();
   }
 
   void _onScroll() async {
@@ -90,10 +94,13 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
                           message: context.tr.noVendors,
                         );
                       } else {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(8).r,
-                          controller: _controller,
-                          itemCount: state.topRatedBrands.length + 1,
+                        return RepaintBoundary(
+                          child: GridView.builder(
+                            padding: const EdgeInsets.all(8).r,
+                            controller: _controller,
+                            physics: const BouncingScrollPhysics(),
+                            cacheExtent: 500.0,
+                            itemCount: state.topRatedBrands.length + 1,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
@@ -112,24 +119,27 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
                                 );
                               }
                             } else {
-                              return TopRatedBrandCard(
-                                infoStart: 5.w,
-                                infoBottom: 12.h,
-                                nameStyle:
-                                    context.textTheme.bodySmall!.copyWith(
-                                  color: context.colorScheme.onPrimary,
+                              return RepaintBoundary(
+                                child: TopRatedBrandCard(
+                                  infoStart: 5.w,
+                                  infoBottom: 12.h,
+                                  nameStyle:
+                                      context.textTheme.bodySmall!.copyWith(
+                                    color: context.colorScheme.onPrimary,
+                                  ),
+                                  brand: state.topRatedBrands[index],
+                                  onTap: () {
+                                    context.router.push(
+                                      BrandProfileRoute(
+                                        brand: state.topRatedBrands[index],
+                                      ),
+                                    );
+                                  },
                                 ),
-                                brand: state.topRatedBrands[index],
-                                onTap: () {
-                                  context.router.push(
-                                    BrandProfileRoute(
-                                      brand: state.topRatedBrands[index],
-                                    ),
-                                  );
-                                },
                               );
                             }
                           },
+                          ),
                         );
                       }
                   }

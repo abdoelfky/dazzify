@@ -34,14 +34,17 @@ class BookingsHistoryScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
   late final BookingHistoryBloc _bookingHistoryBloc;
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
 
   @override
   void initState() {
+    super.initState();
+    _controller = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: false,
+    );
     _bookingHistoryBloc = context.read<BookingHistoryBloc>();
     _controller.addListener(_onScroll);
-
-    super.initState();
   }
 
   void _onScroll() async {
@@ -93,15 +96,18 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
                         message: context.tr.noBookingsYet,
                       );
                     } else {
-                      return ListView.separated(
-                        controller: _controller,
-                        itemCount: state.bookingsHistory.length + 1,
-                        padding: const EdgeInsets.only(
-                          top: 24,
-                          bottom: 16,
-                          right: 16,
-                          left: 16,
-                        ).r,
+                      return RepaintBoundary(
+                        child: ListView.separated(
+                          controller: _controller,
+                          physics: const BouncingScrollPhysics(),
+                          cacheExtent: 500.0,
+                          itemCount: state.bookingsHistory.length + 1,
+                          padding: const EdgeInsets.only(
+                            top: 24,
+                            bottom: 16,
+                            right: 16,
+                            left: 16,
+                          ).r,
                         itemBuilder: (context, index) {
                           if (index >= state.bookingsHistory.length) {
                             if (state.hasReachedMax) {
@@ -115,18 +121,20 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
                             }
                           } else {
                             final booking = state.bookingsHistory[index];
-                            return GestureDetector(
-                              onTap: () {
-                                context.pushRoute(
-                                  BookingStatusRoute(bookingId: booking.id),
-                                );
-                              },
-                              child: BookingCard(
-                                services: booking.services,
-                                imageUrl: booking.services.first.image,
-                                title: booking.services.first.title,
-                                price: booking.services.first.price,
-                                startTime: booking.startTime,
+                            return RepaintBoundary(
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.pushRoute(
+                                    BookingStatusRoute(bookingId: booking.id),
+                                  );
+                                },
+                                child: BookingCard(
+                                  services: booking.services,
+                                  imageUrl: booking.services.first.image,
+                                  title: booking.services.first.title,
+                                  price: booking.services.first.price,
+                                  startTime: booking.startTime,
+                                ),
                               ),
                             );
                           }
@@ -136,6 +144,7 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
                             height: 16.h,
                           );
                         },
+                        ),
                       );
                     }
                 }
