@@ -2588,6 +2588,26 @@ class S {
     return Intl.message('Cancelled', name: 'cancelled', desc: '', args: []);
   }
 
+  /// `Pending Refund`
+  String get pendingRefund {
+    return Intl.message(
+      'Pending Refund',
+      name: 'pendingRefund',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refund In Review`
+  String get refundInReview {
+    return Intl.message(
+      'Refund In Review',
+      name: 'refundInReview',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vodafone Cash`
   String get vodafoneCash {
     return Intl.message(

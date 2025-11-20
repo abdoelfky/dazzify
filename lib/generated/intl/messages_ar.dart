@@ -436,6 +436,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "payment": MessageLookupByLibrary.simpleMessage("الدفع"),
     "paymentConfirmation": MessageLookupByLibrary.simpleMessage("تأكيد الدفع"),
     "pending": MessageLookupByLibrary.simpleMessage("قيد الانتظار"),
+    "pendingRefund": MessageLookupByLibrary.simpleMessage(
+      "في انتظار الاسترداد",
+    ),
     "phone": MessageLookupByLibrary.simpleMessage("رقم التليفون"),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "phoneNumberChangedSuccessfully": MessageLookupByLibrary.simpleMessage(
@@ -514,6 +517,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "refund": MessageLookupByLibrary.simpleMessage("مسترد"),
     "refundAmount": MessageLookupByLibrary.simpleMessage("المبلغ المسترد"),
+    "refundInReview": MessageLookupByLibrary.simpleMessage(
+      "الاسترداد قيد المراجعة",
+    ),
     "refunded": MessageLookupByLibrary.simpleMessage("تم استرداده"),
     "rejected": MessageLookupByLibrary.simpleMessage("مرفوض"),
     "replies": MessageLookupByLibrary.simpleMessage("الردود"),

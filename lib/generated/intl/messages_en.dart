@@ -438,6 +438,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Payment Confirmation",
     ),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
+    "pendingRefund": MessageLookupByLibrary.simpleMessage("Pending Refund"),
     "phone": MessageLookupByLibrary.simpleMessage("Phone Number"),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
     "phoneNumberChangedSuccessfully": MessageLookupByLibrary.simpleMessage(
@@ -508,6 +509,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "refund": MessageLookupByLibrary.simpleMessage("Refund"),
     "refundAmount": MessageLookupByLibrary.simpleMessage("Refund Amount"),
+    "refundInReview": MessageLookupByLibrary.simpleMessage("Refund In Review"),
     "refunded": MessageLookupByLibrary.simpleMessage("Refunded"),
     "rejected": MessageLookupByLibrary.simpleMessage("Rejected"),
     "replies": MessageLookupByLibrary.simpleMessage("Replies"),
