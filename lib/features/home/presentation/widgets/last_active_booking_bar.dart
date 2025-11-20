@@ -30,14 +30,22 @@ class _LastActiveBookingProgressBarState
     DateTime endTime = startDateTime.add(const Duration(hours: 12));
     _totalDuration = endTime.difference(startDateTime);
     _remainingTime = endTime.difference(DateTime.now());
+    
+    // If remaining time is already negative or zero, set it to zero
+    if (_remainingTime.isNegative || _remainingTime.inSeconds <= 0) {
+      _remainingTime = Duration.zero;
+    }
   }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       setState(() {
-        _remainingTime = _remainingTime - const Duration(minutes: 1);
-        if (_remainingTime.inMinutes <= 0) {
+        // Check before subtracting to prevent negative values
+        if (_remainingTime.inMinutes <= 1) {
+          _remainingTime = Duration.zero;
           _timer.cancel();
+        } else {
+          _remainingTime = _remainingTime - const Duration(minutes: 1);
         }
       });
     });
