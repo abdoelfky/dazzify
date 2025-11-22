@@ -74,16 +74,18 @@ class _ReelPlayerState extends State<ReelPlayer>
     _controller.addListener(_videoPlayerListener);
     _controller.addListener(_videoPlaybackListener);
     
-    // Initialize and start playing immediately when buffered
+    // Initialize with progressive loading - ready to play when visible
     await _controller.initialize();
     _hasControllerInitialized.value = true;
     
-    // Start playing as soon as possible (progressive loading)
-    _controller.play();
+    // Don't auto-play - let VisibilityDetector control playback
   }
 
   void _videoPlayerListener() {
-    if (_controller.value.position >= _controller.value.duration) {
+    // Only trigger page change if video actually played and finished
+    if (_controller.value.isInitialized && 
+        _controller.value.duration.inMilliseconds > 0 &&
+        _controller.value.position >= _controller.value.duration) {
       _controller.seekTo(Duration.zero);
       widget.onPageChange?.call();
     }
