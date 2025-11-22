@@ -101,6 +101,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
       ),
     );
     add(GetBrandImagesEvent(event.brandDetails.id));
+    add(GetBrandReelsEvent(event.brandDetails.id));
     add(AddBrandViewEvent(event.brandDetails.id));
   }
 
