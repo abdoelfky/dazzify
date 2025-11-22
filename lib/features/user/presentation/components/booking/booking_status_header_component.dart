@@ -9,6 +9,7 @@ import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_dialog.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
+import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/add_review_sheet.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/cancel_terms_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -147,9 +148,12 @@ class _BookingStatusHeaderComponentState
             routeSettings: const RouteSettings(
               name: "ReviewSheet",
             ),
-            builder: (context) {
-              return BlocProvider.value(
-                value: bookingCubit,
+            builder: (bottomSheetContext) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: bookingCubit),
+                  BlocProvider.value(value: context.read<UserCubit>()),
+                ],
                 child: const AddReviewSheet(),
               );
             },

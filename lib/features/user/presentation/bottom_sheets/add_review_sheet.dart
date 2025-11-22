@@ -1,4 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/home/presentation/widgets/custom_rating_bar.dart';
@@ -75,6 +76,8 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                             child: DazzifyCachedNetworkImage(
                               imageUrl: _profileCubit.state.userModel.picture ?? "",
                               fit: BoxFit.cover,
+                              placeHolder: AssetsManager.avatar,
+
                               height: 40.h,
                               width: 40.w,
                             ),

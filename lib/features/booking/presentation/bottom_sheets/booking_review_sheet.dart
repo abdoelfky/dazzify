@@ -1,4 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/features/booking/data/requests/create_booking_review_request.dart';
 import 'package:dazzify/features/booking/logic/booking_review/booking_review_cubit.dart';
@@ -127,6 +128,7 @@ class _BookingReviewSheetState extends State<BookingReviewSheet> {
                               child: DazzifyCachedNetworkImage(
                                 imageUrl: widget.userModel.picture ?? "",
                                 fit: BoxFit.cover,
+                                placeHolder: AssetsManager.avatar,
                                 height: 40.h,
                                 width: 40.w,
                               ),

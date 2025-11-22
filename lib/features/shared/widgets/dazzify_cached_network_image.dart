@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 
 class DazzifyCachedNetworkImage extends StatelessWidget {
   final String imageUrl;
+  final String? placeHolder;
   final double? width;
   final double? height;
   final BoxFit? fit;
@@ -19,6 +20,7 @@ class DazzifyCachedNetworkImage extends StatelessWidget {
     super.key,
     required this.imageUrl,
     this.width,
+    this.placeHolder,
     this.height,
     this.fit,
     this.borderRadius = 0,
@@ -58,7 +60,7 @@ class DazzifyCachedNetworkImage extends StatelessWidget {
               return AspectRatio(
                 aspectRatio: 1,
                 child: Image.asset(
-                  AssetsManager.dazzifySmilyFace,
+                  placeHolder??AssetsManager.dazzifySmilyFace,
                   fit: BoxFit.cover,
                 ),
               );
