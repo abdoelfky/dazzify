@@ -266,7 +266,7 @@ class TicketPainter extends CustomPainter {
       0,
       size.width,
       size.height,
-      const Radius.circular(20),
+      Radius.circular(16),
     );
     canvas.clipRRect(rounded);
 
