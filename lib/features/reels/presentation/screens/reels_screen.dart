@@ -33,6 +33,8 @@ class _ReelsScreenState extends State<ReelsScreen> {
     _pageController = PageController(initialPage: 0)..addListener(_onScroll);
     likesCubit = context.read<LikesCubit>();
     reelsBloc = context.read<ReelsBloc>();
+    reelsBloc.add(const GetReelsEvent());
+
     super.initState();
   }
 
