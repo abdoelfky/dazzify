@@ -73,7 +73,7 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(360).r,
                             child: DazzifyCachedNetworkImage(
-                              imageUrl: _profileCubit.picture ?? "",
+                              imageUrl: _profileCubit.state.userModel.picture ?? "",
                               fit: BoxFit.cover,
                               height: 40.h,
                               width: 40.w,
@@ -84,7 +84,7 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               DText(
-                                user.fullName,
+                                _profileCubit.state.userModel.fullName,
                                 style: context.textTheme.bodyMedium,
                               ),
                               SizedBox(height: 4.h),
