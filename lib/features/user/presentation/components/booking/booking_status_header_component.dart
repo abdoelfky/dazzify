@@ -147,9 +147,12 @@ class _BookingStatusHeaderComponentState
             routeSettings: const RouteSettings(
               name: "ReviewSheet",
             ),
-            builder: (context) {
-              return BlocProvider.value(
-                value: bookingCubit,
+            builder: (bottomSheetContext) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: bookingCubit),
+                  BlocProvider.value(value: context.read<UserCubit>()),
+                ],
                 child: const AddReviewSheet(),
               );
             },
