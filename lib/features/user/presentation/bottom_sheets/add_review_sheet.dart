@@ -7,6 +7,7 @@ import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_multiline_text_field.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
+import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 
 class AddReviewSheet extends StatefulWidget {
   const AddReviewSheet({super.key});
@@ -19,6 +20,8 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
   late final BookingCubit bookingCubit;
   late final GlobalKey<FormState> formKey;
   late final TextEditingController _reviewController;
+  late UserCubit _profileCubit;
+
   bool isLoading = false;
   double rating = 0;
 
@@ -27,6 +30,8 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
     bookingCubit = context.read<BookingCubit>();
     formKey = GlobalKey<FormState>();
     _reviewController = TextEditingController();
+    _profileCubit = context.read<UserCubit>();
+
     super.initState();
   }
 
@@ -58,7 +63,47 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                     SizedBox(height: 28.h),
                     serviceInfo(context, bookingCubit),
                     SizedBox(height: 28.h),
-                    brandInfo(context, bookingCubit),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 24,
+                      ).r,
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(360).r,
+                            child: DazzifyCachedNetworkImage(
+                              imageUrl: _profileCubit.picture ?? "",
+                              fit: BoxFit.cover,
+                              height: 40.h,
+                              width: 40.w,
+                            ),
+                          ),
+                          SizedBox(width: 16.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DText(
+                                user.fullName,
+                                style: context.textTheme.bodyMedium,
+                              ),
+                              SizedBox(height: 4.h),
+                              SizedBox(
+                                width: 220.w,
+                                child: DText(
+                                  context.tr.reviewConditions,
+                                  style:
+                                  context.textTheme.bodySmall!.copyWith(
+                                    color:
+                                    context.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24).r,
                       child: Center(

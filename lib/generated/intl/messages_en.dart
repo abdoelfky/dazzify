@@ -44,7 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "amanInstallment": MessageLookupByLibrary.simpleMessage("Aman"),
     "amount": MessageLookupByLibrary.simpleMessage("Amount"),
     "and": MessageLookupByLibrary.simpleMessage("And"),
-    "appFees": MessageLookupByLibrary.simpleMessage("App fees"),
+    "appFees": MessageLookupByLibrary.simpleMessage("Service fees"),
     "appName": MessageLookupByLibrary.simpleMessage("Dazzify"),
     "appSettings": MessageLookupByLibrary.simpleMessage("App Settings"),
     "apply": MessageLookupByLibrary.simpleMessage("Apply"),
@@ -231,7 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fees": MessageLookupByLibrary.simpleMessage("Fees"),
     "female": MessageLookupByLibrary.simpleMessage("Female"),
     "finalPriceAfterProviderAccepts": MessageLookupByLibrary.simpleMessage(
-      "Final price will be calculated after provider accepts",
+      "Transportation Fees will be calculated after provider acceptance",
     ),
     "forDiscount": MessageLookupByLibrary.simpleMessage("for discount"),
     "forsaInstallment": MessageLookupByLibrary.simpleMessage("Forsa"),
@@ -455,8 +455,11 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Please log in to freely access app features.",
         ),
+    "plusTransportation": MessageLookupByLibrary.simpleMessage(
+      "+ Transportation Fees",
+    ),
     "plusTransportationAndFees": MessageLookupByLibrary.simpleMessage(
-      "+ Transportation & app fees",
+      "+ Transportation Fees & Service Fees",
     ),
     "point": MessageLookupByLibrary.simpleMessage(" Points"),
     "pointCameraAtQr": MessageLookupByLibrary.simpleMessage(
@@ -594,6 +597,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "sharqia": MessageLookupByLibrary.simpleMessage("Sharqia"),
     "showReplies": MessageLookupByLibrary.simpleMessage("Show replies"),
+    "showServices": MessageLookupByLibrary.simpleMessage("Show Services"),
     "sohag": MessageLookupByLibrary.simpleMessage("Sohag"),
     "souhoolaInstallment": MessageLookupByLibrary.simpleMessage("Souhoola"),
     "southSinai": MessageLookupByLibrary.simpleMessage("SouthSinai"),

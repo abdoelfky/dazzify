@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "amanInstallment": MessageLookupByLibrary.simpleMessage("Aman"),
     "amount": MessageLookupByLibrary.simpleMessage("المبلغ"),
     "and": MessageLookupByLibrary.simpleMessage("و"),
-    "appFees": MessageLookupByLibrary.simpleMessage("رسوم التطبيق"),
+    "appFees": MessageLookupByLibrary.simpleMessage("رسوم الخدمة"),
     "appName": MessageLookupByLibrary.simpleMessage("ديزيفاي"),
     "appSettings": MessageLookupByLibrary.simpleMessage("إعدادات التطبيق"),
     "apply": MessageLookupByLibrary.simpleMessage("تقدم"),
@@ -223,7 +223,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fees": MessageLookupByLibrary.simpleMessage("الرسوم"),
     "female": MessageLookupByLibrary.simpleMessage("انثى"),
     "finalPriceAfterProviderAccepts": MessageLookupByLibrary.simpleMessage(
-      "سيتم حساب السعر النهائي بعد قبول مزود الخدمة",
+      "سيتم حساب رسوم النقل بعد قبول مزود الخدمة",
     ),
     "forDiscount": MessageLookupByLibrary.simpleMessage("للحصول على خصم"),
     "forsaInstallment": MessageLookupByLibrary.simpleMessage("Forsa"),
@@ -457,8 +457,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية.",
         ),
+    "plusTransportation": MessageLookupByLibrary.simpleMessage("+ رسوم النقل"),
     "plusTransportationAndFees": MessageLookupByLibrary.simpleMessage(
-      "+ رسوم النقل والتطبيق",
+      "+ رسوم النقل ورسوم الخدمة",
     ),
     "point": MessageLookupByLibrary.simpleMessage("نقطة"),
     "pointCameraAtQr": MessageLookupByLibrary.simpleMessage(
@@ -598,6 +599,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("مشاركة"),
     "sharqia": MessageLookupByLibrary.simpleMessage("الشرقية"),
     "showReplies": MessageLookupByLibrary.simpleMessage("إظهار الردود"),
+    "showServices": MessageLookupByLibrary.simpleMessage("اظهر الخدمات"),
     "sohag": MessageLookupByLibrary.simpleMessage("سوهاج"),
     "souhoolaInstallment": MessageLookupByLibrary.simpleMessage("Souhoola"),
     "southSinai": MessageLookupByLibrary.simpleMessage("جنوب سيناء"),

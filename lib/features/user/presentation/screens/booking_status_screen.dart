@@ -1,4 +1,5 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/payment/data/models/transaction_model.dart';
 import 'package:dazzify/features/payment/presentation/widgets/transaction_bar.dart';
@@ -60,6 +61,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
         await bookingCubit.getSingleBooking(widget.bookingId);
       },
       child: SafeArea(
+        top: false,
         child: BlocConsumer<BookingCubit, BookingState>(
           listener: (context, state) {
             if (state.cancelBookingState == UiState.loading) {
@@ -84,19 +86,28 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                 bookingStatus = getBookingStatus(state.singleBooking.status);
                 final startTime =
                     DateTime.parse(state.singleBooking.startTime).toLocal();
+                TransactionType? transactionType;
                 final now = DateTime.now();
+                if (state.singleBooking.payments.isNotEmpty) {
+                  transactionType = getTransactionType(
+                      state.singleBooking.payments.first.type);
+                }
                 return DazzifyOverlayLoading(
                   isLoading: isLoading,
                   child: Column(
                     children: [
-                      BookingStatusHeaderComponent(
-                        startTime: state.singleBooking.startTime,
-                        refundConditions:
-                            state.singleBooking.brand.refundConditions,
-                        isBookingFinished: state.singleBooking.isFinished,
-                        isArrived: state.singleBooking.isArrived,
-                        isRate: state.singleBooking.isRate,
-                        status: bookingStatus,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 60.0),
+                        child: BookingStatusHeaderComponent(
+                          startTime: state.singleBooking.startTime,
+                          refundConditions:
+                              state.singleBooking.brand.refundConditions,
+                          isBookingFinished: state.singleBooking.isFinished,
+                          isArrived: state.singleBooking.isArrived &&
+                              state.singleBooking.isInBranch,
+                          isRate: state.singleBooking.isRate,
+                          status: bookingStatus,
+                        ),
                       ),
                       Expanded(
                         child: CustomFadeAnimation(
@@ -176,7 +187,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                     SizedBox(height: 35.h),
                                     if (state.singleBooking.payments.isNotEmpty)
                                       Container(
-                                        padding: EdgeInsetsGeometry.symmetric(vertical: 10.h,horizontal: 10.w),
+                                        padding: EdgeInsetsGeometry.symmetric(
+                                            vertical: 10.h, horizontal: 10.w),
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(15),
@@ -201,7 +213,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                     ),
                                                     SizedBox(width: 8.w),
                                                     DText(
-                                                      context.tr.downPayment,
+                                                      transactionType!.name,
                                                       style: context
                                                           .textTheme.bodyMedium,
                                                     ),
@@ -255,7 +267,6 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                     },
                                                   ),
                                                 ),
-
                                                 Expanded(
                                                   flex: 4,
                                                   child: TransactionButton(
@@ -439,7 +450,8 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
   final priceInfo = booking.state.singleBooking;
   final deliveryRange = priceInfo.deliveryFeesRange;
   final hasDeliveryFees = priceInfo.deliveryFees != null;
-  final hasFees = priceInfo.fees != null;
+
+  final hasFees = priceInfo.fees != null||(AppConfigManager.appFeesMax==0&&AppConfigManager.appFeesMax==0&&AppConfigManager.appFeesMax==0);
   final hasTotalPrice = priceInfo.totalPrice != null;
 
   return Column(

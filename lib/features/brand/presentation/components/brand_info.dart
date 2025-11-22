@@ -175,7 +175,7 @@ class BrandInfo extends StatelessWidget {
         }
       },
       flexBetweenTextAndPrefix: 1,
-      title: context.tr.book,
+      title: context.tr.showServices,
       prefixWidget: Icon(
         SolarIconsOutline.calendar,
         color: context.colorScheme.onPrimary,

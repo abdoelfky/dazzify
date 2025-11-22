@@ -246,11 +246,12 @@
   "servicePrice": "Service price",
   "couponDisc": "Coupon disc",
   "deliferyFees": "Transportation Fees",
-  "appFees": "App fees",
+  "appFees": "Service fees",
   "totalPrice": "Total price",
   "willBeCalculated": "Will be calculated",
-  "plusTransportationAndFees": "+ Transportation & app fees",
-  "finalPriceAfterProviderAccepts": "Final price will be calculated after provider accepts",
+  "plusTransportationAndFees": "+ Transportation Fees & Service Fees",
+  "plusTransportation": "+ Transportation Fees",
+  "finalPriceAfterProviderAccepts": "Transportation Fees will be calculated after provider acceptance",
   "outBranch": "Out branch",
   "confirm": "Confirm",
   "NotSelectedYet": "Not selected yet",
@@ -428,7 +429,8 @@
   "invalidQrCode": "Invalid QR Code",
   "copyCouponCoded": "Copy coupon coded",
   "scratchToRedeem": "Scratch to redeem your discount",
-  "openToScratch": "Open to Scratch your Coupon"
+  "openToScratch": "Open to Scratch your Coupon",
+  "showServices": "Show Services"
 
 
 }

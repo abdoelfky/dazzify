@@ -245,11 +245,12 @@
   "servicePrice": "سعر الخدمة",
   "couponDisc": "خصم الكوبون",
   "deliferyFees": "رسوم النقل",
-  "appFees": "رسوم التطبيق",
+  "appFees": "رسوم الخدمة",
   "totalPrice": "السعر الإجمالي",
   "willBeCalculated": "سيتم الحساب",
-  "plusTransportationAndFees": "+ رسوم النقل والتطبيق",
-  "finalPriceAfterProviderAccepts": "سيتم حساب السعر النهائي بعد قبول مزود الخدمة",
+  "plusTransportationAndFees": "+ رسوم النقل ورسوم الخدمة",
+  "plusTransportation": "+ رسوم النقل",
+  "finalPriceAfterProviderAccepts": "سيتم حساب رسوم النقل بعد قبول مزود الخدمة",
   "outBranch": "خارج الفرع",
   "confirm": "تأكيد",
   "NotSelectedYet": "لم يتم التحديد بعد",
@@ -429,6 +430,7 @@
   "copyCouponCoded": "انسخ رمز الكوبون",
   "scratchToRedeem": "اكشط لاستخدام خصمك",
 
-  "openToScratch": "افتح وامسح للحصول على كوبونك"
+  "openToScratch": "افتح وامسح للحصول على كوبونك",
+  "showServices": "اظهر الخدمات"
 
 }

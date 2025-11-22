@@ -1,16 +1,21 @@
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/dotted_line.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/invoice_line.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_text_form_field.dart';
+import 'package:dazzify/features/user/presentation/screens/booking_status_screen.dart';
 
 class InvoiceWidget extends StatelessWidget {
   final TextEditingController textContorller;
   final List<ServiceDetailsModel> services;
   final ServiceDetailsModel service;
+  final hasFees = (AppConfigManager.appFeesMax == 0 &&
+      AppConfigManager.appFeesMax == 0 &&
+      AppConfigManager.appFeesMax == 0);
 
-  const InvoiceWidget({
+  InvoiceWidget({
     super.key,
     required this.textContorller,
     required this.services,
@@ -24,24 +29,29 @@ class InvoiceWidget extends StatelessWidget {
         num totalPrice = services.isEmpty
             ? service.price * service.quantity
             : services.fold<num>(
-          0,
-              (sum, s) => sum + (s.price * s.quantity),
-        );
+                0,
+                (sum, s) => sum + (s.price * s.quantity),
+              );
 
         final totalCount = services.isEmpty
             ? service.quantity
             : services.fold<int>(0, (sum, s) => sum + s.quantity);
         final deliveryFees = state.deliveryInfo.selectedDeliveryFees;
         final isRangeType = state.deliveryInfo.isRangeType;
-        final appFees = !isRangeType 
-            ? state.invoice.totalPrice - totalPrice - deliveryFees + state.invoice.discountAmount
+
+        final appFees = hasFees
+            ? state.invoice.totalPrice -
+                totalPrice -
+                deliveryFees +
+                state.invoice.discountAmount
             : 0.0;
 
         return Column(
           children: [
             DazzifyTextFormField(
               controller: textContorller,
-              fillColor: context.colorScheme.inversePrimary.withValues(alpha: 0.1),
+              fillColor:
+                  context.colorScheme.inversePrimary.withValues(alpha: 0.1),
               textStyle: context.textTheme.bodyMedium,
               textInputType: TextInputType.text,
               borderSide: getBorderSide(
@@ -66,7 +76,8 @@ class InvoiceWidget extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             InvoiceLine(
-              title: '${context.tr.servicePrice} ($totalCount ${context.tr.services})',
+              title:
+                  '${context.tr.servicePrice} ($totalCount ${context.tr.services})',
               amount: totalPrice,
             ),
             InvoiceLine(
@@ -79,15 +90,16 @@ class InvoiceWidget extends StatelessWidget {
                 title: context.tr.deliferyFees,
                 amount: deliveryFees,
               ),
+            ],
+            if (isRangeType) ...[
+              _buildRangeTransportationLine(context, state),
+            ],
+            if (hasFees)
               InvoiceLine(
                 title: context.tr.appFees,
                 amount: double.parse(appFees.toStringAsFixed(2)),
               ),
-            ],
-            if (isRangeType) ...[
-              _buildRangeTransportationLine(context, state),
-              _buildPendingAppFeesLine(context),
-            ],
+            if (!hasFees) _buildPendingAppFeesLine(context),
             DottedLine(
               lineWidth: context.screenWidth,
               lineColor: context.colorScheme.onSurface,
@@ -98,8 +110,7 @@ class InvoiceWidget extends StatelessWidget {
                 title: context.tr.totalPrice,
                 amount: state.invoice.totalPrice,
               ),
-            if (isRangeType)
-              _buildPendingTotalLine(context, state),
+            if (isRangeType) _buildPendingTotalLine(context, state),
             if (isRangeType) ...[
               SizedBox(height: 8.h),
               _buildPendingNote(context),
@@ -111,51 +122,48 @@ class InvoiceWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRangeTransportationLine(BuildContext context, ServiceInvoiceState state) {
+  Widget _buildRangeTransportationLine(
+      BuildContext context, ServiceInvoiceState state) {
     final min = state.deliveryInfo.minDeliveryFees ?? 0;
     final max = state.deliveryInfo.maxDeliveryFees ?? 0;
-    
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0).r,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          DText(
-            context.tr.deliferyFees,
-            style: context.textTheme.bodyMedium,
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        DText(
+          context.tr.deliferyFees,
+          style: context.textTheme.bodyMedium!.copyWith(
+            color: context.colorScheme.outline,
           ),
-          DText(
-            "${reformatPriceWithCommas(min)}-${reformatPriceWithCommas(max)} ${context.tr.egp}",
-            style: context.textTheme.bodyMedium,
-          ),
-        ],
-      ),
+        ),
+        DText(
+          "${context.tr.from} ${reformatPriceWithCommas(min)} ${context.tr.to} ${reformatPriceWithCommas(max)} (${context.tr.egp})",
+          style: context.textTheme.bodyLarge,
+        ),
+      ],
     );
   }
 
   Widget _buildPendingAppFeesLine(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0).r,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          DText(
-            context.tr.appFees,
-            style: context.textTheme.bodyMedium,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        DText(
+          context.tr.appFees,
+          style: context.textTheme.bodyMedium!.copyWith(
+            color: context.colorScheme.outline,
           ),
-          DText(
-            context.tr.willBeCalculated,
-            style: context.textTheme.bodySmall!.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
-      ),
+        ),
+        DText(
+          context.tr.willBeCalculated,
+          style: context.textTheme.bodyLarge,
+        ),
+      ],
     );
   }
 
-  Widget _buildPendingTotalLine(BuildContext context, ServiceInvoiceState state) {
+  Widget _buildPendingTotalLine(
+      BuildContext context, ServiceInvoiceState state) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0).r,
       child: Row(
@@ -173,13 +181,22 @@ class InvoiceWidget extends StatelessWidget {
                 style: context.textTheme.titleMedium,
               ),
               SizedBox(height: 4.h),
-              DText(
-                context.tr.plusTransportationAndFees,
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                  fontStyle: FontStyle.italic,
+              if (!hasFees)
+                DText(
+                  context.tr.plusTransportationAndFees,
+                  style: context.textTheme.bodySmall!.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-              ),
+              if (hasFees)
+                DText(
+                  context.tr.plusTransportation,
+                  style: context.textTheme.bodySmall!.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
             ],
           ),
         ],
@@ -223,8 +240,8 @@ BorderSide getBorderSide({
   return couponValidationState == UiState.success
       ? const BorderSide(color: Colors.green)
       : couponValidationState == UiState.failure
-      ? const BorderSide(color: Colors.red)
-      : BorderSide(color: context.colorScheme.primary);
+          ? const BorderSide(color: Colors.red)
+          : BorderSide(color: context.colorScheme.primary);
 }
 
 Widget? getSuffixIcon({
@@ -256,20 +273,20 @@ Widget? getSuffixIcon({
           ],
         )
       : TextButton(
-    onPressed: () {
-      if (textContorller.text.isNotEmpty) {
-        FocusManager.instance.primaryFocus?.unfocus();
-        context
-            .read<ServiceInvoiceCubit>()
-            .validateCouponAndUpdateInvoice(
-          service: service,
-          price: price,
-          code: textContorller.text,
+          onPressed: () {
+            if (textContorller.text.isNotEmpty) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context
+                  .read<ServiceInvoiceCubit>()
+                  .validateCouponAndUpdateInvoice(
+                    service: service,
+                    price: price,
+                    code: textContorller.text,
+                  );
+            }
+          },
+          child: DText(
+            context.tr.apply,
+          ),
         );
-      }
-    },
-    child: DText(
-      context.tr.apply,
-    ),
-  );
 }

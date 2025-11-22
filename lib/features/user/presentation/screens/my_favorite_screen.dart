@@ -40,74 +40,75 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
-          listener: (context, state) =>
-              bookingFromMediaCubitListener(state, context),
-          builder: (context, state) {
-            return DazzifyOverlayLoading(
-              isLoading: isLoading,
-              child: Column(
-                children: [
-                  DazzifyAppBar(
+    return Scaffold(
+      body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
+        listener: (context, state) =>
+            bookingFromMediaCubitListener(state, context),
+        builder: (context, state) {
+          return DazzifyOverlayLoading(
+            isLoading: isLoading,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: DazzifyAppBar(
                     isLeading: true,
                     title: context.tr.myFavorite,
                   ),
-                  Expanded(
-                    child: BlocBuilder<FavoriteCubit, FavoriteState>(
-                      builder: (context, state) {
-                        if (state.favoriteServiceList.isEmpty) {
-                          return EmptyDataWidget(
-                            message: context.tr.noFavorites,
-                          );
-                        } else {
-                          return GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              mainAxisExtent: 210.h,
-                              crossAxisSpacing: 10.h,
-                              mainAxisSpacing: 10.h,
-                            ),
-                            padding: const EdgeInsets.all(12).r,
-                            itemCount: state.favoriteServiceList.length,
-                            itemBuilder: (context, index) {
-                              final item = state.favoriteServiceList[index];
-                              return FavoriteCard(
-                                image: item.image,
-                                title: item.title,
-                                price: '${reformatPriceWithCommas(item.price)} ${context.tr.currency}',
-                                onTap: () {
-                                  context
-                                      .read<BookingFromMediaCubit>()
-                                      .getSingleServiceDetails(
-                                        serviceId: item.id,
-                                      );
-                                },
-                                onFavoriteTap: () {
-                                  context
-                                      .read<FavoriteCubit>()
-                                      .addOrRemoveFromFavorite(
-                                        favoriteService: item,
-                                      );
-                                },
-                                isFavorite: true,
-                                imageHeight: 150.h,
-                                imageWidth: 100.w,
-                                borderRadius: 8,
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
+                ),
+                Expanded(
+                  child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                    builder: (context, state) {
+                      if (state.favoriteServiceList.isEmpty) {
+                        return EmptyDataWidget(
+                          message: context.tr.noFavorites,
+                        );
+                      } else {
+                        return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisExtent: 210.h,
+                            crossAxisSpacing: 10.h,
+                            mainAxisSpacing: 10.h,
+                          ),
+                          padding: const EdgeInsets.all(12).r,
+                          itemCount: state.favoriteServiceList.length,
+                          itemBuilder: (context, index) {
+                            final item = state.favoriteServiceList[index];
+                            return FavoriteCard(
+                              image: item.image,
+                              title: item.title,
+                              price: '${reformatPriceWithCommas(item.price)} ${context.tr.currency}',
+                              onTap: () {
+                                context
+                                    .read<BookingFromMediaCubit>()
+                                    .getSingleServiceDetails(
+                                      serviceId: item.id,
+                                    );
+                              },
+                              onFavoriteTap: () {
+                                context
+                                    .read<FavoriteCubit>()
+                                    .addOrRemoveFromFavorite(
+                                      favoriteService: item,
+                                    );
+                              },
+                              isFavorite: true,
+                              imageHeight: 150.h,
+                              imageWidth: 100.w,
+                              borderRadius: 8,
+                            );
+                          },
+                        );
+                      }
+                    },
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

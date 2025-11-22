@@ -58,96 +58,97 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            DazzifyAppBar(
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.qrCodeScanner,
             ),
-            Expanded(
-              child: Stack(
-                children: [
-                  // Camera view
-                  MobileScanner(
-                    controller: cameraController,
-                    onDetect: (capture) {
-                      final List<Barcode> barcodes = capture.barcodes;
-                      for (final barcode in barcodes) {
-                        if (barcode.rawValue != null && !_hasScanned) {
-                          _handleQrCode(barcode.rawValue!);
-                        }
+          ),
+          Expanded(
+            child: Stack(
+              children: [
+                // Camera view
+                MobileScanner(
+                  controller: cameraController,
+                  onDetect: (capture) {
+                    final List<Barcode> barcodes = capture.barcodes;
+                    for (final barcode in barcodes) {
+                      if (barcode.rawValue != null && !_hasScanned) {
+                        _handleQrCode(barcode.rawValue!);
                       }
-                    },
+                    }
+                  },
+                ),
+                // Scanning frame overlay
+                Center(
+                  child: Container(
+                    width: 250.w,
+                    height: 250.w,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: context.colorScheme.primary,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
-                  // Scanning frame overlay
-                  Center(
-                    child: Container(
-                      width: 250.w,
-                      height: 250.w,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: context.colorScheme.primary,
-                          width: 3,
-                        ),
-                        borderRadius: BorderRadius.circular(12.r),
+                ),
+                // Instructions text
+                Positioned(
+                  bottom: 100.h,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 16.h,
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 32.w),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      context.tr.pointCameraAtQr,
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  // Instructions text
-                  Positioned(
-                    bottom: 100.h,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 16.h,
+                ),
+                // Flash toggle button
+                Positioned(
+                  bottom: 30.h,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: IconButton(
+                      icon: ValueListenableBuilder(
+                        valueListenable: cameraController,
+                        builder: (context, state, child) {
+                          return Icon(
+                            state.torchState == TorchState.on
+                                ? Icons.flash_on
+                                : Icons.flash_off,
+                            color: Colors.white,
+                            size: 32.r,
+                          );
+                        },
                       ),
-                      margin: EdgeInsets.symmetric(horizontal: 32.w),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        context.tr.pointCameraAtQr,
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      onPressed: () => cameraController.toggleTorch(),
                     ),
                   ),
-                  // Flash toggle button
-                  Positioned(
-                    bottom: 30.h,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: IconButton(
-                        icon: ValueListenableBuilder(
-                          valueListenable: cameraController,
-                          builder: (context, state, child) {
-                            return Icon(
-                              state.torchState == TorchState.on
-                                  ? Icons.flash_on
-                                  : Icons.flash_off,
-                              color: Colors.white,
-                              size: 32.r,
-                            );
-                          },
-                        ),
-                        onPressed: () => cameraController.toggleTorch(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

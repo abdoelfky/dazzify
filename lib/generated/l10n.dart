@@ -1829,9 +1829,9 @@ class S {
     );
   }
 
-  /// `App fees`
+  /// `Service fees`
   String get appFees {
-    return Intl.message('App fees', name: 'appFees', desc: '', args: []);
+    return Intl.message('Service fees', name: 'appFees', desc: '', args: []);
   }
 
   /// `Total price`
@@ -1849,20 +1849,30 @@ class S {
     );
   }
 
-  /// `+ Transportation & app fees`
+  /// `+ Transportation Fees & Service Fees`
   String get plusTransportationAndFees {
     return Intl.message(
-      '+ Transportation & app fees',
+      '+ Transportation Fees & Service Fees',
       name: 'plusTransportationAndFees',
       desc: '',
       args: [],
     );
   }
 
-  /// `Final price will be calculated after provider accepts`
+  /// `+ Transportation Fees`
+  String get plusTransportation {
+    return Intl.message(
+      '+ Transportation Fees',
+      name: 'plusTransportation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transportation Fees will be calculated after provider acceptance`
   String get finalPriceAfterProviderAccepts {
     return Intl.message(
-      'Final price will be calculated after provider accepts',
+      'Transportation Fees will be calculated after provider acceptance',
       name: 'finalPriceAfterProviderAccepts',
       desc: '',
       args: [],
@@ -3173,6 +3183,16 @@ class S {
     return Intl.message(
       'Open to Scratch your Coupon',
       name: 'openToScratch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Services`
+  String get showServices {
+    return Intl.message(
+      'Show Services',
+      name: 'showServices',
       desc: '',
       args: [],
     );
