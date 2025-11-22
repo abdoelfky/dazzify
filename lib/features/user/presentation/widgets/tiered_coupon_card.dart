@@ -42,6 +42,7 @@ class TieredCouponCard extends StatelessWidget {
       child: Container(
         height: 140.h,
         padding: EdgeInsets.symmetric(horizontal: 8.w),
+
         child: Stack(
           children: [
             Row(
@@ -257,61 +258,61 @@ class TicketPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
     final double cutoutRadius = 16;
-
     final double centerY = size.height / 2;
 
-    // Draw left side
-    paint.color = sideColor;
-    final leftPath = Path();
-
-    leftPath.moveTo(16, 0);
-    leftPath.lineTo(sideWidth, 0);
-    leftPath.lineTo(sideWidth, size.height);
-    leftPath.lineTo(16, size.height);
-
-    // One circle cutout at center left
-    leftPath.lineTo(16, centerY + cutoutRadius);
-    leftPath.arcToPoint(
-      Offset(16, centerY - cutoutRadius),
-      radius: Radius.circular(cutoutRadius),
-      clockwise: false,
+    // ----------- Rounded Corners Clip -----------
+    final RRect rounded = RRect.fromLTRBR(
+      0,
+      0,
+      size.width,
+      size.height,
+      const Radius.circular(20),
     );
-    leftPath.lineTo(16, 0);
+    canvas.clipRRect(rounded);
 
-    leftPath.close();
+    // ----------- LEFT SIDE -----------
+    paint.color = sideColor;
+    final leftPath = Path()
+      ..moveTo(16, 0)
+      ..lineTo(sideWidth, 0)
+      ..lineTo(sideWidth, size.height)
+      ..lineTo(16, size.height)
+      ..lineTo(16, centerY + cutoutRadius)
+      ..arcToPoint(
+        Offset(16, centerY - cutoutRadius),
+        radius: Radius.circular(cutoutRadius),
+        clockwise: false,
+      )
+      ..lineTo(16, 0)
+      ..close();
+
     canvas.drawPath(leftPath, paint);
 
-// Draw right side (mirror of left)
+    // ----------- RIGHT SIDE -----------
     paint.color = bodyColor;
-    final rightPath = Path();
+    final rightPath = Path()
+      ..moveTo(sideWidth, 0)
+      ..lineTo(size.width - 16, 0)
+      ..lineTo(size.width - 16, centerY - cutoutRadius)
+      ..arcToPoint(
+        Offset(size.width - 16, centerY + cutoutRadius),
+        radius: Radius.circular(cutoutRadius),
+        clockwise: false,
+      )
+      ..lineTo(size.width - 16, size.height)
+      ..lineTo(sideWidth, size.height)
+      ..close();
 
-    rightPath.moveTo(sideWidth, 0);
-    rightPath.lineTo(size.width - 16, 0);
-    rightPath.lineTo(size.width - 16, centerY - cutoutRadius);
-
-// نفس اتجاه اليسار (clockwise: false)
-    rightPath.arcToPoint(
-      Offset(size.width - 16, centerY + cutoutRadius),
-      radius: Radius.circular(cutoutRadius),
-      clockwise: false,
-    );
-
-    rightPath.lineTo(size.width - 16, size.height);
-    rightPath.lineTo(sideWidth, size.height);
-
-    rightPath.close();
     canvas.drawPath(rightPath, paint);
 
-
-    // Shadow
+    // ----------- Shadow -----------
     final shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.1)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+      ..color = Colors.black.withOpacity(0.12)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
     canvas.drawPath(leftPath, shadowPaint);
     canvas.drawPath(rightPath, shadowPaint);
   }
-
 
   @override
   bool shouldRepaint(TicketPainter oldDelegate) => false;
