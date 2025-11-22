@@ -44,6 +44,8 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
     super.initState();
     brandBloc = context.read<BrandBloc>();
     widget.scrollController.addListener(_onScroll);
+    // Load photos on initialization
+    brandBloc.add(GetBrandImagesEvent(widget.brandId));
   }
 
   void _onScroll() {
