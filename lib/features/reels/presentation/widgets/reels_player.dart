@@ -63,12 +63,29 @@ class _ReelPlayerState extends State<ReelPlayer>
   }
 
   Future<void> _initReelsPlayer() async {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-      ..initialize().then((_) {
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(widget.videoUrl),
+      videoPlayerOptions: VideoPlayerOptions(
+        mixWithOthers: false,
+        allowBackgroundPlayback: false,
+      ),
+    );
+    
+    try {
+      await _controller.initialize();
+      if (mounted) {
+        _hasControllerInitialized.value = true;
         _controller.addListener(_videoPlayerListener);
         _controller.addListener(_videoPlaybackListener);
-      });
-    _hasControllerInitialized.value = true;
+        // Start playing immediately after initialization
+        _controller.setLooping(true);
+      }
+    } catch (e) {
+      debugPrint('Error initializing video: $e');
+      if (mounted) {
+        _hasControllerInitialized.value = true;
+      }
+    }
   }
 
   void _videoPlayerListener() {
@@ -133,12 +150,23 @@ class _ReelPlayerState extends State<ReelPlayer>
                         _controller.pause();
                       }
                     },
-                    child: AspectRatio(
-                      aspectRatio:
-                      _parseAspectRatio(widget.reel.aspectRatio) ??
-                          8 / 16.5,
-                      // aspectRatio: 8 / 16.5,
-                      child: VideoPlayer(_controller),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AspectRatio(
+                          aspectRatio:
+                          _parseAspectRatio(widget.reel.aspectRatio) ??
+                              8 / 16.5,
+                          // aspectRatio: 8 / 16.5,
+                          child: VideoPlayer(_controller),
+                        ),
+                        // Show loading indicator when buffering
+                        if (_controller.value.isBuffering)
+                          const CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                      ],
                     ),
                   ),
                 ),

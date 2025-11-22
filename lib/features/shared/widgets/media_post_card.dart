@@ -69,20 +69,32 @@ class _MediaPostCardState extends State<MediaPostCard> {
     if (_videoControllers[index] == null) {
       final videoController = VideoPlayerController.networkUrl(
         Uri.parse(widget.brandMedia.mediaItems[index].itemUrl),
+        videoPlayerOptions: VideoPlayerOptions(
+          mixWithOthers: false,
+          allowBackgroundPlayback: false,
+        ),
       );
-      await videoController.initialize();
-      final chewieController = ChewieController(
-        videoPlayerController: videoController,
-        autoPlay: true,
-        looping: true,
-        showControls: false,
-        aspectRatio: _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 4 / 3,
-      );
+      
+      try {
+        await videoController.initialize();
+        
+        if (mounted) {
+          final chewieController = ChewieController(
+            videoPlayerController: videoController,
+            autoPlay: true,
+            looping: true,
+            showControls: false,
+            aspectRatio: _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 4 / 3,
+          );
 
-      setState(() {
-        _videoControllers[index] = videoController;
-        _chewieControllers[index] = chewieController;
-      });
+          setState(() {
+            _videoControllers[index] = videoController;
+            _chewieControllers[index] = chewieController;
+          });
+        }
+      } catch (e) {
+        debugPrint('Error initializing video at index $index: $e');
+      }
     }
   }
 
