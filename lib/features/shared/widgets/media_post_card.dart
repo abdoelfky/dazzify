@@ -69,14 +69,23 @@ class _MediaPostCardState extends State<MediaPostCard> {
     if (_videoControllers[index] == null) {
       final videoController = VideoPlayerController.networkUrl(
         Uri.parse(widget.brandMedia.mediaItems[index].itemUrl),
+        videoPlayerOptions: VideoPlayerOptions(
+          allowBackgroundPlayback: false,
+          mixWithOthers: false,
+        ),
       );
+      
+      // Initialize immediately - don't wait for full download
       await videoController.initialize();
+      
       final chewieController = ChewieController(
         videoPlayerController: videoController,
         autoPlay: true,
         looping: true,
         showControls: false,
         aspectRatio: _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 4 / 3,
+        // Allow playback to start with progressive loading
+        startAt: Duration.zero,
       );
 
       setState(() {

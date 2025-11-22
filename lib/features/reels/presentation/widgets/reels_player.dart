@@ -63,12 +63,23 @@ class _ReelPlayerState extends State<ReelPlayer>
   }
 
   Future<void> _initReelsPlayer() async {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-      ..initialize().then((_) {
-        _controller.addListener(_videoPlayerListener);
-        _controller.addListener(_videoPlaybackListener);
-      });
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(widget.videoUrl),
+      videoPlayerOptions: VideoPlayerOptions(
+        allowBackgroundPlayback: false,
+        mixWithOthers: false,
+      ),
+    );
+    
+    _controller.addListener(_videoPlayerListener);
+    _controller.addListener(_videoPlaybackListener);
+    
+    // Initialize and start playing immediately when buffered
+    await _controller.initialize();
     _hasControllerInitialized.value = true;
+    
+    // Start playing as soon as possible (progressive loading)
+    _controller.play();
   }
 
   void _videoPlayerListener() {
