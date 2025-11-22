@@ -9,7 +9,6 @@ import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_dialog.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
-import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/add_review_sheet.dart';
 import 'package:dazzify/features/user/presentation/bottom_sheets/cancel_terms_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +60,6 @@ class _BookingStatusHeaderComponentState
   void initState() {
     super.initState();
     bookingCubit = context.read<BookingCubit>();
-
     // bookingStatus = getBookingStatus(widget.status);
   }
 
@@ -102,9 +100,9 @@ class _BookingStatusHeaderComponentState
     final minutesUntilBooking = getTimeInMinute();
 
     // If booking is finished, show review button
-    // if (widget.isBookingFinished) {
+    if (widget.isBookingFinished) {
       return rateBookingButton();
-    // }
+    }
 
     // If booking is cancelled, hide cancel button
     if (widget.status == BookingStatus.cancelled) {
@@ -141,8 +139,7 @@ class _BookingStatusHeaderComponentState
       width: 130.w,
       height: 35.h,
       onTap: () {
-        // if (bookingCubit.state.singleBooking.rating.rate == 0.0)
-        {
+        if (bookingCubit.state.singleBooking.rating.rate == 0.0) {
           showModalBottomSheet(
             context: context,
             useRootNavigator: true,
