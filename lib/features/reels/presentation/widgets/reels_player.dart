@@ -21,6 +21,7 @@ class ReelPlayer extends StatefulWidget {
   final String videoUrl;
   final VoidCallback? onPageChange;
   final void Function() onLikeTap;
+  final VideoPlayerController? preloadedController;
 
   const ReelPlayer({
     super.key,
@@ -28,6 +29,7 @@ class ReelPlayer extends StatefulWidget {
     this.onPageChange,
     required this.onLikeTap,
     required this.videoUrl,
+    this.preloadedController,
   });
 
   @override
@@ -42,6 +44,7 @@ class _ReelPlayerState extends State<ReelPlayer>
   late final ValueNotifier<bool> _hasTheUserTappedPause;
   late final ValueNotifier<bool> _hasTheUserOpenedComments;
   late final ValueNotifier<bool> _showHeart;
+  bool _isUsingPreloadedController = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -63,19 +66,30 @@ class _ReelPlayerState extends State<ReelPlayer>
   }
 
   Future<void> _initReelsPlayer() async {
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.videoUrl),
-      videoPlayerOptions: VideoPlayerOptions(
-        allowBackgroundPlayback: false,
-        mixWithOthers: false,
-      ),
-    );
+    // Use preloaded controller if available
+    if (widget.preloadedController != null && 
+        widget.preloadedController!.value.isInitialized) {
+      _controller = widget.preloadedController!;
+      _isUsingPreloadedController = true;
+      debugPrint('✅ Using preloaded controller for: ${widget.videoUrl}');
+    } else {
+      // Create new controller if no preloaded one available
+      _controller = VideoPlayerController.networkUrl(
+        Uri.parse(widget.videoUrl),
+        videoPlayerOptions: VideoPlayerOptions(
+          allowBackgroundPlayback: false,
+          mixWithOthers: false,
+        ),
+      );
+      _isUsingPreloadedController = false;
+      
+      // Initialize with progressive loading - ready to play when visible
+      await _controller.initialize();
+      debugPrint('⚠️ Creating new controller for: ${widget.videoUrl}');
+    }
     
     _controller.addListener(_videoPlayerListener);
     _controller.addListener(_videoPlaybackListener);
-    
-    // Initialize with progressive loading - ready to play when visible
-    await _controller.initialize();
     _hasControllerInitialized.value = true;
     
     // Don't auto-play - let VisibilityDetector control playback
@@ -267,7 +281,10 @@ class _ReelPlayerState extends State<ReelPlayer>
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    // Only dispose controller if we created it (not preloaded)
+    if (!_isUsingPreloadedController) {
+      _controller.dispose();
+    }
     _hasControllerInitialized.dispose();
     _hasTheUserOpenedComments.dispose();
     _hasTheUserTappedPause.dispose();
