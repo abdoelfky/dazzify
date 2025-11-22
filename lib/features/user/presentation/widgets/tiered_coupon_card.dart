@@ -37,7 +37,7 @@ class TieredCouponCard extends StatelessWidget {
       painter: TicketPainter(
         sideColor: sideColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
         bodyColor: bodyColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
-        sideWidth: 50.w,
+        sideWidth: 60.w,
       ),
       child: Container(
         height: 140.h,
@@ -48,7 +48,7 @@ class TieredCouponCard extends StatelessWidget {
               children: [
                 // Side bar with "Discount" text
                 SizedBox(
-                  width: 50.w,
+                  width: 55.w,
                   child: Center(
                     child: RotatedBox(
                       quarterTurns: 3,
@@ -256,87 +256,62 @@ class TicketPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
-    final double cutoutRadius = 12;
-    final double cutoutSpacing = 30;
+    final double cutoutRadius = 16;
 
-    // Draw left side (purple/colored side)
+    final double centerY = size.height / 2;
+
+    // Draw left side
     paint.color = sideColor;
     final leftPath = Path();
+
     leftPath.moveTo(16, 0);
     leftPath.lineTo(sideWidth, 0);
     leftPath.lineTo(sideWidth, size.height);
     leftPath.lineTo(16, size.height);
+
+    // One circle cutout at center left
+    leftPath.lineTo(16, centerY + cutoutRadius);
     leftPath.arcToPoint(
-      Offset(16, size.height - cutoutRadius * 2),
+      Offset(16, centerY - cutoutRadius),
       radius: Radius.circular(cutoutRadius),
       clockwise: false,
     );
+    leftPath.lineTo(16, 0);
 
-    // Add cutouts on the left side
-    double currentY = size.height - cutoutRadius * 2;
-    while (currentY > cutoutRadius * 2) {
-      currentY -= cutoutSpacing;
-      if (currentY > cutoutRadius * 2) {
-        leftPath.lineTo(16, currentY + cutoutRadius);
-        leftPath.arcToPoint(
-          Offset(16, currentY - cutoutRadius),
-          radius: Radius.circular(cutoutRadius),
-          clockwise: false,
-        );
-      }
-    }
-
-    leftPath.lineTo(16, cutoutRadius * 2);
-    leftPath.arcToPoint(
-      Offset(16, 0),
-      radius: Radius.circular(cutoutRadius),
-      clockwise: false,
-    );
     leftPath.close();
     canvas.drawPath(leftPath, paint);
 
-    // Draw right side (green/body color)
+// Draw right side (mirror of left)
     paint.color = bodyColor;
     final rightPath = Path();
+
     rightPath.moveTo(sideWidth, 0);
     rightPath.lineTo(size.width - 16, 0);
+    rightPath.lineTo(size.width - 16, centerY - cutoutRadius);
+
+// نفس اتجاه اليسار (clockwise: false)
     rightPath.arcToPoint(
-      Offset(size.width - 16, cutoutRadius * 2),
+      Offset(size.width - 16, centerY + cutoutRadius),
       radius: Radius.circular(cutoutRadius),
-      clockwise: true,
+      clockwise: false,
     );
 
-    // Add cutouts on the right side
-    currentY = cutoutRadius * 2;
-    while (currentY < size.height - cutoutRadius * 2) {
-      currentY += cutoutSpacing;
-      if (currentY < size.height - cutoutRadius * 2) {
-        rightPath.lineTo(size.width - 16, currentY - cutoutRadius);
-        rightPath.arcToPoint(
-          Offset(size.width - 16, currentY + cutoutRadius),
-          radius: Radius.circular(cutoutRadius),
-          clockwise: true,
-        );
-      }
-    }
-
-    rightPath.lineTo(size.width - 16, size.height - cutoutRadius * 2);
-    rightPath.arcToPoint(
-      Offset(size.width - 16, size.height),
-      radius: Radius.circular(cutoutRadius),
-      clockwise: true,
-    );
+    rightPath.lineTo(size.width - 16, size.height);
     rightPath.lineTo(sideWidth, size.height);
+
     rightPath.close();
     canvas.drawPath(rightPath, paint);
 
-    // Draw shadow
+
+    // Shadow
     final shadowPaint = Paint()
       ..color = Colors.black.withOpacity(0.1)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+
     canvas.drawPath(leftPath, shadowPaint);
     canvas.drawPath(rightPath, shadowPaint);
   }
+
 
   @override
   bool shouldRepaint(TicketPainter oldDelegate) => false;
