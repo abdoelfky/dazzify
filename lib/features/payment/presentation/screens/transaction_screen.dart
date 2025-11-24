@@ -50,20 +50,23 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 50.0),
+                padding:  EdgeInsets.only(top: 50.0).h,
                 child: DazzifyAppBar(
                   isLeading: true,
                   title: context.tr.transaction,
                 ),
               ),
               const Spacer(),
-              IconButton(
-                onPressed: () async {
-                  onTapFilter();
-                },
-                icon: Icon(
-                  SolarIconsOutline.sort,
-                  size: 24.r,
+              Padding(
+                padding:  EdgeInsets.only(top: 50.0).h,
+                child: IconButton(
+                  onPressed: () async {
+                    onTapFilter();
+                  },
+                  icon: Icon(
+                    SolarIconsOutline.sort,
+                    size: 24.r,
+                  ),
                 ),
               ),
             ],

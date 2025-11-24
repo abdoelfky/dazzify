@@ -121,10 +121,9 @@ class AppRouter extends RootStackRouter {
                   children: [
                     AutoRoute(page: HomeRoute.page, initial: true),
                     AutoRoute(page: MyFavoriteRoute.page),
-                    CustomRoute(
+                    AutoRoute(
                       page: BookingStatusRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
+
                     ),
                     AutoRoute(page: CategoryRoute.page),
                     AutoRoute(page: PopularBrandsRoute.page),
@@ -183,15 +182,13 @@ class AppRouter extends RootStackRouter {
                     AutoRoute(
                       page: TieredCouponDetailsRoute.page,
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: BookingsHistoryRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
+
                     ),
-                    CustomRoute(
+                    AutoRoute(
                       page: BookingStatusRoute.page,
-                      transitionsBuilder: TransitionsBuilders.fadeIn,
-                      durationInMilliseconds: 300,
+
                     ),
                     AutoRoute(
                       page: IssueRoutes.page,

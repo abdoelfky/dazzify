@@ -65,86 +65,88 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 50.0),
-          child: DazzifyAppBar(
-            isLeading: true,
-            title: context.tr.bookingsHistory,
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: DazzifyAppBar(
+              isLeading: true,
+              title: context.tr.bookingsHistory,
+            ),
           ),
-        ),
-        Expanded(
-          child: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
-            builder: (context, state) {
-              switch (state.bookingsHistoryState) {
-                case UiState.initial:
-                case UiState.loading:
-                  return const LoadingAnimation();
-                case UiState.failure:
-                  return ErrorDataWidget(
-                      errorDataType: DazzifyErrorDataType.screen,
-                      message: state.errorMessage,
-                      onTap: () {
-                        _bookingHistoryBloc
-                            .add(const GetBookingHistoryEvent());
-                      });
-                case UiState.success:
-                  if (state.bookingsHistory.isEmpty) {
-                    return EmptyDataWidget(
-                      message: context.tr.noBookingsYet,
-                    );
-                  } else {
-                    return ListView.separated(
-                      controller: _controller,
-                      itemCount: state.bookingsHistory.length + 1,
-                      padding: const EdgeInsets.only(
-                        top: 24,
-                        bottom: 16,
-                        right: 16,
-                        left: 16,
-                      ).r,
-                      itemBuilder: (context, index) {
-                        if (index >= state.bookingsHistory.length) {
-                          if (state.hasReachedMax) {
-                            return const SizedBox.shrink();
+          Expanded(
+            child: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
+              builder: (context, state) {
+                switch (state.bookingsHistoryState) {
+                  case UiState.initial:
+                  case UiState.loading:
+                    return const LoadingAnimation();
+                  case UiState.failure:
+                    return ErrorDataWidget(
+                        errorDataType: DazzifyErrorDataType.screen,
+                        message: state.errorMessage,
+                        onTap: () {
+                          _bookingHistoryBloc
+                              .add(const GetBookingHistoryEvent());
+                        });
+                  case UiState.success:
+                    if (state.bookingsHistory.isEmpty) {
+                      return EmptyDataWidget(
+                        message: context.tr.noBookingsYet,
+                      );
+                    } else {
+                      return ListView.separated(
+                        controller: _controller,
+                        itemCount: state.bookingsHistory.length + 1,
+                        padding: const EdgeInsets.only(
+                          top: 24,
+                          bottom: 16,
+                          right: 16,
+                          left: 16,
+                        ).r,
+                        itemBuilder: (context, index) {
+                          if (index >= state.bookingsHistory.length) {
+                            if (state.hasReachedMax) {
+                              return const SizedBox.shrink();
+                            } else {
+                              return SizedBox(
+                                height: 30.h,
+                                width: context.screenWidth,
+                                child: const LoadingAnimation(),
+                              );
+                            }
                           } else {
-                            return SizedBox(
-                              height: 30.h,
-                              width: context.screenWidth,
-                              child: const LoadingAnimation(),
+                            final booking = state.bookingsHistory[index];
+                            return GestureDetector(
+                              onTap: () {
+                                context.pushRoute(
+                                  BookingStatusRoute(bookingId: booking.id),
+                                );
+                              },
+                              child: BookingCard(
+                                services: booking.services,
+                                imageUrl: booking.services.first.image,
+                                title: booking.services.first.title,
+                                price: booking.services.first.price,
+                                startTime: booking.startTime,
+                              ),
                             );
                           }
-                        } else {
-                          final booking = state.bookingsHistory[index];
-                          return GestureDetector(
-                            onTap: () {
-                              context.pushRoute(
-                                BookingStatusRoute(bookingId: booking.id),
-                              );
-                            },
-                            child: BookingCard(
-                              services: booking.services,
-                              imageUrl: booking.services.first.image,
-                              title: booking.services.first.title,
-                              price: booking.services.first.price,
-                              startTime: booking.startTime,
-                            ),
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 16.h,
                           );
-                        }
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 16.h,
-                        );
-                      },
-                    );
-                  }
-              }
-            },
+                        },
+                      );
+                    }
+                }
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

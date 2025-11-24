@@ -45,146 +45,150 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DazzifySheetBody(
-      height: context.isKeyboardClosed
-          ? context.screenHeight * 0.85
-          : context.screenHeight,
-      title: context.tr.writeReview,
-      textStyle: context.textTheme.titleLarge,
-      enableBottomInsets: true,
-      children: [
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
-                child: Column(
-                  children: [
-                    SizedBox(height: 28.h),
-                    serviceInfo(context, bookingCubit),
-                    SizedBox(height: 28.h),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 24,
-                      ).r,
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(360).r,
-                            child: DazzifyCachedNetworkImage(
-                              imageUrl: _profileCubit.state.userModel.picture ?? "",
-                              fit: BoxFit.cover,
-                              placeHolder: AssetsManager.avatar,
-
-                              height: 40.h,
-                              width: 40.w,
-                            ),
-                          ),
-                          SizedBox(width: 16.w),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              DText(
-                                _profileCubit.state.userModel.fullName,
-                                style: context.textTheme.bodyMedium,
-                              ),
-                              SizedBox(height: 4.h),
-                              SizedBox(
-                                width: 220.w,
-                                child: DText(
-                                  context.tr.reviewConditions,
-                                  style:
-                                  context.textTheme.bodySmall!.copyWith(
-                                    color:
-                                    context.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24).r,
-                      child: Center(
-                        child: CustomRatingBar(
-                          initialRating: 0,
-                          onRatingUpdate: (value) {
-                            rating = value;
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Form(
-                key: formKey,
-                child: Padding(
+    return SafeArea(
+      child: DazzifySheetBody(
+        height: context.isKeyboardClosed
+            ? context.screenHeight * 0.85
+            : context.screenHeight,
+        title: context.tr.writeReview,
+        textStyle: context.textTheme.titleLarge,
+        enableBottomInsets: true,
+        children: [
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
                   child: Column(
                     children: [
+                      SizedBox(height: 20.h),
+                      serviceInfo(context, bookingCubit),
+                      SizedBox(height: 20.h),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 8,
+                        padding:  EdgeInsets.symmetric(
+                          vertical: 4.h,
+                          horizontal: 24,
                         ).r,
-                        child: DazzifyMultilineTextField(
-                          maxLength: 200,
-                          controller: _reviewController,
-                          hintText: context.tr.reviewComment,
-                          validator: (value) {
-                            return ValidationManager.hasData(
-                              data: _reviewController.text,
-                              errorMessage: context.tr.textIsTooShort,
-                            );
-                          },
-                          onSaved: (value) {
-                            if (value != null) {
-                              _reviewController.text = value;
-                            }
-                          },
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(360).r,
+                              child: DazzifyCachedNetworkImage(
+                                imageUrl: _profileCubit.state.userModel.picture ?? "",
+                                fit: BoxFit.cover,
+                                placeHolder: AssetsManager.avatar,
+      
+                                height: 40.h,
+                                width: 40.w,
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                DText(
+                                  _profileCubit.state.userModel.fullName,
+                                  style: context.textTheme.bodyMedium,
+                                ),
+                                SizedBox(height: 4.h),
+                                SizedBox(
+                                  width: 220.w,
+                                  child: DText(
+                                    context.tr.reviewConditions,
+                                    style:
+                                    context.textTheme.bodySmall!.copyWith(
+                                      color:
+                                      context.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 62.h),
-                      BlocListener<BookingCubit, BookingState>(
-                        listener: (context, state) {
-                          if (state.createReviewState == UiState.loading) {
-                            isLoading = true;
-                          } else if (state.createReviewState == UiState.success) {
-                            isLoading = false;
-                            context.maybePop();
-                            DazzifyToastBar.showSuccess(
-                              message: context.tr.reviewCreated,
-                            );
-                          } else {
-                            isLoading = false;
-                          }
-                        },
-                        child: PrimaryButton(
-                          isLoading: isLoading,
-                          onTap: () {
-                            if (formKey.currentState!.validate()) {
-                              bookingCubit.createReview(
-                                comment: _reviewController.text,
-                                rate: rating,
-                              );
-                            }
-                          },
-                          title: context.tr.createReview,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16).r,
+                        child: Center(
+                          child: CustomRatingBar(
+                            initialRating: 0,
+                            onRatingUpdate: (value) {
+                              rating = value;
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Form(
+                  key: formKey,
+
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
+                    child: Column(
+
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            // vertical: 12,
+                            horizontal: 8,
+                          ).r,
+                          child: DazzifyMultilineTextField(
+                            maxLength: 200,
+                            controller: _reviewController,
+                            hintText: context.tr.reviewComment,
+                            validator: (value) {
+                              return ValidationManager.hasData(
+                                data: _reviewController.text,
+                                errorMessage: context.tr.textIsTooShort,
+                              );
+                            },
+                            onSaved: (value) {
+                              if (value != null) {
+                                _reviewController.text = value;
+                              }
+                            },
+                          ),
+                        ),
+                        // SizedBox(height: 62.h),
+                        BlocListener<BookingCubit, BookingState>(
+                          listener: (context, state) {
+                            if (state.createReviewState == UiState.loading) {
+                              isLoading = true;
+                            } else if (state.createReviewState == UiState.success) {
+                              isLoading = false;
+                              context.maybePop();
+                              DazzifyToastBar.showSuccess(
+                                message: context.tr.reviewCreated,
+                              );
+                            } else {
+                              isLoading = false;
+                            }
+                          },
+                          child: PrimaryButton(
+                            isLoading: isLoading,
+                            onTap: () {
+                              if (formKey.currentState!.validate()) {
+                                bookingCubit.createReview(
+                                  comment: _reviewController.text,
+                                  rate: rating,
+                                );
+                              }
+                            },
+                            title: context.tr.createReview,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

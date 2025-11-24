@@ -62,257 +62,259 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
       },
       child: SafeArea(
         top: false,
-        child: BlocConsumer<BookingCubit, BookingState>(
-          listener: (context, state) {
-            if (state.cancelBookingState == UiState.loading) {
-              isLoading = true;
-            } else {
-              isLoading = false;
-            }
-          },
-          builder: (context, state) {
-            switch (state.singleBookingState) {
-              case UiState.initial:
-              case UiState.loading:
-                return const LoadingAnimation();
-              case UiState.failure:
-                return ErrorDataWidget(
-                    errorDataType: DazzifyErrorDataType.screen,
-                    message: state.errorMessage,
-                    onTap: () {
-                      bookingCubit.getSingleBooking(widget.bookingId);
-                    });
-              case UiState.success:
-                bookingStatus = getBookingStatus(state.singleBooking.status);
-                final startTime =
-                    DateTime.parse(state.singleBooking.startTime).toLocal();
-                TransactionType? transactionType;
-                final now = DateTime.now();
-                if (state.singleBooking.payments.isNotEmpty) {
-                  transactionType = getTransactionType(
-                      state.singleBooking.payments.first.type);
-                }
-                return DazzifyOverlayLoading(
-                  isLoading: isLoading,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 60.0),
-                        child: BookingStatusHeaderComponent(
-                          startTime: state.singleBooking.startTime,
-                          refundConditions:
-                              state.singleBooking.brand.refundConditions,
-                          isBookingFinished: state.singleBooking.isFinished,
-                          isArrived: state.singleBooking.isArrived &&
-                              state.singleBooking.isInBranch,
-                          isRate: state.singleBooking.isRate,
-                          status: bookingStatus,
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomFadeAnimation(
-                          duration: const Duration(milliseconds: 500),
-                          child: ListView(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16).r,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16.0)
-                                        .r,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length >
-                                        1)
-                                      SizedBox(
-                                        height: 140.h,
-                                        child: PageView.builder(
-                                          controller: _pageController,
-                                          scrollDirection: Axis.horizontal,
-                                          physics:
-                                              const BouncingScrollPhysics(),
-                                          itemCount: bookingCubit.state
-                                              .singleBooking.services.length,
-                                          onPageChanged: (index) {
-                                            setState(() {
-                                              _currentPageIndex = index;
-                                            });
-                                          },
-                                          itemBuilder: (context, index) =>
-                                              MultiBookingWidget(
-                                            service: bookingCubit.state
-                                                .singleBooking.services[index],
-                                            booking: bookingCubit,
-                                          ),
-                                        ),
-                                      ),
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length >
-                                        1)
-                                      Center(
-                                        child: SmoothPageIndicator(
-                                          controller: _pageController,
-                                          count: bookingCubit.state
-                                              .singleBooking.services.length,
-                                          effect: ScrollingDotsEffect(
-                                            activeDotColor:
-                                                context.colorScheme.primary,
-                                            dotColor: Colors.grey,
-                                            dotHeight: 4.0.h,
-                                            dotWidth: 20.0.h,
-                                            spacing: 8.0.w,
-                                          ),
-                                        ),
-                                      ),
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length ==
-                                        1)
-                                      serviceInfo(context, bookingCubit),
-                                    SizedBox(height: 16.h),
-                                    bookingInfo(
-                                        bookingCubit, _currentPageIndex),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                              vertical: 16.0)
-                                          .r,
-                                      child: const Divider(),
-                                    ),
-                                    priceInfo(
-                                        context,
-                                        bookingCubit,
-                                        bookingCubit.state.singleBooking
-                                            .services.length),
-                                    SizedBox(height: 35.h),
-                                    if (state.singleBooking.payments.isNotEmpty &&
-                                        bookingStatus != BookingStatus.cancelled)                                      Container(
-                                        padding: EdgeInsetsGeometry.symmetric(
-                                            vertical: 10.h, horizontal: 10.w),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            color:
-                                                context.colorScheme.onTertiary),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.data_usage_outlined,
-                                                      color: context
-                                                          .colorScheme.primary,
-                                                      size: 16.r,
-                                                    ),
-                                                    SizedBox(width: 8.w),
-                                                    DText(
-                                                      transactionType!.name,
-                                                      style: context
-                                                          .textTheme.bodyMedium,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 10.h),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  flex: 9,
-                                                  child: TransactionBar(
-                                                    transaction: TransactionModel(
-                                                        id: state
-                                                            .singleBooking
-                                                            .payments
-                                                            .first
-                                                            .transactionId,
-                                                        bookingId: state
-                                                            .singleBooking.id,
-                                                        status: "not paid",
-                                                        amount: state
-                                                            .singleBooking
-                                                            .payments
-                                                            .first
-                                                            .amount,
-                                                        refundAmount: 0,
-                                                        expiredAt: state
-                                                            .singleBooking
-                                                            .payments
-                                                            .first
-                                                            .expAt,
-                                                        createdAt: state
-                                                            .singleBooking
-                                                            .payments
-                                                            .first
-                                                            .createdAt,
-                                                        type: state
-                                                            .singleBooking
-                                                            .payments
-                                                            .first
-                                                            .type,
-                                                        services: []),
-                                                    onTimerFinish: () {
-                                                      bookingCubit
-                                                          .getSingleBooking(
-                                                              widget.bookingId);
-                                                    },
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 4,
-                                                  child: TransactionButton(
-                                                    status: "not paid",
-                                                    serviceName: state
-                                                        .singleBooking
-                                                        .services[0]
-                                                        .title,
-                                                    transactionId: state
-                                                        .singleBooking
-                                                        .payments
-                                                        .first
-                                                        .transactionId,
-                                                    amount: state.singleBooking
-                                                        .payments.first.amount,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    DText(
-                                      context.tr.readyForService,
-                                      style: context.textTheme.titleMedium,
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    SwipeButtonComponent(
-                                      status: bookingStatus,
-                                      isFinished:
-                                          state.singleBooking.isFinished,
-                                      isArrived: state.singleBooking.isArrived,
-                                      startTime: state.singleBooking.startTime,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+        child: Scaffold(
+          body: BlocConsumer<BookingCubit, BookingState>(
+            listener: (context, state) {
+              if (state.cancelBookingState == UiState.loading) {
+                isLoading = true;
+              } else {
+                isLoading = false;
+              }
+            },
+            builder: (context, state) {
+              switch (state.singleBookingState) {
+                case UiState.initial:
+                case UiState.loading:
+                  return const LoadingAnimation();
+                case UiState.failure:
+                  return ErrorDataWidget(
+                      errorDataType: DazzifyErrorDataType.screen,
+                      message: state.errorMessage,
+                      onTap: () {
+                        bookingCubit.getSingleBooking(widget.bookingId);
+                      });
+                case UiState.success:
+                  bookingStatus = getBookingStatus(state.singleBooking.status);
+                  final startTime =
+                      DateTime.parse(state.singleBooking.startTime).toLocal();
+                  TransactionType? transactionType;
+                  final now = DateTime.now();
+                  if (state.singleBooking.payments.isNotEmpty) {
+                    transactionType = getTransactionType(
+                        state.singleBooking.payments.first.type);
+                  }
+                  return DazzifyOverlayLoading(
+                    isLoading: isLoading,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 60.0),
+                          child: BookingStatusHeaderComponent(
+                            startTime: state.singleBooking.startTime,
+                            refundConditions:
+                                state.singleBooking.brand.refundConditions,
+                            isBookingFinished: state.singleBooking.isFinished,
+                            isArrived: state.singleBooking.isArrived &&
+                                state.singleBooking.isInBranch,
+                            isRate: state.singleBooking.isRate,
+                            status: bookingStatus,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-            }
-          },
+                        Expanded(
+                          child: CustomFadeAnimation(
+                            duration: const Duration(milliseconds: 500),
+                            child: ListView(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16).r,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16.0)
+                                          .r,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (bookingCubit.state.singleBooking
+                                              .services.length >
+                                          1)
+                                        SizedBox(
+                                          height: 140.h,
+                                          child: PageView.builder(
+                                            controller: _pageController,
+                                            scrollDirection: Axis.horizontal,
+                                            physics:
+                                                const BouncingScrollPhysics(),
+                                            itemCount: bookingCubit.state
+                                                .singleBooking.services.length,
+                                            onPageChanged: (index) {
+                                              setState(() {
+                                                _currentPageIndex = index;
+                                              });
+                                            },
+                                            itemBuilder: (context, index) =>
+                                                MultiBookingWidget(
+                                              service: bookingCubit.state
+                                                  .singleBooking.services[index],
+                                              booking: bookingCubit,
+                                            ),
+                                          ),
+                                        ),
+                                      if (bookingCubit.state.singleBooking
+                                              .services.length >
+                                          1)
+                                        Center(
+                                          child: SmoothPageIndicator(
+                                            controller: _pageController,
+                                            count: bookingCubit.state
+                                                .singleBooking.services.length,
+                                            effect: ScrollingDotsEffect(
+                                              activeDotColor:
+                                                  context.colorScheme.primary,
+                                              dotColor: Colors.grey,
+                                              dotHeight: 4.0.h,
+                                              dotWidth: 20.0.h,
+                                              spacing: 8.0.w,
+                                            ),
+                                          ),
+                                        ),
+                                      if (bookingCubit.state.singleBooking
+                                              .services.length ==
+                                          1)
+                                        serviceInfo(context, bookingCubit),
+                                      SizedBox(height: 16.h),
+                                      bookingInfo(
+                                          bookingCubit, _currentPageIndex),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                                vertical: 16.0)
+                                            .r,
+                                        child: const Divider(),
+                                      ),
+                                      priceInfo(
+                                          context,
+                                          bookingCubit,
+                                          bookingCubit.state.singleBooking
+                                              .services.length),
+                                      SizedBox(height: 35.h),
+                                      if (state.singleBooking.payments.isNotEmpty &&
+                                          bookingStatus != BookingStatus.cancelled)                                      Container(
+                                          padding: EdgeInsetsGeometry.symmetric(
+                                              vertical: 10.h, horizontal: 10.w),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color:
+                                                  context.colorScheme.onTertiary),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.data_usage_outlined,
+                                                        color: context
+                                                            .colorScheme.primary,
+                                                        size: 16.r,
+                                                      ),
+                                                      SizedBox(width: 8.w),
+                                                      DText(
+                                                        transactionType!.name,
+                                                        style: context
+                                                            .textTheme.bodyMedium,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10.h),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 9,
+                                                    child: TransactionBar(
+                                                      transaction: TransactionModel(
+                                                          id: state
+                                                              .singleBooking
+                                                              .payments
+                                                              .first
+                                                              .transactionId,
+                                                          bookingId: state
+                                                              .singleBooking.id,
+                                                          status: "not paid",
+                                                          amount: state
+                                                              .singleBooking
+                                                              .payments
+                                                              .first
+                                                              .amount,
+                                                          refundAmount: 0,
+                                                          expiredAt: state
+                                                              .singleBooking
+                                                              .payments
+                                                              .first
+                                                              .expAt,
+                                                          createdAt: state
+                                                              .singleBooking
+                                                              .payments
+                                                              .first
+                                                              .createdAt,
+                                                          type: state
+                                                              .singleBooking
+                                                              .payments
+                                                              .first
+                                                              .type,
+                                                          services: []),
+                                                      onTimerFinish: () {
+                                                        bookingCubit
+                                                            .getSingleBooking(
+                                                                widget.bookingId);
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: TransactionButton(
+                                                      status: "not paid",
+                                                      serviceName: state
+                                                          .singleBooking
+                                                          .services[0]
+                                                          .title,
+                                                      transactionId: state
+                                                          .singleBooking
+                                                          .payments
+                                                          .first
+                                                          .transactionId,
+                                                      amount: state.singleBooking
+                                                          .payments.first.amount,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      DText(
+                                        context.tr.readyForService,
+                                        style: context.textTheme.titleMedium,
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      SwipeButtonComponent(
+                                        status: bookingStatus,
+                                        isFinished:
+                                            state.singleBooking.isFinished,
+                                        isArrived: state.singleBooking.isArrived,
+                                        startTime: state.singleBooking.startTime,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -450,8 +452,12 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
   final priceInfo = booking.state.singleBooking;
   final deliveryRange = priceInfo.deliveryFeesRange;
   final hasDeliveryFees = priceInfo.deliveryFees != null;
-
-  final hasFees = priceInfo.fees != null||(AppConfigManager.appFeesMax==0&&AppConfigManager.appFeesMax==0&&AppConfigManager.appFeesMax==0);
+  final bool hasFees = (AppConfigManager.appFeesMax != 0 &&
+      AppConfigManager.appFeesMin != 0 &&
+      AppConfigManager.appFeesPercentage != 0);
+  final appFees = hasFees
+      ? priceInfo.fees
+      : 0.0;
   final hasTotalPrice = priceInfo.totalPrice != null;
 
   return Column(
@@ -491,8 +497,8 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       // App Fees - Show value if available, otherwise show "will be calculated"
       PriceInfoItem(
         title: DazzifyApp.tr.appFees,
-        price: hasFees
-            ? "${priceInfo.fees} ${DazzifyApp.tr.egp}"
+        price: !hasFees
+            ? "$appFees ${DazzifyApp.tr.egp}"
             : DazzifyApp.tr.willBeCalculated,
       ),
       SizedBox(height: 16.h),

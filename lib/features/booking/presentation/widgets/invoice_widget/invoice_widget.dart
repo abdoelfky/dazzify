@@ -11,9 +11,9 @@ class InvoiceWidget extends StatelessWidget {
   final TextEditingController textContorller;
   final List<ServiceDetailsModel> services;
   final ServiceDetailsModel service;
-  final hasFees = (AppConfigManager.appFeesMax == 0 &&
-      AppConfigManager.appFeesMax == 0 &&
-      AppConfigManager.appFeesMax == 0);
+  final bool hasFees = (AppConfigManager.appFeesMax != 0 &&
+      AppConfigManager.appFeesMin != 0 &&
+      AppConfigManager.appFeesPercentage != 0);
 
   InvoiceWidget({
     super.key,
@@ -94,12 +94,15 @@ class InvoiceWidget extends StatelessWidget {
             if (isRangeType) ...[
               _buildRangeTransportationLine(context, state),
             ],
-            if (hasFees)
+            if (isRangeType)
+            SizedBox(height: 12.h),
+
+            if (!hasFees)
               InvoiceLine(
                 title: context.tr.appFees,
                 amount: double.parse(appFees.toStringAsFixed(2)),
               ),
-            if (!hasFees) _buildPendingAppFeesLine(context),
+            if (hasFees) _buildPendingAppFeesLine(context),
             DottedLine(
               lineWidth: context.screenWidth,
               lineColor: context.colorScheme.onSurface,
@@ -181,7 +184,7 @@ class InvoiceWidget extends StatelessWidget {
                 style: context.textTheme.titleMedium,
               ),
               SizedBox(height: 4.h),
-              if (!hasFees)
+              if (hasFees)
                 DText(
                   context.tr.plusTransportationAndFees,
                   style: context.textTheme.bodySmall!.copyWith(
@@ -189,7 +192,7 @@ class InvoiceWidget extends StatelessWidget {
                     fontStyle: FontStyle.italic,
                   ),
                 ),
-              if (hasFees)
+              if (!hasFees)
                 DText(
                   context.tr.plusTransportation,
                   style: context.textTheme.bodySmall!.copyWith(
