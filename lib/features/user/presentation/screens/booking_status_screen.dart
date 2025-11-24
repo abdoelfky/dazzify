@@ -185,7 +185,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                         bookingCubit.state.singleBooking
                                             .services.length),
                                     SizedBox(height: 35.h),
-                                    if (state.singleBooking.payments.isNotEmpty)
+                                    if (state.singleBooking.payments.isNotEmpty &&
+                                        bookingStatus != BookingStatus.cancelled)
                                       Container(
                                         padding: EdgeInsetsGeometry.symmetric(
                                             vertical: 10.h, horizontal: 10.w),
