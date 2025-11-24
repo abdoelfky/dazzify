@@ -127,7 +127,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                             .services.length >
                                         1)
                                       SizedBox(
-                                        height: 140,
+                                        height: 140.h,
                                         child: PageView.builder(
                                           controller: _pageController,
                                           scrollDirection: Axis.horizontal,
@@ -185,8 +185,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                         bookingCubit.state.singleBooking
                                             .services.length),
                                     SizedBox(height: 35.h),
-                                    if (state.singleBooking.payments.isNotEmpty)
-                                      Container(
+                                    if (state.singleBooking.payments.isNotEmpty &&
+                                        bookingStatus != BookingStatus.cancelled)                                      Container(
                                         padding: EdgeInsetsGeometry.symmetric(
                                             vertical: 10.h, horizontal: 10.w),
                                         decoration: BoxDecoration(

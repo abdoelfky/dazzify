@@ -98,8 +98,10 @@ class MultiBookingWidget extends StatelessWidget {
                     SizedBox(
                       height: 8.h,
                     ),
-                    Text(
+                    DText(
                       service.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       style: context.textTheme.bodySmall!.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
