@@ -38,7 +38,12 @@ class BookingCubit extends Cubit<BookingState> {
   }
 
   Future<void> getSingleBooking(String bookingId) async {
-    emit(state.copyWith(singleBookingState: UiState.loading));
+    emit(state.copyWith(
+      singleBookingState: UiState.loading,
+      // Clear previous error states when fetching new data
+      errorMessage: "",
+      userArrivedState: UiState.initial,
+    ));
 
     final Either<Failure, SingleBookingModel> result =
         await _bookingRepository.getSingleBooking(
