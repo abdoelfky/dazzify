@@ -126,45 +126,47 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                     if (bookingCubit.state.singleBooking
                                             .services.length >
                                         1)
-                                      SizedBox(
-                                        height: 140,
-                                        child: PageView.builder(
-                                          controller: _pageController,
-                                          scrollDirection: Axis.horizontal,
-                                          physics:
-                                              const BouncingScrollPhysics(),
-                                          itemCount: bookingCubit.state
-                                              .singleBooking.services.length,
-                                          onPageChanged: (index) {
-                                            setState(() {
-                                              _currentPageIndex = index;
-                                            });
-                                          },
-                                          itemBuilder: (context, index) =>
-                                              MultiBookingWidget(
-                                            service: bookingCubit.state
-                                                .singleBooking.services[index],
-                                            booking: bookingCubit,
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 120.h,
+                                            child: PageView.builder(
+                                              controller: _pageController,
+                                              scrollDirection: Axis.horizontal,
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              itemCount: bookingCubit.state
+                                                  .singleBooking.services.length,
+                                              onPageChanged: (index) {
+                                                setState(() {
+                                                  _currentPageIndex = index;
+                                                });
+                                              },
+                                              itemBuilder: (context, index) =>
+                                                  MultiBookingWidget(
+                                                service: bookingCubit.state
+                                                    .singleBooking.services[index],
+                                                booking: bookingCubit,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    if (bookingCubit.state.singleBooking
-                                            .services.length >
-                                        1)
-                                      Center(
-                                        child: SmoothPageIndicator(
-                                          controller: _pageController,
-                                          count: bookingCubit.state
-                                              .singleBooking.services.length,
-                                          effect: ScrollingDotsEffect(
-                                            activeDotColor:
-                                                context.colorScheme.primary,
-                                            dotColor: Colors.grey,
-                                            dotHeight: 4.0.h,
-                                            dotWidth: 20.0.h,
-                                            spacing: 8.0.w,
+                                          SizedBox(height: 8.h),
+                                          Center(
+                                            child: SmoothPageIndicator(
+                                              controller: _pageController,
+                                              count: bookingCubit.state
+                                                  .singleBooking.services.length,
+                                              effect: ScrollingDotsEffect(
+                                                activeDotColor:
+                                                    context.colorScheme.primary,
+                                                dotColor: Colors.grey,
+                                                dotHeight: 4.0.h,
+                                                dotWidth: 20.0.h,
+                                                spacing: 8.0.w,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     if (bookingCubit.state.singleBooking
                                             .services.length ==
@@ -185,7 +187,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                         bookingCubit.state.singleBooking
                                             .services.length),
                                     SizedBox(height: 35.h),
-                                    if (state.singleBooking.payments.isNotEmpty)
+                                    if (state.singleBooking.payments.isNotEmpty &&
+                                        bookingStatus != BookingStatus.cancelled)
                                       Container(
                                         padding: EdgeInsetsGeometry.symmetric(
                                             vertical: 10.h, horizontal: 10.w),
