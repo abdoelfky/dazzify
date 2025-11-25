@@ -32,12 +32,14 @@ class TieredCouponCard extends StatelessWidget {
     final bodyColor = _parseColor(coupon.color?.bodyBackground ?? '#3FD6A6');
     final bool shouldShowScratch = !coupon.opened && !coupon.locked;
     final bool shouldShowBlur = coupon.locked && !coupon.opened;
+    final bool isRTL = Directionality.of(context) == TextDirection.rtl;
 
     return CustomPaint(
       painter: TicketPainter(
         sideColor: sideColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
         bodyColor: bodyColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
         sideWidth: 60.w,
+        isRTL: isRTL,
       ),
       child: Container(
         height: 140.h,
@@ -46,13 +48,14 @@ class TieredCouponCard extends StatelessWidget {
         child: Stack(
           children: [
             Row(
+              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 // Side bar with "Discount" text
                 SizedBox(
                   width: 55.w,
                   child: Center(
                     child: RotatedBox(
-                      quarterTurns: 3,
+                      quarterTurns: isRTL ? 1 : 3,
                       child: Text(
                         context.tr.discount,
                         style: context.textTheme.titleSmall?.copyWith(
@@ -254,11 +257,13 @@ class TicketPainter extends CustomPainter {
   final Color sideColor;
   final Color bodyColor;
   final double sideWidth;
+  final bool isRTL;
 
   TicketPainter({
     required this.sideColor,
     required this.bodyColor,
     required this.sideWidth,
+    required this.isRTL,
   });
 
   @override
@@ -277,48 +282,95 @@ class TicketPainter extends CustomPainter {
     );
     canvas.clipRRect(rounded);
 
-    // ----------- LEFT SIDE -----------
-    paint.color = sideColor;
-    final leftPath = Path()
-      ..moveTo(16, 0)
-      ..lineTo(sideWidth, 0)
-      ..lineTo(sideWidth, size.height)
-      ..lineTo(16, size.height)
-      ..lineTo(16, centerY + cutoutRadius)
-      ..arcToPoint(
-        Offset(16, centerY - cutoutRadius),
-        radius: Radius.circular(cutoutRadius),
-        clockwise: false,
-      )
-      ..lineTo(16, 0)
-      ..close();
+    if (isRTL) {
+      // RTL Layout - Sidebar on the RIGHT
+      // ----------- RIGHT SIDE (Sidebar) -----------
+      paint.color = sideColor;
+      final rightSidePath = Path()
+        ..moveTo(size.width - sideWidth, 0)
+        ..lineTo(size.width - 16, 0)
+        ..lineTo(size.width - 16, centerY - cutoutRadius)
+        ..arcToPoint(
+          Offset(size.width - 16, centerY + cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(size.width - 16, size.height)
+        ..lineTo(size.width - sideWidth, size.height)
+        ..close();
 
-    canvas.drawPath(leftPath, paint);
+      canvas.drawPath(rightSidePath, paint);
 
-    // ----------- RIGHT SIDE -----------
-    paint.color = bodyColor;
-    final rightPath = Path()
-      ..moveTo(sideWidth, 0)
-      ..lineTo(size.width - 16, 0)
-      ..lineTo(size.width - 16, centerY - cutoutRadius)
-      ..arcToPoint(
-        Offset(size.width - 16, centerY + cutoutRadius),
-        radius: Radius.circular(cutoutRadius),
-        clockwise: false,
-      )
-      ..lineTo(size.width - 16, size.height)
-      ..lineTo(sideWidth, size.height)
-      ..close();
+      // ----------- LEFT SIDE (Body) -----------
+      paint.color = bodyColor;
+      final leftBodyPath = Path()
+        ..moveTo(16, 0)
+        ..lineTo(size.width - sideWidth, 0)
+        ..lineTo(size.width - sideWidth, size.height)
+        ..lineTo(16, size.height)
+        ..lineTo(16, centerY + cutoutRadius)
+        ..arcToPoint(
+          Offset(16, centerY - cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(16, 0)
+        ..close();
 
-    canvas.drawPath(rightPath, paint);
+      canvas.drawPath(leftBodyPath, paint);
 
-    // ----------- Shadow -----------
-    final shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.12)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+      // ----------- Shadow -----------
+      final shadowPaint = Paint()
+        ..color = Colors.black.withOpacity(0.12)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
-    canvas.drawPath(leftPath, shadowPaint);
-    canvas.drawPath(rightPath, shadowPaint);
+      canvas.drawPath(rightSidePath, shadowPaint);
+      canvas.drawPath(leftBodyPath, shadowPaint);
+    } else {
+      // LTR Layout - Sidebar on the LEFT
+      // ----------- LEFT SIDE (Sidebar) -----------
+      paint.color = sideColor;
+      final leftPath = Path()
+        ..moveTo(16, 0)
+        ..lineTo(sideWidth, 0)
+        ..lineTo(sideWidth, size.height)
+        ..lineTo(16, size.height)
+        ..lineTo(16, centerY + cutoutRadius)
+        ..arcToPoint(
+          Offset(16, centerY - cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(16, 0)
+        ..close();
+
+      canvas.drawPath(leftPath, paint);
+
+      // ----------- RIGHT SIDE (Body) -----------
+      paint.color = bodyColor;
+      final rightPath = Path()
+        ..moveTo(sideWidth, 0)
+        ..lineTo(size.width - 16, 0)
+        ..lineTo(size.width - 16, centerY - cutoutRadius)
+        ..arcToPoint(
+          Offset(size.width - 16, centerY + cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(size.width - 16, size.height)
+        ..lineTo(sideWidth, size.height)
+        ..close();
+
+      canvas.drawPath(rightPath, paint);
+
+      // ----------- Shadow -----------
+      final shadowPaint = Paint()
+        ..color = Colors.black.withOpacity(0.12)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+      canvas.drawPath(leftPath, shadowPaint);
+      canvas.drawPath(rightPath, shadowPaint);
+    }
   }
 
   @override

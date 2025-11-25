@@ -221,23 +221,27 @@ class TieredCouponDetailsScreen extends StatelessWidget {
     TieredCouponModel currentCoupon,
     bool shouldShowScratch,
   ) {
+    final bool isRTL = Directionality.of(context) == TextDirection.rtl;
+    
     final couponCard = CustomPaint(
       painter: TicketPainter(
         sideColor: sideColor,
         bodyColor: bodyColor,
         sideWidth: 60.w,
+        isRTL: isRTL,
       ),
       child: Container(
         height: 160.h,
         padding: EdgeInsets.symmetric(horizontal: 8.w),
         child: Row(
+          textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
           children: [
             // Side bar with "Discount" text
             SizedBox(
               width: 55.w,
               child: Center(
                 child: RotatedBox(
-                  quarterTurns: 3,
+                  quarterTurns: isRTL ? 1 : 3,
                   child: Text(
                     context.tr.discount,
                     style: context.textTheme.titleSmall?.copyWith(
@@ -407,70 +411,120 @@ class TicketPainter extends CustomPainter {
   final Color sideColor;
   final Color bodyColor;
   final double sideWidth;
+  final bool isRTL;
 
   TicketPainter({
     required this.sideColor,
     required this.bodyColor,
     required this.sideWidth,
+    required this.isRTL,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
     final double cutoutRadius = 16;
-
     final double centerY = size.height / 2;
 
-    // Draw left side
-    paint.color = sideColor;
-    final leftPath = Path();
-
-    leftPath.moveTo(16, 0);
-    leftPath.lineTo(sideWidth, 0);
-    leftPath.lineTo(sideWidth, size.height);
-    leftPath.lineTo(16, size.height);
-
-    // One circle cutout at center left
-    leftPath.lineTo(16, centerY + cutoutRadius);
-    leftPath.arcToPoint(
-      Offset(16, centerY - cutoutRadius),
-      radius: Radius.circular(cutoutRadius),
-      clockwise: false,
+    // ----------- Rounded Corners Clip -----------
+    final RRect rounded = RRect.fromLTRBR(
+      0,
+      0,
+      size.width,
+      size.height,
+      Radius.circular(16),
     );
-    leftPath.lineTo(16, 0);
+    canvas.clipRRect(rounded);
 
-    leftPath.close();
-    canvas.drawPath(leftPath, paint);
+    if (isRTL) {
+      // RTL Layout - Sidebar on the RIGHT
+      // ----------- RIGHT SIDE (Sidebar) -----------
+      paint.color = sideColor;
+      final rightSidePath = Path()
+        ..moveTo(size.width - sideWidth, 0)
+        ..lineTo(size.width - 16, 0)
+        ..lineTo(size.width - 16, centerY - cutoutRadius)
+        ..arcToPoint(
+          Offset(size.width - 16, centerY + cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(size.width - 16, size.height)
+        ..lineTo(size.width - sideWidth, size.height)
+        ..close();
 
-// Draw right side (mirror of left)
-    paint.color = bodyColor;
-    final rightPath = Path();
+      canvas.drawPath(rightSidePath, paint);
 
-    rightPath.moveTo(sideWidth, 0);
-    rightPath.lineTo(size.width - 16, 0);
-    rightPath.lineTo(size.width - 16, centerY - cutoutRadius);
+      // ----------- LEFT SIDE (Body) -----------
+      paint.color = bodyColor;
+      final leftBodyPath = Path()
+        ..moveTo(16, 0)
+        ..lineTo(size.width - sideWidth, 0)
+        ..lineTo(size.width - sideWidth, size.height)
+        ..lineTo(16, size.height)
+        ..lineTo(16, centerY + cutoutRadius)
+        ..arcToPoint(
+          Offset(16, centerY - cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(16, 0)
+        ..close();
 
-// نفس اتجاه اليسار (clockwise: false)
-    rightPath.arcToPoint(
-      Offset(size.width - 16, centerY + cutoutRadius),
-      radius: Radius.circular(cutoutRadius),
-      clockwise: false,
-    );
+      canvas.drawPath(leftBodyPath, paint);
 
-    rightPath.lineTo(size.width - 16, size.height);
-    rightPath.lineTo(sideWidth, size.height);
+      // ----------- Shadow -----------
+      final shadowPaint = Paint()
+        ..color = Colors.black.withOpacity(0.1)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
 
-    rightPath.close();
-    canvas.drawPath(rightPath, paint);
+      canvas.drawPath(rightSidePath, shadowPaint);
+      canvas.drawPath(leftBodyPath, shadowPaint);
+    } else {
+      // LTR Layout - Sidebar on the LEFT
+      // ----------- LEFT SIDE (Sidebar) -----------
+      paint.color = sideColor;
+      final leftPath = Path()
+        ..moveTo(16, 0)
+        ..lineTo(sideWidth, 0)
+        ..lineTo(sideWidth, size.height)
+        ..lineTo(16, size.height)
+        ..lineTo(16, centerY + cutoutRadius)
+        ..arcToPoint(
+          Offset(16, centerY - cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(16, 0)
+        ..close();
 
+      canvas.drawPath(leftPath, paint);
 
-    // Shadow
-    final shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.1)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+      // ----------- RIGHT SIDE (Body) -----------
+      paint.color = bodyColor;
+      final rightPath = Path()
+        ..moveTo(sideWidth, 0)
+        ..lineTo(size.width - 16, 0)
+        ..lineTo(size.width - 16, centerY - cutoutRadius)
+        ..arcToPoint(
+          Offset(size.width - 16, centerY + cutoutRadius),
+          radius: Radius.circular(cutoutRadius),
+          clockwise: false,
+        )
+        ..lineTo(size.width - 16, size.height)
+        ..lineTo(sideWidth, size.height)
+        ..close();
 
-    canvas.drawPath(leftPath, shadowPaint);
-    canvas.drawPath(rightPath, shadowPaint);
+      canvas.drawPath(rightPath, paint);
+
+      // ----------- Shadow -----------
+      final shadowPaint = Paint()
+        ..color = Colors.black.withOpacity(0.1)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+
+      canvas.drawPath(leftPath, shadowPaint);
+      canvas.drawPath(rightPath, shadowPaint);
+    }
   }
 
   @override
