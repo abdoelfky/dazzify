@@ -162,7 +162,14 @@ class TieredCouponCard extends StatelessWidget {
                         //     },
                         //   )
                         // Coupon code or locked message
-
+                        if (coupon.code == null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0).h,
+                          child: Image(
+                            image: AssetImage('assets/images/scratcher.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                          if (coupon.code != null)
                           Container(
                             constraints: BoxConstraints(
