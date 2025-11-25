@@ -34,19 +34,20 @@ class TieredCouponCard extends StatelessWidget {
     final bool shouldShowBlur = coupon.locked && !coupon.opened;
     final bool isRTL = Directionality.of(context) == TextDirection.rtl;
 
-    return CustomPaint(
-      painter: TicketPainter(
-        sideColor: sideColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
-        bodyColor: bodyColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
-        sideWidth: 60.w,
-        isRTL: isRTL,
-      ),
-      child: Container(
-        height: 140.h,
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
-
-        child: Stack(
-          children: [
+    return ClipPath(
+      clipper: TicketClipper(sideWidth: 60.w),
+      child: CustomPaint(
+          painter: TicketPainter(
+            sideColor: sideColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
+            bodyColor: bodyColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
+            sideWidth: 60.w,
+            isRTL: isRTL,
+          ),
+          child: Container(
+              height: 140.h,
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: Stack(
+                children: [
             Row(
               textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
@@ -248,7 +249,7 @@ class TieredCouponCard extends StatelessWidget {
               )
           ],
         ),
-      ),
+      ) ),
     );
   }
 }
@@ -357,14 +358,13 @@ class TicketPainter extends CustomPainter {
 
     // ----------- Rounded Corners Clip -----------
     final RRect rounded = RRect.fromLTRBR(
+      16,
       0,
-      0,
-      size.width,
+      size.width -16,
       size.height,
       Radius.circular(16),
     );
     canvas.clipRRect(rounded);
-
     if (isRTL) {
       // RTL Layout - Sidebar on the RIGHT
       // ----------- RIGHT SIDE (Sidebar) -----------

@@ -383,7 +383,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  currentCoupon.code!,
+                                  currentCoupon.code??'',
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -428,9 +428,9 @@ class TicketPainter extends CustomPainter {
 
     // ----------- Rounded Corners Clip -----------
     final RRect rounded = RRect.fromLTRBR(
+      16,
       0,
-      0,
-      size.width,
+      size.width -16,
       size.height,
       Radius.circular(16),
     );

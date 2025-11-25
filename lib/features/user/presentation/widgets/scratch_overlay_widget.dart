@@ -37,7 +37,7 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
       brushSize: 40,
       threshold: 25,
       enabled: true,
-      accuracy: ScratchAccuracy.medium,
+      accuracy: ScratchAccuracy.low,
       // Use image for visual effect
       image: Image(
         image: AssetImage('assets/images/scratcher.png'),
