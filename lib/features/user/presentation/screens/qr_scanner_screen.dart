@@ -25,9 +25,23 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   bool _hasScanned = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Reset the scan flag when screen loads
+    _hasScanned = false;
+  }
+
+  @override
   void dispose() {
     cameraController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reset scan flag when returning to this screen
+    _hasScanned = false;
   }
 
   void _handleQrCode(String qrCode) {
