@@ -75,8 +75,8 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                             children: [
                               // Header section with logo and text
                               Container(
-                                // height: 37,
-                                // width: 160,
+                                height: 39,
+                                width: 160,
                                 decoration: const BoxDecoration(
                                   image: DecorationImage(
                                     image: AssetImage(

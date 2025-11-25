@@ -159,7 +159,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "continueButton": MessageLookupByLibrary.simpleMessage("Continue"),
     "conversationsAppBarTitle": MessageLookupByLibrary.simpleMessage("Chats"),
     "copyCouponCoded": MessageLookupByLibrary.simpleMessage(
-      "Copy coupon coded",
+      "Click To Copy Coupon Code",
     ),
     "countServiceSelected": m0,
     "couponCopied": MessageLookupByLibrary.simpleMessage(

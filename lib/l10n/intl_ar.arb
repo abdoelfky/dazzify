@@ -427,7 +427,7 @@
   "noCouponsAvailable": "لا توجد كوبونات متاحة",
   "retry": "إعادة المحاولة",
   "invalidQrCode": "رمز QR غير صالح",
-  "copyCouponCoded": "انسخ رمز الكوبون",
+  "copyCouponCoded": "اضغط لنسخ رمز الكوبون",
   "scratchToRedeem": "اكشط لاستخدام خصمك",
 
   "openToScratch": "افتح وامسح للحصول على كوبونك",

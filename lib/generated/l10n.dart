@@ -3158,10 +3158,10 @@ class S {
     );
   }
 
-  /// `Copy coupon coded`
+  /// `Click To Copy Coupon Code`
   String get copyCouponCoded {
     return Intl.message(
-      'Copy coupon coded',
+      'Click To Copy Coupon Code',
       name: 'copyCouponCoded',
       desc: '',
       args: [],

@@ -427,7 +427,7 @@
   "noCouponsAvailable": "No coupons available",
   "retry": "Retry",
   "invalidQrCode": "Invalid QR Code",
-  "copyCouponCoded": "Copy coupon coded",
+  "copyCouponCoded": "Click To Copy Coupon Code",
   "scratchToRedeem": "Scratch to redeem your discount",
   "openToScratch": "Open to Scratch your Coupon",
   "showServices": "Show Services"

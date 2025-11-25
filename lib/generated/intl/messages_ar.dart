@@ -152,7 +152,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversationsAppBarTitle": MessageLookupByLibrary.simpleMessage(
       "المحادثات",
     ),
-    "copyCouponCoded": MessageLookupByLibrary.simpleMessage("انسخ رمز الكوبون"),
+    "copyCouponCoded": MessageLookupByLibrary.simpleMessage(
+      "اضغط لنسخ رمز الكوبون",
+    ),
     "countServiceSelected": m0,
     "couponCopied": MessageLookupByLibrary.simpleMessage(
       "تم نسخ الكود إلى الحافظة",
