@@ -34,7 +34,7 @@ class _ScratchOverlayWidgetState extends State<ScratchOverlayWidget> {
   @override
   Widget build(BuildContext context) {
     final scratchWidget = CustomScratcher(
-      brushSize: 70,
+      brushSize: 40,
       threshold: 25,
       enabled: true,
       accuracy: ScratchAccuracy.medium,
