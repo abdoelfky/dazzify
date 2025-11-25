@@ -209,15 +209,15 @@ class TieredCouponCard extends StatelessWidget {
             // Lock overlay with blur for locked coupons
             if (shouldShowBlur)
               Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.r),
+                child: ClipPath(
+                  clipper: TicketClipper(sideWidth: 60.w),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(
                       sigmaX: 4.0,
                       sigmaY: 4.0,
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.r),
+                    child: Container(
+                      color: Colors.transparent,
                     ),
                   ),
                 ),
@@ -253,6 +253,89 @@ class TieredCouponCard extends StatelessWidget {
   }
 }
 
+class TicketClipper extends CustomClipper<Path> {
+  final double sideWidth;
+
+  TicketClipper({required this.sideWidth});
+
+  @override
+  Path getClip(Size size) {
+    final double cutoutRadius = 16;
+    final double centerY = size.height / 2;
+    final double cornerRadius = 16;
+
+    final path = Path();
+
+    // Start from top-left corner (accounting for rounded corner)
+    path.moveTo(cornerRadius, 0);
+
+    // Top edge to top-right corner
+    path.lineTo(size.width - cornerRadius, 0);
+
+    // Top-right rounded corner
+    path.arcToPoint(
+      Offset(size.width, cornerRadius),
+      radius: Radius.circular(cornerRadius),
+      clockwise: true,
+    );
+
+    // Right edge down to cutout
+    path.lineTo(size.width, centerY - cutoutRadius);
+
+    // Right side cutout (semicircle going inward)
+    path.arcToPoint(
+      Offset(size.width, centerY + cutoutRadius),
+      radius: Radius.circular(cutoutRadius),
+      clockwise: false,
+    );
+
+    // Right edge down to bottom-right corner
+    path.lineTo(size.width, size.height - cornerRadius);
+
+    // Bottom-right rounded corner
+    path.arcToPoint(
+      Offset(size.width - cornerRadius, size.height),
+      radius: Radius.circular(cornerRadius),
+      clockwise: true,
+    );
+
+    // Bottom edge to bottom-left corner
+    path.lineTo(cornerRadius, size.height);
+
+    // Bottom-left rounded corner
+    path.arcToPoint(
+      Offset(0, size.height - cornerRadius),
+      radius: Radius.circular(cornerRadius),
+      clockwise: true,
+    );
+
+    // Left edge up to cutout
+    path.lineTo(0, centerY + cutoutRadius);
+
+    // Left side cutout (semicircle going inward)
+    path.arcToPoint(
+      Offset(0, centerY - cutoutRadius),
+      radius: Radius.circular(cutoutRadius),
+      clockwise: false,
+    );
+
+    // Left edge up to top-left corner
+    path.lineTo(0, cornerRadius);
+
+    // Top-left rounded corner
+    path.arcToPoint(
+      Offset(cornerRadius, 0),
+      radius: Radius.circular(cornerRadius),
+      clockwise: true,
+    );
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(TicketClipper oldClipper) => false;
+}
 class TicketPainter extends CustomPainter {
   final Color sideColor;
   final Color bodyColor;
