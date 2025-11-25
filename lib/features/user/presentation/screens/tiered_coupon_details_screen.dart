@@ -193,6 +193,17 @@ class TieredCouponDetailsScreen extends StatelessWidget {
     Color bodyColor,
   ) {
     return BlocBuilder<TieredCouponCubit, TieredCouponState>(
+      buildWhen: (previous, current) {
+        // Rebuild when the specific coupon at couponIndex changes
+        if (couponIndex >= previous.coupons.length || 
+            couponIndex >= current.coupons.length) {
+          return true;
+        }
+        final prevCoupon = previous.coupons[couponIndex];
+        final currCoupon = current.coupons[couponIndex];
+        return prevCoupon.opened != currCoupon.opened || 
+               prevCoupon.code != currCoupon.code;
+      },
       builder: (context, state) {
         // Get the latest coupon from state instead of using the passed parameter
         final latestCoupon = couponIndex < state.coupons.length
@@ -302,6 +313,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                     // if (currentCoupon.code != null)
                     shouldShowScratch
                         ? ScratchOverlayWidget(
+                            key: ValueKey('scratch_${couponIndex}_${currentCoupon.opened}'),
                             onScratchStart: () {
                               // Fetch real code immediately when scratch starts
                               context
@@ -351,15 +363,18 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                             ),
                           )
                         : GestureDetector(
+                            key: ValueKey('code_${couponIndex}_${currentCoupon.code}'),
                             onTap: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: currentCoupon.code!));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(context.tr.couponCopied),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
+                              if (currentCoupon.code != null && currentCoupon.code!.isNotEmpty) {
+                                Clipboard.setData(
+                                    ClipboardData(text: currentCoupon.code!));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(context.tr.couponCopied),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               constraints: BoxConstraints(
@@ -383,7 +398,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  currentCoupon.code??'',
+                                  currentCoupon.code ?? '',
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,

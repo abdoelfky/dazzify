@@ -82,19 +82,22 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
         final updatedCoupons = List<TieredCouponModel>.from(state.coupons);
         final currentCoupon = updatedCoupons[index];
         
-        // Update ONLY the code, keep opened=false so scratch continues
-        final updatedCoupon = TieredCouponModel(
-          code: coupon.code,
-          opened: false, // Keep as not opened yet
-          locked: currentCoupon.locked,
-          levelNumber: currentCoupon.levelNumber,
-          discountPercentage: currentCoupon.discountPercentage,
-          color: currentCoupon.color,
-          instructions: currentCoupon.instructions,
-        );
-        
-        updatedCoupons[index] = updatedCoupon;
-        emit(state.copyWith(coupons: updatedCoupons));
+        // Only update if not already opened (prevent race condition)
+        if (!currentCoupon.opened) {
+          // Update ONLY the code, keep opened=false so scratch continues
+          final updatedCoupon = TieredCouponModel(
+            code: coupon.code,
+            opened: false, // Keep as not opened yet
+            locked: currentCoupon.locked,
+            levelNumber: currentCoupon.levelNumber,
+            discountPercentage: currentCoupon.discountPercentage,
+            color: currentCoupon.color,
+            instructions: currentCoupon.instructions,
+          );
+          
+          updatedCoupons[index] = updatedCoupon;
+          emit(state.copyWith(coupons: updatedCoupons));
+        }
         
         // Fetch updated rewards list in background (don't wait for it)
         _refreshRewardsInBackground();
@@ -107,19 +110,23 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
     final updatedCoupons = List<TieredCouponModel>.from(state.coupons);
     final coupon = updatedCoupons[index];
     
-    // Mark as opened - the code is already there from fetchCouponCodeOnScratchStart
-    final openedCoupon = TieredCouponModel(
-      code: coupon.code,
-      opened: true,
-      locked: coupon.locked,
-      levelNumber: coupon.levelNumber,
-      discountPercentage: coupon.discountPercentage,
-      color: coupon.color,
-      instructions: coupon.instructions,
-    );
-    
-    updatedCoupons[index] = openedCoupon;
-    emit(state.copyWith(coupons: updatedCoupons));
+    // Only mark as opened if we have a code (ensure code was fetched)
+    // This prevents showing scratch overlay again if code fetch is still pending
+    if (coupon.code != null && coupon.code!.isNotEmpty) {
+      // Mark as opened - the code is already there from fetchCouponCodeOnScratchStart
+      final openedCoupon = TieredCouponModel(
+        code: coupon.code,
+        opened: true,
+        locked: coupon.locked,
+        levelNumber: coupon.levelNumber,
+        discountPercentage: coupon.discountPercentage,
+        color: coupon.color,
+        instructions: coupon.instructions,
+      );
+      
+      updatedCoupons[index] = openedCoupon;
+      emit(state.copyWith(coupons: updatedCoupons));
+    }
   }
 
   // Refresh rewards data in background without changing UI state
