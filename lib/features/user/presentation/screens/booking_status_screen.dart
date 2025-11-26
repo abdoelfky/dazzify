@@ -122,7 +122,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                       const EdgeInsets.symmetric(vertical: 16.0)
                                           .r,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       if (bookingCubit.state.singleBooking
                                               .services.length >
@@ -143,8 +144,10 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                             },
                                             itemBuilder: (context, index) =>
                                                 MultiBookingWidget(
-                                              service: bookingCubit.state
-                                                  .singleBooking.services[index],
+                                              service: bookingCubit
+                                                  .state
+                                                  .singleBooking
+                                                  .services[index],
                                               booking: bookingCubit,
                                             ),
                                           ),
@@ -186,15 +189,18 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                           bookingCubit.state.singleBooking
                                               .services.length),
                                       SizedBox(height: 35.h),
-                                      if (state.singleBooking.payments.isNotEmpty &&
-                                          bookingStatus != BookingStatus.cancelled)                                      Container(
+                                      if (state.singleBooking.payments
+                                              .isNotEmpty &&
+                                          bookingStatus !=
+                                              BookingStatus.cancelled)
+                                        Container(
                                           padding: EdgeInsetsGeometry.symmetric(
                                               vertical: 10.h, horizontal: 10.w),
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(15),
-                                              color:
-                                                  context.colorScheme.onTertiary),
+                                              color: context
+                                                  .colorScheme.onTertiary),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -207,16 +213,18 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                   Row(
                                                     children: [
                                                       Icon(
-                                                        Icons.data_usage_outlined,
+                                                        Icons
+                                                            .data_usage_outlined,
                                                         color: context
-                                                            .colorScheme.primary,
+                                                            .colorScheme
+                                                            .primary,
                                                         size: 16.r,
                                                       ),
                                                       SizedBox(width: 8.w),
                                                       DText(
                                                         transactionType!.name,
-                                                        style: context
-                                                            .textTheme.bodyMedium,
+                                                        style: context.textTheme
+                                                            .bodyMedium,
                                                       ),
                                                     ],
                                                   ),
@@ -264,7 +272,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                       onTimerFinish: () {
                                                         bookingCubit
                                                             .getSingleBooking(
-                                                                widget.bookingId);
+                                                                widget
+                                                                    .bookingId);
                                                       },
                                                     ),
                                                   ),
@@ -281,8 +290,11 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                           .payments
                                                           .first
                                                           .transactionId,
-                                                      amount: state.singleBooking
-                                                          .payments.first.amount,
+                                                      amount: state
+                                                          .singleBooking
+                                                          .payments
+                                                          .first
+                                                          .amount,
                                                     ),
                                                   ),
                                                 ],
@@ -299,8 +311,10 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                         status: bookingStatus,
                                         isFinished:
                                             state.singleBooking.isFinished,
-                                        isArrived: state.singleBooking.isArrived,
-                                        startTime: state.singleBooking.startTime,
+                                        isArrived:
+                                            state.singleBooking.isArrived,
+                                        startTime:
+                                            state.singleBooking.startTime,
                                       ),
                                     ],
                                   ),
@@ -455,9 +469,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
   final bool hasFees = (AppConfigManager.appFeesMax != 0 &&
       AppConfigManager.appFeesMin != 0 &&
       AppConfigManager.appFeesPercentage != 0);
-  final appFees = hasFees
-      ? priceInfo.fees
-      : 0.0;
+  final appFees = hasFees ? priceInfo.fees : 0.0;
   final hasTotalPrice = priceInfo.totalPrice != null;
 
   return Column(
@@ -491,7 +503,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
         PriceInfoItem(
           title: DazzifyApp.tr.deliferyFees,
           price:
-              "${reformatPriceWithCommas(deliveryRange.from)}-${reformatPriceWithCommas(deliveryRange.to)} ${DazzifyApp.tr.egp}",
+              "${DazzifyApp.tr.from} (${reformatPriceWithCommas(deliveryRange.from)}) ${DazzifyApp.tr.to} (${reformatPriceWithCommas(deliveryRange.to)}) ${DazzifyApp.tr.egp}",
         ),
       SizedBox(height: 16.h),
       // App Fees - Show value if available, otherwise show "will be calculated"
@@ -521,15 +533,19 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
                   "${reformatPriceWithCommas(priceInfo.price - priceInfo.couponDis)} ${DazzifyApp.tr.egp}",
             ),
             SizedBox(height: 8.h),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0).r,
-              child: DText(
-                DazzifyApp.tr.plusTransportationAndFees,
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                  fontStyle: FontStyle.italic,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                DText(
+                  hasFees
+                      ? DazzifyApp.tr.pleaseLoginToFreelyAccessAppFeatures
+                      : DazzifyApp.tr.plusTransportation,
+                  style: context.textTheme.bodySmall!.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-              ),
+              ],
             ),
             SizedBox(height: 16.h),
             Container(

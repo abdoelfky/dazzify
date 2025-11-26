@@ -53,13 +53,18 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       child: Scaffold(
+
         body: Column(
           children: [
-            DazzifyAppBar(
-              isLeading: true,
-              title: context.tr.topRatedBrands,
-              horizontalPadding: 16.r,
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: DazzifyAppBar(
+                isLeading: true,
+                title: context.tr.topRatedBrands,
+                horizontalPadding: 16.r,
+              ),
             ),
             Expanded(
               child: BlocBuilder<HomeBrandsBloc, HomeBrandsState>(

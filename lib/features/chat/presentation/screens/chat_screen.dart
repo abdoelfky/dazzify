@@ -91,9 +91,15 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
+      bottom: false,
       child: Scaffold(
         body: Column(
           children: [
+            SizedBox(
+              height: 50,
+
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,

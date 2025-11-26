@@ -67,24 +67,29 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
+      bottom: false,
       child: Scaffold(
         backgroundColor: context.colorScheme.surface,
-        body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
-          listener: (context, state) =>
-              _bookingFromMediaCubitListener(state, context),
-          builder: (BuildContext context, BookingFromMediaState state) {
-            return DazzifyOverlayLoading(
-              isLoading: isLoading,
-              child: Column(
-                children: [
-                  const DazzifyAppBar(
-                    isLeading: true,
-                  ),
-                  brandPostsList(),
-                ],
-              ),
-            );
-          },
+        body: Padding(
+          padding: const EdgeInsets.only(top: 50.0),
+          child: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
+            listener: (context, state) =>
+                _bookingFromMediaCubitListener(state, context),
+            builder: (BuildContext context, BookingFromMediaState state) {
+              return DazzifyOverlayLoading(
+                isLoading: isLoading,
+                child: Column(
+                  children: [
+                    const DazzifyAppBar(
+                      isLeading: true,
+                    ),
+                    brandPostsList(),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

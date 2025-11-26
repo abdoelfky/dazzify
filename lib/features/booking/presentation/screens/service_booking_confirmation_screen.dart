@@ -19,6 +19,8 @@ class _ServiceBookingConfirmationScreenState
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
+      bottom: false,
       child: PopScope(
         canPop: false,
         child: Scaffold(

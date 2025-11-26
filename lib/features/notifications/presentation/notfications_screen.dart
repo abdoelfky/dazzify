@@ -62,13 +62,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       child: Scaffold(
         body: Column(
           children: [
-            DazzifyAppBar(
-              isLeading: true,
-              title: context.tr.notifications,
-              horizontalPadding: 16.r,
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: DazzifyAppBar(
+                isLeading: true,
+                title: context.tr.notifications,
+                horizontalPadding: 16.r,
+              ),
             ),
             Expanded(
               child:
