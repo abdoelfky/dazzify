@@ -118,9 +118,8 @@ dependencies {
     implementation("com.google.firebase:firebase-bom:32.2.2")
     implementation("com.google.firebase:firebase-analytics-ktx")
     
-    // TikTok SDK removed - not available in public Maven repositories
-    // TikTok event tracking should be implemented server-side via TikTok Events API
-    // See: https://business-api.tiktok.com/portal/docs?id=1741601162187777
+    // TikTok App Events SDK for tracking ad conversions
+    implementation 'com.tiktok.android:appevents:3.0.1'
 }
 
 import com.android.build.OutputFile

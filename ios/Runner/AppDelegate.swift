@@ -27,13 +27,22 @@ import AVFoundation
     // Configure audio session for proper playback, especially when launching from TikTok ads
     configureAudioSession()
     
-    // Initialize TikTok Business SDK
+    // Initialize TikTok Business SDK for ad tracking
+        // Note: Access token can be empty initially and updated later via TikTokBusiness.updateAccessToken()
+        // Get your TikTok Access Token from TikTok Ads Manager -> Tools -> Events
+        let tiktokAccessToken = ""  // TODO: Add your TikTok Access Token here
+        
         let config = TikTokConfig(
-            accessToken: "",  // Access token (can be empty or updated later via updateAccessToken)
+            accessToken: tiktokAccessToken,
             appId: "TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF",
             tiktokAppId: "7565017967432450049"
         )
+        
+        // Enable debug mode for testing (disable in production)
+        TikTokBusiness.setDebugMode(true)
         TikTokBusiness.initializeSdk(config)
+        
+        print("TikTok Business SDK initialized with App ID: 7565017967432450049")
     
     GeneratedPluginRegistrant.register(with: self)
     
@@ -66,12 +75,25 @@ import AVFoundation
                  let eventName = args["eventName"] as? String {
                   let parameters = args["parameters"] as? [String: Any]
                   
-                  // Log event to TikTok
+                  // Log event to TikTok Business SDK
                   TikTokBusiness.trackEvent(eventName, withProperties: parameters ?? [:])
+                  print("TikTok Event tracked: \(eventName) with properties: \(parameters ?? [:])")
                   result(true)
               } else {
                   result(FlutterError(code: "INVALID_ARGUMENT",
                                      message: "Event name is required",
+                                     details: nil))
+              }
+          case "updateAccessToken":
+              if let args = call.arguments as? [String: Any],
+                 let accessToken = args["accessToken"] as? String {
+                  // Update TikTok Access Token dynamically
+                  TikTokBusiness.updateAccessToken(accessToken)
+                  print("TikTok Access Token updated successfully")
+                  result(true)
+              } else {
+                  result(FlutterError(code: "INVALID_ARGUMENT",
+                                     message: "Access token is required",
                                      details: nil))
               }
           default:
