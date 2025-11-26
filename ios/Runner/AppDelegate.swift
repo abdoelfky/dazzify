@@ -5,6 +5,7 @@ import flutter_local_notifications
 import app_links
 import restart
 import TikTokBusinessSDK
+import AVFoundation
 @main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
@@ -22,6 +23,9 @@ import TikTokBusinessSDK
       GeneratedPluginRegistrant.register(with: registry)
     }
     GMSServices.provideAPIKey("AIzaSyBFsVXmS0RqDzHJB5aH-mi7vxcLbfCWswc")
+    
+    // Configure audio session for proper playback, especially when launching from TikTok ads
+    configureAudioSession()
     
     // Initialize TikTok Business SDK
         let config = TikTokConfig(
@@ -74,5 +78,25 @@ import TikTokBusinessSDK
               result(FlutterMethodNotImplemented)
           }
       }
+  }
+  
+  private func configureAudioSession() {
+      do {
+          let audioSession = AVAudioSession.sharedInstance()
+          // Set category to playback to ensure audio plays even when coming from TikTok ads
+          // This allows video sound to play and mix with other audio if needed
+          try audioSession.setCategory(.playback, mode: .moviePlayback, options: [.mixWithOthers])
+          try audioSession.setActive(true)
+          
+          print("Audio session configured successfully for TikTok ad launches")
+      } catch {
+          print("Failed to configure audio session: \(error.localizedDescription)")
+      }
+  }
+  
+  override func applicationDidBecomeActive(_ application: UIApplication) {
+      super.applicationDidBecomeActive(application)
+      // Reconfigure audio session when app becomes active (e.g., returning from TikTok)
+      configureAudioSession()
   }
 }

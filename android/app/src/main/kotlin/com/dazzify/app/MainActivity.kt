@@ -1,5 +1,10 @@
 package com.dazzify.app
 
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
@@ -12,6 +17,8 @@ class MainActivity : FlutterActivity() {
     private val TAG = "TikTokChannel"
     private val TIKTOK_APP_ID = "TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF"
     private var isInitialized = true // Always true since we're using local logging
+    private var audioManager: AudioManager? = null
+    private var audioFocusRequest: AudioFocusRequest? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +27,62 @@ class MainActivity : FlutterActivity() {
         // Events are logged locally for debugging purposes
         // For production event tracking, implement server-side TikTok Events API
         Log.d(TAG, "TikTok event tracking initialized (local logging mode) with App ID: $TIKTOK_APP_ID")
+        
+        // Configure audio focus for proper playback when launching from TikTok ads
+        configureAudioFocus()
+    }
+    
+    private fun configureAudioFocus() {
+        try {
+            audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // For Android O and above
+                val audioAttributes = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                    .build()
+                
+                audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setAudioAttributes(audioAttributes)
+                    .setAcceptsDelayedFocusGain(true)
+                    .setOnAudioFocusChangeListener { focusChange ->
+                        Log.d(TAG, "Audio focus changed: $focusChange")
+                    }
+                    .build()
+                
+                audioManager?.requestAudioFocus(audioFocusRequest!!)
+            } else {
+                // For older Android versions
+                @Suppress("DEPRECATION")
+                audioManager?.requestAudioFocus(
+                    { focusChange -> Log.d(TAG, "Audio focus changed: $focusChange") },
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN
+                )
+            }
+            
+            Log.d(TAG, "Audio focus configured successfully for TikTok ad launches")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to configure audio focus: ${e.message}")
+        }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // Reconfigure audio focus when app resumes (e.g., returning from TikTok)
+        configureAudioFocus()
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        // Release audio focus when activity is destroyed
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest?.let { audioManager?.abandonAudioFocusRequest(it) }
+        } else {
+            @Suppress("DEPRECATION")
+            audioManager?.abandonAudioFocus { }
+        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
