@@ -2288,6 +2288,16 @@ class S {
     );
   }
 
+  /// `Please select a rating`
+  String get pleaseSelectRating {
+    return Intl.message(
+      'Please select a rating',
+      name: 'pleaseSelectRating',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Waiting For response`
   String get waitingForResponse {
     return Intl.message(
