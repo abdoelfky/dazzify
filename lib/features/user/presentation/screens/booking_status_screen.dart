@@ -493,7 +493,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
         price: "(${priceInfo.couponDis} ${DazzifyApp.tr.egp})",
       ),
       SizedBox(height: 16.h),
-      // Delivery Fees - Show value if available, otherwise show range
+      // Delivery Fees - Show Value if available, otherwise show range
       if (hasDeliveryFees)
         PriceInfoItem(
           title: DazzifyApp.tr.deliferyFees,
