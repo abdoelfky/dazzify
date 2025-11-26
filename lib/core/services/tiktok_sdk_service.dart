@@ -2,6 +2,11 @@ import 'package:flutter/services.dart';
 
 /// Service class to manage TikTok SDK integration
 /// This service tracks app events and conversions for TikTok Analytics
+/// 
+/// For TikTok Ads:
+/// - Get your Access Token from TikTok Ads Manager -> Tools -> Events
+/// - App ID: TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF
+/// - TikTok App ID: 7565017967432450049
 class TikTokSdkService {
   TikTokSdkService._();
   static final TikTokSdkService instance = TikTokSdkService._();
@@ -23,6 +28,19 @@ class TikTokSdkService {
     } catch (e) {
       // Log error but don't crash the app
       print('TikTok SDK initialization error: $e');
+    }
+  }
+
+  /// Update TikTok Access Token (iOS only)
+  /// Get your Access Token from TikTok Ads Manager -> Tools -> Events
+  Future<void> updateAccessToken(String accessToken) async {
+    try {
+      await _channel.invokeMethod('updateAccessToken', {
+        'accessToken': accessToken,
+      });
+      print('TikTok Access Token updated successfully');
+    } catch (e) {
+      print('TikTok SDK update access token error: $e');
     }
   }
 
