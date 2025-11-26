@@ -10,7 +10,8 @@ import org.json.JSONObject
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.dazzify.app/tiktok"
     private val TAG = "TikTokChannel"
-    private val TIKTOK_APP_ID = "TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF"
+    private val TIKTOK_APP_ID = "TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF" // TikTok API Key
+    private val TIKTOK_APP_EVENT_ID = "7565017967432450049" // TikTok App Event ID
     private var isInitialized = true // Always true since we're using local logging
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,10 @@ class MainActivity : FlutterActivity() {
         // TikTok SDK removed - not available in public Maven repositories
         // Events are logged locally for debugging purposes
         // For production event tracking, implement server-side TikTok Events API
-        Log.d(TAG, "TikTok event tracking initialized (local logging mode) with App ID: $TIKTOK_APP_ID")
+        Log.d(TAG, "TikTok event tracking initialized (local logging mode)")
+        Log.d(TAG, "TikTok API Key: $TIKTOK_APP_ID")
+        Log.d(TAG, "TikTok App Event ID: $TIKTOK_APP_EVENT_ID")
+        Log.d(TAG, "Key Events: Download, AppInstall, Registration, Purchase, ViewContent")
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

@@ -2,6 +2,16 @@ import 'package:flutter/services.dart';
 
 /// Service class to manage TikTok SDK integration
 /// This service tracks app events and conversions for TikTok Analytics
+/// 
+/// TikTok API Key: TTUFZa4Lvs1ki2OHnNKwytyRdKXyzwUF
+/// TikTok App ID: 7565017967432450049
+/// 
+/// Key Events:
+/// - Download: Tracks app downloads (most important for TikTok Ads)
+/// - AppInstall: Tracks first app open after installation
+/// - Registration: Tracks user registration
+/// - Purchase: Tracks in-app purchases
+/// - ViewContent: Tracks content views
 class TikTokSdkService {
   TikTokSdkService._();
   static final TikTokSdkService instance = TikTokSdkService._();
@@ -17,6 +27,9 @@ class TikTokSdkService {
       _isInitialized = result == true;
       
       if (_isInitialized) {
+        // Track download event (most important for TikTok Ads)
+        await logDownload();
+        
         // Track app install event
         await logAppInstall();
       }
@@ -39,6 +52,48 @@ class TikTokSdkService {
       );
     } catch (e) {
       print('TikTok SDK log app install error: $e');
+    }
+  }
+
+  /// Log download event (App Download)
+  /// This is the most important event for TikTok Ads to track app downloads
+  /// Should be called when user completes app download/installation
+  Future<void> logDownload() async {
+    try {
+      await logEvent(
+        eventName: 'Download',
+        parameters: {
+          'event_type': 'download',
+          'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          'value': 1,
+        },
+      );
+    } catch (e) {
+      print('TikTok SDK log download error: $e');
+    }
+  }
+
+  /// Log custom download event with parameters
+  /// Use this for tracking downloads with additional context
+  Future<void> logDownloadWithDetails({
+    String? contentId,
+    String? contentName,
+    String? source,
+  }) async {
+    try {
+      await logEvent(
+        eventName: 'Download',
+        parameters: {
+          'event_type': 'download',
+          'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          'value': 1,
+          if (contentId != null) 'content_id': contentId,
+          if (contentName != null) 'content_name': contentName,
+          if (source != null) 'source': source,
+        },
+      );
+    } catch (e) {
+      print('TikTok SDK log download with details error: $e');
     }
   }
 
