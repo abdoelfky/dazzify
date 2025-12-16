@@ -3197,6 +3197,21 @@ class S {
       args: [],
     );
   }
+
+  /// `View Brand`
+  String get viewBrand {
+    return Intl.message('View Brand', name: 'viewBrand', desc: '', args: []);
+  }
+
+  /// `This service exists but is not available for you`
+  String get serviceExistsButNotAvailable {
+    return Intl.message(
+      'This service exists but is not available for you',
+      name: 'serviceExistsButNotAvailable',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

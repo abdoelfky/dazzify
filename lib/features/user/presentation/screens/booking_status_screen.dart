@@ -466,6 +466,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
   final priceInfo = booking.state.singleBooking;
   final deliveryRange = priceInfo.deliveryFeesRange;
   final hasDeliveryFees = priceInfo.deliveryFees != null;
+  print(priceInfo.deliveryFees);
   final bool hasFees = (AppConfigManager.appFeesMax != 0 &&
       AppConfigManager.appFeesMin != 0 &&
       AppConfigManager.appFeesPercentage != 0);
@@ -509,7 +510,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       // App Fees - Show value if available, otherwise show "will be calculated"
       PriceInfoItem(
         title: DazzifyApp.tr.appFees,
-        price: !hasFees
+        price: !hasFees||hasDeliveryFees
             ? "$appFees ${DazzifyApp.tr.egp}"
             : DazzifyApp.tr.willBeCalculated,
       ),
@@ -538,7 +539,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
               children: [
                 DText(
                   hasFees
-                      ? DazzifyApp.tr.pleaseLoginToFreelyAccessAppFeatures
+                      ? DazzifyApp.tr.plusTransportationAndFees
                       : DazzifyApp.tr.plusTransportation,
                   style: context.textTheme.bodySmall!.copyWith(
                     color: context.colorScheme.onSurfaceVariant,

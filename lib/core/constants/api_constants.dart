@@ -36,6 +36,7 @@ class ApiConstants {
   static const String getBrandServiceAvailableSlots = "/brand/available-slots";
   static const String getBrandMultipleServicesAvailableSlots =
       "/brand/multiple-services/available-slots";
+
   ///multiple-services - multiple-services/available-slots
   static const String createBooking = "/booking/multiple-services/create";
   // static const String createBooking = "/booking/create";
@@ -137,4 +138,9 @@ class ApiConstants {
 
   static const String getTieredCouponRewards = "/user/tiered-coupon-rewards";
   static const String openNewRewardLevel = "/user/open-new-reward-level";
+
+  /// App tracking / analytics
+  ///
+  /// POST /api/v1/log/event
+  static const String logEvent = "/log/event";
 }

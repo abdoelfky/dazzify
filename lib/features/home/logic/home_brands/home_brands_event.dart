@@ -20,3 +20,21 @@ class GetTopRatedBrandsEvent extends HomeBrandsEvent {
   @override
   List<Object> get props => [];
 }
+
+class FilterTopRatedBrandsByCategory extends HomeBrandsEvent {
+  final String? mainCategoryId;
+
+  const FilterTopRatedBrandsByCategory({this.mainCategoryId});
+
+  @override
+  List<Object> get props => [mainCategoryId ?? ''];
+}
+
+class FilterPopularBrandsByCategory extends HomeBrandsEvent {
+  final String? mainCategoryId;
+
+  const FilterPopularBrandsByCategory({this.mainCategoryId});
+
+  @override
+  List<Object> get props => [mainCategoryId ?? ''];
+}

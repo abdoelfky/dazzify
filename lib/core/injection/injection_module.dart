@@ -7,6 +7,7 @@ import 'package:dazzify/core/config/build_config_dev.dart';
 import 'package:dazzify/core/config/build_config_prod.dart';
 import 'package:dazzify/core/config/build_config_stg.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/auth/data/data_sources/remote/auth_remote_datasource.dart';
@@ -68,6 +69,10 @@ abstract class FeaturesModule {
 
   @LazySingleton(as: ApiConsumer)
   DioApiConsumer get dioConsumer => DioApiConsumer(dioClient: dioClient);
+
+  /// App-wide events logger for `/api/v1/log/event`
+  @LazySingleton()
+  AppEventsLogger get appEventsLogger => AppEventsLogger(dioConsumer);
 
   @LazySingleton(as: AuthRemoteDatasource)
   AuthRemoteDatasourceImpl get authRemoteDatasource =>

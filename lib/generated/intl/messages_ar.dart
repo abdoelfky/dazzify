@@ -580,6 +580,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceDone": MessageLookupByLibrary.simpleMessage(
       "الخدمة تمت، نأمل أن تكون قد أعجبتك",
     ),
+    "serviceExistsButNotAvailable": MessageLookupByLibrary.simpleMessage(
+      "هذه الخدمة موجودة ولكنها غير متاحة لك",
+    ),
     "serviceFavoriteAdding": MessageLookupByLibrary.simpleMessage(
       "تمت إضافة الخدمة إلى قائمة المفضلات",
     ),
@@ -657,6 +660,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تحقق من رقم الهاتف",
     ),
     "viewBranches": MessageLookupByLibrary.simpleMessage("اعرض الفروع"),
+    "viewBrand": MessageLookupByLibrary.simpleMessage("عرض العلامة التجارية"),
     "viewLocation": MessageLookupByLibrary.simpleMessage("اعرض الموقع"),
     "viewOnMap": MessageLookupByLibrary.simpleMessage("عرض على الخريطة"),
     "visaCard": MessageLookupByLibrary.simpleMessage("كارت الفيزا"),

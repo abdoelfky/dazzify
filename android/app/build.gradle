@@ -98,6 +98,7 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            multiDexEnabled true
         }
 //        staging {
 //            initWith debug
@@ -118,9 +119,21 @@ dependencies {
     implementation("com.google.firebase:firebase-bom:32.2.2")
     implementation("com.google.firebase:firebase-analytics-ktx")
     
+    // OkHttp3 required by image_cropper/ucrop
+    // Adding both okhttp and okio explicitly to ensure they're available
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okio:okio:3.6.0")
+    
     // TikTok SDK removed - not available in public Maven repositories
     // TikTok event tracking should be implemented server-side via TikTok Events API
     // See: https://business-api.tiktok.com/portal/docs?id=1741601162187777
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.squareup.okhttp3:okhttp:4.12.0'
+        force 'com.squareup.okio:okio:3.6.0'
+    }
 }
 
 import com.android.build.OutputFile

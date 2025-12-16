@@ -430,7 +430,9 @@
   "copyCouponCoded": "Click To Copy Coupon Code",
   "scratchToRedeem": "Scratch to redeem your discount",
   "openToScratch": "Open to Scratch your Coupon",
-  "showServices": "Show Services"
+  "showServices": "Show Services",
+  "viewBrand": "View Brand",
+  "serviceExistsButNotAvailable": "This service exists but is not available for you"
 
 
 }

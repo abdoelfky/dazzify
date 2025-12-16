@@ -67,7 +67,7 @@ class _ReelPlayerState extends State<ReelPlayer>
 
   Future<void> _initReelsPlayer() async {
     // Use preloaded controller if available
-    if (widget.preloadedController != null && 
+    if (widget.preloadedController != null &&
         widget.preloadedController!.value.isInitialized) {
       _controller = widget.preloadedController!;
       _isUsingPreloadedController = true;
@@ -82,22 +82,22 @@ class _ReelPlayerState extends State<ReelPlayer>
         ),
       );
       _isUsingPreloadedController = false;
-      
+
       // Initialize with progressive loading - ready to play when visible
       await _controller.initialize();
       debugPrint('⚠️ Creating new controller for: ${widget.videoUrl}');
     }
-    
+
     _controller.addListener(_videoPlayerListener);
     _controller.addListener(_videoPlaybackListener);
     _hasControllerInitialized.value = true;
-    
+
     // Don't auto-play - let VisibilityDetector control playback
   }
 
   void _videoPlayerListener() {
     // Only trigger page change if video actually played and finished
-    if (_controller.value.isInitialized && 
+    if (_controller.value.isInitialized &&
         _controller.value.duration.inMilliseconds > 0 &&
         _controller.value.position >= _controller.value.duration) {
       _controller.seekTo(Duration.zero);
@@ -146,8 +146,11 @@ class _ReelPlayerState extends State<ReelPlayer>
             },
             child: Stack(
               children: [
-                Container(color: Colors.black,),
-                Center(
+                Container(
+                  color: Colors.black,
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
                   child: VisibilityDetector(
                     key: ValueKey<String>(widget.videoUrl),
                     onVisibilityChanged: (visibility) {
@@ -161,8 +164,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                       }
                     },
                     child: AspectRatio(
-                      aspectRatio:
-                      _parseAspectRatio(widget.reel.aspectRatio) ??
+                      aspectRatio: _parseAspectRatio(widget.reel.aspectRatio) ??
                           8 / 16.5,
                       // aspectRatio: 8 / 16.5,
                       child: VideoPlayer(_controller),
@@ -239,23 +241,23 @@ class _ReelPlayerState extends State<ReelPlayer>
                             return GuestModeBottomSheet();
                           },
                         );
-                      }else {
+                      } else {
                         showModalBottomSheet(
-                        context: context,
-                        useRootNavigator: true,
-                        isScrollControlled: true,
-                        routeSettings: const RouteSettings(
-                          name: "BranchesBottomSheet",
-                        ),
-                        builder: (context) => BlocProvider.value(
-                          value: brandBloc,
-                          child: ChatBranchesSheet(
-                            sheetType: BranchesSheetType.chat,
-                            serviceId: widget.reel.serviceId,
-                            brand: widget.reel.brand,
+                          context: context,
+                          useRootNavigator: true,
+                          isScrollControlled: true,
+                          routeSettings: const RouteSettings(
+                            name: "BranchesBottomSheet",
                           ),
-                        ),
-                      );
+                          builder: (context) => BlocProvider.value(
+                            value: brandBloc,
+                            child: ChatBranchesSheet(
+                              sheetType: BranchesSheetType.chat,
+                              serviceId: widget.reel.serviceId,
+                              brand: widget.reel.brand,
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),
@@ -292,6 +294,7 @@ class _ReelPlayerState extends State<ReelPlayer>
     _showHeart.dispose();
   }
 }
+
 double? _parseAspectRatio(String? ratioString) {
   if (ratioString == null || !ratioString.contains(':')) return null;
   try {

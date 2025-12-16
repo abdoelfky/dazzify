@@ -431,6 +431,8 @@
   "scratchToRedeem": "اكشط لاستخدام خصمك",
 
   "openToScratch": "افتح وامسح للحصول على كوبونك",
-  "showServices": "اظهر الخدمات"
+  "showServices": "اظهر الخدمات",
+  "viewBrand": "عرض العلامة التجارية",
+  "serviceExistsButNotAvailable": "هذه الخدمة موجودة ولكنها غير متاحة لك"
 
 }

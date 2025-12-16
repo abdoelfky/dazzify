@@ -78,6 +78,8 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
     }
 
     return SafeArea(
+      top: false,
+      bottom: false,
       child: Scaffold(
         body: BlocConsumer<ViewLocationCubit, ViewLocationState>(
           listener: (context, state) {

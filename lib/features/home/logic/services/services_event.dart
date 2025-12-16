@@ -20,3 +20,21 @@ class GetTopRatedServicesEvent extends ServicesEvent {
   @override
   List<Object> get props => [];
 }
+
+class FilterTopRatedServicesByCategory extends ServicesEvent {
+  final String? mainCategoryId;
+
+  const FilterTopRatedServicesByCategory({this.mainCategoryId});
+
+  @override
+  List<Object> get props => [mainCategoryId ?? ''];
+}
+
+class FilterPopularServicesByCategory extends ServicesEvent {
+  final String? mainCategoryId;
+
+  const FilterPopularServicesByCategory({this.mainCategoryId});
+
+  @override
+  List<Object> get props => [mainCategoryId ?? ''];
+}

@@ -20,6 +20,8 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   int _topRatedServicesPage = 1;
   final int _popularServicesLimit = 20;
   final int _topRatedServicesLimit = 20;
+  String? selectedMainCategory;
+  String? selectedPopularMainCategory;
 
   ServicesBloc(
     this._homeRepository,
@@ -32,6 +34,8 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       _onGetTopRatedServices,
       transformer: droppable(),
     );
+    on<FilterTopRatedServicesByCategory>(_filterTopRatedServicesByCategory);
+    on<FilterPopularServicesByCategory>(_filterPopularServicesByCategory);
   }
 
   Future<void> _onGetPopularServices(
@@ -46,6 +50,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
         request: GetServicesRequest(
           page: _popularServicesPage,
           limit: _popularServicesLimit,
+          mainCategory: selectedPopularMainCategory,
         ),
       );
 
@@ -85,6 +90,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
         request: GetServicesRequest(
           page: _topRatedServicesPage,
           limit: _topRatedServicesLimit,
+          mainCategory: selectedMainCategory,
         ),
       );
 
@@ -110,5 +116,41 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
         },
       );
     }
+  }
+
+  void _filterTopRatedServicesByCategory(
+    FilterTopRatedServicesByCategory event,
+    Emitter<ServicesState> emit,
+  ) {
+    emit(state.copyWith(
+      hasTopRatedServicesReachedMax: false,
+      topRatedServices: [],
+      topRatedServicesState: UiState.loading,
+    ));
+    if (selectedMainCategory != event.mainCategoryId) {
+      selectedMainCategory = event.mainCategoryId;
+    } else {
+      selectedMainCategory = null;
+    }
+    _topRatedServicesPage = 1;
+    add(const GetTopRatedServicesEvent());
+  }
+
+  void _filterPopularServicesByCategory(
+    FilterPopularServicesByCategory event,
+    Emitter<ServicesState> emit,
+  ) {
+    emit(state.copyWith(
+      hasPopularServicesReachedMax: false,
+      popularServices: [],
+      popularServicesState: UiState.loading,
+    ));
+    if (selectedPopularMainCategory != event.mainCategoryId) {
+      selectedPopularMainCategory = event.mainCategoryId;
+    } else {
+      selectedPopularMainCategory = null;
+    }
+    _popularServicesPage = 1;
+    add(const GetPopularServicesEvent());
   }
 }

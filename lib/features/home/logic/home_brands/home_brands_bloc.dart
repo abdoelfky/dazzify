@@ -19,12 +19,16 @@ class HomeBrandsBloc extends Bloc<HomeBrandsEvent, HomeBrandsState> {
 
   final int _popularBrandsLimit = 20;
   final int _topRatedBrandsLimit = 20;
+  String? selectedPopularMainCategory;
+  String? selectedTopRatedMainCategory;
 
   HomeBrandsBloc(
     this._homeRepository,
   ) : super(const HomeBrandsState()) {
     on<GetPopularBrandsEvent>(_onGetPopularBrands, transformer: droppable());
     on<GetTopRatedBrandsEvent>(_onGetTopRatedBrands, transformer: droppable());
+    on<FilterTopRatedBrandsByCategory>(_filterTopRatedBrandsByCategory);
+    on<FilterPopularBrandsByCategory>(_filterPopularBrandsByCategory);
   }
 
   Future<void> _onGetPopularBrands(
@@ -38,6 +42,7 @@ class HomeBrandsBloc extends Bloc<HomeBrandsEvent, HomeBrandsState> {
         request: GetBrandsRequest(
           page: _popularBrandsPage,
           limit: _popularBrandsLimit,
+          mainCategory: selectedPopularMainCategory,
         ),
       );
 
@@ -78,6 +83,7 @@ class HomeBrandsBloc extends Bloc<HomeBrandsEvent, HomeBrandsState> {
         request: GetBrandsRequest(
           page: _topRatedBrandsPage,
           limit: _topRatedBrandsLimit,
+          mainCategory: selectedTopRatedMainCategory,
         ),
       );
 
@@ -103,5 +109,41 @@ class HomeBrandsBloc extends Bloc<HomeBrandsEvent, HomeBrandsState> {
         },
       );
     }
+  }
+
+  void _filterTopRatedBrandsByCategory(
+    FilterTopRatedBrandsByCategory event,
+    Emitter<HomeBrandsState> emit,
+  ) {
+    emit(state.copyWith(
+      hasTopRatedReachedMax: false,
+      topRatedBrands: [],
+      topRatedBrandsState: UiState.loading,
+    ));
+    if (selectedTopRatedMainCategory != event.mainCategoryId) {
+      selectedTopRatedMainCategory = event.mainCategoryId;
+    } else {
+      selectedTopRatedMainCategory = null;
+    }
+    _topRatedBrandsPage = 1;
+    add(const GetTopRatedBrandsEvent());
+  }
+
+  void _filterPopularBrandsByCategory(
+    FilterPopularBrandsByCategory event,
+    Emitter<HomeBrandsState> emit,
+  ) {
+    emit(state.copyWith(
+      hasPopularReachedMax: false,
+      popularBrands: [],
+      popularBrandsState: UiState.loading,
+    ));
+    if (selectedPopularMainCategory != event.mainCategoryId) {
+      selectedPopularMainCategory = event.mainCategoryId;
+    } else {
+      selectedPopularMainCategory = null;
+    }
+    _popularBrandsPage = 1;
+    add(const GetPopularBrandsEvent());
   }
 }

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/navigation/swipe_back_page.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
@@ -10,7 +12,6 @@ import 'package:dazzify/generated/l10n.dart';
 import 'package:dazzify/route_observer.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:dazzify/settings/theme/theme_manager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,8 +30,32 @@ class DazzifyApp extends StatefulWidget {
   State<DazzifyApp> createState() => _DazzifyAppState();
 }
 
-class _DazzifyAppState extends State<DazzifyApp> {
+class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
   final settingsCubit = getIt<SettingsCubit>();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // App opened
+    _logger.logEvent(event: AppEvents.openApp);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive) {
+      // Best-effort close event when app is about to be terminated / backgrounded
+      _logger.logEvent(event: AppEvents.closeApp);
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

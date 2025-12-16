@@ -3,8 +3,10 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_brands/home_brands_bloc.dart';
+import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/home/presentation/widgets/top_rated_brand_card.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
+import 'package:dazzify/features/shared/widgets/animated_filter_button.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
 import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
@@ -55,9 +57,10 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
     return SafeArea(
       top: false,
       child: Scaffold(
-
-        body: Column(
+        body: Stack(
           children: [
+            Column(
+              children: [
             Padding(
               padding: const EdgeInsets.only(top: 50.0),
               child: DazzifyAppBar(
@@ -141,6 +144,24 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
                 },
               ),
             ),
+              ],
+            ),
+            if (mainCategories.isNotEmpty)
+              PositionedDirectional(
+                top: 40.h,
+                end: 10.w,
+                child: AnimatedFilterButton(
+                  iconColor: context.colorScheme.primary,
+
+                  onItemTap: (int index) {
+                    homeBrandsBloc.add(
+                      FilterTopRatedBrandsByCategory(
+                        mainCategoryId: mainCategories[index].id,
+                      ),
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

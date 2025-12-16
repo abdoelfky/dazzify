@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/api/api_status_codes.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
 import 'package:dazzify/core/framework/dazzify_drop_down.dart';
+import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
@@ -93,6 +94,18 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
           } else if (state.blocState == UiState.failure ||
               state.serviceReviewState == UiState.failure ||
               state.moreLikeThisState == UiState.failure) {
+            // Check if service is not found and we have brand info from "more like this"
+            String? brandSlug;
+            String errorMessage = state.errorMessage;
+            if (state.blocState == UiState.failure &&
+                state.errorCode == ApiStatusCodes.notFound &&
+                state.moreLikeThisServices.isNotEmpty) {
+              // Get brand slug from first "more like this" service
+              brandSlug = state.moreLikeThisServices.first.brand.username;
+              // Update error message to indicate service exists but not available
+              errorMessage = context.tr.serviceExistsButNotAvailable;
+            }
+            
             return ErrorDataWidget(
               enableBackIcon: true,
               onTap: state.blocState == UiState.failure &&
@@ -114,8 +127,18 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       );
                     }
                   : null,
+              secondaryAction: brandSlug != null
+                  ? () {
+                      context.pushRoute(
+                        BrandProfileRoute(brandSlug: brandSlug!),
+                      );
+                    }
+                  : null,
+              secondaryActionTitle: brandSlug != null
+                  ? context.tr.viewBrand
+                  : null,
               errorDataType: DazzifyErrorDataType.screen,
-              message: state.errorMessage,
+              message: errorMessage,
             );
           } else {
             return Stack(

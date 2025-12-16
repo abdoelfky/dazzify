@@ -97,12 +97,14 @@ class InvoiceWidget extends StatelessWidget {
             if (isRangeType)
             SizedBox(height: 12.h),
 
-            if (!hasFees)
+            if (hasFees&&!isRangeType)
               InvoiceLine(
                 title: context.tr.appFees,
                 amount: double.parse(appFees.toStringAsFixed(2)),
               ),
-            if (hasFees) _buildPendingAppFeesLine(context),
+            if (hasFees&&isRangeType) _buildPendingAppFeesLine(context),
+            SizedBox(height: 12.h),
+
             DottedLine(
               lineWidth: context.screenWidth,
               lineColor: context.colorScheme.onSurface,

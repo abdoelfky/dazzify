@@ -163,6 +163,12 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                               DazzifyToastBar.showSuccess(
                                 message: context.tr.reviewCreated,
                               );
+                            }else if (state.createReviewState == UiState.failure) {
+                              isLoading = false;
+                              context.maybePop();
+                              DazzifyToastBar.showError(
+                                message: state.errorMessage,
+                              );
                             } else {
                               isLoading = false;
                             }

@@ -1,10 +1,8 @@
 import 'dart:ui';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
-import 'package:dazzify/features/reels/logic/reels_bloc.dart';
 import 'package:dazzify/features/shared/widgets/category_selectable_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -27,7 +25,6 @@ class _AnimatedFilterButtonState extends State<AnimatedFilterButton>
   late final ValueNotifier<double> _categoriesHeight;
   late final AnimationController _iconRotationController;
   late final ValueNotifier<bool> _isIconRotated;
-  late final reelsBloc = context.read<ReelsBloc>();
   late final ValueNotifier<int?> _selectedIndex;
 
   void _onCategoryTap(int index) {

@@ -11,6 +11,8 @@ class ErrorDataWidget extends StatefulWidget {
   final void Function()? onTap;
   final String message;
   final bool enableBackIcon;
+  final void Function()? secondaryAction;
+  final String? secondaryActionTitle;
 
   const ErrorDataWidget({
     super.key,
@@ -18,6 +20,8 @@ class ErrorDataWidget extends StatefulWidget {
     required this.errorDataType,
     required this.message,
     this.enableBackIcon = false,
+    this.secondaryAction,
+    this.secondaryActionTitle,
   });
 
   @override
@@ -98,11 +102,26 @@ class _ErrorDataWidgetState extends State<ErrorDataWidget> {
             ),
           ),
           SizedBox(height: 80.h),
-          if (widget.onTap != null)
-            PrimaryButton(
-              onTap: onTap!,
-              title: context.tr.retry,
-              height: 42.h,
+          if (widget.onTap != null || widget.secondaryAction != null)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.secondaryAction != null)
+                  PrimaryButton(
+                    onTap: widget.secondaryAction!,
+                    title: widget.secondaryActionTitle ?? context.tr.viewBrand,
+                    height: 42.h,
+                  ),
+                if (widget.secondaryAction != null && widget.onTap != null)
+                  SizedBox(height: 16.h),
+                if (widget.onTap != null)
+                  PrimaryButton(
+                    onTap: onTap!,
+                    title: context.tr.retry,
+                    height: 42.h,
+                    isOutLined: widget.secondaryAction != null,
+                  ),
+              ],
             ),
         ],
       ),

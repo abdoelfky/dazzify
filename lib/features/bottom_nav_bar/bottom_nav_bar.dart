@@ -1,5 +1,8 @@
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
@@ -46,6 +49,7 @@ class _BottomNavBarState extends State<BottomNavBar>
     const ProfileRoute(),
   ];
   late BookingCubit bookingCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -128,7 +132,7 @@ class _BottomNavBarState extends State<BottomNavBar>
         ),
         BlocListener<UserCubit, UserState>(
           listenWhen: (previous, current) =>
-          previous.userState != current.userState,
+              previous.userState != current.userState,
           listener: (context, state) {
             if (state.userState == UiState.success) {
               if (state.userModel.deletedAt.isNotEmpty) {
@@ -148,96 +152,114 @@ class _BottomNavBarState extends State<BottomNavBar>
         builder: (context, child) {
           final tabsRouter = context.tabsRouter;
           return Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  extendBody: true,
-                  body: child,
-                  bottomNavigationBar: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 15,
-                        sigmaY: 15,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SingleChildScrollView(
-                            physics: const NeverScrollableScrollPhysics(),
-                            child: BottomNavigationBar(
-                              currentIndex: tabsRouter.activeIndex,
-                              onTap: (value) {
-                                handleNavbarItemTap(
-                                  value: value,
-                                  tabsRouter: tabsRouter,
+            resizeToAvoidBottomInset: false,
+            extendBody: true,
+            body: child,
+            bottomNavigationBar: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 15,
+                  sigmaY: 15,
+                ),
+                child: SizedBox(
+                  height: 60.h,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: BottomNavigationBar(
+                        currentIndex: tabsRouter.activeIndex,
+                        onTap: (value) {
+                          handleNavbarItemTap(
+                            value: value,
+                            tabsRouter: tabsRouter,
+                          );
+                        },
+                        items: [
+                          BottomNavigationBarItem(
+                            icon: Icon(
+                              SolarIconsOutline.home,
+                              size: 26.r,
+                            ),
+                            label: '',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(
+                              SolarIconsOutline.videoLibrary,
+                              size: 26.r,
+                            ),
+                            label: '',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(
+                              SolarIconsOutline.magnifier,
+                              size: 26.r,
+                            ),
+                            label: '',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(
+                              SolarIconsOutline.chatRoundLine,
+                              size: 26.r,
+                            ),
+                            label: '',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: BlocBuilder<UserCubit, UserState>(
+                              builder: (BuildContext context, UserState state) {
+                                return SizedBox(
+                                  width: 32.r,
+                                  height: 32.r,
+                                  child: DazzifyRoundedPicture(
+                                    imageUrl: state.userModel.picture,
+                                    width: 32.r,
+                                    height: 32.r,
+                                  ),
                                 );
                               },
-                              items: [
-                                BottomNavigationBarItem(
-                                  icon: Icon(
-                                    SolarIconsOutline.home,
-                                    size: 26.r,
-                                  ),
-                                  label: '',
-                                ),
-                                BottomNavigationBarItem(
-                                  icon: Icon(
-                                    SolarIconsOutline.videoLibrary,
-                                    size: 26.r,
-                                  ),
-                                  label: '',
-                                ),
-                                BottomNavigationBarItem(
-                                  icon: Icon(
-                                    SolarIconsOutline.magnifier,
-                                    size: 26.r,
-                                  ),
-                                  label: '',
-                                ),
-                                BottomNavigationBarItem(
-                                  icon: Icon(
-                                    SolarIconsOutline.chatRoundLine,
-                                    size: 26.r,
-                                  ),
-                                  label: '',
-                                ),
-                                BottomNavigationBarItem(
-                                  icon: BlocBuilder<UserCubit, UserState>(
-                                    builder: (BuildContext context, UserState state) {
-                                      return SizedBox(
-                                        width: 32.r,
-                                        height: 32.r,
-                                        child: DazzifyRoundedPicture(
-                                          imageUrl: state.userModel.picture,
-                                          width: 32.r,
-                                          height: 32.r,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  label: '',
-                                  activeIcon: BlocBuilder<UserCubit, UserState>(
-                                    builder: (context, state) =>
-                                        NavActiveProfilePicture(
-                                          imagePath: state.userModel.picture ?? "",
-                                        ),
-                                  ),
-                                ),
-                              ],
+                            ),
+                            label: '',
+                            activeIcon: BlocBuilder<UserCubit, UserState>(
+                              builder: (context, state) =>
+                                  NavActiveProfilePicture(
+                                imagePath: state.userModel.picture ?? "",
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
-
-              );
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
   handleNavbarItemTap({required int value, required TabsRouter tabsRouter}) {
-    if (value == routes.length-1) {
+    // Log nav bar click
+    switch (value) {
+      case 0:
+        _logger.logEvent(event: AppEvents.navClickHome);
+        break;
+      case 1:
+        _logger.logEvent(event: AppEvents.navClickReels);
+        break;
+      case 2:
+        _logger.logEvent(event: AppEvents.navClickSearch);
+        break;
+      case 3:
+        _logger.logEvent(event: AppEvents.navClickChat);
+        break;
+      case 4:
+        _logger.logEvent(event: AppEvents.navClickProfile);
+        break;
+    }
+
+    if (value == routes.length - 1) {
       tabsRouter.current.router.navigate(routes[value]);
     } else if (tabsRouter.activeIndex == value) {
       tabsRouter.current.router.navigate(routes[value]);

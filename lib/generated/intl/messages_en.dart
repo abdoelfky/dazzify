@@ -574,6 +574,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceDone": MessageLookupByLibrary.simpleMessage(
       "Your service is complete. We hope you enjoyed it!",
     ),
+    "serviceExistsButNotAvailable": MessageLookupByLibrary.simpleMessage(
+      "This service exists but is not available for you",
+    ),
     "serviceFavoriteAdding": MessageLookupByLibrary.simpleMessage(
       "Service added to your favorites",
     ),
@@ -649,6 +652,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Verify Phone Number",
     ),
     "viewBranches": MessageLookupByLibrary.simpleMessage("View Branches"),
+    "viewBrand": MessageLookupByLibrary.simpleMessage("View Brand"),
     "viewLocation": MessageLookupByLibrary.simpleMessage("View Location"),
     "viewOnMap": MessageLookupByLibrary.simpleMessage("View on Map"),
     "visaCard": MessageLookupByLibrary.simpleMessage("Visa Card"),

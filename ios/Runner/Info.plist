@@ -81,6 +81,14 @@
                 <string>fb2967524626742822</string>
             </array>
         </dict>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.dazzify.app</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>dazzify</string>
+            </array>
+        </dict>
     </array>
     <key>LSApplicationQueriesSchemes</key>
     <array>

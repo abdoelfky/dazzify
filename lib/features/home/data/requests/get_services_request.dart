@@ -10,9 +10,13 @@ class GetServicesRequest {
   @JsonKey(name: "limit")
   final int limit;
 
+  @JsonKey(name: "mainCategory", includeIfNull: false)
+  final String? mainCategory;
+
   const GetServicesRequest({
     required this.page,
     required this.limit,
+    this.mainCategory,
   });
 
   factory GetServicesRequest.fromJson(Map<String, dynamic> json) =>
