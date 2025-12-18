@@ -1,6 +1,7 @@
-import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/dazzify_app.dart';
@@ -93,6 +94,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   late ServiceInvoiceCubit _invoiceCubit;
   late PageController _pageController;
   late TextEditingController _notesController;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   final ValueNotifier<bool> _isCodeValidatingLoading = ValueNotifier(false);
   final TextEditingController _textController = TextEditingController();
@@ -169,9 +171,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       num totalPrice = widget.services.isEmpty
           ? widget.service.price * widget.service.quantity
           : widget.services.fold<num>(
-        0,
-            (sum, s) => sum + (s.price * s.quantity),
-      );
+              0,
+              (sum, s) => sum + (s.price * s.quantity),
+            );
       // if (widget.services.isEmpty) {
       //   totalPrice =
       //       widget.service.price; // use service price if services is empty
@@ -229,6 +231,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
             isLeading: true,
             title: context.tr.confirmation,
             verticalPadding: 10.h,
+            onBackTap: () {
+              _logger.logEvent(event: AppEvents.confirmationBookingClickBack);
+            },
           ),
         ),
         Expanded(
@@ -344,6 +349,25 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 controller: _notesController,
                 maxLength: 300,
                 hintText: DazzifyApp.tr.writeNotes,
+                onChanged: (value) {
+                  // Track notes addition/removal
+                  final previousText = _notesController.text;
+                  final currentValue = value ?? '';
+                  if (currentValue.isNotEmpty &&
+                      ((previousText?.isEmpty ?? true) ||
+                          previousText != currentValue)) {
+                    // Notes were added or changed
+                    if (previousText.isEmpty ) {
+                      _logger.logEvent(
+                          event: AppEvents.confirmationBookingAddNotes);
+                    }
+                  } else if (currentValue.isEmpty &&
+                      (previousText.isNotEmpty)) {
+                    // Notes were removed
+                    _logger.logEvent(
+                        event: AppEvents.confirmationBookingRemoveNotes);
+                  }
+                },
               ),
             ],
           ),
@@ -384,7 +408,9 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 selectedLocation: state.selectedLocation,
                 selectedGovernorate: state.deliveryInfo.selectedGov,
                 selectedLocationName: state.selectedLocationName,
-                code: state.couponValidationState != UiState.success?'':_textController.text,
+                code: state.couponValidationState != UiState.success
+                    ? ''
+                    : _textController.text,
                 notes: _notesController.text);
           },
         );
@@ -442,6 +468,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           isActive: enableIn || enableBoth,
           onTap: () {
             if (enableIn || enableBoth) {
+              _logger.logEvent(
+                  event: AppEvents.confirmationBookingClickInBranch);
               _selectButton(ServiceLocationOptions.inBranch);
             }
           },
@@ -455,6 +483,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
           isActive: enableOut || enableBoth,
           onTap: () {
             if (enableOut || enableBoth) {
+              _logger.logEvent(
+                  event: AppEvents.confirmationBookingClickOutBranch);
               _selectButton(ServiceLocationOptions.outBranch);
               _openGovernoratesSheet();
             }
@@ -572,13 +602,14 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       DazzifyToastBar.showError(
         message: context.tr.selectYourLocation,
       );
-    } else if (_textController.text.isNotEmpty && 
-               _invoiceCubit.state.couponValidationState != UiState.success) {
+    } else if (_textController.text.isNotEmpty &&
+        _invoiceCubit.state.couponValidationState != UiState.success) {
       // Check if coupon code is entered but not applied
       DazzifyToastBar.showError(
         message: context.tr.pleaseApplyCoupon,
       );
     } else {
+      _logger.logEvent(event: AppEvents.confirmationBookingSubmitBooking);
       // Build servicesWithQuantity payload
       final servicesWithQuantity =
           (widget.services.isEmpty ? [widget.service] : widget.services)

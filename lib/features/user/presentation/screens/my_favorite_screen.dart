@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/brand/logic/booking_from_media/booking_from_media_cubit.dart';
@@ -37,6 +39,7 @@ class MyFavoriteScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
   bool isLoading = false;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,10 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                   child: DazzifyAppBar(
                     isLeading: true,
                     title: context.tr.myFavorite,
+                    onBackTap: () {
+                      _logger.logEvent(event: AppEvents.favouritesClickBack);
+                      context.maybePop();
+                    },
                   ),
                 ),
                 Expanded(
@@ -79,7 +86,8 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                             return FavoriteCard(
                               image: item.image,
                               title: item.title,
-                              price: '${reformatPriceWithCommas(item.price)} ${context.tr.currency}',
+                              price:
+                                  '${reformatPriceWithCommas(item.price)} ${context.tr.currency}',
                               onTap: () {
                                 context
                                     .read<BookingFromMediaCubit>()
@@ -88,6 +96,11 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                                     );
                               },
                               onFavoriteTap: () {
+                                _logger.logEvent(
+                                  event:
+                                      AppEvents.favouritesClickRemoveFavourite,
+                                  serviceId: item.id,
+                                );
                                 context
                                     .read<FavoriteCubit>()
                                     .addOrRemoveFromFavorite(

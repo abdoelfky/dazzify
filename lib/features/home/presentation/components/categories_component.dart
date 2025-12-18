@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/data/models/category_model.dart';
@@ -13,6 +16,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoriesComponent extends StatelessWidget {
   const CategoriesComponent({super.key});
+
+  AppEventsLogger get _logger => getIt<AppEventsLogger>();
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +69,10 @@ class CategoriesComponent extends StatelessWidget {
                             ).r,
                             child: CategoryCard(
                               onTap: () {
+                                _logger.logEvent(
+                                  event: AppEvents.homeClickMaincategory,
+                                  mainCategoryId: category.id,
+                                );
                                 context.pushRoute(
                                   CategoryRoute(
                                     categoryName: category.name,

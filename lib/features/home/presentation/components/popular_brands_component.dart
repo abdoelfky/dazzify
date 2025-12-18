@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
@@ -14,6 +17,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class PopularBrandsComponent extends StatelessWidget {
   const PopularBrandsComponent({super.key});
 
+  AppEventsLogger get _logger => getIt<AppEventsLogger>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,6 +27,9 @@ class PopularBrandsComponent extends StatelessWidget {
           sectionTitle: context.tr.popularBrands,
           sectionType: SectionType.withTextButton,
           onTextButtonTap: () {
+            _logger.logEvent(
+              event: AppEvents.homeClickMorePopularBrands,
+            );
             context.pushRoute(const PopularBrandsRoute());
           },
         ),
@@ -60,6 +68,10 @@ class PopularBrandsComponent extends StatelessWidget {
                         child: PopularBrandCard(
                           brand: state.popularBrands[index],
                           onTap: () {
+                            _logger.logEvent(
+                              event: AppEvents.homeClickBrand,
+                              brandId: state.popularBrands[index].id,
+                            );
                             context.navigateTo(
                               BrandProfileRoute(
                                 brand: state.popularBrands[index],

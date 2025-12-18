@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
@@ -29,6 +32,7 @@ class _IssueSheetState extends State<IssueSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   final TextEditingController issueMessageController = TextEditingController();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -94,6 +98,7 @@ class _IssueSheetState extends State<IssueSheet> {
                       isLoading: isLoading,
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
+                          _logger.logEvent(event: AppEvents.issueSubmit);
                           issueBloc.add(
                             CreateIssueEvent(
                               bookingId: widget.bookingId,

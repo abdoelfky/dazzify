@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
@@ -167,6 +170,9 @@ Widget serviceReviewSection(
                   Center(
                     child: TextButton(
                       onPressed: () {
+                        getIt<AppEventsLogger>().logEvent(
+                          event: AppEvents.serviceDetailsClickAllReviews,
+                        );
                         context.pushRoute(
                           SeeAllReviewsRoute(
                             serviceId: serviceId,

@@ -1,5 +1,8 @@
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
@@ -27,6 +30,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
   late UserCubit _userCubit;
   late TokensCubit _tokensCubit;
   late AppNotificationsCubit _notificationsCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -40,6 +44,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
+
         padding: const EdgeInsets.only(
           left: 16,
           right: 16,
@@ -55,6 +60,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.phone,
                   title: context.tr.phoneNumber,
                   onTap: () {
+                    _logger.logEvent(event: AppEvents.profileClickEditPhone);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,
@@ -85,6 +91,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.heart,
                   title: context.tr.myFavorite,
                   onTap: () {
+                    _logger.logEvent(event: AppEvents.profileClickFavourites);
                     context.pushRoute(const MyFavoriteRoute());
                   },
                 ),
@@ -92,6 +99,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.qrCode,
                   title: context.tr.qrCodeScanner,
                   onTap: () {
+                    _logger.logEvent(event: AppEvents.profileClickQrCode);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,
@@ -129,6 +137,8 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.history,
                   title: "  ${context.tr.bookingsHistory}",
                   onTap: () {
+                    _logger.logEvent(
+                        event: AppEvents.profileClickBookingHistory);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,
@@ -146,6 +156,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.chatSquare,
                   title: context.tr.issue,
                   onTap: () {
+                    _logger.logEvent(event: AppEvents.profileClickIssue);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,
@@ -163,6 +174,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   iconData: SolarIconsOutline.wallet,
                   title: context.tr.payment,
                   onTap: () {
+                    _logger.logEvent(event: AppEvents.profileClickPayments);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,
@@ -207,6 +219,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                     },
                   ),
                   onTap: () {
+                    _logger.logEvent(event: AppEvents.profileChangeLanguage);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,
@@ -270,6 +283,13 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                                   },
                                 );
                               } else {
+                                if (switched) {
+                                  _logger.logEvent(
+                                      event: AppEvents.profileOnNotifications);
+                                } else {
+                                  _logger.logEvent(
+                                      event: AppEvents.profileOffNotifications);
+                                }
                                 notificationsControl(
                                   isActive: switched,
                                   permissions: state.permissionsState,
@@ -293,6 +313,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                     builder: (context, state) {
                       return IconSwitcher(
                         onChanged: (switched) {
+                          _logger.logEvent(event: AppEvents.profileChangeTheme);
                           context.read<SettingsCubit>().changeAppTheme();
                         },
                         activeIcon: SolarIconsOutline.sunrise,
@@ -308,6 +329,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
           SizedBox(height: 16.h),
           PrimaryButton(
             onTap: () {
+              _logger.logEvent(event: AppEvents.profileClickDeleteAccount);
               if (AuthLocalDatasourceImpl().checkGuestMode()) {
                 showModalBottomSheet(
                   context: context,
@@ -326,7 +348,8 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         listener: (context, state) {
                           if (state.deleteUserAccountState == UiState.success) {
                             _tokensCubit.deleteUserTokens();
-                          } else if (state.deleteUserAccountState == UiState.failure) {
+                          } else if (state.deleteUserAccountState ==
+                              UiState.failure) {
                             DazzifyToastBar.showError(
                               message: state.errorMessage,
                             );
@@ -335,7 +358,17 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         child: DazzifyDialog(
                           buttonTitle: context.tr.delete,
                           message: context.tr.deleteAccountMessage,
-                          onTap: () => _userCubit.deleteUser(),
+                          onTap: () async {
+                            _logger.logEvent(
+                                event:
+                                    AppEvents.profileClickConfirmDeleteAccount);
+                            _userCubit.deleteUser();
+                          },
+                          onCancelTap: () async {
+                            _logger.logEvent(
+                                event:
+                                    AppEvents.profileClickCancelDeleteAccount);
+                          },
                         ),
                       ),
                     );
@@ -349,6 +382,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
           SizedBox(height: 16.h),
           PrimaryButton(
             onTap: () {
+              _logger.logEvent(event: AppEvents.profileClickLogout);
               AuthLocalDatasourceImpl().checkGuestMode()
                   ? _tokensCubit.deleteUserTokens()
                   : showDialog(
@@ -357,7 +391,15 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         return DazzifyDialog(
                           buttonTitle: context.tr.logOut,
                           message: context.tr.logOutMessage,
-                          onTap: () => _tokensCubit.deleteUserTokens(),
+                          onTap: () async {
+                            _logger.logEvent(
+                                event: AppEvents.profileClickConfirmLogout);
+                            _tokensCubit.deleteUserTokens();
+                          },
+                          onCancelTap: () async {
+                            _logger.logEvent(
+                                event: AppEvents.profileClickCancelLogout);
+                          },
                         );
                       },
                     );

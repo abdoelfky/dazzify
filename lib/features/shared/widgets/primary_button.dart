@@ -1,5 +1,6 @@
 import 'package:dazzify/core/framework/dazzify_text.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
+import 'package:dazzify/core/util/debounce_util.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,16 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create a unique key for this button instance for debouncing
+    final debounceKey = 'primary_button_${key?.hashCode ?? hashCode}_$title';
+
+    void Function()? debouncedOnTap;
+    if (isActive && !isLoading) {
+      debouncedOnTap = () => DebounceUtil.execute(debounceKey, onTap);
+    }
+
     return GestureDetector(
-      onTap: (isActive && !isLoading) ? onTap : null,
+      onTap: debouncedOnTap,
       child: Container(
         width: width ?? 312.w,
         height: height ?? 42.h,

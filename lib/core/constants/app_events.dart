@@ -188,18 +188,29 @@ class AppEvents {
   static const String serviceDetailsClickBrand = 'servicedetails-click-brand';
   static const String serviceDetailsClickAllReviews =
       'servicedetails-click-allreviews';
+  static const String serviceDetailsClickShare = 'servicedetails-click-share';
+  static const String serviceDetailsClickReport = 'servicedetails-click-report';
+  static const String serviceDetailsSubmitReport =
+      'servicedetails-submit-report';
 
   // All Reviews Page
   static const String allReviewsClickBack = 'allreviews-click-back';
 
   // Calendar Page
   static const String calendarClickBack = 'calendar-click-back';
+  static const String calendarClickDate = 'calendar-click-date';
+  static const String calendarClickTime = 'calendar-click-time';
+  static const String calendarClickProceed = 'calendar-click-proceed';
   static const String calendarSelectDate = 'calendar-select-date';
   static const String calendarSelectTime = 'calendar-select-time';
   static const String calendarAgreeTerms = 'calendar-agree-terms';
   static const String calendarCancelTerms = 'calendar-cancel-terms';
 
   // Confirmation Booking Page
+  static const String confirmationClickBackHome =
+      'confirmation-click-back-home';
+  static const String confirmationClickAgree = 'confirmation-click-agree';
+  static const String confirmationClickCancel = 'confirmation-click-cancel';
   static const String confirmationBookingClickBack =
       'confirmtionbooking-click-back';
   static const String confirmationBookingClickInBranch =

@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/home/presentation/widgets/top_rated_brand_card.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
@@ -8,6 +11,8 @@ import 'package:dazzify/features/shared/widgets/section_widget.dart';
 class TopRatedBrandsComponent extends StatelessWidget {
   const TopRatedBrandsComponent({super.key});
 
+  AppEventsLogger get _logger => getIt<AppEventsLogger>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,6 +21,9 @@ class TopRatedBrandsComponent extends StatelessWidget {
           sectionTitle: context.tr.topRatedBrands,
           sectionType: SectionType.withTextButton,
           onTextButtonTap: () {
+            _logger.logEvent(
+              event: AppEvents.homeClickMoreTopratedBrands,
+            );
             context.pushRoute(const TopRatedBrandsRoute());
           },
         ),
@@ -50,6 +58,10 @@ class TopRatedBrandsComponent extends StatelessWidget {
                         return TopRatedBrandCard(
                           brand: item,
                           onTap: () {
+                            _logger.logEvent(
+                              event: AppEvents.homeClickBrand,
+                              brandId: item.id,
+                            );
                             context.navigateTo(
                               BrandProfileRoute(
                                 brand: state.topRatedBrands[index],

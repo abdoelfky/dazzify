@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/shared/enums/booking_status_enum.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
@@ -29,6 +32,7 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
   late BookingStatus bookingStatus;
   Key swipeButtonKey = UniqueKey();
   late final DazzifySwipeButtonController dazzifySwipeButtonController;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -180,7 +184,10 @@ class _SwipeButtonComponentState extends State<SwipeButtonComponent> {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: DazzifySwipeButton(
-          onSwipe: bookingCubit.userArrived,
+          onSwipe: () {
+            _logger.logEvent(event: AppEvents.bookingStatusSwipeArrive);
+            bookingCubit.userArrived();
+          },
           title: context.tr.swipe,
           swipedTitle: context.tr.arrived,
           dazzifySwipeButtonController: dazzifySwipeButtonController,

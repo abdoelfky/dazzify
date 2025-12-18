@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
@@ -29,6 +32,7 @@ class ChatBranchesSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final logger = getIt<AppEventsLogger>();
     return DazzifySheetBody(
       title: context.tr.branches,
       height: AppConstants.bottomSheetHeight,
@@ -67,6 +71,27 @@ class ChatBranchesSheet extends StatelessWidget {
                           branchName: state.brandBranches[index].name,
                           onTap: () async {
                             if (sheetType == BranchesSheetType.chat) {
+                              // Determine context from route name
+                              final routeName =
+                                  ModalRoute.of(context)?.settings.name ?? '';
+                              if (routeName.contains('BrandPosts') ||
+                                  routeName.contains('brand-posts')) {
+                                logger.logEvent(
+                                  event: AppEvents.brandMediaClickChat,
+                                  branchId: state.brandBranches[index].id,
+                                );
+                              } else if (routeName.contains('Brand') ||
+                                  routeName.contains('brand')) {
+                                logger.logEvent(
+                                  event: AppEvents.brandClickChat,
+                                  branchId: state.brandBranches[index].id,
+                                );
+                              } else {
+                                logger.logEvent(
+                                  event: AppEvents.reelsClickChat,
+                                  branchId: state.brandBranches[index].id,
+                                );
+                              }
                               context.maybePop();
                               context.navigateTo(
                                 ChatRoute(
@@ -78,6 +103,10 @@ class ChatBranchesSheet extends StatelessWidget {
                               );
                             } else if (sheetType ==
                                 BranchesSheetType.mapLocations) {
+                              logger.logEvent(
+                                event: AppEvents.brandClickBranchGoMap,
+                                branchId: state.brandBranches[index].id,
+                              );
                               context.maybePop();
                               double lat =
                                   state.brandBranches[index].location.latitude;

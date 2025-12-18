@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_brands/home_brands_bloc.dart';
@@ -38,6 +40,7 @@ class PopularBrandsScreen extends StatefulWidget implements AutoRouteWrapper {
 class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
   final ScrollController _controller = ScrollController();
   late final HomeBrandsBloc allBrandsBloc;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -76,6 +79,10 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
                   isLeading: true,
                   title: context.tr.popularBrands,
                   horizontalPadding: 16.r,
+                  onBackTap: () {
+                    _logger.logEvent(event: AppEvents.popularClickBrandsBack);
+                    context.maybePop();
+                  },
                 ),
               ),
               Expanded(
@@ -130,6 +137,10 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
                                 return BrandCard(
                                   brand: state.popularBrands[index],
                                   onTap: () {
+                                    _logger.logEvent(
+                                      event: AppEvents.popularClickBrandsBrand,
+                                      brandId: state.popularBrands[index].id,
+                                    );
                                     context.router.push(
                                       BrandProfileRoute(
                                         brand: state.popularBrands[index],
@@ -156,7 +167,6 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
               end: 10.w,
               child: AnimatedFilterButton(
                 iconColor: context.colorScheme.primary,
-
                 onItemTap: (int index) {
                   allBrandsBloc.add(
                     FilterPopularBrandsByCategory(

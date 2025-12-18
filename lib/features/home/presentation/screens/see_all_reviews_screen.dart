@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
@@ -34,6 +37,7 @@ class SeeAllReviewsScreen extends StatefulWidget implements AutoRouteWrapper {
 class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
   late final ServiceDetailsBloc serviceDetailsBloc;
   final ScrollController _scrollController = ScrollController();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -62,6 +66,10 @@ class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
             child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.allReviews,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.allReviewsClickBack);
+                context.maybePop();
+              },
             ),
           ),
           BlocBuilder<ServiceDetailsBloc, ServiceDetailsState>(

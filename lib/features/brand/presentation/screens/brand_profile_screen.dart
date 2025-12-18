@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/api/api_status_codes.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/dazzify_drop_down.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -50,9 +52,10 @@ class BrandProfileScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _BrandProfileScreenState extends State<BrandProfileScreen>
     with SingleTickerProviderStateMixin {
-  late  TabController _tabController;
+  late TabController _tabController;
   late final BrandBloc _brandBloc;
   late final ScrollController _controller;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   int _resolveInitialTabIndex(BrandState state) {
     final hasPhotos = state.photos.isNotEmpty;
@@ -99,7 +102,6 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
         },
         child: BlocBuilder<BrandBloc, BrandState>(
           builder: (context, state) {
-
             if (_tabController.index == 0 &&
                 state.brandDetailsState == UiState.success &&
                 state.photosState == UiState.success &&
@@ -146,7 +148,18 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0).r,
                             child: TabBar(
-                              onTap: (index) {},
+                              onTap: (index) {
+                                if (index == 0) {
+                                  _logger.logEvent(
+                                      event: AppEvents.brandClickTabPhotos);
+                                } else if (index == 1) {
+                                  _logger.logEvent(
+                                      event: AppEvents.brandClickTabVideos);
+                                } else if (index == 2) {
+                                  _logger.logEvent(
+                                      event: AppEvents.brandClickTabReviews);
+                                }
+                              },
                               controller: _tabController,
                               unselectedLabelColor: context.colorScheme.outline,
                               labelColor: context.colorScheme.primary,
@@ -222,6 +235,7 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                       child: GlassIconButton(
                         icon: SolarIconsOutline.arrowLeft,
                         onPressed: () {
+                          _logger.logEvent(event: AppEvents.brandClickBack);
                           context.maybePop();
                         },
                       ),
@@ -235,17 +249,18 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                         MenuOption(
                           svgIcon: AssetsManager.shareIcon,
                           onTap: () {
+                            _logger.logEvent(event: AppEvents.brandClickShare);
                             print('object');
                             openUrlSheet(
-                              url: AppConstants.shareBrand(
-                                  state.brandDetails.username!),
-                              context: context
-                            );
+                                url: AppConstants.shareBrand(
+                                    state.brandDetails.username!),
+                                context: context);
                           },
                         ),
                         MenuOption(
                           icon: SolarIconsOutline.dangerCircle,
                           onTap: () {
+                            _logger.logEvent(event: AppEvents.brandClickReport);
                             if (AuthLocalDatasourceImpl().checkGuestMode()) {
                               showModalBottomSheet(
                                 context: context,
@@ -259,6 +274,7 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                                 context: context,
                                 id: state.brandDetails.id,
                                 type: "brand",
+                                eventType: 'brand',
                               );
                             }
                           },

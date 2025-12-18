@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/search/search_bloc.dart';
@@ -34,6 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final ScrollController _brandsScrollController = ScrollController();
   late final SearchBloc searchBloc;
   late MediaType mediaType;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -91,6 +95,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: DazzifyAppBar(
                   title: context.tr.search,
                   isLeading: true,
+                  onBackTap: () {
+                    _logger.logEvent(event: AppEvents.searchClickBack);
+                    context.maybePop();
+                  },
                 ),
               ),
               Padding(
@@ -106,7 +114,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   validator: (value) => null,
                   textInputType: TextInputType.text,
                   onChanged: (keyWord) {
+                    if (keyWord.isNotEmpty) {
+                      _logger.logEvent(
+                        event: AppEvents.searchSearch,
+                        searchText: keyWord,
+                      );
+                    }
                     searchBloc.add(GetSearchResultsEvent(keyWord: keyWord));
+                  },
+                  onSubmit: (keyWord) {
+                    _logger.logEvent(event: AppEvents.searchClickSearch);
                   },
                 ),
               ),
@@ -183,6 +200,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                         return MediaCard(
                                           imageUrl: media.thumbnail,
                                           onTap: () {
+                                            _logger.logEvent(
+                                              event: AppEvents.searchClickMedia,
+                                              mediaId: media.id,
+                                            );
                                             _showPhotoScreen(media);
                                           },
                                           isVideo: false,
@@ -192,6 +213,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                         return MediaCard(
                                           imageUrl: media.thumbnail,
                                           onTap: () {
+                                            _logger.logEvent(
+                                              event: AppEvents.searchClickMedia,
+                                              mediaId: media.id,
+                                            );
                                             _showPhotoScreen(media);
                                           },
                                           isVideo: false,
@@ -201,6 +226,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                         return MediaCard(
                                           imageUrl: media.thumbnail,
                                           onTap: () {
+                                            _logger.logEvent(
+                                              event: AppEvents.searchClickMedia,
+                                              mediaId: media.id,
+                                            );
                                             context.pushRoute(
                                               ReelViewerRoute(reel: media),
                                             );
@@ -253,6 +282,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                   return BrandCard(
                                     brand: state.brands[index],
                                     onTap: () {
+                                      _logger.logEvent(
+                                        event: AppEvents.searchClickBrand,
+                                        brandId: state.brands[index].id,
+                                      );
                                       navigateToBrandProfile(
                                         context: context,
                                         brand: state.brands[index],

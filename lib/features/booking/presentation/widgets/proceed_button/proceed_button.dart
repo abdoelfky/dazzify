@@ -1,3 +1,6 @@
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/service_availability_cubit/service_availability_cubit.dart';
 import 'package:dazzify/features/booking/presentation/bottom_sheets/brand_terms_sheet.dart';
@@ -27,6 +30,7 @@ class ProceedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final logger = getIt<AppEventsLogger>();
     return BlocBuilder<ServiceAvailabilityCubit, ServiceAvailabilityState>(
       builder: (context, state) {
         return PrimaryButton(
@@ -34,6 +38,7 @@ class ProceedButton extends StatelessWidget {
             width: 328.w,
             height: 42.h,
             onTap: () async {
+              logger.logEvent(event: AppEvents.calendarClickProceed);
               showModalBottomSheet(
                 context: context,
                 useRootNavigator: true,

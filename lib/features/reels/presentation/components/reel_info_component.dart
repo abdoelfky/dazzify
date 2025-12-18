@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/widgets/animated_read_more_text.dart';
@@ -20,6 +23,8 @@ class ReelInfoComponent extends StatefulWidget {
 }
 
 class _ReelInfoComponentState extends State<ReelInfoComponent> {
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +39,10 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
           children: [
             GestureDetector(
               onTap: () {
+                _logger.logEvent(
+                  event: AppEvents.reelsClickBrand,
+                  brandId: widget.reel.brand.id,
+                );
                 context.navigateTo(
                   BrandProfileRoute(
                     brand: widget.reel.brand,
@@ -63,6 +72,10 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                 widget.reel.brand.verified
                     ? GestureDetector(
                         onTap: () {
+                          _logger.logEvent(
+                            event: AppEvents.reelsClickBrand,
+                            brandId: widget.reel.brand.id,
+                          );
                           context.pushRoute(
                             BrandProfileRoute(
                               brand: widget.reel.brand,
@@ -75,7 +88,7 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                             ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: 200.w),
                               child: IntrinsicWidth(
-                                child:  DText(
+                                child: DText(
                                   maxLines: 1,
                                   widget.reel.brand.name,
                                   style: context.textTheme.bodyLarge!.copyWith(
@@ -102,6 +115,10 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                       )
                     : GestureDetector(
                         onTap: () {
+                          _logger.logEvent(
+                            event: AppEvents.reelsClickBrand,
+                            brandId: widget.reel.brand.id,
+                          );
                           context.pushRoute(
                             BrandProfileRoute(brand: widget.reel.brand),
                           );

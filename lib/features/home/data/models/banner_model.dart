@@ -9,6 +9,8 @@ class BannerModel {
   final String image;
   @JsonKey(defaultValue: "")
   final String action;
+  @JsonKey(includeFromJson: true, includeToJson: true)
+  final String? id;
   final String? url;
   final String? coupon;
   final MainCategoryData? mainCategory;
@@ -17,18 +19,20 @@ class BannerModel {
 
   BannerModel({
     required this.image,
+    this.id,
     required this.action,
-    required this.url,
-    required this.coupon,
-    required this.mainCategory,
-    required this.brand,
-    required this.service,
+    this.url,
+    this.coupon,
+    this.mainCategory,
+    this.brand,
+    this.service,
   });
 
   const BannerModel.empty({
     this.image = '',
     this.action = '',
     this.url,
+    this.id,
     this.coupon,
     this.mainCategory,
     this.brand,

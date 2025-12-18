@@ -1,3 +1,6 @@
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/payment/logic/payment_methods/payment_methods_cubit.dart';
@@ -23,6 +26,7 @@ class EWalletTab extends StatefulWidget {
 class _EWalletTabState extends State<EWalletTab> {
   late final TransactionBloc transactionBloc;
   late final PaymentMethodsCubit paymentMethodsCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -75,6 +79,10 @@ class _EWalletTabState extends State<EWalletTab> {
                   imageFit: BoxFit.contain,
                   title: method.name,
                   onPressed: () {
+                    _logger.logEvent(
+                      event: AppEvents.paymentMethodsClickPaymentMethod,
+                      paymentMethodId: method.id,
+                    );
                     eWalletMethod(method.id);
                   },
                 );
@@ -83,13 +91,13 @@ class _EWalletTabState extends State<EWalletTab> {
           case UiState.failure:
             return AvailableSoonWidget();
 
-        // return ErrorDataWidget(
-            //   errorDataType: DazzifyErrorDataType.screen,
-            //   message: state.cardErrorMessage,
-            //   onTap: () {
-            //     paymentMethodsCubit.getCardMethods();
-            //   },
-            // );
+          // return ErrorDataWidget(
+          //   errorDataType: DazzifyErrorDataType.screen,
+          //   message: state.cardErrorMessage,
+          //   onTap: () {
+          //     paymentMethodsCubit.getCardMethods();
+          //   },
+          // );
         }
       },
     );

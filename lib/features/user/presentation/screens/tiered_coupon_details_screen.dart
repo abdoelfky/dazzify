@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
@@ -17,7 +19,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
   final TieredCouponModel coupon;
   final int couponIndex;
 
-  const TieredCouponDetailsScreen({
+  TieredCouponDetailsScreen({
     super.key,
     required this.coupon,
     required this.couponIndex,
@@ -54,6 +56,11 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                 child: DazzifyAppBar(
                   isLeading: true,
                   title: context.tr.coupons,
+                  onBackTap: () {
+                    getIt<AppEventsLogger>()
+                        .logEvent(event: AppEvents.couponQrCodeDetailsBack);
+                    context.maybePop();
+                  },
                 ),
               ),
               Expanded(
@@ -195,28 +202,29 @@ class TieredCouponDetailsScreen extends StatelessWidget {
     return BlocBuilder<TieredCouponCubit, TieredCouponState>(
       buildWhen: (previous, current) {
         // Rebuild when the specific coupon at couponIndex changes
-        if (couponIndex >= previous.coupons.length || 
+        if (couponIndex >= previous.coupons.length ||
             couponIndex >= current.coupons.length) {
           return true;
         }
         final prevCoupon = previous.coupons[couponIndex];
         final currCoupon = current.coupons[couponIndex];
-        return prevCoupon.opened != currCoupon.opened || 
-               prevCoupon.code != currCoupon.code;
+        return prevCoupon.opened != currCoupon.opened ||
+            prevCoupon.code != currCoupon.code;
       },
       builder: (context, state) {
         // Get the latest coupon from state instead of using the passed parameter
         final latestCoupon = couponIndex < state.coupons.length
             ? state.coupons[couponIndex]
             : coupon;
-        
-        final bool shouldShowScratch = !latestCoupon.opened && !latestCoupon.locked;
+
+        final bool shouldShowScratch =
+            !latestCoupon.opened && !latestCoupon.locked;
 
         final couponCard = _buildCouponCardContent(
-          context, 
-          sideColor, 
-          bodyColor, 
-          latestCoupon, 
+          context,
+          sideColor,
+          bodyColor,
+          latestCoupon,
           shouldShowScratch,
         );
 
@@ -233,7 +241,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
     bool shouldShowScratch,
   ) {
     final bool isRTL = Directionality.of(context) == TextDirection.rtl;
-    
+
     final couponCard = CustomPaint(
       painter: TicketPainter(
         sideColor: sideColor,
@@ -313,20 +321,21 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                     // if (currentCoupon.code != null)
                     shouldShowScratch
                         ? ScratchOverlayWidget(
-                            key: ValueKey('scratch_${couponIndex}_${currentCoupon.opened}'),
+                            key: ValueKey(
+                                'scratch_${couponIndex}_${currentCoupon.opened}'),
                             onScratchStart: () {
+                              getIt<AppEventsLogger>().logEvent(
+                                  event: AppEvents.couponQrCodeScratch);
                               // Fetch real code immediately when scratch starts
                               context
                                   .read<TieredCouponCubit>()
-                                  .fetchCouponCodeOnScratchStart(
-                                      couponIndex);
+                                  .fetchCouponCodeOnScratchStart(couponIndex);
                             },
                             onThresholdReached: () {
                               // Mark as opened when threshold reached
                               context
                                   .read<TieredCouponCubit>()
-                                  .markCouponAsOpenedOnThreshold(
-                                      couponIndex);
+                                  .markCouponAsOpenedOnThreshold(couponIndex);
                             },
                             overlayColor: Colors.white,
                             width: 200.w,
@@ -352,8 +361,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   currentCoupon.code ?? 'XXXXX',
-                                  style:
-                                      context.textTheme.bodyLarge?.copyWith(
+                                  style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.sp,
@@ -363,9 +371,13 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                             ),
                           )
                         : GestureDetector(
-                            key: ValueKey('code_${couponIndex}_${currentCoupon.code}'),
+                            key: ValueKey(
+                                'code_${couponIndex}_${currentCoupon.code}'),
                             onTap: () {
-                              if (currentCoupon.code != null && currentCoupon.code!.isNotEmpty) {
+                              if (currentCoupon.code != null &&
+                                  currentCoupon.code!.isNotEmpty) {
+                                getIt<AppEventsLogger>().logEvent(
+                                    event: AppEvents.couponQrCodeCopy);
                                 Clipboard.setData(
                                     ClipboardData(text: currentCoupon.code!));
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -445,7 +457,7 @@ class TicketPainter extends CustomPainter {
     final RRect rounded = RRect.fromLTRBR(
       16,
       0,
-      size.width -16,
+      size.width - 16,
       size.height,
       Radius.circular(16),
     );

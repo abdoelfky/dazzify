@@ -1,3 +1,6 @@
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/colors_manager.dart';
 import 'package:dazzify/features/booking/logic/service_availability_cubit/service_availability_cubit.dart';
 import 'package:dazzify/features/booking/presentation/widgets/time_selection_widget/components/analog_clock/build_vendor_sessions_stack.dart';
@@ -20,6 +23,8 @@ class AnalogClock extends StatelessWidget {
       builder: (context, state) {
         return GestureDetector(
           onTap: () {
+            getIt<AppEventsLogger>()
+                .logEvent(event: AppEvents.calendarSelectTime);
             context.read<ServiceAvailabilityCubit>().changeSelectedSession();
           },
           child: SizedBox(

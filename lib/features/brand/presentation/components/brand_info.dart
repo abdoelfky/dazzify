@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
@@ -90,6 +93,8 @@ class BrandInfo extends StatelessWidget {
             SizedBox(height: 20.h),
             TextButton(
               onPressed: () {
+                getIt<AppEventsLogger>()
+                    .logEvent(event: AppEvents.brandClickBranches);
                 final BrandBloc brandBloc = context.read<BrandBloc>();
                 brandBloc.add(GetBrandBranchesEvent(
                   brand.id,
@@ -157,6 +162,8 @@ class BrandInfo extends StatelessWidget {
       width: 252.w,
       height: 45.h,
       onTap: () {
+        getIt<AppEventsLogger>()
+            .logEvent(event: AppEvents.brandClickShowServices);
         if (AuthLocalDatasourceImpl().checkGuestMode()) {
           showModalBottomSheet(
             context: context,
@@ -187,6 +194,8 @@ class BrandInfo extends StatelessWidget {
   IconButton messageBrand(BuildContext context) {
     return IconButton(
       onPressed: () {
+        // Note: branchId will be logged when branch is selected in ChatBranchesSheet
+        getIt<AppEventsLogger>().logEvent(event: AppEvents.brandClickChat);
         if (AuthLocalDatasourceImpl().checkGuestMode()) {
           showModalBottomSheet(
             context: context,

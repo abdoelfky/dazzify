@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
@@ -30,6 +33,7 @@ class DetailsHeaderComponent extends StatefulWidget {
 class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
   bool isBranchesSheetOpened = false;
   late String image;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -65,7 +69,8 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
                 top: 90.h,
                 start: 30.w,
                 child: SizedBox(
-                  width: context.screenWidth - 100.w, // Or any specific width like 250.w
+                  width: context.screenWidth -
+                      100.w, // Or any specific width like 250.w
                   child: titleAndPrice(),
                 ),
               ),
@@ -96,6 +101,10 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
         if (!widget.isBooking)
           GestureDetector(
             onTap: () {
+              _logger.logEvent(
+                event: AppEvents.serviceDetailsClickBrand,
+                brandId: widget.service.brand.id,
+              );
               context.pushRoute(
                 BrandProfileRoute(
                   brandSlug: widget.service.brand.username,
@@ -170,7 +179,6 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
-
         SizedBox(height: 4.h),
         RichText(
           text: TextSpan(
@@ -227,9 +235,23 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
                   hasBackGround: false,
                   borderRadius: 12.r,
                   onFavoriteTap: () {
-                    context.read<FavoriteCubit>().addOrRemoveFromFavorite(
-                          favoriteService: widget.service.toFavoriteModel(),
-                        );
+                    final favoriteCubit = context.read<FavoriteCubit>();
+                    final isFavorite = favoriteCubit.state.favoriteIds
+                        .contains(widget.service.id);
+                    if (isFavorite) {
+                      _logger.logEvent(
+                        event: AppEvents.serviceDetailsClickRemoveFavourite,
+                        serviceId: widget.service.id,
+                      );
+                    } else {
+                      _logger.logEvent(
+                        event: AppEvents.serviceDetailsClickAddFavourite,
+                        serviceId: widget.service.id,
+                      );
+                    }
+                    favoriteCubit.addOrRemoveFromFavorite(
+                      favoriteService: widget.service.toFavoriteModel(),
+                    );
                   },
                   iconSize: 34.r,
                 ),
@@ -259,9 +281,23 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
               backgroundOpacity: 0.16,
               borderRadius: 12.r,
               onFavoriteTap: () {
-                context.read<FavoriteCubit>().addOrRemoveFromFavorite(
-                      favoriteService: widget.service.toFavoriteModel(),
-                    );
+                final favoriteCubit = context.read<FavoriteCubit>();
+                final isFavorite =
+                    favoriteCubit.state.favoriteIds.contains(widget.service.id);
+                if (isFavorite) {
+                  _logger.logEvent(
+                    event: AppEvents.serviceDetailsClickRemoveFavourite,
+                    serviceId: widget.service.id,
+                  );
+                } else {
+                  _logger.logEvent(
+                    event: AppEvents.serviceDetailsClickAddFavourite,
+                    serviceId: widget.service.id,
+                  );
+                }
+                favoriteCubit.addOrRemoveFromFavorite(
+                  favoriteService: widget.service.toFavoriteModel(),
+                );
               },
               iconSize: 34.r,
             );
@@ -274,6 +310,10 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
             width: 136.w,
             height: 60.h,
             onTap: () async {
+              _logger.logEvent(
+                event: AppEvents.serviceDetailsClickBook,
+                serviceId: widget.service.id,
+              );
               if (widget.branch != null) {
                 context.pushRoute(ServiceAvailabilityRoute(
                   service: widget.service,
@@ -290,17 +330,17 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
                       return GuestModeBottomSheet();
                     },
                   );
-                }else {
+                } else {
                   showModalBottomSheet(
-                  context: context,
-                  useRootNavigator: true,
-                  isScrollControlled: true,
-                  routeSettings:
-                      const RouteSettings(name: "BookingBranchesSheet"),
-                  builder: (context) => BookingBranchesSheet(
-                    service: widget.service,
-                  ),
-                );
+                    context: context,
+                    useRootNavigator: true,
+                    isScrollControlled: true,
+                    routeSettings:
+                        const RouteSettings(name: "BookingBranchesSheet"),
+                    builder: (context) => BookingBranchesSheet(
+                      service: widget.service,
+                    ),
+                  );
                 }
               }
             },

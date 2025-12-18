@@ -74,10 +74,10 @@ class _MediaPostCardState extends State<MediaPostCard> {
           mixWithOthers: false,
         ),
       );
-      
+
       // Initialize immediately - don't wait for full download
       await videoController.initialize();
-      
+
       final chewieController = ChewieController(
         videoPlayerController: videoController,
         autoPlay: true,
@@ -108,11 +108,11 @@ class _MediaPostCardState extends State<MediaPostCard> {
             (right) => didAddView = true,
           );
         }
-        
+
         // Auto-play first video when post comes into view
         if (visibilityInfo.visibleFraction > 0.5) {
           final firstItem = widget.brandMedia.mediaItems[_indicatorIndex.value];
-          if (firstItem.itemType == "video" && 
+          if (firstItem.itemType == "video" &&
               _videoControllers[_indicatorIndex.value] != null &&
               _videoControllers[_indicatorIndex.value]!.value.isInitialized) {
             _videoControllers[_indicatorIndex.value]!.play();
@@ -228,10 +228,24 @@ class _MediaPostCardState extends State<MediaPostCard> {
                         },
                       );
                     } else {
+                      // Determine context from route or widget usage
+                      final routeName =
+                          ModalRoute.of(context)?.settings.name ?? '';
+                      String eventType;
+                      if (routeName.contains('Search') ||
+                          routeName.contains('search')) {
+                        eventType = 'search-media';
+                      } else if (routeName.contains('BrandPosts') ||
+                          routeName.contains('brand-posts')) {
+                        eventType = 'brand-media';
+                      } else {
+                        eventType = 'brand-media';
+                      }
                       showReportBottomSheet(
                         context: context,
                         id: widget.brandMedia.id,
                         type: "media",
+                        eventType: eventType,
                       );
                     }
                   },
@@ -287,7 +301,8 @@ class _MediaPostCardState extends State<MediaPostCard> {
 
   Widget postMedia() {
     if (widget.brandMedia.mediaItems.length > 1) {
-      final aspectRatio = _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7;
+      final aspectRatio =
+          _parseAspectRatio(widget.brandMedia.aspectRatio) ?? 0.7;
       final carouselHeight = context.screenWidth / aspectRatio;
 
       return Column(
@@ -314,7 +329,8 @@ class _MediaPostCardState extends State<MediaPostCard> {
                           _videoControllers[index]!.value.isInitialized) {
                         return VisibilityDetector(
                           onVisibilityChanged: (visibility) {
-                            if (visibility.visibleFraction > 0.0 && _indicatorIndex.value == index) {
+                            if (visibility.visibleFraction > 0.0 &&
+                                _indicatorIndex.value == index) {
                               _videoControllers[index]!.play();
                             } else {
                               _videoControllers[index]!.pause();
@@ -347,7 +363,6 @@ class _MediaPostCardState extends State<MediaPostCard> {
                     autoPlay: false,
                     height: carouselHeight,
                     aspectRatio: aspectRatio,
-
                     autoPlayCurve: Curves.ease,
                     enlargeCenterPage: false,
                     initialPage: 0,
@@ -361,7 +376,8 @@ class _MediaPostCardState extends State<MediaPostCard> {
                       }
                       _indicatorIndex.value = index;
                       // Auto-play the current video if it's a video
-                      if (widget.brandMedia.mediaItems[index].itemType == "video" &&
+                      if (widget.brandMedia.mediaItems[index].itemType ==
+                              "video" &&
                           _videoControllers[index] != null) {
                         _videoControllers[index]!.play();
                       }

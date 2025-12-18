@@ -1,5 +1,8 @@
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_birthdate_picker.dart';
@@ -34,6 +37,7 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   late final profileCubit = context.read<UserCubit>();
   late ValueNotifier isActive;
   bool hasDropDownOpened = false;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -194,6 +198,8 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
                         isActive: isActive.value,
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
+                            _logger.logEvent(
+                                event: AppEvents.profileSubmitEditData);
                             _formKey.currentState!.save();
                             if (nameChanged()) {
                               profileCubit.updateProfileName(
@@ -243,7 +249,8 @@ class _ProfileUpdateSheetState extends State<ProfileUpdateSheet> {
   //   return profileCubit.state.userModel.profile.age != age;
   // }
   bool birthDayChanged() {
-    return profileCubit.state.userModel.profile.birthday != birthDayController.text;
+    return profileCubit.state.userModel.profile.birthday !=
+        birthDayController.text;
   }
 
   void checkActivity() {

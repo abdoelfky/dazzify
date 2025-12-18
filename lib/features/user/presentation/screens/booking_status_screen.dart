@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/payment/data/models/transaction_model.dart';
@@ -37,6 +40,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
   bool isLoading = false;
   late PageController _pageController;
   int _currentPageIndex = 0; // Track current page
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -85,10 +89,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                       });
                 case UiState.success:
                   bookingStatus = getBookingStatus(state.singleBooking.status);
-                  final startTime =
-                      DateTime.parse(state.singleBooking.startTime).toLocal();
                   TransactionType? transactionType;
-                  final now = DateTime.now();
                   if (state.singleBooking.payments.isNotEmpty) {
                     transactionType = getTransactionType(
                         state.singleBooking.payments.first.type);
@@ -510,7 +511,7 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
       // App Fees - Show value if available, otherwise show "will be calculated"
       PriceInfoItem(
         title: DazzifyApp.tr.appFees,
-        price: !hasFees||hasDeliveryFees
+        price: !hasFees || hasDeliveryFees
             ? "$appFees ${DazzifyApp.tr.egp}"
             : DazzifyApp.tr.willBeCalculated,
       ),

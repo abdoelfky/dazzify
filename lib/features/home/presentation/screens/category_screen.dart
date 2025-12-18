@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/category/category_bloc.dart';
@@ -41,6 +43,7 @@ class CategoryScreen extends StatefulWidget implements AutoRouteWrapper {
 class _CategoryScreenState extends State<CategoryScreen> {
   final ScrollController _controller = ScrollController();
   late final CategoryBloc categoryBloc;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -79,6 +82,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
             isLeading: true,
             title: widget.categoryName,
             horizontalPadding: 16.r,
+            onBackTap: () {
+              _logger.logEvent(event: AppEvents.maincategoryClickBack);
+              context.maybePop();
+            },
           ),
         ),
         Expanded(
@@ -136,6 +143,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           return BrandCard(
                             brand: state.brands[index],
                             onTap: () {
+                              _logger.logEvent(
+                                event: AppEvents.maincategoryClickBrand,
+                                brandId: state.brands[index].id,
+                              );
                               context.router.push(
                                 BrandProfileRoute(
                                   brand: state.brands[index],

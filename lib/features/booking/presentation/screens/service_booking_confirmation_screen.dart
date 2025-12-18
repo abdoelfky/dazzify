@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +19,8 @@ class ServiceBookingConfirmationScreen extends StatefulWidget {
 
 class _ServiceBookingConfirmationScreenState
     extends State<ServiceBookingConfirmationScreen> {
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,6 +60,8 @@ class _ServiceBookingConfirmationScreenState
                 ),
                 PrimaryButton(
                   onTap: () {
+                    _logger.logEvent(
+                        event: AppEvents.confirmationBookingClick12hGoToHome);
                     context.navigateTo(const HomeRoute());
                   },
                   title: DazzifyApp.tr.backHome,

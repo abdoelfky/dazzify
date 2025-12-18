@@ -1,5 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/brand/presentation/widgets/brand_category_item.dart';
@@ -42,6 +44,7 @@ class BrandServiceBookingScreen extends StatefulWidget
 
 class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
   late final ServiceSelectionCubit _serviceSelectionCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -69,6 +72,10 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
             DazzifyAppBar(
               isLeading: true,
               title: context.tr.services,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.servicesClickBack);
+                context.maybePop();
+              },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -129,6 +136,10 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                           name: category.name,
                           isSelected: category.id == state.selectedCategoryId,
                           onTap: () {
+                            _logger.logEvent(
+                              event: AppEvents.servicesClickCategory,
+                              categoryId: category.id,
+                            );
                             _serviceSelectionCubit.selectCategory(
                                 brandCategory: category);
                           },
@@ -216,12 +227,20 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                   );
                                 },
                                 onCardTap: () {
+                                  _logger.logEvent(
+                                    event: AppEvents.servicesClickService,
+                                    serviceId: service.id,
+                                  );
                                   _goToServiceDetailsScreen(
                                     service: service,
                                     branch: state.selectedBranch,
                                   );
                                 },
                                 onBookingSelectTap: () {
+                                  _logger.logEvent(
+                                    event: AppEvents.servicesClickBook,
+                                    serviceId: service.id,
+                                  );
                                   {
                                     _serviceSelectionCubit.selectBookingService(
                                       service: service,

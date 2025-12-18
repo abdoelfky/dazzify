@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/dazzify_text.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/colors_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -54,22 +56,25 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
   late final ValueNotifier<bool> _hasReachedTheEnd;
   late final ValueNotifier<bool> _hasCheckedAgree;
   late final BrandTermsCubit _brandTermsCubit = getIt<BrandTermsCubit>();
-  late final ServiceSelectionCubit _serviceSelectionCubit = getIt<ServiceSelectionCubit>();
+  late final ServiceSelectionCubit _serviceSelectionCubit =
+      getIt<ServiceSelectionCubit>();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   void _scrollListener() {
-    if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
+    if (_scrollController.offset >=
+        _scrollController.position.maxScrollExtent) {
       _hasReachedTheEnd.value = true;
     }
   }
 
   void _checkIfScrollable() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients && _scrollController.position.maxScrollExtent == 0) {
+      if (_scrollController.hasClients &&
+          _scrollController.position.maxScrollExtent == 0) {
         _hasReachedTheEnd.value = true;
       }
     });
   }
-
 
   @override
   void initState() {
@@ -88,7 +93,6 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
 
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -129,7 +133,8 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
 
                   case UiState.failure:
                     return ErrorDataWidget(
-                      onTap: () => _brandTermsCubit.getBrandTerms(brandId: widget.service.brand.id),
+                      onTap: () => _brandTermsCubit.getBrandTerms(
+                          brandId: widget.service.brand.id),
                       errorDataType: DazzifyErrorDataType.sheet,
                       message: state.errorMessage,
                     );
@@ -137,7 +142,8 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                   case UiState.success:
                     if (state.brandTerms.isEmpty) {
                       return Center(
-                        child: EmptyDataWidget(message: context.tr.noBrandTerms),
+                        child:
+                            EmptyDataWidget(message: context.tr.noBrandTerms),
                       );
                     } else {
                       _checkIfScrollable();
@@ -148,20 +154,29 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                               child: ListView.builder(
                                 controller: _scrollController,
                                 itemCount: state.brandTerms.length,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16).r,
+                                padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 16)
+                                    .r,
                                 itemBuilder: (context, index) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(bottom: 24.0, left: 16.0, right: 16.0).r,
+                                    padding: const EdgeInsets.only(
+                                            bottom: 24.0,
+                                            left: 16.0,
+                                            right: 16.0)
+                                        .r,
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 4.0).r,
+                                          padding:
+                                              const EdgeInsets.only(top: 4.0).r,
                                           child: Container(
                                             width: 8.r,
                                             height: 8.r,
                                             decoration: BoxDecoration(
-                                              color: context.colorScheme.onSurface,
+                                              color:
+                                                  context.colorScheme.onSurface,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
@@ -171,8 +186,10 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                           child: DText(
                                             state.brandTerms[index],
                                             softWrap: true,
-                                            style: context.textTheme.bodySmall!.copyWith(
-                                              color: context.colorScheme.onSurfaceVariant,
+                                            style: context.textTheme.bodySmall!
+                                                .copyWith(
+                                              color: context
+                                                  .colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ),
@@ -184,9 +201,6 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                               ),
                             ),
                           ),
-
-
-
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 40).r,
                             child: Column(
@@ -194,23 +208,28 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                 ValueListenableBuilder(
                                   valueListenable: _hasReachedTheEnd,
                                   builder: (_, reachedEnd, __) {
-                                    if (!reachedEnd) return const SizedBox.shrink();
+                                    if (!reachedEnd)
+                                      return const SizedBox.shrink();
 
                                     return ValueListenableBuilder(
                                       valueListenable: _hasCheckedAgree,
                                       builder: (_, checked, __) {
                                         return InkWell(
-                                          onTap: () => _hasCheckedAgree.value = !checked,
+                                          onTap: () =>
+                                              _hasCheckedAgree.value = !checked,
                                           child: Row(
                                             children: [
                                               Checkbox(
                                                 value: checked,
-                                                onChanged: (val) => _hasCheckedAgree.value = val ?? false,
+                                                onChanged: (val) =>
+                                                    _hasCheckedAgree.value =
+                                                        val ?? false,
                                               ),
                                               Expanded(
                                                 child: DText(
                                                   context.tr.iAgreeToTerms,
-                                                  style: context.textTheme.bodySmall,
+                                                  style: context
+                                                      .textTheme.bodySmall,
                                                 ),
                                               ),
                                             ],
@@ -220,18 +239,24 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                     );
                                   },
                                 ),
-
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                        padding: const EdgeInsets.symmetric(
+                                                horizontal: 10)
+                                            .r,
                                         child: PrimaryButton(
-                                          textColor: context.colorScheme.primary,
+                                          textColor:
+                                              context.colorScheme.primary,
                                           isOutLined: true,
                                           width: 155.w,
                                           onTap: () {
+                                            _logger.logEvent(
+                                                event: AppEvents
+                                                    .calendarCancelTerms);
                                             context.maybePop();
                                           },
                                           title: context.tr.cancel,
@@ -240,15 +265,21 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10).r,
+                                        padding: const EdgeInsets.symmetric(
+                                                horizontal: 10)
+                                            .r,
                                         child: ValueListenableBuilder(
                                           valueListenable: _hasReachedTheEnd,
                                           builder: (_, reachedEnd, __) {
                                             return ValueListenableBuilder(
                                               valueListenable: _hasCheckedAgree,
                                               builder: (_, checked, __) {
-                                                final isScrollable = state.brandTerms.length > 10;
-                                                final isActive = isScrollable ? (reachedEnd && checked) : checked;
+                                                final isScrollable =
+                                                    state.brandTerms.length >
+                                                        10;
+                                                final isActive = isScrollable
+                                                    ? (reachedEnd && checked)
+                                                    : checked;
 
                                                 return PrimaryButton(
                                                   isActive: isActive,
@@ -256,18 +287,30 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                                                   width: 155.w,
                                                   height: 42.h,
                                                   onTap: () {
+                                                    _logger.logEvent(
+                                                        event: AppEvents
+                                                            .calendarAgreeTerms);
                                                     context.maybePop();
-                                                    context.pushRoute(ServiceInvoiceRoute(
+                                                    context.pushRoute(
+                                                        ServiceInvoiceRoute(
                                                       service: widget.service,
-                                                      serviceSelectionCubit: widget.serviceSelectionCubit ?? _serviceSelectionCubit,
+                                                      serviceSelectionCubit: widget
+                                                              .serviceSelectionCubit ??
+                                                          _serviceSelectionCubit,
                                                       services: widget.services,
                                                       branchId: widget.branchId,
-                                                      branchName: widget.branchName,
-                                                      branchLocation: widget.branchLocation,
-                                                      selectedDate: widget.selectedDate,
-                                                      selectedStartTimeStamp: widget.selectedStartTimeStamp,
-                                                      selectedFromTime: widget.selectedFromTime,
-                                                      selectedToTime: widget.selectedToTime,
+                                                      branchName:
+                                                          widget.branchName,
+                                                      branchLocation:
+                                                          widget.branchLocation,
+                                                      selectedDate:
+                                                          widget.selectedDate,
+                                                      selectedStartTimeStamp: widget
+                                                          .selectedStartTimeStamp,
+                                                      selectedFromTime: widget
+                                                          .selectedFromTime,
+                                                      selectedToTime:
+                                                          widget.selectedToTime,
                                                     ));
                                                   },
                                                 );

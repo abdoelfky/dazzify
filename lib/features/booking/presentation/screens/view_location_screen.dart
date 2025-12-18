@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -57,6 +59,7 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
   late String _buttonTitle;
   bool _isLoading = true; // Initially loading
   late ViewLocationCubit _viewLocationCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -86,6 +89,8 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
             if (state.blocState == UiState.loading) {
               _isLoading = true;
             } else if (state.blocState == UiState.success) {
+              _logger.logEvent(
+                  event: AppEvents.confirmationBookingClickConfirmLocation);
               LocationModel selectedLocation = LocationModel(
                 longitude: _selectedLatLng.longitude,
                 latitude: _selectedLatLng.latitude,
@@ -123,7 +128,6 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                     _viewLocationCubit.showButton();
                   },
                   onTap: _mapOnTap,
-
                   gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                     Factory<OneSequenceGestureRecognizer>(
                       () => EagerGestureRecognizer(),
@@ -148,15 +152,15 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                       ).r,
                       child: state.showButton
                           ? CustomFadeAnimation(
-                        duration: const Duration(milliseconds: 300),
-                        child: PrimaryButton(
-                          title: _buttonTitle,
-                          width: context.screenWidth,
-                          isLoading: _isLoading,
-                          isActive: _isButtonActive,
-                          onTap: _buttonOnTap,
-                        ),
-                      )
+                              duration: const Duration(milliseconds: 300),
+                              child: PrimaryButton(
+                                title: _buttonTitle,
+                                width: context.screenWidth,
+                                isLoading: _isLoading,
+                                isActive: _isButtonActive,
+                                onTap: _buttonOnTap,
+                              ),
+                            )
                           : Container()),
                 ),
               ],
@@ -199,7 +203,6 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
       setState(() {
         _isLoading = false; // Once initialized, stop loading
       });
-
     } else {
       // If no location is provided, get the current location of the user
       Position? position = await _getCurrentLocation();
@@ -243,20 +246,24 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
         return null; // Location permission denied
       }
     }
 
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
 
   void _buttonOnTap() {
     if (widget.isDisplayOnly) {
       context.maybePop();
     } else {
+      _logger.logEvent(event: AppEvents.confirmationBookingClickSelectLocation);
       _viewLocationCubit.getLocationName(
         latitude: _selectedLatLng.latitude,
         longitude: _selectedLatLng.longitude,
@@ -266,6 +273,7 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
 
   void _mapOnTap(LatLng latLng) {
     if (!widget.isDisplayOnly) {
+      _logger.logEvent(event: AppEvents.confirmationBookingClickSelectLocation);
       _viewLocationCubit.addMarker(latLng.latitude, latLng.longitude);
 
       _isButtonActive = true;

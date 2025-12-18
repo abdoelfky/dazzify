@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/features/shared/enums/issue_status_enum.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
@@ -21,6 +24,7 @@ class _IssueStatusScreenState extends State<IssueStatusScreen>
     with SingleTickerProviderStateMixin {
   late IssueStatus _issueStatus;
   late TabController _tabController;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -40,6 +44,10 @@ class _IssueStatusScreenState extends State<IssueStatusScreen>
             child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.issueStatus,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.issueClickBack);
+                context.maybePop();
+              },
             ),
           ),
           IssueStepper(currentStep: _tabController.index),

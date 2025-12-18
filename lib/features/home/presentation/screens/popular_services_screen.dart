@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
@@ -36,6 +38,7 @@ class PopularServicesScreen extends StatefulWidget implements AutoRouteWrapper {
 class _PopularServicesScreenState extends State<PopularServicesScreen> {
   final ScrollController _controller = ScrollController();
   late final ServicesBloc servicesBloc;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -61,89 +64,99 @@ class _PopularServicesScreenState extends State<PopularServicesScreen> {
           children: [
             Column(
               children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: DazzifyAppBar(
-                isLeading: true,
-                title: context.tr.popularServices,
-                horizontalPadding: 16.r,
-              ),
-            ),
-            Expanded(
-              child: BlocBuilder<ServicesBloc, ServicesState>(
-                builder: (context, state) {
-                  switch (state.popularServicesState) {
-                    case UiState.initial:
-                    case UiState.loading:
-                      return DazzifyLoadingShimmer(
-                        dazzifyLoadingType: DazzifyLoadingType.gridView,
-                        gridViewItemCount: 12,
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 6.h,
-                        crossAxisSpacing: 6.w,
-                        mainAxisExtent: 185.h,
-                        widgetPadding: const EdgeInsets.all(8).r,
-                      );
-                    case UiState.failure:
-                      return ErrorDataWidget(
-                        errorDataType: DazzifyErrorDataType.screen,
-                        message: state.errorMessage,
-                        onTap: () {
-                          servicesBloc.add(const GetPopularServicesEvent());
-                        },
-                      );
-                    case UiState.success:
-                      if (state.popularServices.isEmpty) {
-                        return EmptyDataWidget(
-                          message: context.tr.noServices,
-                        );
-                      } else {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(8).r,
-                          controller: _controller,
-                          itemCount: state.popularServices.length + 1,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: DazzifyAppBar(
+                    isLeading: true,
+                    title: context.tr.popularServices,
+                    horizontalPadding: 16.r,
+                    onBackTap: () {
+                      _logger.logEvent(
+                          event: AppEvents.popularClickServicesBack);
+                      context.maybePop();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: BlocBuilder<ServicesBloc, ServicesState>(
+                    builder: (context, state) {
+                      switch (state.popularServicesState) {
+                        case UiState.initial:
+                        case UiState.loading:
+                          return DazzifyLoadingShimmer(
+                            dazzifyLoadingType: DazzifyLoadingType.gridView,
+                            gridViewItemCount: 12,
                             crossAxisCount: 3,
                             mainAxisSpacing: 6.h,
                             crossAxisSpacing: 6.w,
                             mainAxisExtent: 185.h,
-                          ),
-                          itemBuilder: (context, index) {
-                            if (state.popularServices.isNotEmpty &&
-                                index >= state.popularServices.length) {
-                              if (state.hasPopularServicesReachedMax) {
-                                return const SizedBox.shrink();
-                              } else {
-                                return LoadingAnimation(
-                                  height: 50.h,
-                                  width: 50.w,
-                                );
-                              }
-                            } else {
-                              final service = state.popularServices[index];
-                              return PopularServiceCard(
-                                service: service,
-                                nameStyle:
-                                    context.textTheme.bodySmall!.copyWith(
-                                  color: Colors.white,
-                                ),
-                                iconTop: 5.h,
-                                iconEnd: 5.w,
-                                onTap: () {
-                                  context.router.push(
-                                    ServiceDetailsRoute(service: service),
+                            widgetPadding: const EdgeInsets.all(8).r,
+                          );
+                        case UiState.failure:
+                          return ErrorDataWidget(
+                            errorDataType: DazzifyErrorDataType.screen,
+                            message: state.errorMessage,
+                            onTap: () {
+                              servicesBloc.add(const GetPopularServicesEvent());
+                            },
+                          );
+                        case UiState.success:
+                          if (state.popularServices.isEmpty) {
+                            return EmptyDataWidget(
+                              message: context.tr.noServices,
+                            );
+                          } else {
+                            return GridView.builder(
+                              padding: const EdgeInsets.all(8).r,
+                              controller: _controller,
+                              itemCount: state.popularServices.length + 1,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 6.h,
+                                crossAxisSpacing: 6.w,
+                                mainAxisExtent: 185.h,
+                              ),
+                              itemBuilder: (context, index) {
+                                if (state.popularServices.isNotEmpty &&
+                                    index >= state.popularServices.length) {
+                                  if (state.hasPopularServicesReachedMax) {
+                                    return const SizedBox.shrink();
+                                  } else {
+                                    return LoadingAnimation(
+                                      height: 50.h,
+                                      width: 50.w,
+                                    );
+                                  }
+                                } else {
+                                  final service = state.popularServices[index];
+                                  return PopularServiceCard(
+                                    service: service,
+                                    nameStyle:
+                                        context.textTheme.bodySmall!.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                    iconTop: 5.h,
+                                    iconEnd: 5.w,
+                                    onTap: () {
+                                      _logger.logEvent(
+                                        event: AppEvents
+                                            .popularClickServicesService,
+                                        serviceId: service.id,
+                                      );
+                                      context.router.push(
+                                        ServiceDetailsRoute(service: service),
+                                      );
+                                    },
                                   );
-                                },
-                              );
-                            }
-                          },
-                        );
+                                }
+                              },
+                            );
+                          }
                       }
-                  }
-                },
-              ),
-            ),
+                    },
+                  ),
+                ),
               ],
             ),
             if (mainCategories.isNotEmpty)
@@ -152,7 +165,6 @@ class _PopularServicesScreenState extends State<PopularServicesScreen> {
                 end: 10.w,
                 child: AnimatedFilterButton(
                   iconColor: context.colorScheme.primary,
-
                   onItemTap: (int index) {
                     servicesBloc.add(
                       FilterPopularServicesByCategory(

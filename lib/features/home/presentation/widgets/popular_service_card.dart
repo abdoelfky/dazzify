@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/home/presentation/widgets/popular_service_card_clipper.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/logic/favorite/favorite_cubit.dart';
@@ -81,7 +84,6 @@ class PopularServiceCard extends StatelessWidget {
                         ),
                   ),
                   DText(
-
                     '${reformatPriceWithCommas(service.price)} ${context.tr.egp}',
                     style: context.textTheme.bodySmall!.copyWith(
                       color: Colors.white,
@@ -95,14 +97,27 @@ class PopularServiceCard extends StatelessWidget {
               end: iconEnd ?? 8.w,
               child: BlocBuilder<FavoriteCubit, FavoriteState>(
                 builder: (context, state) {
+                  final logger = getIt<AppEventsLogger>();
+                  final isFavorite = state.favoriteIds.contains(service.id);
                   return FavoriteIconButton(
                     iconSize: 18.r,
                     backgroundColor:
-                    context.colorScheme.onPrimary.withValues(alpha: 0.6),
+                        context.colorScheme.onPrimary.withValues(alpha: 0.6),
                     favoriteColor: context.colorScheme.primary,
                     unFavoriteColor: context.colorScheme.primary,
-                    isFavorite: state.favoriteIds.contains(service.id),
+                    isFavorite: isFavorite,
                     onFavoriteTap: () {
+                      if (isFavorite) {
+                        logger.logEvent(
+                          event: AppEvents.homeClickRemoveFavourite,
+                          serviceId: service.id,
+                        );
+                      } else {
+                        logger.logEvent(
+                          event: AppEvents.homeClickAddFavourite,
+                          serviceId: service.id,
+                        );
+                      }
                       final favoriteCubit = context.read<FavoriteCubit>();
                       favoriteCubit.addOrRemoveFromFavorite(
                         favoriteService: service.toFavoriteModel(),

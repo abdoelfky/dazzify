@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/functions.dart';
@@ -26,6 +28,7 @@ import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 @RoutePage()
 class BrandPostsScreen extends StatefulWidget implements AutoRouteWrapper {
@@ -68,7 +71,9 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
   late final BrandBloc brandBloc;
   late final FavoriteCubit favoriteCubit;
   late final BookingFromMediaCubit _bookingFromMediaCubit;
-  late final ScrollController _controller;
+  late final ItemScrollController _itemScrollController;
+  late final ItemPositionsListener _itemPositionsListener;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
   bool isLoading = false;
 
   @override
@@ -78,55 +83,57 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
     favoriteCubit = context.read<FavoriteCubit>();
     _bookingFromMediaCubit = context.read<BookingFromMediaCubit>();
 
-    _controller = ScrollController()..addListener(_onScroll);
+    _itemScrollController = ItemScrollController();
+    _itemPositionsListener = ItemPositionsListener.create();
+    _itemPositionsListener.itemPositions.addListener(_onScroll);
+
+    // Scroll to the selected photo index after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _moveToIndex();
+      _scrollToIndex();
     });
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _itemPositionsListener.itemPositions.removeListener(_onScroll);
     super.dispose();
   }
 
-  int getDescriptionLinesCount(String text) {
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: context.textTheme.labelMedium,
-      ),
-      textDirection: TextDirection.ltr,
-      textAlign: TextAlign.left,
-    );
+  void _scrollToIndex() {
+    if (widget.photoIndex == 0) return;
 
-    textPainter.layout(maxWidth: context.screenWidth - 32);
-
-    return textPainter.computeLineMetrics().length;
+    // Wait for the list to be fully built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (_itemScrollController.isAttached) {
+            _itemScrollController.scrollTo(
+              index: widget.photoIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              alignment: 0.0, // Show the item from the top of the viewport
+            );
+          }
+        });
+      });
+    });
   }
 
-  void _moveToIndex() {
-    if (widget.photoIndex != 0) {
-      int descriptionLines = getDescriptionLinesCount(
-        brandBloc.state.photos[widget.photoIndex].caption,
-      );
-      if (descriptionLines >= 2) {
-        _controller.jumpTo(
-          widget.photoIndex * context.screenHeight * 0.70,
-        );
-      } else {
-        _controller.jumpTo(
-          widget.photoIndex * context.screenHeight * 0.64,
-        );
-      }
-    }
-  }
+  void _onScroll() {
+    final positions = _itemPositionsListener.itemPositions.value;
+    if (positions.isEmpty) return;
 
-  void _onScroll() async {
-    final maxScroll = _controller.position.maxScrollExtent;
-    final currentScroll = _controller.offset;
-    if (currentScroll >= (maxScroll * 0.8)) {
+    // Get the last visible item index
+    final lastVisibleIndex = positions
+        .where((position) => position.itemTrailingEdge > 0)
+        .reduce((max, position) =>
+            position.itemTrailingEdge > max.itemTrailingEdge ? position : max)
+        .index;
+
+    // Load more if we're near the end (within last 5 items)
+    if (lastVisibleIndex >= brandBloc.state.photos.length - 5) {
       brandBloc.add(
         GetBrandImagesEvent(widget.brandId),
       );
@@ -152,6 +159,10 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                     title:
                         "${truncateText(widget.brandName, 25)} ${DazzifyApp.tr.posts}",
                     textStyle: context.textTheme.titleMedium,
+                    onBackTap: () {
+                      _logger.logEvent(event: AppEvents.brandMediaClickBack);
+                      context.maybePop();
+                    },
                   ),
                 ),
                 brandPostsList(),
@@ -183,31 +194,40 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
   }
 
   Expanded brandPostsList() {
-    return Expanded(
-      child: BlocBuilder<BrandBloc, BrandState>(
-        builder: (context, state) {
-          return CustomFadeAnimation(
-            duration: const Duration(milliseconds: 300),
-            child: ListView.separated(
-              controller: _controller,
-              itemCount: state.photos.length + 1,
-              itemBuilder: (context, index) {
-                if (index >= state.photos.length) {
-                  if (state.hasPhotosReachedMax) {
-                    return const SizedBox.shrink();
-                  } else {
-                    return LoadingAnimation(
-                      height: 50.h,
-                      width: 50.w,
-                    );
-                  }
+    return Expanded(child: BlocBuilder<BrandBloc, BrandState>(
+      builder: (context, brandState) {
+        return CustomFadeAnimation(
+          duration: const Duration(milliseconds: 300),
+          child: ScrollablePositionedList.builder(
+            itemScrollController: _itemScrollController,
+            itemPositionsListener: _itemPositionsListener,
+            itemCount: brandState.photos.length + 1,
+            itemBuilder: (context, index) {
+              if (index >= brandState.photos.length) {
+                if (brandState.hasPhotosReachedMax) {
+                  return const SizedBox.shrink();
                 } else {
-                  final brandMedia = state.photos[index];
-                  return BlocConsumer<LikesCubit, LikesState>(
-                    listener: (context, state) =>
-                        likesCubitListener(state, brandMedia),
-                    builder: (context, state) {
-                      return MediaPostCard(
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: LoadingAnimation(
+                        height: 50.h,
+                        width: 50.w,
+                      ),
+                    ),
+                  );
+                }
+              } else {
+                final brandMedia = brandState.photos[index];
+                return BlocConsumer<LikesCubit, LikesState>(
+                  listener: (context, likesState) =>
+                      likesCubitListener(likesState, brandMedia),
+                  builder: (context, likesState) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index < brandState.photos.length - 1 ? 8.h : 0,
+                      ),
+                      child: MediaPostCard(
                         brandMedia: brandMedia,
                         isLiked:
                             likesCubit.state.likesIds.contains(brandMedia.id),
@@ -225,6 +245,8 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                           }
                         },
                         onCommentTap: () {
+                          _logger.logEvent(
+                              event: AppEvents.brandMediaClickComments);
                           if (AuthLocalDatasourceImpl().checkGuestMode()) {
                             showModalBottomSheet(
                               context: context,
@@ -246,36 +268,31 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
                           }
                         },
                         onSendServiceTap: () {
-                          if (AuthLocalDatasourceImpl().checkGuestMode()) {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: false,
-                              builder: (context) {
-                                return GuestModeBottomSheet();
-                              },
-                            );
-                          } else {
-                            handelSendServiceTap(brandMedia);
-                          }
+                          handelSendServiceTap(brandMedia);
                         },
                         onBookingTap: () {
+                          _logger.logEvent(
+                              event: AppEvents.brandMediaClickBook);
                           _bookingFromMediaCubit.getSingleServiceDetails(
                             serviceId: brandMedia.serviceId,
                           );
                         },
-                      );
-                    },
-                  );
-                }
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(height: 8);
-              },
-            ),
-          );
-        },
-      ),
-    );
+                        onBrandTap: () {
+                          _logger.logEvent(
+                            event: AppEvents.brandMediaClickBrand,
+                            brandId: brandMedia.brand.id,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        );
+      },
+    ));
   }
 
   void likesCubitListener(LikesState state, MediaModel brandMedia) {
@@ -307,23 +324,33 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
   }
 
   void handelSendServiceTap(MediaModel brandMedia) {
-    brandBloc.add(GetBrandBranchesEvent(brandMedia.brand.id));
+    if (AuthLocalDatasourceImpl().checkGuestMode()) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: false,
+        builder: (context) {
+          return GuestModeBottomSheet();
+        },
+      );
+    } else {
+      brandBloc.add(GetBrandBranchesEvent(brandMedia.brand.id));
 
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      routeSettings: const RouteSettings(
-        name: "BranchesBottomSheet",
-      ),
-      builder: (context) => BlocProvider.value(
-        value: brandBloc,
-        child: ChatBranchesSheet(
-          sheetType: BranchesSheetType.chat,
-          serviceId: brandMedia.serviceId,
-          brand: brandMedia.brand,
+      showModalBottomSheet(
+        context: context,
+        useRootNavigator: true,
+        isScrollControlled: true,
+        routeSettings: const RouteSettings(
+          name: "BranchesBottomSheet",
         ),
-      ),
-    );
+        builder: (context) => BlocProvider.value(
+          value: brandBloc,
+          child: ChatBranchesSheet(
+            sheetType: BranchesSheetType.chat,
+            serviceId: brandMedia.serviceId,
+            brand: brandMedia.brand,
+          ),
+        ),
+      );
+    }
   }
 }

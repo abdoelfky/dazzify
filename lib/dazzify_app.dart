@@ -92,6 +92,7 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
                   FocusScope.of(context).unfocus();
                 },
                 child: MaterialApp.router(
+
                   debugShowCheckedModeBanner: false,
                   builder: (context, child) {
                     return MediaQuery(
@@ -119,8 +120,10 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
                     DazzifyApp.tr = context.tr;
                     return DazzifyApp.tr.appName;
                   },
+
                   locale: Locale(state.currentLanguageCode),
                   supportedLocales: S.delegate.supportedLocales,
+
                   theme: state.isDarkTheme
                       ? ThemeManager.darkTheme()
                       : ThemeManager.lightTheme(),

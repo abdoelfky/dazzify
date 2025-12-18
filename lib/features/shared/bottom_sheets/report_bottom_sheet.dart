@@ -1,4 +1,6 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/validation_manager.dart';
@@ -20,10 +22,25 @@ class ReportBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<ReportCubit>();
+    final logger = getIt<AppEventsLogger>();
+    final routeName = ModalRoute.of(context)?.settings.name ?? '';
 
     return BlocConsumer<ReportCubit, ReportState>(
       listener: (context, state) {
         if (state.uiState == UiState.success) {
+          // Log submit event based on route name
+          if (routeName.contains('search-media') ||
+              routeName.contains('Search')) {
+            logger.logEvent(event: AppEvents.searchMediaSubmitReport);
+          } else if (routeName.contains('brand-media') ||
+              routeName.contains('Brand')) {
+            logger.logEvent(event: AppEvents.brandMediaSubmitReport);
+          } else if (routeName.contains('service') ||
+              routeName.contains('Service')) {
+            logger.logEvent(event: AppEvents.serviceDetailsSubmitReport);
+          } else {
+            logger.logEvent(event: AppEvents.brandSubmitReport);
+          }
           FocusManager.instance.primaryFocus?.unfocus();
           DazzifyToastBar.showSuccess(message: context.tr.reported);
           context.pop();
@@ -86,13 +103,25 @@ showReportBottomSheet({
   required BuildContext context,
   required String id,
   required String type,
+  String? eventType, // Optional: 'search-media' or 'brand-media' or 'brand'
 }) {
+  final logger = getIt<AppEventsLogger>();
+
+  // Log click event based on context
+  if (eventType == 'search-media') {
+    logger.logEvent(event: AppEvents.searchMediaClickReport);
+  } else if (eventType == 'brand-media') {
+    logger.logEvent(event: AppEvents.brandMediaClickReport);
+  } else {
+    logger.logEvent(event: AppEvents.brandClickReport);
+  }
+
   return showModalBottomSheet(
     context: context,
     useRootNavigator: true,
     isScrollControlled: true,
-    routeSettings: const RouteSettings(
-      name: "ٌReportBottomSheet",
+    routeSettings: RouteSettings(
+      name: "ReportBottomSheet_${eventType ?? 'default'}",
     ),
     builder: (context) => BlocProvider(
       create: (context) => getIt<ReportCubit>()..setUp(type, id),

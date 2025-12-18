@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/brand/logic/booking_from_media/booking_from_media_cubit.dart';
@@ -53,6 +55,7 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
   late final LikesCubit _likesCubit;
   late final BrandBloc _brandBloc;
   late final BookingFromMediaCubit _bookingFromMediaCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
   bool isLoading = false;
 
   @override
@@ -81,8 +84,12 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
                 isLoading: isLoading,
                 child: Column(
                   children: [
-                    const DazzifyAppBar(
+                    DazzifyAppBar(
                       isLeading: true,
+                      onBackTap: () {
+                        _logger.logEvent(event: AppEvents.searchMediaClickBack);
+                        context.maybePop();
+                      },
                     ),
                     brandPostsList(),
                   ],
@@ -130,6 +137,7 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
                     _likesCubit.addOrRemoveLike(mediaId: widget.photo.id);
                   },
                   onCommentTap: () {
+                    _logger.logEvent(event: AppEvents.searchMediaClickComments);
                     if (widget.photo.commentsCount == null) {
                       showModalBottomSheet(
                         context: context,
@@ -138,7 +146,7 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
                           return CommentsClosedBottomSheet();
                         },
                       );
-                    }else {
+                    } else {
                       handelCommentsTap(widget.photo);
                     }
                   },
@@ -146,11 +154,16 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
                     handelSendServiceTap(widget.photo);
                   },
                   onBookingTap: () {
+                    _logger.logEvent(event: AppEvents.searchMediaClickBook);
                     _bookingFromMediaCubit.getSingleServiceDetails(
                       serviceId: widget.photo.serviceId,
                     );
                   },
                   onBrandTap: () {
+                    _logger.logEvent(
+                      event: AppEvents.searchMediaClickBrand,
+                      brandId: widget.photo.brand.id,
+                    );
                     handelBrandTap(widget.photo.brand);
                   },
                 );
@@ -174,7 +187,7 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
   void handelCommentsTap(MediaModel media) {
     final commentsBloc = getIt<CommentsBloc>();
 
-      showModalBottomSheet(
+    showModalBottomSheet(
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
@@ -187,7 +200,6 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
         child: MediaCommentsSheet(media: media),
       ),
     );
-
   }
 
   void handelSendServiceTap(MediaModel brandMedia) {

@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
@@ -15,6 +18,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TopServicesComponent extends StatelessWidget {
   const TopServicesComponent({super.key});
 
+  AppEventsLogger get _logger => getIt<AppEventsLogger>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,6 +28,9 @@ class TopServicesComponent extends StatelessWidget {
           sectionTitle: context.tr.topRatedServices,
           sectionType: SectionType.withTextButton,
           onTextButtonTap: () {
+            _logger.logEvent(
+              event: AppEvents.homeClickMoreTopratedServices,
+            );
             context.pushRoute(const TopRatedServicesRoute());
           },
         ),
@@ -68,16 +76,33 @@ class TopServicesComponent extends StatelessWidget {
                             image: service.image,
                             price: service.price,
                             onTap: () {
+                              _logger.logEvent(
+                                event: AppEvents.homeClickService,
+                                serviceId: service.id,
+                              );
                               context.pushRoute(
                                 ServiceDetailsRoute(service: service),
                               );
                             },
                             onFavoriteTap: () {
-                              context
-                                  .read<FavoriteCubit>()
-                                  .addOrRemoveFromFavorite(
-                                    favoriteService: service.toFavoriteModel(),
-                                  );
+                              final favoriteCubit =
+                                  context.read<FavoriteCubit>();
+                              final isFavorite = favoriteCubit.state.favoriteIds
+                                  .contains(service.id);
+                              if (isFavorite) {
+                                _logger.logEvent(
+                                  event: AppEvents.homeClickRemoveFavourite,
+                                  serviceId: service.id,
+                                );
+                              } else {
+                                _logger.logEvent(
+                                  event: AppEvents.homeClickAddFavourite,
+                                  serviceId: service.id,
+                                );
+                              }
+                              favoriteCubit.addOrRemoveFromFavorite(
+                                favoriteService: service.toFavoriteModel(),
+                              );
                             },
                             isFavorite: state.favoriteIds.contains(service.id),
                           );

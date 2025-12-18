@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/payment/logic/transactions/transaction_bloc.dart';
@@ -35,6 +38,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen>
   late final TabController _tabController;
   bool isLoading = false;
   late final TransactionBloc transactionBloc;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -77,13 +81,29 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen>
                   padding: EdgeInsets.only(top: 45),
                   child: DazzifyAppBar(
                       isLeading: true,
-                      title: "${widget.serviceName} - ${context.tr.pay}"),
+                      title: "${widget.serviceName} - ${context.tr.pay}",
+                      onBackTap: () {
+                        _logger.logEvent(
+                            event: AppEvents.paymentMethodsClickBack);
+                        context.maybePop();
+                      }),
                 ),
                 SizedBox(
                   height: 10.h,
                 ),
                 TabBar(
-                  onTap: (index) {},
+                  onTap: (index) {
+                    if (index == 0) {
+                      _logger.logEvent(
+                          event: AppEvents.paymentMethodsClickWallet);
+                    } else if (index == 1) {
+                      _logger.logEvent(
+                          event: AppEvents.paymentMethodsClickCard);
+                    } else if (index == 2) {
+                      _logger.logEvent(
+                          event: AppEvents.paymentMethodsClickInstallment);
+                    }
+                  },
                   controller: _tabController,
                   unselectedLabelColor: context.colorScheme.outline,
                   labelColor: context.colorScheme.primary,

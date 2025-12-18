@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -55,12 +57,21 @@ class ChatScreen extends StatefulWidget implements AutoRouteWrapper {
 class _ChatScreenState extends State<ChatScreen> {
   late final TextEditingController textController;
   late final ChatCubit _chatCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
+  DateTime? _chatStartTime;
 
   @override
   void initState() {
     _chatCubit = context.read<ChatCubit>();
     _chatCubit.conversationsCubit = context.read<ConversationsCubit>();
     textController = TextEditingController();
+
+    // Log chat open event
+    _logger.logEvent(
+      event: AppEvents.chatOpenChat,
+      branchId: widget.branchId,
+    );
+    _chatStartTime = DateTime.now();
 
     if (widget.serviceToBeSent != null) {
       _chatCubit.sendMessage(
@@ -82,6 +93,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
+    // Log chat time when leaving
+    if (_chatStartTime != null) {
+      final chatDuration = DateTime.now().difference(_chatStartTime!).inSeconds;
+      if (chatDuration > 0) {
+        _logger.logEvent(
+          event: AppEvents.chatTimeChatting,
+          time: chatDuration,
+        );
+      }
+    }
     textController.dispose();
     _chatCubit.close();
 
@@ -98,7 +119,6 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             SizedBox(
               height: 50,
-
             ),
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -109,6 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   IconButton(
                     onPressed: () {
+                      _logger.logEvent(event: AppEvents.chatClickBack);
                       context.maybePop();
                     },
                     icon: Icon(
@@ -237,29 +258,37 @@ class _ChatScreenState extends State<ChatScreen> {
                             duration: const Duration(milliseconds: 700),
                             child: ListView.builder(
                               padding: const EdgeInsets.only(top: 16).r,
-                              itemCount: state.messages.length + 
-                                  (state.sendingMessageState == UiState.loading ? 1 : 0),
+                              itemCount: state.messages.length +
+                                  (state.sendingMessageState == UiState.loading
+                                      ? 1
+                                      : 0),
                               reverse: true,
                               itemBuilder: (context, index) {
                                 // Show loading shimmer at the top (index 0) when sending
-                                if (index == 0 && state.sendingMessageState == UiState.loading) {
+                                if (index == 0 &&
+                                    state.sendingMessageState ==
+                                        UiState.loading) {
                                   return LoadingMessageShimmer(
-                                    isTextMessage: state.sendingMessageType == MessageType.txt.name,
+                                    isTextMessage: state.sendingMessageType ==
+                                        MessageType.txt.name,
                                   );
                                 }
-                                
+
                                 // Adjust index if shimmer is showing
-                                final messageIndex = state.sendingMessageState == UiState.loading 
-                                    ? index - 1 
-                                    : index;
-                                    
+                                final messageIndex =
+                                    state.sendingMessageState == UiState.loading
+                                        ? index - 1
+                                        : index;
+
                                 if (state.messages[messageIndex].runtimeType ==
                                     String) {
                                   return DateWidget(
-                                    date: state.messages[messageIndex].messageSentTime,
+                                    date: state
+                                        .messages[messageIndex].messageSentTime,
                                   );
                                 } else {
-                                  if (state.messages[messageIndex].messageType !=
+                                  if (state
+                                          .messages[messageIndex].messageType !=
                                       MessageType.txt.name) {
                                     return ServiceOrPhotoMessage(
                                       message: state.messages[messageIndex],

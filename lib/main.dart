@@ -21,17 +21,17 @@ Future<void> main() async {
   // runZonedGuarded(
   //   () async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize timezone database for Africa/Cairo timezone support
   tz.initializeTimeZones();
-  
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Initialize Meta SDK for tracking app events and conversions
   await MetaSdkService.instance.initialize();
-  
+
   // Initialize TikTok SDK for tracking app events and conversions
   await TikTokSdkService.instance.initialize();
 
@@ -50,15 +50,14 @@ Future<void> main() async {
   //   mapsImplementation.useAndroidViewSurface = true;
   // }
 
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
     runApp(
-       const DazzifyApp(),
-
+      const DazzifyApp(),
     );
   });
   // },

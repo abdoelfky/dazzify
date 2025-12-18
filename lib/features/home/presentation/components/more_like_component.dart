@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
 import 'package:dazzify/features/shared/logic/favorite/favorite_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
@@ -59,6 +62,11 @@ class MoreLikeComponent extends StatelessWidget {
                                   height: 180.h,
                                   price: service.price,
                                   onTap: () {
+                                    getIt<AppEventsLogger>().logEvent(
+                                      event:
+                                          AppEvents.serviceDetailsClickService,
+                                      serviceId: service.id,
+                                    );
                                     context.pushRoute(
                                       ServiceDetailsRoute(service: service),
                                     );

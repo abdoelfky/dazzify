@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/shared/enums/issue_status_enum.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
@@ -54,20 +57,20 @@ class _IssueItemState extends State<IssueItem> {
                   height: 110.h,
                   child: services.length > 1
                       ? CarouselSlider.builder(
-                    itemCount: services.length,
-                    itemBuilder: (context, index, realIndex) =>
-                        cardImage(services[index].image),
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      autoPlayInterval: const Duration(seconds: 3),
-                      enlargeCenterPage: true,
-                      enlargeFactor: 0.65.r,
-                      viewportFraction: 1.1.r,
-                      onPageChanged: (index, _) {
-                        setState(() => _currentIndex = index);
-                      },
-                    ),
-                  )
+                          itemCount: services.length,
+                          itemBuilder: (context, index, realIndex) =>
+                              cardImage(services[index].image),
+                          options: CarouselOptions(
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(seconds: 3),
+                            enlargeCenterPage: true,
+                            enlargeFactor: 0.65.r,
+                            viewportFraction: 1.1.r,
+                            onPageChanged: (index, _) {
+                              setState(() => _currentIndex = index);
+                            },
+                          ),
+                        )
                       : cardImage(currentService.image),
                 ),
                 SizedBox(width: 16.w),
@@ -96,13 +99,18 @@ class _IssueItemState extends State<IssueItem> {
   }
 }
 
-
 void onCardTap({
   required BuildContext context,
   required IssueBloc issueBloc,
   required IssueModel issue,
 }) {
+  final logger = getIt<AppEventsLogger>();
+
   if (issue.status.isEmpty) {
+    logger.logEvent(
+      event: AppEvents.issueClickDetails,
+      bookingId: issue.bookingId,
+    );
     showModalBottomSheet(
         context: context,
         useRootNavigator: true,
@@ -120,6 +128,10 @@ void onCardTap({
           );
         });
   } else {
+    logger.logEvent(
+      event: AppEvents.issueClickDetails,
+      bookingId: issue.bookingId,
+    );
     print(issue.status);
     print(issue.reply);
     context.pushRoute(
@@ -177,13 +189,14 @@ Widget priceAndStatus({
   required IssueModel issue,
 }) {
   final hasPrice = issue.price > 0;
-  
+
   return Row(
     children: [
       if (hasPrice)
         SizedBox(
           width: context.screenWidth * 0.47,
-          child: DText("${reformatPriceWithCommas(issue.price)} ${context.tr.egp}",
+          child: DText(
+              "${reformatPriceWithCommas(issue.price)} ${context.tr.egp}",
               style: context.textTheme.bodyMedium),
         ),
       if (issue.status.isNotEmpty)

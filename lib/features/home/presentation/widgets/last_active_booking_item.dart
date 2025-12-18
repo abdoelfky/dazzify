@@ -1,5 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/booking/data/models/last_active_booking_model.dart';
 import 'package:dazzify/features/home/presentation/widgets/last_active_booking_bar.dart';
 import 'package:dazzify/features/shared/enums/booking_status_enum.dart';
@@ -19,6 +22,7 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
   late BookingStatus bookingStatus;
   late PageController _pageController;
   int _currentPageIndex = 0;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -39,6 +43,10 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
 
     return GestureDetector(
       onTap: () {
+        _logger.logEvent(
+          event: AppEvents.homeClickBookingStatus,
+          bookingId: widget.booking.id,
+        );
         context.pushRoute(BookingStatusRoute(bookingId: widget.booking.id));
       },
       child: Container(
@@ -93,11 +101,11 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                                             BorderRadius.circular(6.r),
                                       ),
                                       child: DText(
-                                        'X${services[index].quantity}',
-                                          style: context.textTheme.bodyMedium!.copyWith(
-                                              color: context.colorScheme.onSecondary
-                                          )
-                                      ),
+                                          'X${services[index].quantity}',
+                                          style: context.textTheme.bodyMedium!
+                                              .copyWith(
+                                                  color: context.colorScheme
+                                                      .onSecondary)),
                                     ),
                                   ),
                                 ],
@@ -141,17 +149,12 @@ class _LastActiveBookingItemState extends State<LastActiveBookingItem> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 6.r, vertical: 2.r),
                             decoration: BoxDecoration(
-                              color:
-                              context.colorScheme.inversePrimary,
-                              borderRadius:
-                              BorderRadius.circular(6.r),
+                              color: context.colorScheme.inversePrimary,
+                              borderRadius: BorderRadius.circular(6.r),
                             ),
-                            child: DText(
-                              'X${services.first.quantity}',
+                            child: DText('X${services.first.quantity}',
                                 style: context.textTheme.bodyMedium!.copyWith(
-                                    color: context.colorScheme.onSecondary
-                                )
-                            ),
+                                    color: context.colorScheme.onSecondary)),
                           ),
                         ),
                       ],

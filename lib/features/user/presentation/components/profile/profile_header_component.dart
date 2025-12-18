@@ -1,7 +1,10 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_rounded_picture.dart';
@@ -20,6 +23,7 @@ class ProfileHeaderComponent extends StatefulWidget {
 
 class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
   late UserCubit _profileCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -65,6 +69,9 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                     );
                   },
                 );
+              }
+              if (state.updateProfileImageState == UiState.success) {
+                _logger.logEvent(event: AppEvents.profileSubmitEditPhoto);
               }
             },
             builder: (context, state) {
@@ -121,6 +128,8 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
                             imageUrl: state.userModel.picture ?? "",
                             hasEditButton: state.userModel.picture != null,
                             onEditButtonTap: () {
+                              _logger.logEvent(
+                                  event: AppEvents.profileClickEditPhoto);
                               if (AuthLocalDatasourceImpl().checkGuestMode()) {
                                 showModalBottomSheet(
                                   context: context,
@@ -156,6 +165,7 @@ class _ProfileHeaderComponentState extends State<ProfileHeaderComponent> {
           end: 16.w,
           child: GestureDetector(
             onTap: () {
+              _logger.logEvent(event: AppEvents.profileClickEditData);
               if (AuthLocalDatasourceImpl().checkGuestMode()) {
                 showModalBottomSheet(
                   context: context,

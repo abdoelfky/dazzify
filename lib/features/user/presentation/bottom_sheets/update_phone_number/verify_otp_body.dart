@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_pin_input.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
 import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
@@ -20,6 +23,7 @@ class _VerifyOtpBodyState extends State<VerifyOtpBody> {
   DazzifyPinState dazzifyPinState = DazzifyPinState.normal;
   bool isLoading = false;
   late GlobalKey<FormState> _formKey;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -106,6 +110,7 @@ class _VerifyOtpBodyState extends State<VerifyOtpBody> {
                 PrimaryButton(
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
+                      _logger.logEvent(event: AppEvents.profileSubmitEditPhone);
                       FocusManager.instance.primaryFocus?.unfocus();
                       await _profileCubit.verifyUpdatePhoneNumber(
                         otp: otpCode,

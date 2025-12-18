@@ -8,12 +8,14 @@ class DazzifyDialog extends StatelessWidget {
   final String message;
   final String buttonTitle;
   final Future<void> Function() onTap;
+  final VoidCallback? onCancelTap;
 
   const DazzifyDialog({
     super.key,
     required this.message,
     required this.buttonTitle,
     required this.onTap,
+    this.onCancelTap,
   });
 
   @override
@@ -54,6 +56,7 @@ class DazzifyDialog extends StatelessWidget {
                     children: [
                       PrimaryButton(
                         onTap: () {
+                          onCancelTap?.call();
                           Future.delayed(const Duration(milliseconds: 300), () {
                             if (context.mounted) {
                               context.maybePop();

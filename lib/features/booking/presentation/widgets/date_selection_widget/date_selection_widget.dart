@@ -1,4 +1,7 @@
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/colors_manager.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/service_availability_cubit/service_availability_cubit.dart';
@@ -24,6 +27,7 @@ class DateSelectionWidget extends StatefulWidget {
 class _DateSelectionWidgetState extends State<DateSelectionWidget> {
   late final ServiceAvailabilityCubit cubit =
       context.read<ServiceAvailabilityCubit>();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +51,7 @@ class _DateSelectionWidgetState extends State<DateSelectionWidget> {
       ),
       child: SfDateRangePicker(
         onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+          _logger.logEvent(event: AppEvents.calendarSelectDate);
           context.read<ServiceAvailabilityCubit>().changeSelectedDate(
                 serviceId: widget.serviceId,
                 branchId: widget.branchId,

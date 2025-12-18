@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/notifications/logic/in_app_notifications/in_app_notifications_bloc.dart';
@@ -33,6 +35,7 @@ class NotificationsScreen extends StatefulWidget implements AutoRouteWrapper {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   final ScrollController _controller = ScrollController();
   late final InAppNotificationsBloc inAppNotificationsBloc;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   void _onScroll() async {
     final maxScroll = _controller.position.maxScrollExtent;
@@ -72,6 +75,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 isLeading: true,
                 title: context.tr.notifications,
                 horizontalPadding: 16.r,
+                onBackTap: () {
+                  _logger.logEvent(event: AppEvents.notificationsClickBack);
+                  context.maybePop();
+                },
               ),
             ),
             Expanded(

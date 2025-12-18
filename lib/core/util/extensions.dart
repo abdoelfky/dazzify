@@ -1,3 +1,4 @@
+import 'package:dazzify/core/util/debounce_util.dart';
 import 'package:dazzify/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as localization;
@@ -30,4 +31,14 @@ extension BuildContextExtension on BuildContext {
   double get bottomInsets => MediaQuery.of(this).viewInsets.bottom;
 
   bool get isDarkTheme => Theme.of(this).brightness == Brightness.dark;
+}
+
+/// Extension to easily create debounced callbacks
+extension DebounceCallbackExtension on void Function() {
+  /// Returns a debounced version of this callback
+  /// [key] - Optional unique key for this debounce instance. If not provided, uses callback's hashCode
+  void Function() debounced([String? key]) {
+    final callbackKey = key ?? hashCode.toString();
+    return () => DebounceUtil.execute(callbackKey, this);
+  }
 }

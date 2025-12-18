@@ -1,3 +1,4 @@
+import 'package:dazzify/core/util/debounce_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,6 +27,14 @@ class GlassIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create a unique key for this button instance for debouncing
+    final debounceKey =
+        'glass_icon_button_${key?.hashCode ?? hashCode}_${icon?.codePoint ?? svgIconPath}';
+
+    void debouncedOnPressed() {
+      DebounceUtil.execute(debounceKey, onPressed);
+    }
+
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       width: width ?? 40.w,
@@ -36,7 +45,7 @@ class GlassIconButton extends StatelessWidget {
       ),
       child: icon != null
           ? IconButton(
-              onPressed: onPressed,
+              onPressed: debouncedOnPressed,
               icon: Icon(
                 icon,
                 color: Colors.white,
@@ -44,7 +53,7 @@ class GlassIconButton extends StatelessWidget {
               ),
             )
           : GestureDetector(
-              onTap: onPressed,
+              onTap: debouncedOnPressed,
               child: SizedBox(
                 width: 24.r,
                 height: 24.r,

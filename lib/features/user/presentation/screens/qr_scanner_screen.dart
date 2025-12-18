@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_toast_bar.dart';
@@ -23,7 +26,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   );
 
   bool _hasScanned = false;
-
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -47,9 +50,10 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
 
   void _handleQrCode(String qrCode) {
     if (_hasScanned) return;
-    
+
     _hasScanned = true;
-    
+    _logger.logEvent(event: AppEvents.qrCodeScan);
+
     // Check if the QR code matches the tiered coupon rewards URL
     if (qrCode == 'https://www.dazzifyapp.com/tiered-coupon-rewards') {
       // Navigate to tiered coupon rewards screen
@@ -59,7 +63,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       DazzifyToastBar.showError(
         message: context.tr.invalidQrCode,
       );
-      
+
       // Reset after a delay to allow scanning again
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
@@ -81,6 +85,10 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
             child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.qrCodeScanner,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.qrCodeClickBack);
+                context.maybePop();
+              },
             ),
           ),
           Expanded(

@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
@@ -29,6 +31,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
   late final LikesCubit likesCubit;
   late final ReelsBloc reelsBloc;
   late final VideoPreloader _videoPreloader;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
   int _currentPage = 0;
 
   @override
@@ -48,7 +51,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
     if (currentScroll >= (maxScroll * 0.8)) {
       reelsBloc.add(const GetReelsEvent());
     }
-    
+
     // Track current page and preload next videos
     if (_pageController.hasClients) {
       final page = _pageController.page?.round() ?? 0;
@@ -58,12 +61,12 @@ class _ReelsScreenState extends State<ReelsScreen> {
       }
     }
   }
-  
+
   /// Preload the next 2 videos and dispose old ones
   void _preloadNextVideos() {
     final state = reelsBloc.state;
     if (state.reels.isEmpty) return;
-    
+
     // Preload next 2 videos
     for (int i = 1; i <= 2; i++) {
       final nextIndex = _currentPage + i;
@@ -74,7 +77,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
         }
       }
     }
-    
+
     // Dispose videos that are more than 2 positions behind
     for (int i = 0; i < _currentPage - 2; i++) {
       if (i >= 0 && i < state.reels.length) {
@@ -89,107 +92,122 @@ class _ReelsScreenState extends State<ReelsScreen> {
     return BlocBuilder<ReelsBloc, ReelsState>(
       buildWhen: (previous, current) => previous.reels != current.reels,
       builder: (context, state) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.black,
-          body: Stack(
-            children: [
-              if (state.reels.isEmpty && state.reelsState == UiState.success)
-                Center(
-                  child: EmptyDataWidget(
-                    message: context.tr.noReels,
-                  ),
-                )
-              else
-                Positioned.fill(
-                  top: 0,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    scrollDirection: Axis.vertical,
-                    itemCount: state.hasReelsReachedMax
-                        ? state.reels.length
-                        : state.reels.length + 1,
-                    onPageChanged: (index) {
-                      _currentPage = index;
-                      _preloadNextVideos();
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      switch (state.reelsState) {
-                        case UiState.initial:
-                        case UiState.loading:
-                          return const Center(child: LoadingAnimation());
-                        case UiState.failure:
-                          return ErrorDataWidget(
-                            errorDataType: DazzifyErrorDataType.screen,
-                            message: state.errorMessage,
-                            onTap: () {
-                              reelsBloc.add(const GetReelsEvent());
-                            },
-                          );
-                        case UiState.success:
-                          if (index >= state.reels.length) {
-                            if (state.hasReelsReachedMax &&
-                                state.reels.isNotEmpty) {
-                              return const SizedBox.shrink();
-                            } else if (state.reels.isEmpty) {
-                              return Center(
-                                child: EmptyDataWidget(
-                                  message: context.tr.noReels,
+        return PopScope(
+          canPop: true,
+          onPopInvoked: (didPop) {
+            if (didPop) {
+              _logger.logEvent(event: AppEvents.reelsClickBack);
+            }
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.black,
+            body: Stack(
+              children: [
+                if (state.reels.isEmpty && state.reelsState == UiState.success)
+                  Center(
+                    child: EmptyDataWidget(
+                      message: context.tr.noReels,
+                    ),
+                  )
+                else
+                  Positioned.fill(
+                    top: 0,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      scrollDirection: Axis.vertical,
+                      itemCount: state.hasReelsReachedMax
+                          ? state.reels.length
+                          : state.reels.length + 1,
+                      onPageChanged: (index) {
+                        _currentPage = index;
+                        _preloadNextVideos();
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        switch (state.reelsState) {
+                          case UiState.initial:
+                          case UiState.loading:
+                            return const Center(child: LoadingAnimation());
+                          case UiState.failure:
+                            return ErrorDataWidget(
+                              errorDataType: DazzifyErrorDataType.screen,
+                              message: state.errorMessage,
+                              onTap: () {
+                                reelsBloc.add(const GetReelsEvent());
+                              },
+                            );
+                          case UiState.success:
+                            if (index >= state.reels.length) {
+                              if (state.hasReelsReachedMax &&
+                                  state.reels.isNotEmpty) {
+                                return const SizedBox.shrink();
+                              } else if (state.reels.isEmpty) {
+                                return Center(
+                                  child: EmptyDataWidget(
+                                    message: context.tr.noReels,
+                                  ),
+                                );
+                              } else {
+                                return const LoadingAnimation();
+                              }
+                            } else {
+                              final currentReel = state.reels[index];
+                              final videoUrl =
+                                  currentReel.mediaItems[0].itemUrl;
+
+                              // Preload next videos when building current item
+                              if (index == _currentPage) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  _preloadNextVideos();
+                                });
+                              }
+
+                              return BlocProvider(
+                                create: (context) => getIt<CommentsBloc>(),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 30).r,
+                                  child: ReelPlayer(
+                                    reel: currentReel,
+                                    videoUrl: videoUrl,
+                                    preloadedController:
+                                        _videoPreloader.getController(videoUrl),
+                                    onLikeTap: () => likesCubit.addOrRemoveLike(
+                                        mediaId: currentReel.id),
+                                    onPageChange: () {
+                                      _pageController.nextPage(
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    },
+                                  ),
                                 ),
                               );
-                            } else {
-                              return const LoadingAnimation();
                             }
-                          } else {
-                            final currentReel = state.reels[index];
-                            final videoUrl = currentReel.mediaItems[0].itemUrl;
-                            
-                            // Preload next videos when building current item
-                            if (index == _currentPage) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _preloadNextVideos();
-                              });
-                            }
-                            
-                            return BlocProvider(
-                              create: (context) => getIt<CommentsBloc>(),
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 30).r,
-                                child: ReelPlayer(
-                                  reel: currentReel,
-                                  videoUrl: videoUrl,
-                                  preloadedController: _videoPreloader.getController(videoUrl),
-                                  onLikeTap: () => likesCubit.addOrRemoveLike(
-                                      mediaId: currentReel.id),
-                                  onPageChange: () {
-                                    _pageController.nextPage(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          }
-                      }
+                        }
+                      },
+                    ),
+                  ),
+                PositionedDirectional(
+                  top: 40.h,
+                  end: 10.w,
+                  child: AnimatedFilterButton(
+                    onItemTap: (int index) {
+                      _logger.logEvent(
+                        event: AppEvents.reelsClickFilter,
+                        mainCategoryId: mainCategories[index].id,
+                      );
+                      reelsBloc.add(
+                        FilterReelsByCategories(
+                          mainCategoryId: mainCategories[index].id,
+                        ),
+                      );
                     },
                   ),
                 ),
-              PositionedDirectional(
-                top: 40.h,
-                end: 10.w,
-                child: AnimatedFilterButton(
-                  onItemTap: (int index) {
-                    reelsBloc.add(
-                      FilterReelsByCategories(
-                        mainCategoryId: mainCategories[index].id,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

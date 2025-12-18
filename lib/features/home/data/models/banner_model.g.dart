@@ -9,6 +9,7 @@ part of 'banner_model.dart';
 BannerModel _$BannerModelFromJson(Map<String, dynamic> json) => BannerModel(
       image: json['image'] as String? ?? '',
       action: json['action'] as String? ?? '',
+      id: json['id'] as String?,
       url: json['url'] as String?,
       coupon: json['coupon'] as String?,
       mainCategory: json['mainCategory'] == null
@@ -27,6 +28,7 @@ Map<String, dynamic> _$BannerModelToJson(BannerModel instance) =>
     <String, dynamic>{
       'image': instance.image,
       'action': instance.action,
+      'id': instance.id,
       'url': instance.url,
       'coupon': instance.coupon,
       'mainCategory': instance.mainCategory,

@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
 import 'package:dazzify/features/shared/logic/settings/settings_cubit.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
@@ -16,6 +19,7 @@ class ChangeLanguageDialog extends StatefulWidget {
 class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
   late final SettingsCubit settingsCubit;
   late final UserCubit userCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -31,6 +35,7 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
           previous.updateProfileLangState != current.updateProfileLangState,
       listener: (context, state) {
         if (state.updateProfileLangState == UiState.loading) {
+          // Language change is logged when user selects a language
           context.maybePop();
         }
       },
@@ -62,6 +67,11 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
                       SizedBox(height: 8.h),
                       ListTile(
                         onTap: () {
+                          if (state.currentLanguageCode !=
+                              AppConstants.enCode) {
+                            _logger.logEvent(
+                                event: AppEvents.profileSubmitEditPhone);
+                          }
                           toEnglishLanguage(state.currentLanguageCode);
                         },
                         leading: DText(
@@ -76,12 +86,22 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
                           value: AppConstants.enCode,
                           groupValue: state.currentLanguageCode,
                           onChanged: (value) {
+                            if (state.currentLanguageCode !=
+                                AppConstants.enCode) {
+                              _logger.logEvent(
+                                  event: AppEvents.profileSubmitEditPhone);
+                            }
                             toEnglishLanguage(state.currentLanguageCode);
                           },
                         ),
                       ),
                       ListTile(
                         onTap: () {
+                          if (state.currentLanguageCode !=
+                              AppConstants.arCode) {
+                            _logger.logEvent(
+                                event: AppEvents.profileSubmitEditPhone);
+                          }
                           toArabicLanguage(state.currentLanguageCode);
                         },
                         leading: DText(
@@ -96,6 +116,11 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
                           value: AppConstants.arCode,
                           groupValue: state.currentLanguageCode,
                           onChanged: (value) {
+                            if (state.currentLanguageCode !=
+                                AppConstants.arCode) {
+                              _logger.logEvent(
+                                  event: AppEvents.profileSubmitEditPhone);
+                            }
                             toArabicLanguage(state.currentLanguageCode);
                           },
                         ),

@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
@@ -52,22 +55,18 @@ class ServiceInformation extends StatelessWidget {
                   right: 0,
                   child: Container(
                     padding:
-                    EdgeInsets.symmetric(horizontal: 6.r, vertical: 2.r),
+                        EdgeInsets.symmetric(horizontal: 6.r, vertical: 2.r),
                     decoration: BoxDecoration(
                       color: context.colorScheme.inversePrimary,
                       borderRadius: BorderRadius.circular(6.r),
                     ),
-                    child: DText(
-                      'X${service.quantity}',
-                        style: context.textTheme.bodyMedium!.copyWith(
-                            color: context.colorScheme.onSecondary
-                        )
-                    ),
+                    child: DText('X${service.quantity}',
+                        style: context.textTheme.bodyMedium!
+                            .copyWith(color: context.colorScheme.onSecondary)),
                   ),
                 ),
               ],
             ),
-
             SizedBox(
               width: 16.w,
             ),
@@ -119,9 +118,13 @@ class ServiceInformation extends StatelessWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        if (selectedButton != ServiceLocationOptions.inBranch.toString()) {
+                        if (selectedButton !=
+                            ServiceLocationOptions.inBranch.toString()) {
                           onSelectLocationTap();
                         } else {
+                          getIt<AppEventsLogger>().logEvent(
+                              event: AppEvents
+                                  .confirmationBookingClickBranchLocation);
                           // print(branchLocation!.latitude);
                           LocationModel? locationModel =
                               selectedButton == ServiceLocationOptions.inBranch
@@ -140,9 +143,7 @@ class ServiceInformation extends StatelessWidget {
                             ),
                           );
                         }
-                      }
-
-                      ,
+                      },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0).r,
                         child: Row(

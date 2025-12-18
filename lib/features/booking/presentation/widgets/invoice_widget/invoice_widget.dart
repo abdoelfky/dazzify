@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/dotted_line.dart';
@@ -63,6 +66,8 @@ class InvoiceWidget extends StatelessWidget {
               onChanged: (value) {
                 // Reset coupon validation state if user changes text after applying
                 if (state.couponValidationState == UiState.success) {
+                  getIt<AppEventsLogger>().logEvent(
+                      event: AppEvents.confirmationBookingRemoveCoupon);
                   context.read<ServiceInvoiceCubit>().clearCoupon();
                 }
               },
@@ -94,17 +99,14 @@ class InvoiceWidget extends StatelessWidget {
             if (isRangeType) ...[
               _buildRangeTransportationLine(context, state),
             ],
-            if (isRangeType)
-            SizedBox(height: 12.h),
-
-            if (hasFees&&!isRangeType)
+            if (isRangeType) SizedBox(height: 12.h),
+            if (hasFees && !isRangeType)
               InvoiceLine(
                 title: context.tr.appFees,
                 amount: double.parse(appFees.toStringAsFixed(2)),
               ),
-            if (hasFees&&isRangeType) _buildPendingAppFeesLine(context),
+            if (hasFees && isRangeType) _buildPendingAppFeesLine(context),
             SizedBox(height: 12.h),
-
             DottedLine(
               lineWidth: context.screenWidth,
               lineColor: context.colorScheme.onSurface,
@@ -271,6 +273,8 @@ Widget? getSuffixIcon({
                 color: context.colorScheme.error,
               ),
               onPressed: () {
+                getIt<AppEventsLogger>()
+                    .logEvent(event: AppEvents.confirmationBookingRemoveCoupon);
                 textContorller.clear();
                 context.read<ServiceInvoiceCubit>().clearCoupon();
               },
@@ -280,6 +284,8 @@ Widget? getSuffixIcon({
       : TextButton(
           onPressed: () {
             if (textContorller.text.isNotEmpty) {
+              getIt<AppEventsLogger>()
+                  .logEvent(event: AppEvents.confirmationBookingAddCoupon);
               FocusManager.instance.primaryFocus?.unfocus();
               context
                   .read<ServiceInvoiceCubit>()

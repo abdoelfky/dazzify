@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -46,6 +49,7 @@ class _BookingStatusHeaderComponentState
   late final BookingCubit bookingCubit;
   bool isButtonActive = true;
   bool isCanceled = false;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   // late BookingStatus bookingStatus;
 
@@ -85,6 +89,10 @@ class _BookingStatusHeaderComponentState
           isLeading: true,
           title: context.tr.bookingStatus,
           textStyle: context.textTheme.bodyLarge,
+          onBackTap: () {
+            _logger.logEvent(event: AppEvents.bookingStatusClickBack);
+            context.maybePop();
+          },
         ),
         const Spacer(),
         Padding(
@@ -200,6 +208,7 @@ class _BookingStatusHeaderComponentState
         height: 35.h,
         onTap: () {
           if (!isCanceled) {
+            _logger.logEvent(event: AppEvents.bookingStatusClickCancel);
             showModalBottomSheet(
               context: context,
               useRootNavigator: true,
@@ -210,9 +219,14 @@ class _BookingStatusHeaderComponentState
                   refundConditions: widget.refundConditions,
                   onAgreeTap: (hasAgreed) {
                     if (hasAgreed) {
+                      _logger.logEvent(
+                          event: AppEvents.bookingStatusClickAgreeCancel);
                       // FocusManager.instance.primaryFocus?.unfocus();
                       bookingCubit.cancelBooking();
                       // context.maybePop();
+                    } else {
+                      _logger.logEvent(
+                          event: AppEvents.bookingStatusClickCancelCancel);
                     }
                   },
                 );

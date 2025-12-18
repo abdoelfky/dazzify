@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
@@ -35,6 +37,7 @@ class BookingsHistoryScreen extends StatefulWidget implements AutoRouteWrapper {
 class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
   late final BookingHistoryBloc _bookingHistoryBloc;
   final ScrollController _controller = ScrollController();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -73,6 +76,10 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
             child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.bookingsHistory,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.bookingHistoryClickBack);
+                context.maybePop();
+              },
             ),
           ),
           Expanded(
@@ -120,6 +127,10 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
                             final booking = state.bookingsHistory[index];
                             return GestureDetector(
                               onTap: () {
+                                _logger.logEvent(
+                                  event: AppEvents.bookingHistoryClickBooking,
+                                  bookingId: booking.id,
+                                );
                                 context.pushRoute(
                                   BookingStatusRoute(bookingId: booking.id),
                                 );

@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/api/api_status_codes.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/dazzify_drop_down.dart';
 import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/assets_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/functions.dart';
@@ -67,6 +69,7 @@ class ServiceDetailsScreen extends StatefulWidget implements AutoRouteWrapper {
 class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   late final ServiceDetailsBloc serviceDetailsBloc;
   late final FavoriteCubit favoriteCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -105,7 +108,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               // Update error message to indicate service exists but not available
               errorMessage = context.tr.serviceExistsButNotAvailable;
             }
-            
+
             return ErrorDataWidget(
               enableBackIcon: true,
               onTap: state.blocState == UiState.failure &&
@@ -134,9 +137,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       );
                     }
                   : null,
-              secondaryActionTitle: brandSlug != null
-                  ? context.tr.viewBrand
-                  : null,
+              secondaryActionTitle:
+                  brandSlug != null ? context.tr.viewBrand : null,
               errorDataType: DazzifyErrorDataType.screen,
               message: errorMessage,
             );
@@ -167,6 +169,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                     child: GlassIconButton(
                       icon: SolarIconsOutline.arrowLeft,
                       onPressed: () {
+                        _logger.logEvent(
+                            event: AppEvents.serviceDetailsClickBack);
                         context.maybePop();
                       },
                     ),
@@ -180,6 +184,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       MenuOption(
                         svgIcon: AssetsManager.shareIcon,
                         onTap: () {
+                          _logger.logEvent(
+                              event: AppEvents.serviceDetailsClickShare);
                           openUrlSheet(
                               url: AppConstants.shareService(
                                 state.service.id,
@@ -190,6 +196,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       MenuOption(
                         icon: SolarIconsOutline.dangerCircle,
                         onTap: () {
+                          _logger.logEvent(
+                              event: AppEvents.serviceDetailsClickReport);
                           if (AuthLocalDatasourceImpl().checkGuestMode()) {
                             showModalBottomSheet(
                               context: context,
@@ -203,6 +211,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                               context: context,
                               id: state.service.id,
                               type: "service",
+                              eventType: 'service',
                             );
                           }
                         },

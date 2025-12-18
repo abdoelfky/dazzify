@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/shared/animations/loading_animation.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
 import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
@@ -17,6 +20,7 @@ class IssueScreen extends StatefulWidget {
 class _IssueScreenState extends State<IssueScreen> {
   late final IssueBloc issueBloc;
   final ScrollController controller = ScrollController();
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -43,6 +47,10 @@ class _IssueScreenState extends State<IssueScreen> {
             child: DazzifyAppBar(
               isLeading: true,
               title: context.tr.issue,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.issueClickBack);
+                context.maybePop();
+              },
             ),
           ),
           Expanded(
@@ -113,8 +121,7 @@ class _IssueScreenState extends State<IssueScreen> {
                             if (index != 0) {
                               return Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 16)
-                                        .r,
+                                    const EdgeInsets.symmetric(vertical: 16).r,
                                 child: Divider(
                                   color: context.colorScheme.outlineVariant,
                                 ),

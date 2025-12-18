@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/colors_manager.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -32,6 +34,7 @@ class _BannersComponentState extends State<BannersComponent> {
   late final ValueNotifier<int> currentBannerIndex;
   late BannersAction bannersAction;
   late final BookingFromMediaCubit bookingFromMediaCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -91,6 +94,11 @@ class _BannersComponentState extends State<BannersComponent> {
                               ).r,
                               child: GestureDetector(
                                 onTap: () {
+                                  _logger.logEvent(
+                                    event: AppEvents.homeClickBanner,
+                                    bannerId:
+                                        state.banners[index].id,
+                                  );
                                   if (AuthLocalDatasourceImpl()
                                       .checkGuestMode()) {
                                     showModalBottomSheet(
@@ -137,6 +145,9 @@ class _BannersComponentState extends State<BannersComponent> {
                     child: GlassIconButton(
                       icon: SolarIconsOutline.heart,
                       onPressed: () {
+                        _logger.logEvent(
+                          event: AppEvents.homeClickFavourites,
+                        );
                         if (AuthLocalDatasourceImpl().checkGuestMode()) {
                           showModalBottomSheet(
                             context: context,
@@ -157,6 +168,9 @@ class _BannersComponentState extends State<BannersComponent> {
                     child: GlassIconButton(
                       icon: SolarIconsOutline.bell,
                       onPressed: () {
+                        _logger.logEvent(
+                          event: AppEvents.homeClickNotifications,
+                        );
                         if (AuthLocalDatasourceImpl().checkGuestMode()) {
                           showModalBottomSheet(
                             context: context,

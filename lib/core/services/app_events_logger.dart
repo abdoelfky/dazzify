@@ -1,5 +1,6 @@
 import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/constants/api_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:injectable/injectable.dart';
 
 /// Simple wrapper around `/api/v1/log/event`.
@@ -92,7 +93,7 @@ class AppEventsLogger {
     required int timeInSeconds,
   }) =>
       logEvent(
-        event: 'reels-time-start-end-watching',
+        event: AppEvents.reelsTimeWatching,
         mediaId: mediaId,
         time: timeInSeconds,
       );

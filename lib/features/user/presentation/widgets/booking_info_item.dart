@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/shared/helper/map_helper.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 
@@ -85,6 +88,9 @@ class BookingInfoItem extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
+                          getIt<AppEventsLogger>().logEvent(
+                            event: AppEvents.bookingStatusClickViewLocation,
+                          );
                           MapHelper.openLocation(lat: lat!, long: long!);
                         },
                         child: DText(
@@ -97,15 +103,15 @@ class BookingInfoItem extends StatelessWidget {
                     ],
                   )
                 : SizedBox(
-                  width: 200.w,
-                  child: DText(
+                    width: 200.w,
+                    child: DText(
                       subtitle,
                       softWrap: true,
                       style: context.textTheme.bodySmall!.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                ),
+                  ),
           ],
         ),
       ],

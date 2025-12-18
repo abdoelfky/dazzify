@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/shared/enums/transaction_enum.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
 
@@ -22,6 +25,7 @@ class TransactionButton extends StatefulWidget {
 
 class _TransactionButtonState extends State<TransactionButton> {
   late PaymentStatus paymentStatus;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -51,6 +55,20 @@ class _TransactionButtonState extends State<TransactionButton> {
           ).r,
           title: buttonTitle,
           onTap: () {
+            // Check if this is from booking status screen
+            final routeName = ModalRoute.of(context)?.settings.name ?? '';
+            if (routeName.contains('BookingStatus') ||
+                routeName.contains('booking-status')) {
+              _logger.logEvent(
+                event: AppEvents.bookingStatusClickPay,
+                transactionId: widget.transactionId,
+              );
+            } else {
+              _logger.logEvent(
+                event: AppEvents.paymentsClickPay,
+                transactionId: widget.transactionId,
+              );
+            }
             context.router.root
                 .push(
               PaymentMethodRoute(

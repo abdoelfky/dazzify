@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
@@ -35,6 +38,7 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
     with AutomaticKeepAliveClientMixin {
   // final ScrollController _scrollController = ScrollController();
   late final BrandBloc brandBloc;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   bool get wantKeepAlive => true;
@@ -58,7 +62,7 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
 
   double _parseAspectRatio(String aspectRatio) {
     if (aspectRatio.isEmpty) return 1.0;
-    
+
     try {
       final parts = aspectRatio.split(':');
       if (parts.length == 2) {
@@ -71,7 +75,7 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
     } catch (e) {
       return 1.0;
     }
-    
+
     return 1.0;
   }
 
@@ -126,7 +130,8 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
                   } else {
                     final card = state.photos[index];
                     final cardImageType = getCardImageType(card.type);
-                    final aspectRatio = _parseAspectRatio(card.aspectRatio ?? "");
+                    final aspectRatio =
+                        _parseAspectRatio(card.aspectRatio ?? "");
 
                     switch (cardImageType) {
                       case CardImageType.none:
@@ -140,6 +145,10 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
                             isAlbum: false,
                             aspectRatio: card.aspectRatio,
                             onTap: () {
+                              _logger.logEvent(
+                                event: AppEvents.brandClickMedia,
+                                mediaId: card.id,
+                              );
                               context.pushRoute(
                                 BrandPostsRoute(
                                   brandBloc: brandBloc,
@@ -160,6 +169,10 @@ class _BrandPhotosTabState extends State<BrandPhotosTab>
                             isAlbum: true,
                             aspectRatio: card.aspectRatio,
                             onTap: () {
+                              _logger.logEvent(
+                                event: AppEvents.brandClickMedia,
+                                mediaId: card.id,
+                              );
                               context.pushRoute(
                                 BrandPostsRoute(
                                   brandBloc: brandBloc,

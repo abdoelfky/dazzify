@@ -1,4 +1,6 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
@@ -45,6 +47,8 @@ class _ReelPlayerState extends State<ReelPlayer>
   late final ValueNotifier<bool> _hasTheUserOpenedComments;
   late final ValueNotifier<bool> _showHeart;
   bool _isUsingPreloadedController = false;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
+  DateTime? _watchStartTime;
 
   @override
   bool get wantKeepAlive => true;
@@ -158,8 +162,22 @@ class _ReelPlayerState extends State<ReelPlayer>
                         // Reset pause state when reel becomes fully visible
                         _hasTheUserTappedPause.value = false;
                         _hasTheUserOpenedComments.value = false;
+                        _watchStartTime = DateTime.now();
                         _controller.play();
                       } else if (visibility.visibleFraction < 0.2) {
+                        // Log watch time when reel becomes invisible
+                        if (_watchStartTime != null) {
+                          final watchDuration =
+                              DateTime.now().difference(_watchStartTime!);
+                          final timeInSeconds = watchDuration.inSeconds;
+                          if (timeInSeconds > 0) {
+                            _logger.logReelsWatchTime(
+                              mediaId: widget.reel.id,
+                              timeInSeconds: timeInSeconds,
+                            );
+                          }
+                          _watchStartTime = null;
+                        }
                         _controller.pause();
                       }
                     },
@@ -282,6 +300,18 @@ class _ReelPlayerState extends State<ReelPlayer>
 
   @override
   void dispose() {
+    // Log watch time when reel is disposed
+    if (_watchStartTime != null) {
+      final watchDuration = DateTime.now().difference(_watchStartTime!);
+      final timeInSeconds = watchDuration.inSeconds;
+      if (timeInSeconds > 0) {
+        _logger.logReelsWatchTime(
+          mediaId: widget.reel.id,
+          timeInSeconds: timeInSeconds,
+        );
+      }
+      _watchStartTime = null;
+    }
     super.dispose();
     // Only dispose controller if we created it (not preloaded)
     if (!_isUsingPreloadedController) {

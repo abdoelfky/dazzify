@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/data/models/brand_delivery_fees_model.dart';
@@ -33,6 +36,7 @@ class GovernoratesBottomSheet extends StatefulWidget {
 
 class _GovernorateBottomSheetState extends State<GovernoratesBottomSheet> {
   late final ServiceInvoiceCubit _invoiceCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -110,8 +114,10 @@ class _GovernorateBottomSheetState extends State<GovernoratesBottomSheet> {
   }
 
   void _onPressed(BrandDeliveryFeesModel deliveryModel, BuildContext context) {
+    _logger.logEvent(
+        event: AppEvents.confirmationBookingClickSelectGovernorate);
     final isRange = deliveryModel.isRangeType;
-    
+
     _invoiceCubit.updateDeliveryInfo(
         deliveryInfo: DeliveryInfoModel(
       selectedDeliveryFees: deliveryModel.deliveryFees,

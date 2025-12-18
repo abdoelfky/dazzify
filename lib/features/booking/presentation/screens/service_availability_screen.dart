@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/service_availability_cubit/service_availability_cubit.dart';
@@ -52,6 +54,7 @@ class ServiceAvailabilityScreen extends StatefulWidget
 
 class _ServiceAvailabilityScreenState extends State<ServiceAvailabilityScreen> {
   bool isShimmeringDateSelection = true;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,10 @@ class _ServiceAvailabilityScreenState extends State<ServiceAvailabilityScreen> {
             DazzifyAppBar(
               isLeading: true,
               title: widget.branchName,
+              onBackTap: () {
+                _logger.logEvent(event: AppEvents.calendarClickBack);
+                context.maybePop();
+              },
             ),
             BlocConsumer<ServiceAvailabilityCubit, ServiceAvailabilityState>(
               listener: (context, state) {

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/brand/logic/brand_branches/brand_branches_cubit.dart';
@@ -33,6 +35,7 @@ class BranchSelectionBottomSheet extends StatefulWidget {
 class _BranchSelectionBottomSheetState
     extends State<BranchSelectionBottomSheet> {
   late final BrandBranchesCubit _brandBranchesCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -76,8 +79,7 @@ class _BranchSelectionBottomSheetState
                       ),
                     ),
                   );
-                } else
-                {
+                } else {
                   return Expanded(
                     child: ListView.separated(
                       itemCount: state.brandBranches.length,
@@ -85,6 +87,10 @@ class _BranchSelectionBottomSheetState
                         return BranchesBottomSheetItem(
                           branchName: state.brandBranches[index].name,
                           onTap: () async {
+                            _logger.logEvent(
+                              event: AppEvents.brandClickShowBranchServices,
+                              branchId: state.brandBranches[index].id,
+                            );
                             context.maybePop();
                             context.pushRoute(
                               BrandServiceBookingRoute(

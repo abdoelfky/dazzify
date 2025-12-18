@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/home/presentation/widgets/popular_service_card.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
@@ -8,6 +11,8 @@ import 'package:dazzify/features/shared/widgets/section_widget.dart';
 class PopularServiceComponent extends StatelessWidget {
   const PopularServiceComponent({super.key});
 
+  AppEventsLogger get _logger => getIt<AppEventsLogger>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,6 +21,9 @@ class PopularServiceComponent extends StatelessWidget {
           sectionTitle: context.tr.popularServices,
           sectionType: SectionType.withTextButton,
           onTextButtonTap: () {
+            _logger.logEvent(
+              event: AppEvents.homeClickMorePopularServices,
+            );
             context.pushRoute(const PopularServicesRoute());
           },
         ),
@@ -53,6 +61,10 @@ class PopularServiceComponent extends StatelessWidget {
                         return PopularServiceCard(
                           service: service,
                           onTap: () {
+                            _logger.logEvent(
+                              event: AppEvents.homeClickService,
+                              serviceId: service.id,
+                            );
                             context.router.push(
                               ServiceDetailsRoute(service: service),
                             );

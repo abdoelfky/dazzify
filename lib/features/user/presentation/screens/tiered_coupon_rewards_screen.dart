@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
@@ -22,6 +25,8 @@ class TieredCouponRewardsScreen extends StatefulWidget {
 }
 
 class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
   @override
   void initState() {
     super.initState();
@@ -48,126 +53,137 @@ class _TieredCouponRewardsScreenState extends State<TieredCouponRewardsScreen> {
                 child: DazzifyAppBar(
                   isLeading: true,
                   title: context.tr.coupons,
+                  onBackTap: () {
+                    _logger.logEvent(event: AppEvents.couponQrCodeBack);
+                    context.maybePop();
+                  },
                 ),
               ),
               Expanded(
                 child: BlocBuilder<TieredCouponCubit, TieredCouponState>(
-                builder: (context, state) {
-                  if (state.uiState == UiState.loading) {
-                    return const DazzifyOverlayLoading(
-                      isLoading: true,
-                      child: SizedBox.expand(),
-                    );
-                  }
+                  builder: (context, state) {
+                    if (state.uiState == UiState.loading) {
+                      return const DazzifyOverlayLoading(
+                        isLoading: true,
+                        child: SizedBox.expand(),
+                      );
+                    }
 
-                  if (state.uiState == UiState.failure) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 64.r,
-                            color: Colors.red,
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            state.errorMessage,
-                            style: context.textTheme.bodyLarge,
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 16.h),
-                          ElevatedButton(
-                            onPressed: () {
-                              context
-                                  .read<TieredCouponCubit>()
-                                  .getTieredCouponRewards();
-                            },
-                            child: Text(context.tr.retry),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  if (state.coupons.isEmpty) {
-                    return Center(
-                      child: Text(
-                        context.tr.noCouponsAvailable,
-                        style: context.textTheme.bodyLarge,
-                      ),
-                    );
-                  }
-
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      return SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 16.h,
-                        ),
-                        physics: const BouncingScrollPhysics(),
+                    if (state.uiState == UiState.failure) {
+                      return Center(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Header text
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: constraints.maxWidth * 0.9,
-                              ),
-                              child: Text(
-                                context.tr.startWithFirstCoupon,
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 22,
-                                  color: ColorsSchemeManager.light.primary,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                            Icon(
+                              Icons.error_outline,
+                              size: 64.r,
+                              color: Colors.red,
                             ),
-                            SizedBox(height: 20.h),
-                            
-                            // Coupons list
-                            ...List.generate(state.coupons.length, (index) {
-                              final coupon = state.coupons[index];
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: 16.h),
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 600.w,
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (!coupon.locked) {
-                                        // Capture the cubit before entering the builder
-                                        final cubit = context.read<TieredCouponCubit>();
-                                        // Navigate to details screen
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => BlocProvider.value(
-                                              value: cubit,
-                                              child: TieredCouponDetailsScreen(
-                                                coupon: coupon,
-                                                couponIndex: index,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: TieredCouponCard(
-                                      coupon: coupon,
-                                      couponIndex: index,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
+                            SizedBox(height: 16.h),
+                            Text(
+                              state.errorMessage,
+                              style: context.textTheme.bodyLarge,
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16.h),
+                            ElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<TieredCouponCubit>()
+                                    .getTieredCouponRewards();
+                              },
+                              child: Text(context.tr.retry),
+                            ),
                           ],
                         ),
                       );
-                    },
-                  );
+                    }
+
+                    if (state.coupons.isEmpty) {
+                      return Center(
+                        child: Text(
+                          context.tr.noCouponsAvailable,
+                          style: context.textTheme.bodyLarge,
+                        ),
+                      );
+                    }
+
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 16.h,
+                          ),
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Header text
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth * 0.9,
+                                ),
+                                child: Text(
+                                  context.tr.startWithFirstCoupon,
+                                  style:
+                                      context.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 22,
+                                    color: ColorsSchemeManager.light.primary,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+
+                              // Coupons list
+                              ...List.generate(state.coupons.length, (index) {
+                                final coupon = state.coupons[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 16.h),
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: 600.w,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (!coupon.locked) {
+                                          _logger.logEvent(
+                                              event: AppEvents
+                                                  .couponQrCodeClickDetails);
+                                          // Capture the cubit before entering the builder
+                                          final cubit =
+                                              context.read<TieredCouponCubit>();
+                                          // Navigate to details screen
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BlocProvider.value(
+                                                value: cubit,
+                                                child:
+                                                    TieredCouponDetailsScreen(
+                                                  coupon: coupon,
+                                                  couponIndex: index,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: TieredCouponCard(
+                                        coupon: coupon,
+                                        couponIndex: index,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               ),

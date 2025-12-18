@@ -1,5 +1,8 @@
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/booking/data/models/vendor_session_model.dart';
 import 'package:dazzify/features/booking/logic/service_availability_cubit/service_availability_cubit.dart';
 
@@ -12,6 +15,7 @@ class DigitalClock extends StatefulWidget {
 
 class _DigitalClockState extends State<DigitalClock> {
   late ServiceAvailabilityCubit _availabilityCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -61,6 +65,7 @@ class _DigitalClockState extends State<DigitalClock> {
                       VendorSessionModel session = selectedDaySessions[index];
                       return DropdownMenuItem<String>(
                         onTap: () {
+                          _logger.logEvent(event: AppEvents.calendarSelectTime);
                           _availabilityCubit.changeSelectedSession(
                             newSessionIndex: index,
                           );
@@ -81,7 +86,11 @@ class _DigitalClockState extends State<DigitalClock> {
                   ),
                   dropdownColor: context.colorScheme.surfaceContainerHighest,
                   icon: const SizedBox.shrink(),
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    if (value != null) {
+                      _logger.logEvent(event: AppEvents.calendarSelectTime);
+                    }
+                  },
                 ),
               )),
           SizedBox(
