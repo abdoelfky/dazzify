@@ -97,7 +97,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   isLeading: true,
                   onBackTap: () {
                     _logger.logEvent(event: AppEvents.searchClickBack);
-                    context.maybePop();
+                    context.router.navigate(const HomeTabRoute());
                   },
                 ),
               ),

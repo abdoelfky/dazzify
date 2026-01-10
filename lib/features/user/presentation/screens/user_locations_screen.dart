@@ -85,8 +85,10 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocConsumer<LocationCubit, LocationState>(
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+        body: BlocConsumer<LocationCubit, LocationState>(
         listener: (context, state) {
           if (state.blocState == UiState.loading) {
             isLoading = true;
@@ -132,11 +134,14 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
               PositionedDirectional(
                 top: 24.h,
                 start: 8.w,
-                child: DazzifyAppBar(
-                    isLeading: true,
-                    onBackTap: () {
-                      context.maybePop();
-                    }),
+                child: Material(
+                  color: Colors.transparent,
+                  child: DazzifyAppBar(
+                      isLeading: true,
+                      onBackTap: () {
+                        context.maybePop();
+                      }),
+                ),
               ),
               Container(
                 alignment: Alignment.bottomCenter,
@@ -177,6 +182,7 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
             ],
           );
         },
+      ),
       ),
     );
   }

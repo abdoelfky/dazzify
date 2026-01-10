@@ -83,8 +83,10 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
     return SafeArea(
       top: false,
       bottom: false,
-      child: Scaffold(
-        body: BlocConsumer<ViewLocationCubit, ViewLocationState>(
+      child: PopScope(
+        canPop: true,
+        child: Scaffold(
+          body: BlocConsumer<ViewLocationCubit, ViewLocationState>(
           listener: (context, state) {
             if (state.blocState == UiState.loading) {
               _isLoading = true;
@@ -137,11 +139,14 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                 PositionedDirectional(
                     top: 24.h,
                     start: 8.w,
-                    child: DazzifyAppBar(
-                        isLeading: true,
-                        onBackTap: () {
-                          context.maybePop();
-                        })),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: DazzifyAppBar(
+                          isLeading: true,
+                          onBackTap: () {
+                            context.maybePop();
+                          }),
+                    )),
                 Container(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
@@ -166,6 +171,7 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
               ],
             );
           },
+        ),
         ),
       ),
     );

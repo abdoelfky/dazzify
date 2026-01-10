@@ -100,8 +100,15 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
             // Check if service is not found and we have brand info from "more like this"
             String? brandSlug;
             String errorMessage = state.errorMessage;
-            if (state.blocState == UiState.failure &&
-                state.errorCode == ApiStatusCodes.notFound &&
+            // Check if service is not found by error code or error message
+            final errorMessageLower = errorMessage.toLowerCase();
+            final isServiceNotFound = state.errorCode == ApiStatusCodes.notFound ||
+                errorMessageLower.contains('could not be found') ||
+                errorMessageLower.contains('not found') ||
+                errorMessageLower.contains('service could not be found') ||
+                errorMessageLower.contains('requested service');
+            
+            if (isServiceNotFound &&
                 state.moreLikeThisServices.isNotEmpty) {
               // Get brand slug from first "more like this" service
               brandSlug = state.moreLikeThisServices.first.brand.username;
@@ -111,9 +118,17 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
 
             return ErrorDataWidget(
               enableBackIcon: true,
-              onTap: state.blocState == UiState.failure &&
-                      state.errorCode != ApiStatusCodes.notFound
+              onTap: !isServiceNotFound &&
+                      state.blocState == UiState.failure
                   ? () {
+                      // Retry getting service details
+                      if (widget.service != null) {
+                        serviceDetailsBloc.add(AddServiceEvent(service: widget.service!));
+                      } else {
+                        serviceDetailsBloc.add(
+                          GetServiceDetailsEvent(serviceId: widget.serviceId!),
+                        );
+                      }
                       serviceDetailsBloc.add(
                         GetServiceReviewsEvent(
                           serviceId: widget.service != null
@@ -139,6 +154,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   : null,
               secondaryActionTitle:
                   brandSlug != null ? context.tr.viewBrand : null,
+              tertiaryAction: isServiceNotFound
+                  ? () {
+                      _logger.logEvent(
+                          event: AppEvents.serviceDetailsClickBack);
+                      context.navigateTo(const HomeRoute());
+                    }
+                  : null,
+              tertiaryActionTitle: isServiceNotFound
+                  ? context.tr.backHome
+                  : null,
               errorDataType: DazzifyErrorDataType.screen,
               message: errorMessage,
             );

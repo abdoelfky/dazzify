@@ -101,18 +101,20 @@ class PopularBrandCard extends StatelessWidget {
                         style: context.textTheme.bodySmall!
                             .copyWith(color: context.colorScheme.outline),
                       ),
-                      SizedBox(width: 24.w),
-                      Icon(
-                        SolarIconsOutline.star,
-                        size: 12.r,
-                        color: context.colorScheme.outline,
-                      ),
-                      SizedBox(width: 4.w),
-                      DText(
-                        brand.rating!.toString(),
-                        style: context.textTheme.bodySmall!
-                            .copyWith(color: context.colorScheme.outline),
-                      ),
+                      if ((brand.ratingCount ?? 0) > 0) ...[
+                        SizedBox(width: 24.w),
+                        Icon(
+                          SolarIconsOutline.star,
+                          size: 12.r,
+                          color: context.colorScheme.outline,
+                        ),
+                        SizedBox(width: 4.w),
+                        DText(
+                          brand.rating!.toString(),
+                          style: context.textTheme.bodySmall!
+                              .copyWith(color: context.colorScheme.outline),
+                        ),
+                      ],
                     ],
                   ),
                 ],

@@ -45,7 +45,7 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.detached ||
-        state == AppLifecycleState.inactive) {
+        state == AppLifecycleState.paused) {
       // Best-effort close event when app is about to be terminated / backgrounded
       _logger.logEvent(event: AppEvents.closeApp);
     }
@@ -99,8 +99,12 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
                       data: MediaQuery.of(context).copyWith(
                         textScaler: TextScaler.noScaling,
                       ),
-                      child: SwipeBackNavigator(
-                        child: child!,
+                      child: SafeArea(
+                        top: false,
+                        bottom: true,
+                        child: SwipeBackNavigator(
+                          child: child!,
+                        ),
                       ),
                     );
                   },

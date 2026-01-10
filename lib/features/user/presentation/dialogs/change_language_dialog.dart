@@ -70,7 +70,7 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
                           if (state.currentLanguageCode !=
                               AppConstants.enCode) {
                             _logger.logEvent(
-                                event: AppEvents.profileSubmitEditPhone);
+                                event: AppEvents.profileChangeLanguage);
                           }
                           toEnglishLanguage(state.currentLanguageCode);
                         },
@@ -100,7 +100,7 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
                           if (state.currentLanguageCode !=
                               AppConstants.arCode) {
                             _logger.logEvent(
-                                event: AppEvents.profileSubmitEditPhone);
+                                event: AppEvents.profileChangeLanguage);
                           }
                           toArabicLanguage(state.currentLanguageCode);
                         },
@@ -119,7 +119,7 @@ class _ChangeLanguageDialogState extends State<ChangeLanguageDialog> {
                             if (state.currentLanguageCode !=
                                 AppConstants.arCode) {
                               _logger.logEvent(
-                                  event: AppEvents.profileSubmitEditPhone);
+                                  event: AppEvents.profileChangeLanguage);
                             }
                             toArabicLanguage(state.currentLanguageCode);
                           },

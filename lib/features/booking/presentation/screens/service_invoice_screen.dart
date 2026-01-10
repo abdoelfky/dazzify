@@ -95,6 +95,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
   late PageController _pageController;
   late TextEditingController _notesController;
   final AppEventsLogger _logger = getIt<AppEventsLogger>();
+  String _previousNotesText = '';
 
   final ValueNotifier<bool> _isCodeValidatingLoading = ValueNotifier(false);
   final TextEditingController _textController = TextEditingController();
@@ -233,6 +234,7 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
             verticalPadding: 10.h,
             onBackTap: () {
               _logger.logEvent(event: AppEvents.confirmationBookingClickBack);
+              context.maybePop();
             },
           ),
         ),
@@ -351,22 +353,22 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                 hintText: DazzifyApp.tr.writeNotes,
                 onChanged: (value) {
                   // Track notes addition/removal
-                  final previousText = _notesController.text;
                   final currentValue = value ?? '';
-                  if (currentValue.isNotEmpty &&
-                      ((previousText?.isEmpty ?? true) ||
-                          previousText != currentValue)) {
-                    // Notes were added or changed
-                    if (previousText.isEmpty ) {
-                      _logger.logEvent(
-                          event: AppEvents.confirmationBookingAddNotes);
-                    }
-                  } else if (currentValue.isEmpty &&
-                      (previousText.isNotEmpty)) {
-                    // Notes were removed
+                  final previousText = _previousNotesText;
+                  
+                  // Check if notes were added (empty -> not empty)
+                  if (currentValue.isNotEmpty && previousText.isEmpty) {
+                    _logger.logEvent(
+                        event: AppEvents.confirmationBookingAddNotes);
+                  }
+                  // Check if notes were removed (not empty -> empty)
+                  else if (currentValue.isEmpty && previousText.isNotEmpty) {
                     _logger.logEvent(
                         event: AppEvents.confirmationBookingRemoveNotes);
                   }
+                  
+                  // Update previous text for next comparison
+                  _previousNotesText = currentValue;
                 },
               ),
             ],

@@ -241,11 +241,12 @@ class TieredCouponDetailsScreen extends StatelessWidget {
     bool shouldShowScratch,
   ) {
     final bool isRTL = Directionality.of(context) == TextDirection.rtl;
+    final bool shouldShowBlur = currentCoupon.locked && !currentCoupon.opened;
 
     final couponCard = CustomPaint(
       painter: TicketPainter(
-        sideColor: sideColor,
-        bodyColor: bodyColor,
+        sideColor: sideColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
+        bodyColor: bodyColor.withOpacity(shouldShowBlur ? 0.5 : 1.0),
         sideWidth: 60.w,
         isRTL: isRTL,
       ),
@@ -337,26 +338,19 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   .read<TieredCouponCubit>()
                                   .markCouponAsOpenedOnThreshold(couponIndex);
                             },
-                            overlayColor: Colors.white,
+                            overlayColor: bodyColor,
                             width: 200.w,
-                            height: 46.h,
+                            height: 38.h,
                             child: Container(
-                              width: 220.w,
-                              height: 46.h,
+                              width: 200.w,
+                              height: 38.h,
                               padding: EdgeInsets.symmetric(
                                 horizontal: 32.w,
-                                vertical: 10.h,
+                                vertical: 6.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.r),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
                               ),
                               child: Center(
                                 child: Text(
@@ -364,8 +358,9 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16.sp,
+                                    fontSize: 14.sp,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -391,22 +386,15 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                             child: Container(
                               constraints: BoxConstraints(
                                 maxWidth: 200.w,
-                                minWidth: 160.w,
+                                minWidth: 120.w,
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 40.w,
-                                vertical: 8.h,
+                                horizontal: 32.w,
+                                vertical: 6.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.r),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
                               ),
                               child: Center(
                                 child: Text(
@@ -414,7 +402,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   style: context.textTheme.bodyLarge?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18.sp,
+                                    fontSize: 14.sp,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -502,8 +490,8 @@ class TicketPainter extends CustomPainter {
 
       // ----------- Shadow -----------
       final shadowPaint = Paint()
-        ..color = Colors.black.withOpacity(0.1)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+        ..color = Colors.black.withOpacity(0.12)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
       canvas.drawPath(rightSidePath, shadowPaint);
       canvas.drawPath(leftBodyPath, shadowPaint);
@@ -546,8 +534,8 @@ class TicketPainter extends CustomPainter {
 
       // ----------- Shadow -----------
       final shadowPaint = Paint()
-        ..color = Colors.black.withOpacity(0.1)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+        ..color = Colors.black.withOpacity(0.12)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
       canvas.drawPath(leftPath, shadowPaint);
       canvas.drawPath(rightPath, shadowPaint);

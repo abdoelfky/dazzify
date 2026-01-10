@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/dazzify_text.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/core/util/time_manager.dart';
@@ -21,8 +24,15 @@ class ConversationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
     return GestureDetector(
       onTap: () async {
+        // Log chat open event
+        _logger.logEvent(
+          event: AppEvents.chatOpenChat,
+          branchId: conversation.branch.branchId,
+        );
         context.pushRoute(
           ChatRoute(
             brand: conversation.brand,

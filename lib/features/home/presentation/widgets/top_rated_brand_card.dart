@@ -56,30 +56,31 @@ class TopRatedBrandCard extends StatelessWidget {
                   ),
                 ],
               ),
-              PositionedDirectional(
-                top: ratingTop ?? 10.h,
-                end: ratingEnd ?? 10.w,
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      AssetsManager.star,
-                      height: 12.r,
-                      width: 12.r,
-                      colorFilter: ColorFilter.mode(
-                        context.colorScheme.onPrimary,
-                        BlendMode.srcIn,
+              if ((brand.ratingCount ?? 0) > 0)
+                PositionedDirectional(
+                  top: ratingTop ?? 10.h,
+                  end: ratingEnd ?? 10.w,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AssetsManager.star,
+                        height: 12.r,
+                        width: 12.r,
+                        colorFilter: ColorFilter.mode(
+                          context.colorScheme.onPrimary,
+                          BlendMode.srcIn,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 4.w),
-                    DText(
-                      brand.rating!.toString(),
-                      style: context.textTheme.bodySmall!.copyWith(
-                        color: context.colorScheme.onPrimary,
+                      SizedBox(width: 4.w),
+                      DText(
+                        brand.rating!.toString(),
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: context.colorScheme.onPrimary,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
               PositionedDirectional(
                 bottom: infoBottom ?? 10.h,
                 start: infoStart ?? 10.w,

@@ -92,21 +92,22 @@ class BrandCard extends StatelessWidget {
                     )
                   ],
                 ),
-                Row(
-                  children: [
-                    DText(
-                      brand.rating!.toString(),
-                      style: context.textTheme.bodySmall!
-                          .copyWith(color: context.colorScheme.outline),
-                    ),
-                    const Spacer(),
-                    Icon(
-                      SolarIconsOutline.star,
-                      size: 12.r,
-                      color: context.colorScheme.outline,
-                    )
-                  ],
-                )
+                if ((brand.ratingCount ?? 0) > 0)
+                  Row(
+                    children: [
+                      DText(
+                        brand.rating!.toString(),
+                        style: context.textTheme.bodySmall!
+                            .copyWith(color: context.colorScheme.outline),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        SolarIconsOutline.star,
+                        size: 12.r,
+                        color: context.colorScheme.outline,
+                      )
+                    ],
+                  )
               ],
             ),
           )

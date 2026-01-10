@@ -22,11 +22,13 @@ class ChatBranchesSheet extends StatelessWidget {
   final String? serviceId;
   final BrandModel brand;
   final BranchesSheetType sheetType;
+  final ChatSource? chatSource;
 
   const ChatBranchesSheet({
     this.serviceId,
     required this.brand,
     required this.sheetType,
+    this.chatSource,
     super.key,
   });
 
@@ -71,26 +73,51 @@ class ChatBranchesSheet extends StatelessWidget {
                           branchName: state.brandBranches[index].name,
                           onTap: () async {
                             if (sheetType == BranchesSheetType.chat) {
-                              // Determine context from route name
-                              final routeName =
-                                  ModalRoute.of(context)?.settings.name ?? '';
-                              if (routeName.contains('BrandPosts') ||
-                                  routeName.contains('brand-posts')) {
-                                logger.logEvent(
-                                  event: AppEvents.brandMediaClickChat,
-                                  branchId: state.brandBranches[index].id,
-                                );
-                              } else if (routeName.contains('Brand') ||
-                                  routeName.contains('brand')) {
-                                logger.logEvent(
-                                  event: AppEvents.brandClickChat,
-                                  branchId: state.brandBranches[index].id,
-                                );
+                              // Determine context from chatSource parameter or route name
+                              if (chatSource != null) {
+                                // Use explicit chatSource if provided
+                                switch (chatSource!) {
+                                  case ChatSource.brandMedia:
+                                    logger.logEvent(
+                                      event: AppEvents.brandMediaClickChat,
+                                      branchId: state.brandBranches[index].id,
+                                    );
+                                    break;
+                                  case ChatSource.searchMedia:
+                                    logger.logEvent(
+                                      event: AppEvents.searchMediaClickChat,
+                                      branchId: state.brandBranches[index].id,
+                                    );
+                                    break;
+                                  case ChatSource.brandProfile:
+                                    logger.logEvent(
+                                      event: AppEvents.brandClickChat,
+                                      branchId: state.brandBranches[index].id,
+                                    );
+                                    break;
+                                }
                               } else {
-                                logger.logEvent(
-                                  event: AppEvents.reelsClickChat,
-                                  branchId: state.brandBranches[index].id,
-                                );
+                                // Fallback to route name detection for backward compatibility
+                                final routeName =
+                                    ModalRoute.of(context)?.settings.name ?? '';
+                                if (routeName.contains('BrandPosts') ||
+                                    routeName.contains('brand-posts')) {
+                                  logger.logEvent(
+                                    event: AppEvents.brandMediaClickChat,
+                                    branchId: state.brandBranches[index].id,
+                                  );
+                                } else if (routeName.contains('Brand') ||
+                                    routeName.contains('brand')) {
+                                  logger.logEvent(
+                                    event: AppEvents.brandClickChat,
+                                    branchId: state.brandBranches[index].id,
+                                  );
+                                } else {
+                                  logger.logEvent(
+                                    event: AppEvents.searchMediaClickChat,
+                                    branchId: state.brandBranches[index].id,
+                                  );
+                                }
                               }
                               context.maybePop();
                               context.navigateTo(

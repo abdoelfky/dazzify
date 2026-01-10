@@ -218,6 +218,7 @@ class _SearchPostScreenState extends State<SearchPostScreen> {
           sheetType: BranchesSheetType.chat,
           serviceId: brandMedia.serviceId,
           brand: brandMedia.brand,
+          chatSource: ChatSource.searchMedia,
         ),
       ),
     );

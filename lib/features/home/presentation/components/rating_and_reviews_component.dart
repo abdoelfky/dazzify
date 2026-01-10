@@ -29,6 +29,11 @@ class _RatingAndReviewsComponentState extends State<RatingAndReviewsComponent> {
 
   @override
   Widget build(BuildContext context) {
+    // Hide the entire component if ratingCount is 0
+    if (widget.service.ratingCount == 0) {
+      return const SizedBox.shrink();
+    }
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0).r,
       child: Column(

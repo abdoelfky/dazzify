@@ -109,7 +109,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         },
                       );
                     } else {
-                      context.pushRoute(const QrScannerRoute());
+                      context.pushRoute(const TieredCouponRewardsWrapperRoute());
                       // QrScannerRoute
                       // TieredCouponRewardsWrapperRoute
                     }
@@ -219,7 +219,6 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                     },
                   ),
                   onTap: () {
-                    _logger.logEvent(event: AppEvents.profileChangeLanguage);
                     if (AuthLocalDatasourceImpl().checkGuestMode()) {
                       showModalBottomSheet(
                         context: context,

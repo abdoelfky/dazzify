@@ -398,6 +398,31 @@ class _DazzifyPhotoViewerState extends State<DazzifyPhotoViewer> {
       ),
     );
 
+    // Determine chat source by checking if we came from brand or search
+    // Since DazzifyPhotoViewer is opened from BrandPostsScreen or SearchPostScreen,
+    // we'll check the route name to infer the source
+    ChatSource chatSource = ChatSource.brandMedia; // Default to brand
+    
+    try {
+      // Use AutoRoute's router to check the current route
+      final router = context.router;
+      final routeName = router.current.name;
+      
+      // Check if current route indicates search
+      if (routeName.contains('SearchPost') || routeName.contains('search-post') ||
+          routeName.contains('Search') || routeName.contains('search')) {
+        chatSource = ChatSource.searchMedia;
+      } else if (routeName.contains('BrandPosts') || routeName.contains('brand-posts') ||
+                 routeName.contains('Brand') || routeName.contains('brand')) {
+        chatSource = ChatSource.brandMedia;
+      }
+      // If route name is DazzifyPhotoViewerRoute, we can't determine from route name alone
+      // In this case, we default to brandMedia (most common case)
+    } catch (e) {
+      // If we can't determine, default to brand (since most media access is from brand)
+      chatSource = ChatSource.brandMedia;
+    }
+
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
@@ -411,6 +436,7 @@ class _DazzifyPhotoViewerState extends State<DazzifyPhotoViewer> {
           sheetType: BranchesSheetType.chat,
           serviceId: media.serviceId,
           brand: media.brand,
+          chatSource: chatSource,
         ),
       ),
     );

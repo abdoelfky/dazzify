@@ -348,6 +348,7 @@ class _BrandPostsScreenState extends State<BrandPostsScreen> {
             sheetType: BranchesSheetType.chat,
             serviceId: brandMedia.serviceId,
             brand: brandMedia.brand,
+            chatSource: ChatSource.brandMedia,
           ),
         ),
       );

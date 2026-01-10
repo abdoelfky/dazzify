@@ -13,6 +13,8 @@ class ErrorDataWidget extends StatefulWidget {
   final bool enableBackIcon;
   final void Function()? secondaryAction;
   final String? secondaryActionTitle;
+  final void Function()? tertiaryAction;
+  final String? tertiaryActionTitle;
 
   const ErrorDataWidget({
     super.key,
@@ -22,6 +24,8 @@ class ErrorDataWidget extends StatefulWidget {
     this.enableBackIcon = false,
     this.secondaryAction,
     this.secondaryActionTitle,
+    this.tertiaryAction,
+    this.tertiaryActionTitle,
   });
 
   @override
@@ -102,7 +106,9 @@ class _ErrorDataWidgetState extends State<ErrorDataWidget> {
             ),
           ),
           SizedBox(height: 80.h),
-          if (widget.onTap != null || widget.secondaryAction != null)
+          if (widget.onTap != null ||
+              widget.secondaryAction != null ||
+              widget.tertiaryAction != null)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -112,14 +118,26 @@ class _ErrorDataWidgetState extends State<ErrorDataWidget> {
                     title: widget.secondaryActionTitle ?? context.tr.viewBrand,
                     height: 42.h,
                   ),
-                if (widget.secondaryAction != null && widget.onTap != null)
+                if (widget.secondaryAction != null &&
+                    (widget.onTap != null || widget.tertiaryAction != null))
+                  SizedBox(height: 16.h),
+                if (widget.tertiaryAction != null)
+                  PrimaryButton(
+                    onTap: widget.tertiaryAction!,
+                    title: widget.tertiaryActionTitle ?? context.tr.backHome,
+                    height: 42.h,
+                    isOutLined: widget.secondaryAction != null,
+                  ),
+                if (widget.tertiaryAction != null && widget.onTap != null)
                   SizedBox(height: 16.h),
                 if (widget.onTap != null)
                   PrimaryButton(
                     onTap: onTap!,
                     title: context.tr.retry,
                     height: 42.h,
-                    isOutLined: widget.secondaryAction != null,
+                    isOutLined:
+                        widget.secondaryAction != null ||
+                        widget.tertiaryAction != null,
                   ),
               ],
             ),

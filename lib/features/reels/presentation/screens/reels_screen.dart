@@ -165,23 +165,20 @@ class _ReelsScreenState extends State<ReelsScreen> {
 
                               return BlocProvider(
                                 create: (context) => getIt<CommentsBloc>(),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 30).r,
-                                  child: ReelPlayer(
-                                    reel: currentReel,
-                                    videoUrl: videoUrl,
-                                    preloadedController:
-                                        _videoPreloader.getController(videoUrl),
-                                    onLikeTap: () => likesCubit.addOrRemoveLike(
-                                        mediaId: currentReel.id),
-                                    onPageChange: () {
-                                      _pageController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    },
-                                  ),
+                                child: ReelPlayer(
+                                  reel: currentReel,
+                                  videoUrl: videoUrl,
+                                  preloadedController:
+                                      _videoPreloader.getController(videoUrl),
+                                  onLikeTap: () => likesCubit.addOrRemoveLike(
+                                      mediaId: currentReel.id),
+                                  onPageChange: () {
+                                    _pageController.nextPage(
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeInOut,
+                                    );
+                                  },
                                 ),
                               );
                             }

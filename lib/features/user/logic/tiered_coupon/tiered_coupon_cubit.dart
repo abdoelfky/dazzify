@@ -29,10 +29,40 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
         final sortedCoupons = List.of(coupons)
           ..sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
         
+        // Preserve opened state from current state and set opened=true if code exists
+        final currentCoupons = state.coupons;
+        final mergedCoupons = sortedCoupons.asMap().entries.map((entry) {
+          final index = entry.key;
+          final newCoupon = entry.value;
+          
+          // If we have a current coupon at this index, preserve its opened state
+          // Also, if the new coupon from API has a code, it means it was opened
+          bool shouldBeOpened = false;
+          if (index < currentCoupons.length) {
+            final currentCoupon = currentCoupons[index];
+            // Preserve opened state from current OR if new coupon has a code
+            shouldBeOpened = currentCoupon.opened || 
+                            (newCoupon.code != null && newCoupon.code!.isNotEmpty);
+          } else {
+            // New coupon - if it has a code, it was opened
+            shouldBeOpened = newCoupon.code != null && newCoupon.code!.isNotEmpty;
+          }
+          
+          return TieredCouponModel(
+            code: newCoupon.code,
+            opened: shouldBeOpened,
+            locked: newCoupon.locked,
+            levelNumber: newCoupon.levelNumber,
+            discountPercentage: newCoupon.discountPercentage,
+            color: newCoupon.color,
+            instructions: newCoupon.instructions,
+          );
+        }).toList();
+        
         emit(
           state.copyWith(
             uiState: UiState.success,
-            coupons: sortedCoupons,
+            coupons: mergedCoupons,
           ),
         );
       },
@@ -143,26 +173,33 @@ class TieredCouponCubit extends Cubit<TieredCouponState> {
         final sortedNewCoupons = List.of(coupons)
           ..sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
         
-        // Merge: Keep opened state from current if it exists
+        // Merge: Keep opened state from current if it exists, or set opened=true if code exists
         final mergedCoupons = sortedNewCoupons.asMap().entries.map((entry) {
           final index = entry.key;
           final newCoupon = entry.value;
           
           // If we have a current coupon at this index, preserve its opened state
+          // Also, if the new coupon from API has a code, it means it was opened
+          bool shouldBeOpened = false;
           if (index < currentCoupons.length) {
             final currentCoupon = currentCoupons[index];
-            return TieredCouponModel(
-              code: newCoupon.code,
-              opened: currentCoupon.opened, // Preserve opened state
-              locked: newCoupon.locked,
-              levelNumber: newCoupon.levelNumber,
-              discountPercentage: newCoupon.discountPercentage,
-              color: newCoupon.color,
-              instructions: newCoupon.instructions,
-            );
+            // Preserve opened state from current OR if new coupon has a code
+            shouldBeOpened = currentCoupon.opened || 
+                            (newCoupon.code != null && newCoupon.code!.isNotEmpty);
+          } else {
+            // New coupon - if it has a code, it was opened
+            shouldBeOpened = newCoupon.code != null && newCoupon.code!.isNotEmpty;
           }
           
-          return newCoupon;
+          return TieredCouponModel(
+            code: newCoupon.code,
+            opened: shouldBeOpened,
+            locked: newCoupon.locked,
+            levelNumber: newCoupon.levelNumber,
+            discountPercentage: newCoupon.discountPercentage,
+            color: newCoupon.color,
+            instructions: newCoupon.instructions,
+          );
         }).toList();
         
         emit(state.copyWith(coupons: mergedCoupons));

@@ -66,11 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _chatCubit.conversationsCubit = context.read<ConversationsCubit>();
     textController = TextEditingController();
 
-    // Log chat open event
-    _logger.logEvent(
-      event: AppEvents.chatOpenChat,
-      branchId: widget.branchId,
-    );
+
     _chatStartTime = DateTime.now();
 
     if (widget.serviceToBeSent != null) {

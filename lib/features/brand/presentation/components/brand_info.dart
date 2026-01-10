@@ -223,6 +223,7 @@ class BrandInfo extends StatelessWidget {
               child: ChatBranchesSheet(
                 sheetType: BranchesSheetType.chat,
                 brand: brand,
+                chatSource: ChatSource.brandProfile,
               ),
             ),
           );

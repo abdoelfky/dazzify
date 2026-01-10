@@ -82,6 +82,12 @@ enum BranchesSheetType {
   mapLocations,
 }
 
+enum ChatSource {
+  brandMedia,
+  searchMedia,
+  brandProfile,
+}
+
 enum AvailabilityDayTime {
   am,
   pm,

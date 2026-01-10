@@ -22,6 +22,7 @@ import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
 import 'package:dazzify/features/shared/widgets/glass_icon_button.dart';
 import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/widget_direction.dart';
+import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -128,6 +129,15 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
                           );
                         }
                       },
+                tertiaryAction: state.errorCode == ApiStatusCodes.notFound
+                    ? () {
+                        _logger.logEvent(event: AppEvents.brandClickBack);
+                        context.navigateTo(const HomeRoute());
+                      }
+                    : null,
+                tertiaryActionTitle: state.errorCode == ApiStatusCodes.notFound
+                    ? context.tr.backHome
+                    : null,
                 errorDataType: DazzifyErrorDataType.screen,
                 message: state.errorMessage,
               );

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/shared/widgets/glass_icon_button.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -23,31 +25,42 @@ class _WebViewScreenState extends State<WebViewScreen> {
     super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.transparent)
+      ..enableZoom(true)
       ..loadRequest(Uri.parse(widget.url));
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       child: Scaffold(
-        body: Stack(
-          children: [
-            WebViewWidget(
-              controller: controller,
-            ),
-            PositionedDirectional(
-              top: 30,
-              start: 16,
-              child: GlassIconButton(
-                icon: context.currentTextDirection == TextDirection.ltr
-                    ? SolarIconsOutline.arrowLeft
-                    : SolarIconsOutline.arrowRight,
-                onPressed: () {
-                  context.maybePop();
+        body: Padding(
+          padding: const EdgeInsets.only(top: 50.0),
+          child: Stack(
+            children: [
+              WebViewWidget(
+                controller: controller,
+                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
+                  ),
                 },
               ),
-            )
-          ],
+              PositionedDirectional(
+                top: 30,
+                start: 16,
+                child: GlassIconButton(
+                  icon: context.currentTextDirection == TextDirection.ltr
+                      ? SolarIconsOutline.arrowLeft
+                      : SolarIconsOutline.arrowRight,
+                  onPressed: () {
+                    context.maybePop();
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

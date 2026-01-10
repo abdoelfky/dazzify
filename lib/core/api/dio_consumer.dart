@@ -241,8 +241,10 @@ class DioApiConsumer extends ApiConsumer {
     } else {
       if (baseResponse.error!.code == 401 &&
           (baseResponse.error!.message == AppConstants.bannedUserTokenMessage ||
-           baseResponse.error!.message == AppConstants.invalidUserAccessTokenMessage ||
-           baseResponse.error!.message == AppConstants.invalidUserRefreshTokenMessage)) {
+              baseResponse.error!.message ==
+                  AppConstants.invalidUserAccessTokenMessage ||
+              baseResponse.error!.message ==
+                  AppConstants.invalidUserRefreshTokenMessage)) {
         if (!getIt<AuthLocalDatasource>().checkGuestMode()) {
           getIt<TokensCubit>().emitSessionExpired();
         } else {
@@ -288,9 +290,9 @@ class DioApiConsumer extends ApiConsumer {
         break;
       case DioExceptionType.cancel:
         // Check if this is a session expired cancellation
-        if (error.error is String && 
-            (error.error.toString().contains('session expired') || 
-             error.error.toString().contains('Invalid RefreshToken'))) {
+        if (error.error is String &&
+            (error.error.toString().contains('session expired') ||
+                error.error.toString().contains('Invalid RefreshToken'))) {
           // Session expired, user will be redirected to login
           // Throw a specific exception that can be caught
           throw const SessionCancelledException();

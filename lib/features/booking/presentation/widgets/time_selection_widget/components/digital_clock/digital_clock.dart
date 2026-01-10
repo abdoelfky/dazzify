@@ -65,7 +65,6 @@ class _DigitalClockState extends State<DigitalClock> {
                       VendorSessionModel session = selectedDaySessions[index];
                       return DropdownMenuItem<String>(
                         onTap: () {
-                          _logger.logEvent(event: AppEvents.calendarSelectTime);
                           _availabilityCubit.changeSelectedSession(
                             newSessionIndex: index,
                           );

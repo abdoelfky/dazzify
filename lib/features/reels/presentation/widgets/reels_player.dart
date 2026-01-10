@@ -1,4 +1,3 @@
-import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
@@ -153,8 +152,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                 Container(
                   color: Colors.black,
                 ),
-                Align(
-                  alignment: Alignment.topCenter,
+                Positioned.fill(
                   child: VisibilityDetector(
                     key: ValueKey<String>(widget.videoUrl),
                     onVisibilityChanged: (visibility) {
@@ -181,11 +179,18 @@ class _ReelPlayerState extends State<ReelPlayer>
                         _controller.pause();
                       }
                     },
-                    child: AspectRatio(
-                      aspectRatio: _parseAspectRatio(widget.reel.aspectRatio) ??
-                          8 / 16.5,
-                      // aspectRatio: 8 / 16.5,
-                      child: VideoPlayer(_controller),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final aspectRatio = _parseAspectRatio(widget.reel.aspectRatio) ?? 8 / 16.5;
+                        return FittedBox(
+                          fit: BoxFit.cover,
+                          child: SizedBox(
+                            width: constraints.maxWidth,
+                            height: constraints.maxWidth / aspectRatio,
+                            child: VideoPlayer(_controller),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -236,7 +241,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                   ),
                 ),
                 PositionedDirectional(
-                  bottom: 50.h,
+                  bottom: 120.h,
                   end: 10.w,
                   child: ReelsButtonComponent(
                     reel: widget.reel,
@@ -281,7 +286,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                   ),
                 ),
                 PositionedDirectional(
-                  bottom: 30.h,
+                  bottom: 100.h,
                   start: 10.w,
                   child: ReelInfoComponent(
                     reel: widget.reel,

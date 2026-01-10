@@ -44,212 +44,214 @@ class TieredCouponCard extends StatelessWidget {
             isRTL: isRTL,
           ),
           child: Container(
-              height: 140.h,
-              padding: EdgeInsets.symmetric(horizontal: 8.w),
-              child: Stack(
-                children: [
-            Row(
-              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+            height: 140.h,
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Stack(
               children: [
-                // Side bar with "Discount" text
-                SizedBox(
-                  width: 55.w,
-                  child: Center(
-                    child: RotatedBox(
-                      quarterTurns: isRTL ? 1 : 3,
-                      child: Text(
-                        context.tr.discount,
-                        style: context.textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
+                Row(
+                  textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                  children: [
+                    // Side bar with "Discount" text
+                    SizedBox(
+                      width: 55.w,
+                      child: Center(
+                        child: RotatedBox(
+                          quarterTurns: isRTL ? 1 : 3,
+                          child: Text(
+                            context.tr.discount,
+                            style: context.textTheme.titleSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
 
-                // Main content
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 16.h,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Header text
-                        if (!shouldShowBlur && coupon.opened)
-                          Text(
-                            context.tr.copyCouponCoded,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        else if (!shouldShowBlur && !coupon.opened)
-                          Text(
-                            context.tr.openToScratch,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        if (!shouldShowBlur) SizedBox(height: 5.h),
-
-                        // Discount percentage
-                        Text(
-                          '${coupon.discountPercentage}%',
-                          style: context.textTheme.headlineLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30.sp,
-                          ),
+                    // Main content
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
                         ),
-                        SizedBox(height: 5.h),
-                        // if (shouldShowScratch)
-                        //   // Scratch only on code area
-                        //   BlocBuilder<TieredCouponCubit, TieredCouponState>(
-                        //     builder: (context, state) {
-                        //       // Get the latest coupon data from state
-                        //       final latestCoupon = couponIndex != null && couponIndex! < state.coupons.length
-                        //           ? state.coupons[couponIndex!]
-                        //           : coupon;
-                        //
-                        //       return ScratchOverlayWidget(
-                        //         onScratchStart: () {
-                        //           // Fetch real code immediately when scratch starts
-                        //           if (couponIndex != null) {
-                        //             context.read<TieredCouponCubit>().fetchCouponCodeOnScratchStart(couponIndex!);
-                        //           }
-                        //         },
-                        //         onThresholdReached: () {
-                        //           // Mark as opened when threshold reached
-                        //           if (couponIndex != null) {
-                        //             context.read<TieredCouponCubit>().markCouponAsOpenedOnThreshold(couponIndex!);
-                        //           }
-                        //           if (onScratchComplete != null) {
-                        //             onScratchComplete!();
-                        //           }
-                        //         },
-                        //         overlayColor: Colors.white,
-                        //         width: 180.w,
-                        //         height: 38.h,
-                        //         child: Container(
-                        //           width: 180.w,
-                        //           height: 38.h,
-                        //           padding: EdgeInsets.symmetric(
-                        //             horizontal: 24.w,
-                        //             vertical: 6.h,
-                        //           ),
-                        //           decoration: BoxDecoration(
-                        //             color: Colors.white,
-                        //             borderRadius: BorderRadius.circular(8.r),
-                        //           ),
-                        //           child: Center(
-                        //             child: Text(
-                        //               latestCoupon.code ?? 'XXXXX',
-                        //               style: context.textTheme.bodyLarge?.copyWith(
-                        //                 color: Colors.black,
-                        //                 fontWeight: FontWeight.bold,
-                        //                 fontSize: 14.sp,
-                        //               ),
-                        //               textAlign: TextAlign.center,
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       );
-                        //     },
-                        //   )
-                        // Coupon code or locked message
-                        if (coupon.code == null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6.0).h,
-                          child: Image(
-                            image: AssetImage('assets/images/scratcher.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                         if (coupon.code != null)
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth: 200.w,
-                              minWidth: 120.w,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 32.w,
-                              vertical: 6.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                coupon.code!,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Header text
+                            if (!shouldShowBlur && coupon.opened)
+                              Text(
+                                context.tr.copyCouponCoded,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            else if (!shouldShowBlur && !coupon.opened)
+                              Text(
+                                context.tr.openToScratch,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                            if (!shouldShowBlur) SizedBox(height: 5.h),
 
-            // Lock overlay with blur for locked coupons
-            if (shouldShowBlur)
-              Positioned.fill(
-                child: ClipPath(
-                  clipper: TicketClipper(sideWidth: 60.w),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 4.0,
-                      sigmaY: 4.0,
-                    ),
-                    child: Container(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-            if (shouldShowBlur)
-              Align(
-                alignment: Alignment.bottomCenter,
-                heightFactor: 5,
-                widthFactor: .9,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      context.tr.locked,
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                            // Discount percentage
+                            Text(
+                              '${coupon.discountPercentage}%',
+                              style: context.textTheme.headlineLarge?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30.sp,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            // if (shouldShowScratch)
+                            //   // Scratch only on code area
+                            //   BlocBuilder<TieredCouponCubit, TieredCouponState>(
+                            //     builder: (context, state) {
+                            //       // Get the latest coupon data from state
+                            //       final latestCoupon = couponIndex != null && couponIndex! < state.coupons.length
+                            //           ? state.coupons[couponIndex!]
+                            //           : coupon;
+                            //
+                            //       return ScratchOverlayWidget(
+                            //         onScratchStart: () {
+                            //           // Fetch real code immediately when scratch starts
+                            //           if (couponIndex != null) {
+                            //             context.read<TieredCouponCubit>().fetchCouponCodeOnScratchStart(couponIndex!);
+                            //           }
+                            //         },
+                            //         onThresholdReached: () {
+                            //           // Mark as opened when threshold reached
+                            //           if (couponIndex != null) {
+                            //             context.read<TieredCouponCubit>().markCouponAsOpenedOnThreshold(couponIndex!);
+                            //           }
+                            //           if (onScratchComplete != null) {
+                            //             onScratchComplete!();
+                            //           }
+                            //         },
+                            //         overlayColor: Colors.white,
+                            //         width: 180.w,
+                            //         height: 38.h,
+                            //         child: Container(
+                            //           width: 180.w,
+                            //           height: 38.h,
+                            //           padding: EdgeInsets.symmetric(
+                            //             horizontal: 24.w,
+                            //             vertical: 6.h,
+                            //           ),
+                            //           decoration: BoxDecoration(
+                            //             color: Colors.white,
+                            //             borderRadius: BorderRadius.circular(8.r),
+                            //           ),
+                            //           child: Center(
+                            //             child: Text(
+                            //               latestCoupon.code ?? 'XXXXX',
+                            //               style: context.textTheme.bodyLarge?.copyWith(
+                            //                 color: Colors.black,
+                            //                 fontWeight: FontWeight.bold,
+                            //                 fontSize: 14.sp,
+                            //               ),
+                            //               textAlign: TextAlign.center,
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       );
+                            //     },
+                            //   )
+                            // Coupon code or locked message
+                            if (coupon.code == null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 6.0).h,
+                                child: Image(
+                                  image:
+                                      AssetImage('assets/images/scratcher.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            if (coupon.code != null)
+                              Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: 200.w,
+                                  minWidth: 120.w,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 32.w,
+                                  vertical: 6.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    coupon.code!,
+                                    style:
+                                        context.textTheme.bodyLarge?.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.sp,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Icon(
-                      Icons.lock,
-                      color: Colors.white,
-                      size: 20.r,
                     ),
                   ],
                 ),
-              )
-          ],
-        ),
-      ) ),
+
+                // Lock overlay with blur for locked coupons
+                if (shouldShowBlur)
+                  Positioned.fill(
+                    child: ClipPath(
+                      clipper: TicketClipper(sideWidth: 60.w),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 4.0,
+                          sigmaY: 4.0,
+                        ),
+                        child: Container(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (shouldShowBlur)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    heightFactor: 5,
+                    widthFactor: .9,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          context.tr.locked,
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Icon(
+                          Icons.lock,
+                          color: Colors.white,
+                          size: 20.r,
+                        ),
+                      ],
+                    ),
+                  )
+              ],
+            ),
+          )),
     );
   }
 }
@@ -337,6 +339,7 @@ class TicketClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(TicketClipper oldClipper) => false;
 }
+
 class TicketPainter extends CustomPainter {
   final Color sideColor;
   final Color bodyColor;
@@ -360,7 +363,7 @@ class TicketPainter extends CustomPainter {
     final RRect rounded = RRect.fromLTRBR(
       16,
       0,
-      size.width -16,
+      size.width - 16,
       size.height,
       Radius.circular(16),
     );

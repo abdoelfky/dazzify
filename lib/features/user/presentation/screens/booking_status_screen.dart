@@ -201,7 +201,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                               color: context
-                                                  .colorScheme.onTertiary),
+                                                  .colorScheme.surfaceContainerHighest),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -225,7 +225,9 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                       DText(
                                                         transactionType!.name,
                                                         style: context.textTheme
-                                                            .bodyMedium,
+                                                            .bodyMedium!.copyWith(
+                                                          color: context.colorScheme.onSurface,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),

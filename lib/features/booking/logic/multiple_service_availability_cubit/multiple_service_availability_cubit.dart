@@ -99,11 +99,14 @@ class MultipleServiceAvailabilityCubit
     VendorSessionModel selectedSession = const VendorSessionModel.empty();
     bool isAnySessionSelected = false;
 
+    // إذا كان AM متاحاً، اختر AM
     if (availableSessions[AvailabilityDayTime.am]!.isNotEmpty) {
       selectedDayTime = AvailabilityDayTime.am;
       selectedSession = availableSessions[AvailabilityDayTime.am]!.first;
       isAnySessionSelected = true;
-    } else if (availableSessions[AvailabilityDayTime.pm]!.isNotEmpty) {
+    } 
+    // إذا لم يكن AM متاحاً ولكن PM متاح، اختر PM تلقائياً
+    else if (availableSessions[AvailabilityDayTime.pm]!.isNotEmpty) {
       selectedDayTime = AvailabilityDayTime.pm;
       selectedSession = availableSessions[AvailabilityDayTime.pm]!.first;
       isAnySessionSelected = true;
