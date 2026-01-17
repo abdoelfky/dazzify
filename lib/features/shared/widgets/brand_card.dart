@@ -73,44 +73,46 @@ class BrandCard extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          SizedBox(
-            width: context.screenWidth * 0.11,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    DText(
-                      '${brand.totalBookingsCount}',
-                      style: context.textTheme.bodySmall!
-                          .copyWith(color: context.colorScheme.outline),
+          if ((brand.totalBookingsCount != null && brand.totalBookingsCount! > 0) || (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0)))
+            SizedBox(
+              width: context.screenWidth * 0.11,
+              child: Column(
+                children: [
+                  if (brand.totalBookingsCount != null && brand.totalBookingsCount! > 0)
+                    Row(
+                      children: [
+                        DText(
+                          '${brand.totalBookingsCount}',
+                          style: context.textTheme.bodySmall!
+                              .copyWith(color: context.colorScheme.outline),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          SolarIconsOutline.usersGroupTwoRounded,
+                          size: 12.r,
+                          color: context.colorScheme.outline,
+                        )
+                      ],
                     ),
-                    const Spacer(),
-                    Icon(
-                      SolarIconsOutline.usersGroupTwoRounded,
-                      size: 12.r,
-                      color: context.colorScheme.outline,
+                  if (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0))
+                    Row(
+                      children: [
+                        DText(
+                          brand.rating!.toString(),
+                          style: context.textTheme.bodySmall!
+                              .copyWith(color: context.colorScheme.outline),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          SolarIconsOutline.star,
+                          size: 12.r,
+                          color: context.colorScheme.outline,
+                        )
+                      ],
                     )
-                  ],
-                ),
-                if ((brand.ratingCount ?? 0) > 0)
-                  Row(
-                    children: [
-                      DText(
-                        brand.rating!.toString(),
-                        style: context.textTheme.bodySmall!
-                            .copyWith(color: context.colorScheme.outline),
-                      ),
-                      const Spacer(),
-                      Icon(
-                        SolarIconsOutline.star,
-                        size: 12.r,
-                        color: context.colorScheme.outline,
-                      )
-                    ],
-                  )
-              ],
-            ),
-          )
+                ],
+              ),
+            )
         ],
       ),
     );

@@ -109,7 +109,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                         },
                       );
                     } else {
-                      context.pushRoute(const TieredCouponRewardsWrapperRoute());
+                      context.pushRoute(const QrScannerRoute());
                       // QrScannerRoute
                       // TieredCouponRewardsWrapperRoute
                     }

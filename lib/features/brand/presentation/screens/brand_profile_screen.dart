@@ -120,7 +120,7 @@ class _BrandProfileScreenState extends State<BrandProfileScreen>
             } else if (state.brandDetailsState == UiState.failure) {
               return ErrorDataWidget(
                 enableBackIcon: true,
-                onTap: state.errorCode != ApiStatusCodes.notFound
+                onTap: state.errorCode == ApiStatusCodes.notFound
                     ? null
                     : () {
                         if (widget.brandSlug != null) {

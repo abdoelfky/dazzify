@@ -54,41 +54,48 @@ class BrandInfo extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 38, right: 38, top: 16).r,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      DText(
-                        context.tr.bookings,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: context.colorScheme.outline,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      DText(
-                        brand.totalBookingsCount.toString(),
-                        style: context.textTheme.bodyLarge,
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      DText(
-                        context.tr.rate,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: context.colorScheme.outline,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      DText(
-                        brand.rating!.toString(),
-                        style: context.textTheme.bodyLarge,
-                      )
-                    ],
-                  ),
-                ],
-              ),
+              child: (brand.totalBookingsCount != null && brand.totalBookingsCount! > 0) ||
+                      (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0))
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (brand.totalBookingsCount != null && brand.totalBookingsCount! > 0)
+                          Column(
+                            children: [
+                              DText(
+                                context.tr.bookings,
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: context.colorScheme.outline,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              DText(
+                                brand.totalBookingsCount.toString(),
+                                style: context.textTheme.bodyLarge,
+                              )
+                            ],
+                          ),
+                        if (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0))
+                          Column(
+                            children: [
+                              DText(
+                                context.tr.rate,
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: context.colorScheme.outline,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              DText(
+                                brand.rating!.toString(),
+                                style: context.textTheme.bodyLarge,
+                              )
+                            ],
+                          ),
+                      ],
+                    )
+                  : SizedBox(
+                      height: 60.h, // Approximate height of a Column with two DText widgets and spacing
+                    ),
             ),
             SizedBox(height: 20.h),
             TextButton(

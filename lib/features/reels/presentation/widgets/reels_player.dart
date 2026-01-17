@@ -2,7 +2,9 @@ import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
+import 'package:dazzify/features/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:dazzify/features/brand/logic/brand/brand_bloc.dart';
+import 'package:dazzify/features/home/presentation/screens/reel_viewer_screen.dart';
 import 'package:dazzify/features/brand/presentation/bottom_sheets/chat_branches_sheet.dart';
 import 'package:dazzify/features/reels/logic/reels_bloc.dart';
 import 'package:dazzify/features/reels/presentation/components/reel_buttons_component.dart';
@@ -115,9 +117,27 @@ class _ReelPlayerState extends State<ReelPlayer>
     }
   }
 
+  bool _hasBottomNavigationBar(BuildContext context) {
+    // Check if BottomNavBar exists in the widget tree (from ReelsScreen)
+    final bottomNavBar = context.findAncestorWidgetOfExactType<BottomNavBar>();
+    if (bottomNavBar != null) {
+      return true;
+    }
+    
+    // Check if ReelViewerScreen exists in the widget tree (from search)
+    final reelViewerScreen = context.findAncestorWidgetOfExactType<ReelViewerScreen>();
+    if (reelViewerScreen != null) {
+      return true;
+    }
+    
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    final bool hasBottomNavBar = _hasBottomNavigationBar(context);
 
     return ValueListenableBuilder(
       valueListenable: _hasControllerInitialized,
@@ -240,8 +260,29 @@ class _ReelPlayerState extends State<ReelPlayer>
                     },
                   ),
                 ),
+                // Gradient overlay for better text readability
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.3),
+                            Colors.black.withOpacity(0.6),
+                            Colors.black.withOpacity(0.8),
+                          ],
+                          stops: const [0.0, 0.5, 0.7, 0.85, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 PositionedDirectional(
-                  bottom: 120.h,
+                  bottom: hasBottomNavBar ? 70.h : 40.h,
                   end: 10.w,
                   child: ReelsButtonComponent(
                     reel: widget.reel,
@@ -286,7 +327,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                   ),
                 ),
                 PositionedDirectional(
-                  bottom: 100.h,
+                  bottom: hasBottomNavBar ? 70.h : 40.h,
                   start: 10.w,
                   child: ReelInfoComponent(
                     reel: widget.reel,

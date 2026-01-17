@@ -338,7 +338,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                                   .read<TieredCouponCubit>()
                                   .markCouponAsOpenedOnThreshold(couponIndex);
                             },
-                            overlayColor: bodyColor,
+                            overlayColor: Colors.white,
                             width: 200.w,
                             height: 38.h,
                             child: Container(

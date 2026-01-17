@@ -661,6 +661,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Waiting For response",
     ),
     "wePay": MessageLookupByLibrary.simpleMessage("We Pay"),
+    "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
     "willBeCalculated": MessageLookupByLibrary.simpleMessage(
       "Will be calculated",
     ),

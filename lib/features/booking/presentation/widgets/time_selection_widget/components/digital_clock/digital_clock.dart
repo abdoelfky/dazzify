@@ -65,6 +65,7 @@ class _DigitalClockState extends State<DigitalClock> {
                       VendorSessionModel session = selectedDaySessions[index];
                       return DropdownMenuItem<String>(
                         onTap: () {
+                          _logger.logEvent(event: AppEvents.calendarSelectTime);
                           _availabilityCubit.changeSelectedSession(
                             newSessionIndex: index,
                           );
@@ -86,9 +87,7 @@ class _DigitalClockState extends State<DigitalClock> {
                   dropdownColor: context.colorScheme.surfaceContainerHighest,
                   icon: const SizedBox.shrink(),
                   onChanged: (value) {
-                    if (value != null) {
-                      _logger.logEvent(event: AppEvents.calendarSelectTime);
-                    }
+                    // Event is logged in DropdownMenuItem.onTap to ensure it fires
                   },
                 ),
               )),

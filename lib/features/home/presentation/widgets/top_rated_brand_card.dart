@@ -56,7 +56,7 @@ class TopRatedBrandCard extends StatelessWidget {
                   ),
                 ],
               ),
-              if ((brand.ratingCount ?? 0) > 0)
+              if (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0))
                 PositionedDirectional(
                   top: ratingTop ?? 10.h,
                   end: ratingEnd ?? 10.w,
@@ -109,30 +109,32 @@ class TopRatedBrandCard extends StatelessWidget {
                           ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6).r,
-                      child: Container(
-                        width: 60.w,
-                        height: 1.5.h,
-                        color: context.colorScheme.onPrimary,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          SolarIconsOutline.usersGroupTwoRounded,
-                          size: 12.r,
+                    if (brand.totalBookingsCount != null && brand.totalBookingsCount! > 0) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6).r,
+                        child: Container(
+                          width: 60.w,
+                          height: 1.5.h,
                           color: context.colorScheme.onPrimary,
                         ),
-                        SizedBox(width: 4.w),
-                        DText(
-                          "${brand.totalBookingsCount.toString()} ${context.tr.clients}",
-                          style: context.textTheme.labelSmall!.copyWith(
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            SolarIconsOutline.usersGroupTwoRounded,
+                            size: 12.r,
                             color: context.colorScheme.onPrimary,
                           ),
-                        ),
-                      ],
-                    ),
+                          SizedBox(width: 4.w),
+                          DText(
+                            "${brand.totalBookingsCount.toString()} ${context.tr.clients}",
+                            style: context.textTheme.labelSmall!.copyWith(
+                              color: context.colorScheme.onPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),

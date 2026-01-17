@@ -1,6 +1,6 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/framework/export.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/colors_manager.dart';
@@ -14,14 +14,11 @@ import 'package:dazzify/features/shared/enums/banners_action_enum.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
 import 'package:dazzify/features/shared/widgets/empty_data_widget.dart';
-import 'package:dazzify/features/shared/widgets/glass_icon_button.dart';
 import 'package:dazzify/features/shared/widgets/guest_mode_bottom_sheet.dart';
 import 'package:dazzify/features/shared/widgets/rectangular_animated_indicator.dart';
-import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:solar_icons/solar_icons.dart';
 
 class BannersComponent extends StatefulWidget {
   const BannersComponent({super.key});
@@ -57,10 +54,7 @@ class _BannersComponentState extends State<BannersComponent> {
           case UiState.initial:
           case UiState.loading:
             return DazzifyLoadingShimmer(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ).r,
+              borderRadius: BorderRadius.zero,
               dazzifyLoadingType: DazzifyLoadingType.custom,
               cardWidth: context.screenWidth,
               cardHeight: 320.h,
@@ -73,7 +67,7 @@ class _BannersComponentState extends State<BannersComponent> {
           case UiState.success:
             return SizedBox(
               width: context.screenWidth,
-              height: 320.h,
+              height: 290.h,
               child: Stack(
                 children: [
                   state.banners.isEmpty
@@ -87,44 +81,75 @@ class _BannersComponentState extends State<BannersComponent> {
                           itemBuilder: (context, index, realIndex) {
                             bannersAction =
                                 getBannersAction(state.banners[index].action);
-                            return ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(30),
-                                bottomRight: Radius.circular(30),
-                              ).r,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _logger.logEvent(
-                                    event: AppEvents.homeClickBanner,
-                                    bannerId:
-                                        state.banners[index].id,
-                                  );
-                                  if (AuthLocalDatasourceImpl()
-                                      .checkGuestMode()) {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: false,
-                                      builder: (context) {
-                                        return GuestModeBottomSheet();
-                                      },
+                            return Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _logger.logEvent(
+                                      event: AppEvents.homeClickBanner,
+                                      bannerId: state.banners[index].id,
                                     );
-                                  } else {
-                                    BannerHelper.onBannerTap(
-                                      context: context,
-                                      homeState: state,
-                                      bookingState: bookingFromMediaCubit.state,
-                                      bannersAction: bannersAction,
-                                      index: index,
-                                    );
-                                  }
-                                },
-                                child: DazzifyCachedNetworkImage(
-                                  width: context.screenWidth,
-                                  height: 320.h,
-                                  imageUrl: state.banners[index].image,
-                                  fit: BoxFit.cover,
+                                    if (AuthLocalDatasourceImpl()
+                                        .checkGuestMode()) {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: false,
+                                        builder: (context) {
+                                          return GuestModeBottomSheet();
+                                        },
+                                      );
+                                    } else {
+                                      BannerHelper.onBannerTap(
+                                        context: context,
+                                        homeState: state,
+                                        bookingState: bookingFromMediaCubit.state,
+                                        bannersAction: bannersAction,
+                                        index: index,
+                                      );
+                                    }
+                                  },
+                                  child: DazzifyCachedNetworkImage(
+
+                                    width: context.screenWidth,
+                                    height: 320.h,
+                                    imageUrl: state.banners[index].image,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
+                                // Text overlay in top-left
+                                PositionedDirectional(
+                                  start: 20.w,
+                                  top: 20.h,
+                                  child: IgnorePointer(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (state.banners[index].mainCategory != null)
+                                          DText(
+                                            state.banners[index].mainCategory!.name,
+                                            style: context.textTheme.headlineMedium?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 28.sp,
+                                            ),
+                                          ),
+                                        if (state.banners[index].coupon != null)
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 4.h),
+                                            child: DText(
+                                              '${state.banners[index].coupon}% OFF',
+                                              style: context.textTheme.titleLarge?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18.sp,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             );
                           },
                           options: CarouselOptions(
@@ -134,60 +159,17 @@ class _BannersComponentState extends State<BannersComponent> {
                             autoPlayCurve: Curves.ease,
                             enlargeCenterPage: false,
                             initialPage: 0,
+                            enableInfiniteScroll: false,
+                            scrollPhysics: const BouncingScrollPhysics(),
                             onPageChanged: (index, reason) {
                               currentBannerIndex.value = index;
                             },
                           ),
                         ),
                   PositionedDirectional(
-                    end: 30.w,
-                    top: 40.h,
-                    child: GlassIconButton(
-                      icon: SolarIconsOutline.heart,
-                      onPressed: () {
-                        _logger.logEvent(
-                          event: AppEvents.homeClickFavourites,
-                        );
-                        if (AuthLocalDatasourceImpl().checkGuestMode()) {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: false,
-                            builder: (context) {
-                              return GuestModeBottomSheet();
-                            },
-                          );
-                        } else {
-                          context.navigateTo(const MyFavoriteRoute());
-                        }
-                      },
-                    ),
-                  ),
-                  PositionedDirectional(
-                    start: 30.w,
-                    top: 40.h,
-                    child: GlassIconButton(
-                      icon: SolarIconsOutline.bell,
-                      onPressed: () {
-                        _logger.logEvent(
-                          event: AppEvents.homeClickNotifications,
-                        );
-                        if (AuthLocalDatasourceImpl().checkGuestMode()) {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: false,
-                            builder: (context) {
-                              return GuestModeBottomSheet();
-                            },
-                          );
-                        } else {
-                          context.pushRoute(const NotificationsRoute());
-                        }
-                      },
-                    ),
-                  ),
-                  PositionedDirectional(
-                    start: 10.w,
-                    bottom: 25.h,
+                    start: 0,
+                    end: 0,
+                    bottom: 70.h,
                     child: Visibility(
                       visible: state.banners.length > 1,
                       child: ValueListenableBuilder<int>(

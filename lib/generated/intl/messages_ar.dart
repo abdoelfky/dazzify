@@ -669,6 +669,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "في إنتظار الرد",
     ),
     "wePay": MessageLookupByLibrary.simpleMessage("وي باي"),
+    "welcome": MessageLookupByLibrary.simpleMessage("مرحباً"),
     "willBeCalculated": MessageLookupByLibrary.simpleMessage("سيتم الحساب"),
     "writeNotes": MessageLookupByLibrary.simpleMessage(
       "اكتب ملاحظات لمقدم الخدمة",

@@ -144,6 +144,11 @@ class S {
     );
   }
 
+  /// `Welcome`
+  String get welcome {
+    return Intl.message('Welcome', name: 'welcome', desc: '', args: []);
+  }
+
   /// `Categories`
   String get categories {
     return Intl.message('Categories', name: 'categories', desc: '', args: []);

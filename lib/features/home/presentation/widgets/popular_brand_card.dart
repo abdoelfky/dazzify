@@ -90,19 +90,22 @@ class PopularBrandCard extends StatelessWidget {
                   SizedBox(height: 2.h),
                   Row(
                     children: [
-                      Icon(
-                        SolarIconsOutline.usersGroupTwoRounded,
-                        size: 12.r,
-                        color: context.colorScheme.outline,
-                      ),
-                      SizedBox(width: 4.w),
-                      DText(
-                        brand.totalBookingsCount.toString(),
-                        style: context.textTheme.bodySmall!
-                            .copyWith(color: context.colorScheme.outline),
-                      ),
-                      if ((brand.ratingCount ?? 0) > 0) ...[
-                        SizedBox(width: 24.w),
+                      if (brand.totalBookingsCount != null && brand.totalBookingsCount! > 0) ...[
+                        Icon(
+                          SolarIconsOutline.usersGroupTwoRounded,
+                          size: 12.r,
+                          color: context.colorScheme.outline,
+                        ),
+                        SizedBox(width: 4.w),
+                        DText(
+                          brand.totalBookingsCount.toString(),
+                          style: context.textTheme.bodySmall!
+                              .copyWith(color: context.colorScheme.outline),
+                        ),
+                      ],
+                      if (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0)) ...[
+                        if (brand.totalBookingsCount != null && brand.totalBookingsCount! > 0)
+                          SizedBox(width: 24.w),
                         Icon(
                           SolarIconsOutline.star,
                           size: 12.r,

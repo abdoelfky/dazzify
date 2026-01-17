@@ -5,6 +5,7 @@ import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart'
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/home/presentation/components/banners_component.dart';
 import 'package:dazzify/features/home/presentation/components/categories_component.dart';
+import 'package:dazzify/features/home/presentation/components/home_app_bar_component.dart';
 import 'package:dazzify/features/home/presentation/components/last_active_booking_component.dart';
 import 'package:dazzify/features/home/presentation/components/popular_brands_component.dart';
 import 'package:dazzify/features/home/presentation/components/popular_service_component.dart';
@@ -97,16 +98,64 @@ class _HomeScreenState extends State<HomeScreen>
             } else {
               return DazzifyOverlayLoading(
                 isLoading: isLoading,
-                child: ListView(
-                  padding: const EdgeInsets.only(bottom: 70).r,
-                  children: const [
-                    BannersComponent(),
-                    CategoriesComponent(),
-                    LastActiveBookingComponent(),
-                    PopularBrandsComponent(),
-                    TopRatedBrandsComponent(),
-                    PopularServiceComponent(),
-                    TopServicesComponent(),
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 310.h,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            // Banner with negative margin to show above App Bar
+                            Positioned(
+                              top: 100,
+                              left: 0,
+                              right: 0,
+                              child: const BannersComponent(),
+                            ),
+                            // App Bar on top
+                            const HomeAppBarComponent(),
+
+                            Positioned(
+                              top: 310.h,
+                              left: 0,
+                              right: 0,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(55),
+                                ).r,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: context.colorScheme.surface,
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                    ).r,
+                                  ),
+                                  child: SliverToBoxAdapter(
+                                    child:Column( children: [
+                                      const CategoriesComponent(),
+                                      const LastActiveBookingComponent(),
+                                      const PopularBrandsComponent(),
+                                      const TopRatedBrandsComponent(),
+                                      const PopularServiceComponent(),
+                                      const TopServicesComponent(),
+                                      SizedBox(height: 70.h),
+                                    ],
+                                  )),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // SliverList(
+                    //   delegate: SliverChildListDelegate([
+                    //     // Bottom padding
+                    //   ]),
+                    // ),
                   ],
                 ),
               );

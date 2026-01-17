@@ -137,12 +137,13 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
                           ),
                         ),
                       ),
-                DText(
-                  buildBookingCountDText(),
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: ColorsManager.customGrey,
+                if (widget.reel.bookingsCount != null && widget.reel.bookingsCount! > 0)
+                  DText(
+                    buildBookingCountDText(),
+                    style: context.textTheme.bodySmall!.copyWith(
+                      color: ColorsManager.customGrey,
+                    ),
                   ),
-                ),
               ],
             )
           ],
@@ -155,7 +156,14 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
             textStyle:
                 context.textTheme.labelMedium!.copyWith(color: Colors.white),
             linkStyle: context.textTheme.titleSmall!.copyWith(
-              color: context.colorScheme.primary,
+              color: context.colorScheme.onError,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             trimLines: 2,
             moreText: context.tr.more,
@@ -191,12 +199,8 @@ class _ReelInfoComponentState extends State<ReelInfoComponent> {
   }
 
   String buildBookingCountDText() {
-    if (widget.reel.bookingsCount == 0) {
-      return context.tr.noBookings;
-    } else if (widget.reel.bookingsCount == 1) {
+    if (widget.reel.bookingsCount == 1) {
       return "${widget.reel.bookingsCount} ${context.tr.booking}";
-    } else if (widget.reel.bookingsCount == null) {
-      return "";
     } else {
       return "${widget.reel.bookingsCount} ${context.tr.bookings}";
     }
