@@ -68,149 +68,143 @@ class _HomeScreenState extends State<HomeScreen>
       isDark ? 0.02 : 0.015,
     ) ?? surfaceColor;
     
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-      ),
-      child: Stack(
-        children: [
-          // Gradient background for status bar area
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: MediaQuery.of(context).padding.top,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    gradientStart,
-                    gradientEnd,
-                  ],
+    return SafeArea(
+      bottom: false,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        ),
+        child: Stack(
+          children: [
+            // Gradient background for status bar area
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: MediaQuery.of(context).padding.top,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      gradientStart,
+                      gradientEnd,
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Scaffold(
-            extendBody: true,
-            body: RefreshIndicator(
-        onRefresh: () async {
-          mainCategories.clear();
-          await Future.wait([
-            bookingCubit.getLastActiveBookings(),
-            homeCubit.getBanners(),
-            homeCubit.getMainCategories(),
-            homeCubit.getPopularBrands(),
-            homeCubit.getTopRatedBrands(),
-            homeCubit.getPopularServices(),
-            homeCubit.getTopRatedServices(),
-          ]);
-        },
-        color: context.colorScheme.primary,
-        backgroundColor: context.colorScheme.surface,
-        child: BlocConsumer<HomeCubit, HomeState>(
-          listener: (context, state) {
-            homeCubitListener(state, context);
+            Scaffold(
+              extendBody: true,
+              body: RefreshIndicator(
+          onRefresh: () async {
+            mainCategories.clear();
+            await Future.wait([
+              bookingCubit.getLastActiveBookings(),
+              homeCubit.getBanners(),
+              homeCubit.getMainCategories(),
+              homeCubit.getPopularBrands(),
+              homeCubit.getTopRatedBrands(),
+              homeCubit.getPopularServices(),
+              homeCubit.getTopRatedServices(),
+            ]);
           },
-          builder: (context, state) {
-            if (state.bannersState == UiState.failure ||
-                state.categoriesState == UiState.failure ||
-                state.popularBrandsState == UiState.failure ||
-                state.topRatedBrandsState == UiState.failure ||
-                state.popularServicesState == UiState.failure ||
-                state.topRatedServicesState == UiState.failure ||
-                bookingCubit.state.lastActiveBookingState == UiState.failure) {
-              return ErrorDataWidget(
-                errorDataType: DazzifyErrorDataType.screen,
-                message: state.errorMessage,
-                onTap: () {
-                  homeCubit
-                    ..getBanners()
-                    ..getMainCategories()
-                    ..getPopularBrands()
-                    ..getTopRatedBrands()
-                    ..getPopularServices()
-                    ..getTopRatedServices()
-                    ..getPopularServices();
+          color: context.colorScheme.primary,
+          backgroundColor: context.colorScheme.surface,
+          child: BlocConsumer<HomeCubit, HomeState>(
+            listener: (context, state) {
+              homeCubitListener(state, context);
+            },
+            builder: (context, state) {
+              if (state.bannersState == UiState.failure ||
+                  state.categoriesState == UiState.failure ||
+                  state.popularBrandsState == UiState.failure ||
+                  state.topRatedBrandsState == UiState.failure ||
+                  state.popularServicesState == UiState.failure ||
+                  state.topRatedServicesState == UiState.failure ||
+                  bookingCubit.state.lastActiveBookingState == UiState.failure) {
+                return ErrorDataWidget(
+                  errorDataType: DazzifyErrorDataType.screen,
+                  message: state.errorMessage,
+                  onTap: () {
+                    homeCubit
+                      ..getBanners()
+                      ..getMainCategories()
+                      ..getPopularBrands()
+                      ..getTopRatedBrands()
+                      ..getPopularServices()
+                      ..getTopRatedServices()
+                      ..getPopularServices();
 
-                  bookingCubit.getLastActiveBookings();
-                  userCubit.getUser();
-                },
-              );
-            } else {
-              return DazzifyOverlayLoading(
-                isLoading: isLoading,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(children: [
-                    Stack(
-                      clipBehavior: Clip.none,
+                    bookingCubit.getLastActiveBookings();
+                    userCubit.getUser();
+                  },
+                );
+              } else {
+                return DazzifyOverlayLoading(
+                  isLoading: isLoading,
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
                       children: [
-                        SizedBox(
-                          height: 1310.h,
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            // Banner with negative margin to show above App Bar
+                            Positioned(
+                              top: 100,
+                              left: 0,
+                              right: 0,
+                              child: const BannersComponent(),
+                            ),
+                            // App Bar on top
+                            const HomeAppBarComponent(),
+                          ],
                         ),
-                        // Banner with negative margin to show above App Bar
-                        Positioned(
-                          top: 100,
-                          left: 0,
-                          right: 0,
-                          child: const BannersComponent(),
-                        ),
-                        // App Bar on top
-                        const HomeAppBarComponent(),
 
-                        Positioned(
-                          top: 310.h,
-                          left: 0,
-                          right: 0,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(40),
-                            ).r,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.surface,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                ).r,
-                              ),
-                              child: Column(
-                                children: [
-                                  const CategoriesComponent(),
-                                  const LastActiveBookingComponent(),
-                                  const PopularBrandsComponent(),
-                                  const TopRatedBrandsComponent(),
-                                  const PopularServiceComponent(),
-                                  const TopServicesComponent(),
-                                  SizedBox(height: 70.h),
-                                ],
-                              ),
+                        SizedBox(height: 210.h), // Space for banner to show
+
+                        // Main content
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                          ).r,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.surface,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                              ).r,
+                            ),
+                            child: Column(
+                              children: [
+                                const CategoriesComponent(),
+                                const LastActiveBookingComponent(),
+                                const PopularBrandsComponent(),
+                                const TopRatedBrandsComponent(),
+                                const PopularServiceComponent(),
+                                const TopServicesComponent(),
+                                SizedBox(height: 100.h), // Bottom padding for better scrolling
+                              ],
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
-
-                    // SliverList(
-                    //   delegate: SliverChildListDelegate([
-                    //     // Bottom padding
-                    //   ]),
-                    // ),
-                  ],
-                ),
-              ));
-            }
-          },
-        ),
-      ),
+                  ),
+                );
+              }
+            },
           ),
-        ],
+        ),
+            ),
+          ],
+        ),
       ),
     );
   }

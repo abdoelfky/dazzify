@@ -66,6 +66,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
       },
       child: SafeArea(
         top: false,
+        bottom: false,
         child: Scaffold(
           body: BlocConsumer<BookingCubit, BookingState>(
             listener: (context, state) {

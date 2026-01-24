@@ -51,61 +51,68 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) async {
-        if (state is GuestModeSuccessState) {
-          // Check for app updates and maintenance mode
-          await checkForAppUpdate();
-          if (AppConfigManager.isAppInMaintenance) {
-            getIt<AppRouter>().replace(const MaintenanceRoute());
-          } else {
-            // After guest mode is set up, check authentication status
-            context.read<TokensCubit>().isUserAuthenticated();
-          }
-        }
-      },
-      child: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      ColorsSchemeManager.light.primary,
-                      ColorsSchemeManager.light.secondary,
-                    ],
-                    // Adjusted stops to give more space to the second color
-                    stops: [
-                      _animation.value - 0.3,
-                      // Allow the first color to go slightly offscreen at the top
-                      _animation.value + 0.3,
-                      // The second color's range is now larger
-                    ],
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      removeBottom: true,
+      child: Scaffold(
+        body: BlocListener<AuthCubit, AuthState>(
+          listener: (context, state) async {
+            if (state is GuestModeSuccessState) {
+              // Check for app updates and maintenance mode
+              await checkForAppUpdate();
+              if (AppConfigManager.isAppInMaintenance) {
+                getIt<AppRouter>().replace(const MaintenanceRoute());
+              } else {
+                // After guest mode is set up, check authentication status
+                context.read<TokensCubit>().isUserAuthenticated();
+              }
+            }
+          },
+          child: AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          ColorsSchemeManager.light.primary,
+                          ColorsSchemeManager.light.secondary,
+                        ],
+                        // Adjusted stops to give more space to the second color
+                        stops: [
+                          _animation.value - 0.3,
+                          // Allow the first color to go slightly offscreen at the top
+                          _animation.value + 0.3,
+                          // The second color's range is now larger
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: 10,
-                  sigmaY: 10,
-                ),
-                child: Container(
-                  color: const Color(0xFF4B108D).withValues(alpha: 0.5),
-                ),
-              ),
-              Center(
-                child: Lottie.asset(
-                  AssetsManager.splashAnimatedAppLogo,
-                  repeat: false,
-                ),
-              ),
-            ],
-          );
-        },
+                  BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 10,
+                      sigmaY: 10,
+                    ),
+                    child: Container(
+                      color: const Color(0xFF4B108D).withValues(alpha: 0.5),
+                    ),
+                  ),
+                  Center(
+                    child: Lottie.asset(
+                      AssetsManager.splashAnimatedAppLogo,
+                      repeat: false,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

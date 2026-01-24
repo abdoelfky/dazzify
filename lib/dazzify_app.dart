@@ -93,10 +93,13 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
               return AnnotatedRegion<SystemUiOverlayStyle>(
                 value: SystemUiOverlayStyle(
                   statusBarColor: Colors.transparent,
-                  statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-                  statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+                  statusBarIconBrightness:
+                      isDark ? Brightness.light : Brightness.dark,
+                  statusBarBrightness:
+                      isDark ? Brightness.dark : Brightness.light,
                   systemNavigationBarColor: Colors.transparent,
-                  systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+                  systemNavigationBarIconBrightness:
+                      isDark ? Brightness.light : Brightness.dark,
                   systemNavigationBarDividerColor: Colors.transparent,
                 ),
                 child: GestureDetector(
@@ -106,46 +109,39 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
                     FocusScope.of(context).unfocus();
                   },
                   child: MaterialApp.router(
-
-                  debugShowCheckedModeBanner: false,
-                  builder: (context, child) {
-                    return MediaQuery(
-                      data: MediaQuery.of(context).copyWith(
-                        textScaler: TextScaler.noScaling,
-                      ),
-                      child: SafeArea(
-                        top: false,
-                        bottom: true,
+                    debugShowCheckedModeBanner: false,
+                    builder: (context, child) {
+                      return MediaQuery(
+                        data: MediaQuery.of(context).copyWith(
+                          textScaler: TextScaler.noScaling,
+                        ),
                         child: SwipeBackNavigator(
                           child: child!,
                         ),
-                      ),
-                    );
-                  },
-                  routerConfig: getIt<AppRouter>().config(
-                    navigatorObservers: () => [
-                      MyRouteObserver(),
-                      AutoRouteObserver(),
+                      );
+                    },
+                    routerConfig: getIt<AppRouter>().config(
+                      navigatorObservers: () => [
+                        MyRouteObserver(),
+                        AutoRouteObserver(),
+                      ],
+                    ),
+                    localizationsDelegates: const [
+                      S.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
                     ],
+                    onGenerateTitle: (context) {
+                      DazzifyApp.tr = context.tr;
+                      return DazzifyApp.tr.appName;
+                    },
+                    locale: Locale(state.currentLanguageCode),
+                    supportedLocales: S.delegate.supportedLocales,
+                    theme: state.isDarkTheme
+                        ? ThemeManager.darkTheme()
+                        : ThemeManager.lightTheme(),
                   ),
-                  localizationsDelegates: const [
-                    S.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
-                  onGenerateTitle: (context) {
-                    DazzifyApp.tr = context.tr;
-                    return DazzifyApp.tr.appName;
-                  },
-
-                  locale: Locale(state.currentLanguageCode),
-                  supportedLocales: S.delegate.supportedLocales,
-
-                  theme: state.isDarkTheme
-                      ? ThemeManager.darkTheme()
-                      : ThemeManager.lightTheme(),
-                ),
                 ),
               );
             },
