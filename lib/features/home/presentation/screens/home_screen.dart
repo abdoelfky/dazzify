@@ -17,6 +17,7 @@ import 'package:dazzify/features/shared/widgets/error_data_widget.dart';
 import 'package:dazzify/features/user/logic/user/user_cubit.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -49,9 +50,56 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      extendBody: true,
-      body: RefreshIndicator(
+    final surfaceColor = context.colorScheme.surface;
+    final primaryColor = context.colorScheme.primary;
+    final secondaryColor = context.colorScheme.secondary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Create the same gradient as HomeAppBarComponent for status bar
+    final gradientStart = Color.lerp(
+      surfaceColor,
+      primaryColor,
+      isDark ? 0.03 : 0.02,
+    ) ?? surfaceColor;
+    
+    final gradientEnd = Color.lerp(
+      surfaceColor,
+      secondaryColor,
+      isDark ? 0.02 : 0.015,
+    ) ?? surfaceColor;
+    
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      ),
+      child: Stack(
+        children: [
+          // Gradient background for status bar area
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: MediaQuery.of(context).padding.top,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    gradientStart,
+                    gradientEnd,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Scaffold(
+            extendBody: true,
+            body: RefreshIndicator(
         onRefresh: () async {
           mainCategories.clear();
           await Future.wait([
@@ -98,57 +146,55 @@ class _HomeScreenState extends State<HomeScreen>
             } else {
               return DazzifyOverlayLoading(
                 isLoading: isLoading,
-                child: CustomScrollView(
+                child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 310.h,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            // Banner with negative margin to show above App Bar
-                            Positioned(
-                              top: 100,
-                              left: 0,
-                              right: 0,
-                              child: const BannersComponent(),
-                            ),
-                            // App Bar on top
-                            const HomeAppBarComponent(),
-
-                            Positioned(
-                              top: 310.h,
-                              left: 0,
-                              right: 0,
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(55),
-                                ).r,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.surface,
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                    ).r,
-                                  ),
-                                  child: SliverToBoxAdapter(
-                                    child:Column( children: [
-                                      const CategoriesComponent(),
-                                      const LastActiveBookingComponent(),
-                                      const PopularBrandsComponent(),
-                                      const TopRatedBrandsComponent(),
-                                      const PopularServiceComponent(),
-                                      const TopServicesComponent(),
-                                      SizedBox(height: 70.h),
-                                    ],
-                                  )),
-                                ),
-                              ),
-                            )
-                          ],
+                  child: Column(children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        SizedBox(
+                          height: 1310.h,
                         ),
-                      ),
+                        // Banner with negative margin to show above App Bar
+                        Positioned(
+                          top: 100,
+                          left: 0,
+                          right: 0,
+                          child: const BannersComponent(),
+                        ),
+                        // App Bar on top
+                        const HomeAppBarComponent(),
+
+                        Positioned(
+                          top: 310.h,
+                          left: 0,
+                          right: 0,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                            ).r,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.surface,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                ).r,
+                              ),
+                              child: Column(
+                                children: [
+                                  const CategoriesComponent(),
+                                  const LastActiveBookingComponent(),
+                                  const PopularBrandsComponent(),
+                                  const TopRatedBrandsComponent(),
+                                  const PopularServiceComponent(),
+                                  const TopServicesComponent(),
+                                  SizedBox(height: 70.h),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
 
                     // SliverList(
@@ -158,10 +204,13 @@ class _HomeScreenState extends State<HomeScreen>
                     // ),
                   ],
                 ),
-              );
+              ));
             }
           },
         ),
+      ),
+          ),
+        ],
       ),
     );
   }

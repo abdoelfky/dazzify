@@ -13,6 +13,7 @@ import 'package:dazzify/route_observer.dart';
 import 'package:dazzify/settings/router/app_router.dart';
 import 'package:dazzify/settings/theme/theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -88,13 +89,23 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
           builder: (context, child) =>
               BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
-              return GestureDetector(
-                // Allow underlying gestures (swipe-back) to work
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: MaterialApp.router(
+              final isDark = state.isDarkTheme;
+              return AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+                  statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+                  systemNavigationBarColor: Colors.transparent,
+                  systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+                  systemNavigationBarDividerColor: Colors.transparent,
+                ),
+                child: GestureDetector(
+                  // Allow underlying gestures (swipe-back) to work
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: MaterialApp.router(
 
                   debugShowCheckedModeBanner: false,
                   builder: (context, child) {
@@ -134,6 +145,7 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
                   theme: state.isDarkTheme
                       ? ThemeManager.darkTheme()
                       : ThemeManager.lightTheme(),
+                ),
                 ),
               );
             },

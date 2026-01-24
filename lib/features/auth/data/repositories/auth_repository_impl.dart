@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:dazzify/core/api/dio_tokens_interceptor.dart';
 import 'package:dazzify/core/errors/exceptions.dart';
 import 'package:dazzify/core/errors/failures.dart';
 import 'package:dazzify/core/injection/injection.dart';
@@ -60,6 +61,8 @@ class AuthRepositoryImpl extends AuthRepository {
         request: request,
       );
       _localDatasource.storeUserTokens(response);
+      // Clear the cached token in interceptor to ensure fresh token is used
+      getIt<DioTokenInterceptor>().clearTokenCache();
       return Right(response);
     } on ServerException catch (exception) {
       return Left(ApiFailure(message: exception.message!));
@@ -107,6 +110,8 @@ class AuthRepositoryImpl extends AuthRepository {
         registerToken: registerToken,
       );
       _localDatasource.storeUserTokens(response);
+      // Clear the cached token in interceptor to ensure fresh token is used
+      getIt<DioTokenInterceptor>().clearTokenCache();
       return Right(response);
     } on ServerException catch (exception) {
       return Left(ApiFailure(message: exception.message!));

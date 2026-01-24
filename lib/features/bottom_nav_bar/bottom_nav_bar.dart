@@ -4,10 +4,10 @@ import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
 import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
+import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/auth/data/data_sources/local/auth_local_datasource_impl.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/booking/logic/booking_review/booking_review_cubit.dart';
-import 'package:dazzify/features/bottom_nav_bar/widgets/nav_active_profile_picture.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/notifications/logic/app_notifications/app_notifications_cubit.dart';
 import 'package:dazzify/features/payment/logic/transactions/transaction_bloc.dart';
@@ -155,79 +155,107 @@ class _BottomNavBarState extends State<BottomNavBar>
             resizeToAvoidBottomInset: false,
             extendBody: true,
             body: child,
-            bottomNavigationBar: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: 15,
-                  sigmaY: 15,
-                ),
-                child: SizedBox(
-                  height: 60.h,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      child: BottomNavigationBar(
-                        currentIndex: tabsRouter.activeIndex,
-                        onTap: (value) {
-                          handleNavbarItemTap(
-                            value: value,
-                            tabsRouter: tabsRouter,
-                          );
-                        },
-                        items: [
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.home,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.videoLibrary,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.magnifier,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(
-                              SolarIconsOutline.chatRoundLine,
-                              size: 26.r,
-                            ),
-                            label: '',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: BlocBuilder<UserCubit, UserState>(
-                              builder: (BuildContext context, UserState state) {
-                                return SizedBox(
-                                  width: 32.r,
-                                  height: 32.r,
-                                  child: DazzifyRoundedPicture(
-                                    imageUrl: state.userModel.picture,
-                                    width: 32.r,
-                                    height: 32.r,
-                                  ),
-                                );
-                              },
-                            ),
-                            label: '',
-                            activeIcon: BlocBuilder<UserCubit, UserState>(
-                              builder: (context, state) =>
-                                  NavActiveProfilePicture(
-                                imagePath: state.userModel.picture ?? "",
-                              ),
-                            ),
-                          ),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.only(
+                left: 16.w,
+                right: 16.w,
+                bottom: 10.h,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50.r),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: 20,
+                    sigmaY: 20,
+                  ),
+                  child: Container(
+                    height: 60.h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          _getActiveColor(context, tabsRouter.activeIndex)
+                              .withValues(alpha: 0.12),
+                          _getActiveColor(context, tabsRouter.activeIndex)
+                              .withValues(alpha: 0.12),
+                          _getActiveColor(context, tabsRouter.activeIndex)
+                              .withValues(alpha: 0.12),
                         ],
+                        stops: const [0.0, 0.3, 1.0],
                       ),
+                      border: Border.all(
+                        color: context.isDarkTheme
+                            ? Colors.white.withValues(alpha: 0.15)
+                            : Colors.black.withValues(alpha: 0.1),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(50.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Home Icon
+                        _buildNavItem(
+                          context: context,
+                          isActive: tabsRouter.activeIndex == 0,
+                          icon: SolarIconsOutline.home,
+                          onTap: () {
+                            handleNavbarItemTap(
+                              value: 0,
+                              tabsRouter: tabsRouter,
+                            );
+                          },
+                        ),
+                        // Video Library Icon
+                        _buildNavItem(
+                          context: context,
+                          isActive: tabsRouter.activeIndex == 1,
+                          icon: SolarIconsOutline.videoLibrary,
+                          onTap: () {
+                            handleNavbarItemTap(
+                              value: 1,
+                              tabsRouter: tabsRouter,
+                            );
+                          },
+                        ),
+                        // Search Icon
+                        _buildNavItem(
+                          context: context,
+                          isActive: tabsRouter.activeIndex == 2,
+                          icon: SolarIconsOutline.magnifier,
+                          onTap: () {
+                            handleNavbarItemTap(
+                              value: 2,
+                              tabsRouter: tabsRouter,
+                            );
+                          },
+                        ),
+                        // Chat Icon
+                        _buildNavItem(
+                          context: context,
+                          isActive: tabsRouter.activeIndex == 3,
+                          icon: SolarIconsOutline.chatRoundLine,
+                          onTap: () {
+                            handleNavbarItemTap(
+                              value: 3,
+                              tabsRouter: tabsRouter,
+                            );
+                          },
+                        ),
+                        // Profile Icon
+                        _buildProfileNavItem(
+                          context: context,
+                          isActive: tabsRouter.activeIndex == 4,
+                          onTap: () {
+                            handleNavbarItemTap(
+                              value: 4,
+                              tabsRouter: tabsRouter,
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -266,5 +294,75 @@ class _BottomNavBarState extends State<BottomNavBar>
     } else {
       tabsRouter.setActiveIndex(value);
     }
+  }
+
+  Widget _buildNavItem({
+    required BuildContext context,
+    required bool isActive,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 44.r,
+        height: 44.r,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isActive ? context.colorScheme.primary : Colors.transparent,
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: context.colorScheme.primary.withValues(alpha: 0.4),
+                    blurRadius: 12.r,
+                    spreadRadius: 2.r,
+                  ),
+                ]
+              : null,
+        ),
+        child: Icon(
+          icon,
+          size: 26.r,
+          color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.7),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileNavItem({
+    required BuildContext context,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: BlocBuilder<UserCubit, UserState>(
+        builder: (BuildContext context, UserState state) {
+          return Container(
+            width: 32.r,
+            height: 32.r,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: isActive
+                  ? Border.all(
+                      color: context.colorScheme.primary,
+                      width: 2.r,
+                    )
+                  : null,
+            ),
+            child: DazzifyRoundedPicture(
+              imageUrl: state.userModel.picture,
+              width: 32.r,
+              height: 32.r,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Color _getActiveColor(BuildContext context, int activeIndex) {
+    // Return primary color (green) for all active icons
+    return context.colorScheme.primary;
   }
 }
