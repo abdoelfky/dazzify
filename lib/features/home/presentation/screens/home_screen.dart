@@ -54,21 +54,22 @@ class _HomeScreenState extends State<HomeScreen>
     final primaryColor = context.colorScheme.primary;
     final secondaryColor = context.colorScheme.secondary;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Create the same gradient as HomeAppBarComponent for status bar
     final gradientStart = Color.lerp(
       surfaceColor,
       primaryColor,
       isDark ? 0.03 : 0.02,
     ) ?? surfaceColor;
-    
+
     final gradientEnd = Color.lerp(
       surfaceColor,
       secondaryColor,
       isDark ? 0.02 : 0.015,
     ) ?? surfaceColor;
-    
+
     return SafeArea(
+      top: false,
       bottom: false,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -150,59 +151,69 @@ class _HomeScreenState extends State<HomeScreen>
                   isLoading: isLoading,
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            // Banner with negative margin to show above App Bar
-                            Positioned(
-                              top: 100,
-                              left: 0,
-                              right: 0,
-                              child: const BannersComponent(),
-                            ),
-                            // App Bar on top
-                            const HomeAppBarComponent(),
-                          ],
-                        ),
-
-                        SizedBox(height: 210.h), // Space for banner to show
-
-                        // Main content
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                          ).r,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: context.colorScheme.surface,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                              ).r,
-                            ),
-                            child: Column(
-                              children: [
-                                const CategoriesComponent(),
-                                const LastActiveBookingComponent(),
-                                const PopularBrandsComponent(),
-                                const TopRatedBrandsComponent(),
-                                const PopularServiceComponent(),
-                                const TopServicesComponent(),
-                                SizedBox(height: 100.h), // Bottom padding for better scrolling
-                              ],
-                            ),
+                    child: Column(children: [
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          SizedBox(
+                            height: 1310.h,
                           ),
-                        ),
-                      ],
-                    ),
+                          // Banner with negative margin to show above App Bar
+                          Positioned(
+                            top: 100,
+                            left: 0,
+                            right: 0,
+                            child: const BannersComponent(),
+                          ),
+                          // App Bar on top
+                          const HomeAppBarComponent(),
+
+                          Positioned(
+                            top: 310.h,
+                            left: 0,
+                            right: 0,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                              ).r,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.surface,
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                  ).r,
+                                ),
+                                child: Column(
+                                  children: [
+                                    const CategoriesComponent(),
+                                    const LastActiveBookingComponent(),
+                                    const PopularBrandsComponent(),
+                                    const TopRatedBrandsComponent(),
+                                    const PopularServiceComponent(),
+                                    const TopServicesComponent(),
+                                    SizedBox(height: 70.h),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+
+                      // SliverList(
+                      //   delegate: SliverChildListDelegate([
+                      //     // Bottom padding
+                      //   ]),
+                      // ),
+                    ],
                   ),
-                );
+                ));
               }
             },
           ),
         ),
             ),
+
           ],
         ),
       ),
