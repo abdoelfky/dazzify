@@ -205,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen>
                       //     // Bottom padding
                       //   ]),
                       // ),
+                      SizedBox(height: 210.h,)
                     ],
                   ),
                 ));
