@@ -58,7 +58,14 @@ class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.allReviewsClickBack);
+        }
+      },
+      child: Scaffold(
       body: Column(
         children: [
           Padding(
@@ -116,6 +123,7 @@ class _SeeAllReviewsScreenState extends State<SeeAllReviewsScreen> {
             },
           ),
         ],
+      ),
       ),
     );
   }

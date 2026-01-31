@@ -31,7 +31,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     if (!state.hasReachedMax) {
-      emit(state.copyWith(blocState: UiState.loading));
+      // Check if this is initial load or pagination
+      final isInitialLoad = state.brands.isEmpty;
+      
+      // Only emit loading state for initial load, use isLoadingMore for pagination
+      if (isInitialLoad) {
+        emit(state.copyWith(blocState: UiState.loading));
+      } else {
+        emit(state.copyWith(isLoadingMore: true));
+      }
 
       final result = await _homeRepository.getTopRatedBrands(
         request: GetBrandsRequest(
@@ -46,6 +54,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
           state.copyWith(
             blocState: UiState.failure,
             errorMessage: failure.message,
+            isLoadingMore: false,
           ),
         ),
         (brands) {
@@ -55,6 +64,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
               brands: List.of(state.brands)..addAll(brands),
               blocState: UiState.success,
               hasReachedMax: hasReachedMax,
+              isLoadingMore: false,
             ),
           );
           _page++;

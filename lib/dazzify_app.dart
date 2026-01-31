@@ -48,10 +48,15 @@ class _DazzifyAppState extends State<DazzifyApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       // App returned from background to foreground
       _logger.logEvent(event: AppEvents.openApp);
-    } else if (state == AppLifecycleState.detached ||
-        state == AppLifecycleState.paused) {
-      // Best-effort close event when app is about to be terminated / backgrounded
+    } else if (state == AppLifecycleState.paused) {
+      // App is backgrounded but still in memory
       _logger.logEvent(event: AppEvents.closeApp);
+    } else if (state == AppLifecycleState.detached) {
+      // App is about to be completely terminated
+      _logger.logEvent(event: AppEvents.closeApp);
+    } else if (state == AppLifecycleState.inactive) {
+      // App is inactive (e.g., during phone call or when app switcher is open)
+      // Don't log close event here as it's a temporary state
     }
   }
 

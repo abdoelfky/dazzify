@@ -60,7 +60,12 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        // Handle back button if needed
+      },
+      child: RefreshIndicator(
       onRefresh: () async {
         await bookingCubit.getSingleBooking(widget.bookingId);
       },
@@ -201,8 +206,8 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(15),
-                                              color: context
-                                                  .colorScheme.surfaceContainerHighest),
+                                              color: context.colorScheme
+                                                  .surfaceContainerHighest),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -226,8 +231,11 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                                                       DText(
                                                         transactionType!.name,
                                                         style: context.textTheme
-                                                            .bodyMedium!.copyWith(
-                                                          color: context.colorScheme.onSurface,
+                                                            .bodyMedium!
+                                                            .copyWith(
+                                                          color: context
+                                                              .colorScheme
+                                                              .onSurface,
                                                         ),
                                                       ),
                                                     ],
@@ -327,6 +335,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 90.h,)
                       ],
                     ),
                   );
@@ -334,6 +343,7 @@ class _BookingStatusScreenState extends State<BookingStatusScreen> {
             },
           ),
         ),
+      ),
       ),
     );
   }
@@ -576,9 +586,11 @@ Widget priceInfo(BuildContext context, BookingCubit booking, int length) {
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),
+
           ],
         ),
     ],

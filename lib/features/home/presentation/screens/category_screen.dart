@@ -90,6 +90,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
         Expanded(
           child: BlocBuilder<CategoryBloc, CategoryState>(
+            buildWhen: (previous, current) {
+              // Rebuild when:
+              // 1. Main bloc state changes (initial/loading/failure/success)
+              // 2. Brands list length changes (new items added)
+              // 3. hasReachedMax changes
+              // Don't rebuild when only isLoadingMore changes (prevents scroll position loss)
+              return previous.blocState != current.blocState ||
+                  previous.brands.length != current.brands.length ||
+                  previous.hasReachedMax != current.hasReachedMax;
+            },
             builder: (context, state) {
               switch (state.blocState) {
                 case UiState.initial:

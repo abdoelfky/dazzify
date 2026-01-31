@@ -9,10 +9,12 @@ part of 'coupon_model.dart';
 CouponModel _$CouponModelFromJson(Map<String, dynamic> json) => CouponModel(
       discountAmount: json['discountAmount'] as num? ?? 0,
       couponId: json['couponId'] as String? ?? '',
+      message: json['message'] as String? ?? '',
     );
 
 Map<String, dynamic> _$CouponModelToJson(CouponModel instance) =>
     <String, dynamic>{
       'discountAmount': instance.discountAmount,
       'couponId': instance.couponId,
+      'message': instance.message,
     };

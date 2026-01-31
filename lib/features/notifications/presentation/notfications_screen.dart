@@ -64,10 +64,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.notificationsClickBack);
+        }
+      },
+      child: SafeArea(
+        top: false,
+        bottom: false,
+        child: Scaffold(
         body: Column(
           children: [
             Padding(
@@ -153,6 +160,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

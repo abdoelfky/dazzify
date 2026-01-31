@@ -65,7 +65,14 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.servicesClickBack);
+        }
+      },
+      child: Scaffold(
       body: SafeArea(
         child: Column(
           children: [
@@ -88,6 +95,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
               buildSingleServiceTotalPrice(),
           ],
         ),
+      ),
       ),
     );
   }

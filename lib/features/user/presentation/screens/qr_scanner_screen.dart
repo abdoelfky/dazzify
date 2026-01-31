@@ -77,7 +77,14 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.qrCodeClickBack);
+        }
+      },
+      child: Scaffold(
       body: Column(
         children: [
           Padding(
@@ -172,6 +179,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

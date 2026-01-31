@@ -80,14 +80,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          _textController.clear();
-          searchBloc.add(const RefreshEvent());
-          await Future.delayed(const Duration(seconds: 2));
-        },
-        child: Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.searchClickBack);
+        }
+      },
+      child: SafeArea(
+        bottom: false,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            _textController.clear();
+            searchBloc.add(const RefreshEvent());
+            await Future.delayed(const Duration(seconds: 2));
+          },
+          child: Scaffold(
           body: Column(
             children: [
               Padding(
@@ -165,9 +173,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             child: CustomFadeAnimation(
                               child: MasonryGridView.builder(
                                 controller: _mediaScrollController,
-                                padding: const EdgeInsets.only(
+                                padding:  EdgeInsets.only(
                                   top: 0,
-                                  bottom: 30,
+                                  bottom: 90.h,
                                   right: 16,
                                   left: 16,
                                 ).r,
@@ -255,50 +263,56 @@ class _SearchScreenState extends State<SearchScreen> {
                           );
                         } else {
                           return Expanded(
-                            child: ListView.separated(
-                              itemCount: state.brands.length + 1,
-                              padding: const EdgeInsets.only(
-                                top: 0,
-                                bottom: 90,
-                                right: 16,
-                                left: 16,
-                              ).r,
-                              controller: _brandsScrollController,
-                              itemBuilder: (context, index) {
-                                if (index >= state.brands.length) {
-                                  if (state.hasBrandsReachMax) {
-                                    return const SizedBox.shrink();
-                                  } else {
-                                    return SizedBox(
-                                      height: 25.r,
-                                      width: context.screenWidth,
-                                      child: LoadingAnimation(
-                                        height: 25.r,
-                                        width: 25.r,
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  return BrandCard(
-                                    brand: state.brands[index],
-                                    onTap: () {
-                                      _logger.logEvent(
-                                        event: AppEvents.searchClickBrand,
-                                        brandId: state.brands[index].id,
-                                      );
-                                      navigateToBrandProfile(
-                                        context: context,
+                            child: Column(
+                              children: [
+                                ListView.separated(
+                                  itemCount: state.brands.length + 1,
+                                  padding: const EdgeInsets.only(
+                                    top: 0,
+                                    bottom: 90,
+                                    right: 16,
+                                    left: 16,
+                                  ).r,
+                                  controller: _brandsScrollController,
+                                  itemBuilder: (context, index) {
+                                    if (index >= state.brands.length) {
+                                      if (state.hasBrandsReachMax) {
+                                        return const SizedBox.shrink();
+                                      } else {
+                                        return SizedBox(
+                                          height: 25.r,
+                                          width: context.screenWidth,
+                                          child: LoadingAnimation(
+                                            height: 25.r,
+                                            width: 25.r,
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      return BrandCard(
                                         brand: state.brands[index],
-                                        index: index,
+                                        onTap: () {
+                                          _logger.logEvent(
+                                            event: AppEvents.searchClickBrand,
+                                            brandId: state.brands[index].id,
+                                          );
+                                          navigateToBrandProfile(
+                                            context: context,
+                                            brand: state.brands[index],
+                                            index: index,
+                                          );
+                                        },
                                       );
-                                    },
-                                  );
-                                }
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) => SizedBox(
-                                height: 16.h,
-                              ),
+                                    }
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          SizedBox(
+                                    height: 16.h,
+                                  ),
+                                ),
+                               
+                              ],
                             ),
                           );
                         }
@@ -309,6 +323,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

@@ -191,7 +191,7 @@ class _VendorReelsScreenState extends State<BrandReelsScreen> {
                   },
                 ),
               PositionedDirectional(
-                top: 25.h,
+                top: 30.h,
                 start: 6.w,
                 child: const DazzifyAppBar(isLeading: true),
               ),

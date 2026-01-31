@@ -68,7 +68,14 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.popularClickBrandsBack);
+        }
+      },
+      child: Scaffold(
       body: Stack(
         children: [
           Column(
@@ -177,6 +184,7 @@ class _PopularBrandsScreenState extends State<PopularBrandsScreen> {
               ),
             ),
         ],
+      ),
       ),
     );
   }

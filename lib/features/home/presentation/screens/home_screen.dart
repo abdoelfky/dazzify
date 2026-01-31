@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                           // Banner with negative margin to show above App Bar
                           Positioned(
-                            top: 100,
+                            top: 70.h,
                             left: 0,
                             right: 0,
                             child: const BannersComponent(),
@@ -205,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen>
                       //     // Bottom padding
                       //   ]),
                       // ),
-                      SizedBox(height: 210.h,)
+                      SizedBox(height: 30.h,)
                     ],
                   ),
                 ));

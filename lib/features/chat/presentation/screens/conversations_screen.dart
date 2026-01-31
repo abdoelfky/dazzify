@@ -34,8 +34,13 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        // Handle back button if needed
+      },
+      child: SafeArea(
+        child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
             await conversationsCubit.getConversations();
@@ -122,6 +127,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

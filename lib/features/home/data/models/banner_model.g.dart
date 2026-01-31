@@ -8,8 +8,8 @@ part of 'banner_model.dart';
 
 BannerModel _$BannerModelFromJson(Map<String, dynamic> json) => BannerModel(
       image: json['image'] as String? ?? '',
-      action: json['action'] as String? ?? '',
       id: json['id'] as String?,
+      action: json['action'] as String? ?? '',
       url: json['url'] as String?,
       coupon: json['coupon'] as String?,
       mainCategory: json['mainCategory'] == null

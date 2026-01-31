@@ -87,167 +87,170 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<ServiceDetailsBloc, ServiceDetailsState>(
-        builder: (context, state) {
-          if (state.blocState == UiState.loading) {
-            return const Center(
-              child: LoadingAnimation(),
-            );
-          } else if (state.blocState == UiState.failure ||
-              state.serviceReviewState == UiState.failure ||
-              state.moreLikeThisState == UiState.failure) {
-            // Check if service is not found and we have brand info from "more like this"
-            String? brandSlug;
-            String errorMessage = state.errorMessage;
-            // Check if service is not found by error code or error message
-            final errorMessageLower = errorMessage.toLowerCase();
-            final isServiceNotFound = state.errorCode == ApiStatusCodes.notFound ||
-                errorMessageLower.contains('could not be found') ||
-                errorMessageLower.contains('not found') ||
-                errorMessageLower.contains('service could not be found') ||
-                errorMessageLower.contains('requested service');
-            
-            if (isServiceNotFound &&
-                state.moreLikeThisServices.isNotEmpty) {
-              // Get brand slug from first "more like this" service
-              brandSlug = state.moreLikeThisServices.first.brand.username;
-              // Update error message to indicate service exists but not available
-              errorMessage = context.tr.serviceExistsButNotAvailable;
-            }
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: BlocBuilder<ServiceDetailsBloc, ServiceDetailsState>(
+          builder: (context, state) {
+            if (state.blocState == UiState.loading) {
+              return const Center(
+                child: LoadingAnimation(),
+              );
+            } else if (state.blocState == UiState.failure ||
+                state.serviceReviewState == UiState.failure ||
+                state.moreLikeThisState == UiState.failure) {
+              // Check if service is not found and we have brand info from "more like this"
+              String? brandSlug;
+              String errorMessage = state.errorMessage;
+              // Check if service is not found by error code or error message
+              final errorMessageLower = errorMessage.toLowerCase();
+              final isServiceNotFound = state.errorCode == ApiStatusCodes.notFound ||
+                  errorMessageLower.contains('could not be found') ||
+                  errorMessageLower.contains('not found') ||
+                  errorMessageLower.contains('service could not be found') ||
+                  errorMessageLower.contains('requested service');
 
-            return ErrorDataWidget(
-              enableBackIcon: true,
-              onTap: !isServiceNotFound &&
-                      state.blocState == UiState.failure
-                  ? () {
-                      // Retry getting service details
-                      if (widget.service != null) {
-                        serviceDetailsBloc.add(AddServiceEvent(service: widget.service!));
-                      } else {
+              if (isServiceNotFound &&
+                  state.moreLikeThisServices.isNotEmpty) {
+                // Get brand slug from first "more like this" service
+                brandSlug = state.moreLikeThisServices.first.brand.username;
+                // Update error message to indicate service exists but not available
+                errorMessage = context.tr.serviceExistsButNotAvailable;
+              }
+
+              return ErrorDataWidget(
+                enableBackIcon: true,
+                onTap: !isServiceNotFound &&
+                        state.blocState == UiState.failure
+                    ? () {
+                        // Retry getting service details
+                        if (widget.service != null) {
+                          serviceDetailsBloc.add(AddServiceEvent(service: widget.service!));
+                        } else {
+                          serviceDetailsBloc.add(
+                            GetServiceDetailsEvent(serviceId: widget.serviceId!),
+                          );
+                        }
                         serviceDetailsBloc.add(
-                          GetServiceDetailsEvent(serviceId: widget.serviceId!),
+                          GetServiceReviewsEvent(
+                            serviceId: widget.service != null
+                                ? widget.service!.id
+                                : widget.serviceId!,
+                          ),
+                        );
+                        serviceDetailsBloc.add(
+                          GetMoreLikeThisEvent(
+                            serviceId: widget.service != null
+                                ? widget.service!.id
+                                : widget.serviceId!,
+                          ),
                         );
                       }
-                      serviceDetailsBloc.add(
-                        GetServiceReviewsEvent(
-                          serviceId: widget.service != null
-                              ? widget.service!.id
-                              : widget.serviceId!,
-                        ),
-                      );
-                      serviceDetailsBloc.add(
-                        GetMoreLikeThisEvent(
-                          serviceId: widget.service != null
-                              ? widget.service!.id
-                              : widget.serviceId!,
-                        ),
-                      );
-                    }
-                  : null,
-              secondaryAction: brandSlug != null
-                  ? () {
-                      context.pushRoute(
-                        BrandProfileRoute(brandSlug: brandSlug!),
-                      );
-                    }
-                  : null,
-              secondaryActionTitle:
-                  brandSlug != null ? context.tr.viewBrand : null,
-              tertiaryAction: isServiceNotFound
-                  ? () {
-                      _logger.logEvent(
-                          event: AppEvents.serviceDetailsClickBack);
-                      context.navigateTo(const HomeRoute());
-                    }
-                  : null,
-              tertiaryActionTitle: isServiceNotFound
-                  ? context.tr.backHome
-                  : null,
-              errorDataType: DazzifyErrorDataType.screen,
-              message: errorMessage,
-            );
-          } else {
-            return Stack(
-              children: [
-                ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    DetailsHeaderComponent(
-                      service: state.service,
-                      branch: widget.branch,
-                      isBooking: widget.isBooking,
-                    ),
-                    SizedBox(height: 8.h),
-                    IncludesWidget(
-                      include: state.service.includes,
-                    ),
-                    SizedBox(height: 8.h),
-                    RatingAndReviewsComponent(service: state.service),
-                    if (!widget.isBooking) const MoreLikeComponent(),
-                  ],
-                ),
-                PositionedDirectional(
-                  top: 50.r,
-                  start: 15.r,
-                  child: WidgetDirection(
-                    child: GlassIconButton(
-                      icon: SolarIconsOutline.arrowLeft,
-                      onPressed: () {
+                    : null,
+                secondaryAction: brandSlug != null
+                    ? () {
+                        context.pushRoute(
+                          BrandProfileRoute(brandSlug: brandSlug!),
+                        );
+                      }
+                    : null,
+                secondaryActionTitle:
+                    brandSlug != null ? context.tr.viewBrand : null,
+                tertiaryAction: isServiceNotFound
+                    ? () {
                         _logger.logEvent(
                             event: AppEvents.serviceDetailsClickBack);
-                        context.maybePop();
-                      },
-                    ),
-                  ),
-                ),
-                PositionedDirectional(
-                  top: 50.r,
-                  end: 15.r,
-                  child: DazzifyIconMenu(
-                    options: [
-                      MenuOption(
-                        svgIcon: AssetsManager.shareIcon,
-                        onTap: () {
-                          _logger.logEvent(
-                              event: AppEvents.serviceDetailsClickShare);
-                          openUrlSheet(
-                              url: AppConstants.shareService(
-                                state.service.id,
-                              ),
-                              context: context);
-                        },
+                        context.navigateTo(const HomeRoute());
+                      }
+                    : null,
+                tertiaryActionTitle: isServiceNotFound
+                    ? context.tr.backHome
+                    : null,
+                errorDataType: DazzifyErrorDataType.screen,
+                message: errorMessage,
+              );
+            } else {
+              return Stack(
+                children: [
+                  ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      DetailsHeaderComponent(
+                        service: state.service,
+                        branch: widget.branch,
+                        isBooking: widget.isBooking,
                       ),
-                      MenuOption(
-                        icon: SolarIconsOutline.dangerCircle,
-                        onTap: () {
-                          _logger.logEvent(
-                              event: AppEvents.serviceDetailsClickReport);
-                          if (AuthLocalDatasourceImpl().checkGuestMode()) {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: false,
-                              builder: (context) {
-                                return GuestModeBottomSheet();
-                              },
-                            );
-                          } else {
-                            showReportBottomSheet(
-                              context: context,
-                              id: state.service.id,
-                              type: "service",
-                              eventType: 'service',
-                            );
-                          }
-                        },
-                      )
+                      SizedBox(height: 8.h),
+                      IncludesWidget(
+                        include: state.service.includes,
+                      ),
+                      SizedBox(height: 8.h),
+                      RatingAndReviewsComponent(service: state.service),
+                      if (!widget.isBooking) const MoreLikeComponent(),
                     ],
                   ),
-                ),
-              ],
-            );
-          }
-        },
+                  PositionedDirectional(
+                    top: 50.r,
+                    start: 15.r,
+                    child: WidgetDirection(
+                      child: GlassIconButton(
+                        icon: SolarIconsOutline.arrowLeft,
+                        onPressed: () {
+                          _logger.logEvent(
+                              event: AppEvents.serviceDetailsClickBack);
+                          context.maybePop();
+                        },
+                      ),
+                    ),
+                  ),
+                  PositionedDirectional(
+                    top: 50.r,
+                    end: 15.r,
+                    child: DazzifyIconMenu(
+                      options: [
+                        MenuOption(
+                          svgIcon: AssetsManager.shareIcon,
+                          onTap: () {
+                            _logger.logEvent(
+                                event: AppEvents.serviceDetailsClickShare);
+                            openUrlSheet(
+                                url: AppConstants.shareService(
+                                  state.service.id,
+                                ),
+                                context: context);
+                          },
+                        ),
+                        MenuOption(
+                          icon: SolarIconsOutline.dangerCircle,
+                          onTap: () {
+                            _logger.logEvent(
+                                event: AppEvents.serviceDetailsClickReport);
+                            if (AuthLocalDatasourceImpl().checkGuestMode()) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: false,
+                                builder: (context) {
+                                  return GuestModeBottomSheet();
+                                },
+                              );
+                            } else {
+                              showReportBottomSheet(
+                                context: context,
+                                id: state.service.id,
+                                type: "service",
+                                eventType: 'service',
+                              );
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }

@@ -154,111 +154,136 @@ class _BottomNavBarState extends State<BottomNavBar>
           routes: routes,
           builder: (context, child) {
             final tabsRouter = context.tabsRouter;
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              extendBody: true,
-              body: child,
-              bottomNavigationBar: Padding(
-                padding: EdgeInsets.only(
-                  left: 16.w,
-                  right: 16.w,
-                  bottom: 10.h,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50.r),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 20,
-                      sigmaY: 20,
-                    ),
-                    child: Container(
-                      height: 60.h,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            _getActiveColor(context, tabsRouter.activeIndex)
-                                .withValues(alpha: 0.12),
-                            _getActiveColor(context, tabsRouter.activeIndex)
-                                .withValues(alpha: 0.12),
-                            _getActiveColor(context, tabsRouter.activeIndex)
-                                .withValues(alpha: 0.12),
-                          ],
-                          stops: const [0.0, 0.3, 1.0],
-                        ),
-                        border: Border.all(
-                          color: context.isDarkTheme
-                              ? Colors.white.withValues(alpha: 0.15)
-                              : Colors.black.withValues(alpha: 0.1),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(50.r),
+            return PopScope(
+              canPop: tabsRouter.activeIndex == 0,
+              onPopInvoked: (didPop) {
+                if (!didPop && tabsRouter.activeIndex != 0) {
+                  // Log back button event based on current tab before navigating to home
+                  final currentIndex = tabsRouter.activeIndex;
+                  switch (currentIndex) {
+                    case 1:
+                      _logger.logEvent(event: AppEvents.reelsClickBack);
+                      break;
+                    case 2:
+                      _logger.logEvent(event: AppEvents.searchClickBack);
+                      break;
+                    case 3:
+                      _logger.logEvent(event: AppEvents.chatClickBack);
+                      break;
+                    case 4:
+                      _logger.logEvent(event: AppEvents.profileClickBack);
+                      break;
+                  }
+                  // Navigate to home
+                  tabsRouter.setActiveIndex(0);
+                }
+              },
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                extendBody: true,
+                body: child,
+                bottomNavigationBar: Padding(
+                  padding: EdgeInsets.only(
+                    left: 16.w,
+                    right: 16.w,
+                    bottom: 10.h,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50.r),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 20,
+                        sigmaY: 20,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Home Icon
-                          _buildNavItem(
-                            context: context,
-                            isActive: tabsRouter.activeIndex == 0,
-                            icon: SolarIconsOutline.home,
-                            onTap: () {
-                              handleNavbarItemTap(
-                                value: 0,
-                                tabsRouter: tabsRouter,
-                              );
-                            },
+                      child: Container(
+                        height: 60.h,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              _getActiveColor(context, tabsRouter.activeIndex)
+                                  .withValues(alpha: 0.12),
+                              _getActiveColor(context, tabsRouter.activeIndex)
+                                  .withValues(alpha: 0.12),
+                              _getActiveColor(context, tabsRouter.activeIndex)
+                                  .withValues(alpha: 0.12),
+                            ],
+                            stops: const [0.0, 0.3, 1.0],
                           ),
-                          // Video Library Icon
-                          _buildNavItem(
-                            context: context,
-                            isActive: tabsRouter.activeIndex == 1,
-                            icon: SolarIconsOutline.videoLibrary,
-                            onTap: () {
-                              handleNavbarItemTap(
-                                value: 1,
-                                tabsRouter: tabsRouter,
-                              );
-                            },
+                          border: Border.all(
+                            color: context.isDarkTheme
+                                ? Colors.white.withValues(alpha: 0.15)
+                                : Colors.black.withValues(alpha: 0.1),
+                            width: 1,
                           ),
-                          // Search Icon
-                          _buildNavItem(
-                            context: context,
-                            isActive: tabsRouter.activeIndex == 2,
-                            icon: SolarIconsOutline.magnifier,
-                            onTap: () {
-                              handleNavbarItemTap(
-                                value: 2,
-                                tabsRouter: tabsRouter,
-                              );
-                            },
-                          ),
-                          // Chat Icon
-                          _buildNavItem(
-                            context: context,
-                            isActive: tabsRouter.activeIndex == 3,
-                            icon: SolarIconsOutline.chatRoundLine,
-                            onTap: () {
-                              handleNavbarItemTap(
-                                value: 3,
-                                tabsRouter: tabsRouter,
-                              );
-                            },
-                          ),
-                          // Profile Icon
-                          _buildProfileNavItem(
-                            context: context,
-                            isActive: tabsRouter.activeIndex == 4,
-                            onTap: () {
-                              handleNavbarItemTap(
-                                value: 4,
-                                tabsRouter: tabsRouter,
-                              );
-                            },
-                          ),
-                        ],
+                          borderRadius: BorderRadius.circular(50.r),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Home Icon
+                            _buildNavItem(
+                              context: context,
+                              isActive: tabsRouter.activeIndex == 0,
+                              icon: SolarIconsOutline.home,
+                              onTap: () {
+                                handleNavbarItemTap(
+                                  value: 0,
+                                  tabsRouter: tabsRouter,
+                                );
+                              },
+                            ),
+                            // Video Library Icon
+                            _buildNavItem(
+                              context: context,
+                              isActive: tabsRouter.activeIndex == 1,
+                              icon: SolarIconsOutline.videoLibrary,
+                              onTap: () {
+                                handleNavbarItemTap(
+                                  value: 1,
+                                  tabsRouter: tabsRouter,
+                                );
+                              },
+                            ),
+                            // Search Icon
+                            _buildNavItem(
+                              context: context,
+                              isActive: tabsRouter.activeIndex == 2,
+                              icon: SolarIconsOutline.magnifier,
+                              onTap: () {
+                                handleNavbarItemTap(
+                                  value: 2,
+                                  tabsRouter: tabsRouter,
+                                );
+                              },
+                            ),
+                            // Chat Icon
+                            _buildNavItem(
+                              context: context,
+                              isActive: tabsRouter.activeIndex == 3,
+                              icon: SolarIconsOutline.chatRoundLine,
+                              onTap: () {
+                                handleNavbarItemTap(
+                                  value: 3,
+                                  tabsRouter: tabsRouter,
+                                );
+                              },
+                            ),
+                            // Profile Icon
+                            _buildProfileNavItem(
+                              context: context,
+                              isActive: tabsRouter.activeIndex == 4,
+                              onTap: () {
+                                handleNavbarItemTap(
+                                  value: 4,
+                                  tabsRouter: tabsRouter,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

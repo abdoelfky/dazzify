@@ -60,32 +60,36 @@ class DazzifyToastBar {
                   ),
                   padding: EdgeInsetsDirectional.only(
                     start: 12.0.r,
-                    top: 6.0.r,
-                    bottom: 6.0.r,
+                    end: 8.0.r,
+                    top: 10.0.r,
+                    bottom: 10.0.r,
                   ),
                   margin: EdgeInsetsDirectional.all(21.0.r),
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width - 42.0.r,
+                  ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: DText(
                           message,
-                          maxLines: 3,
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
                           style: context.textTheme.bodyMedium!.copyWith(
                             color: Colors.white,
                           ),
                         ),
                       ),
+                      SizedBox(width: 8.0.w),
                       GestureDetector(
                         onTap: () {
                           controller.dismiss();
                         },
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.only(end: 8.0.r),
-                          child: const Icon(
-                            Icons.clear,
-                            color: Colors.white,
-                            size: 16.0,
-                          ),
+                        child: const Icon(
+                          Icons.clear,
+                          color: Colors.white,
+                          size: 16.0,
                         ),
                       )
                     ],

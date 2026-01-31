@@ -57,9 +57,16 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.topratedClickBrandsBack);
+        }
+      },
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
         body: Stack(
           children: [
             Column(
@@ -177,6 +184,7 @@ class _TopRatedBrandsScreenState extends State<TopRatedBrandsScreen> {
               ),
           ],
         ),
+      ),
       ),
     );
   }

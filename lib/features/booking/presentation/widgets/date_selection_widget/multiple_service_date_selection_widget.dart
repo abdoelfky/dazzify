@@ -1,4 +1,7 @@
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
+import 'package:dazzify/core/injection/injection.dart' show getIt;
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/colors_manager.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
@@ -19,6 +22,8 @@ class MultipleServiceDateSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16).r,
       width: 328.w,
@@ -39,6 +44,8 @@ class MultipleServiceDateSelectionWidget extends StatelessWidget {
       ),
       child: SfDateRangePicker(
         onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+          _logger.logEvent(event: AppEvents.calendarSelectDate);
+
           context.read<MultipleServiceAvailabilityCubit>().changeSelectedDate(
                 services: services,
                 branchId: branchId,

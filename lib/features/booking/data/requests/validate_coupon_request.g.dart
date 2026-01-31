@@ -11,6 +11,9 @@ ValidateCouponRequest _$ValidateCouponRequestFromJson(
     ValidateCouponRequest(
       code: json['code'] as String,
       purchaseAmount: json['purchaseAmount'] as num,
+      services: (json['services'] as List<dynamic>)
+          .map((e) => ServiceItemRequest.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ValidateCouponRequestToJson(
@@ -18,4 +21,5 @@ Map<String, dynamic> _$ValidateCouponRequestToJson(
     <String, dynamic>{
       'code': instance.code,
       'purchaseAmount': instance.purchaseAmount,
+      'services': instance.services.map((e) => e.toJson()).toList(),
     };

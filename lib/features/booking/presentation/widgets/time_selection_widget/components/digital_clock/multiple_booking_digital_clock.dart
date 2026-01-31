@@ -1,5 +1,8 @@
 import 'package:dazzify/core/constants/app_constants.dart';
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/booking/data/models/vendor_session_model.dart';
 import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
 
@@ -14,6 +17,7 @@ class MultipleBookingDigitalClock extends StatefulWidget {
 class _MultipleBookingDigitalClockState
     extends State<MultipleBookingDigitalClock> {
   late MultipleServiceAvailabilityCubit _availabilityCubit;
+  final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
   @override
   void initState() {
@@ -63,6 +67,10 @@ class _MultipleBookingDigitalClockState
                       VendorSessionModel session = selectedDaySessions[index];
                       return DropdownMenuItem<String>(
                         onTap: () {
+                          _logger.logEvent(event: AppEvents.calendarSelectTime);
+                          _availabilityCubit.changeSelectedSession(
+                            newSessionIndex: index,
+                          );
                           _availabilityCubit.changeSelectedSession(
                             newSessionIndex: index,
                           );

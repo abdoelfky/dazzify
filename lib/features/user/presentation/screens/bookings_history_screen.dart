@@ -68,7 +68,14 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.bookingHistoryClickBack);
+        }
+      },
+      child: Scaffold(
       body: Column(
         children: [
           Padding(
@@ -106,9 +113,9 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
                       return ListView.separated(
                         controller: _controller,
                         itemCount: state.bookingsHistory.length + 1,
-                        padding: const EdgeInsets.only(
+                        padding:  EdgeInsets.only(
                           top: 24,
-                          bottom: 16,
+                          bottom: 70.h,
                           right: 16,
                           left: 16,
                         ).r,
@@ -157,6 +164,7 @@ class _BookingsHistoryScreenState extends State<BookingsHistoryScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

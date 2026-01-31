@@ -20,7 +20,7 @@ void configureDependencies() {
   // Manually register AppEventsLogger without needing codegen regeneration.
   if (!getIt.isRegistered<AppEventsLogger>()) {
     getIt.registerLazySingleton<AppEventsLogger>(
-      () => AppEventsLogger(getIt<ApiConsumer>()),
+          () => AppEventsLogger(getIt<ApiConsumer>()),
     );
   }
 }

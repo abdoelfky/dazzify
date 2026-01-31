@@ -34,46 +34,50 @@ class DazzifySheetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        height: height ?? context.screenHeight * 0.75,
-        width: context.screenWidth,
-        decoration: BoxDecoration(
-          color: backgroundColor ?? context.colorScheme.surface,
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(30),
-            topLeft: Radius.circular(30),
-          ).r,
-        ),
-        child: Padding(
-          padding: enableBottomInsets
-              ? EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                )
-              : EdgeInsets.zero,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BottomSheetDash(
-                height: handlerHeight ?? 6.h,
-                width: handlerWidth ?? 70.w,
-                color: handlerColor ?? context.colorScheme.primary,
-              ),
-              SizedBox(height: 13.h),
-              if (title != null)
-                DText(
-                  title!,
-                  style: textStyle ??
-                      context.textTheme.bodyLarge!.copyWith(
-                        color: context.colorScheme.onSurface,
-                      ),
+    return SafeArea(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: height ?? context.screenHeight * 0.75,
+          width: context.screenWidth,
+          decoration: BoxDecoration(
+            color: backgroundColor ?? context.colorScheme.surface,
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(30),
+              topLeft: Radius.circular(30),
+            ).r,
+          ),
+          child: Padding(
+            padding: enableBottomInsets
+                ? EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  )
+                : EdgeInsets.zero,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BottomSheetDash(
+                  height: handlerHeight ?? 6.h,
+                  width: handlerWidth ?? 70.w,
+                  color: handlerColor ?? context.colorScheme.primary,
                 ),
-              SizedBox(height: titleBottomPadding ?? 20.h),
-              ...children
-            ],
+                SizedBox(height: 13.h),
+                if (title != null)
+                  DText(
+                    title!,
+                    style: textStyle ??
+                        context.textTheme.bodyLarge!.copyWith(
+                          color: context.colorScheme.onSurface,
+                        ),
+                  ),
+                SizedBox(height: titleBottomPadding ?? 20.h),
+                ...children,
+                SizedBox(height: titleBottomPadding ?? 20.h),
+
+              ],
+            ),
           ),
         ),
       ),

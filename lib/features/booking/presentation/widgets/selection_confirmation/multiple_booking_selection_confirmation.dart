@@ -1,4 +1,7 @@
+import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/booking/logic/multiple_service_availability_cubit/multiple_service_availability_cubit.dart';
 import 'package:dazzify/features/shared/animations/custom_fade_animation.dart';
 
@@ -7,6 +10,8 @@ class MultipleBookingSelectionConfirmation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppEventsLogger _logger = getIt<AppEventsLogger>();
+
     return BlocBuilder<MultipleServiceAvailabilityCubit,
         MultipleServiceAvailabilityState>(
       builder: (context, state) {
@@ -42,6 +47,14 @@ class MultipleBookingSelectionConfirmation extends StatelessWidget {
                     Checkbox(
                       value: state.isSessionConfirmed,
                       onChanged: (value) {
+                        if(!state.isSessionConfirmed){
+                        _logger.logEvent(
+                            event: AppEvents
+                                .calendarAgreeTerms);}
+                        else{
+                        _logger.logEvent(
+                            event: AppEvents
+                                .calendarCancelTerms);}
                         context
                             .read<MultipleServiceAvailabilityCubit>()
                             .changeSessionConfirmation(value: value!);

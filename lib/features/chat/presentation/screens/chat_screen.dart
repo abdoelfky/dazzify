@@ -109,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
-      bottom: false,
+      // bottom: false,
       child: Scaffold(
         body: Column(
           children: [

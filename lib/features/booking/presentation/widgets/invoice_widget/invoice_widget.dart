@@ -8,7 +8,6 @@ import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/dot
 import 'package:dazzify/features/booking/presentation/widgets/invoice_widget/invoice_line.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_text_form_field.dart';
-import 'package:dazzify/features/user/presentation/screens/booking_status_screen.dart';
 
 class InvoiceWidget extends StatelessWidget {
   final TextEditingController textContorller;
@@ -76,9 +75,34 @@ class InvoiceWidget extends StatelessWidget {
                 price: totalPrice,
                 couponValidationState: state.couponValidationState,
                 service: services.isEmpty ? service : services.first,
+                services: services,
                 textContorller: textContorller,
               ),
             ),
+            // Display message from backend (success or error)
+            if (state.couponModel.message.isNotEmpty ||
+                (state.couponValidationState == UiState.failure &&
+                    state.errorMessage.isNotEmpty))
+              Padding(
+                padding: EdgeInsets.only(top: 8.h, left: 4.w),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: DText(
+                    state.couponValidationState == UiState.failure
+                        ? (state.errorMessage.isNotEmpty
+                            ? state.errorMessage
+                            : context.tr.couponNotValidated)
+                        : state.couponModel.message,
+                    style: context.textTheme.bodySmall!.copyWith(
+                      color: state.couponValidationState == UiState.success
+                          ? Colors.green
+                          : state.couponValidationState == UiState.failure
+                              ? Colors.red
+                              : context.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
             SizedBox(height: 24.h),
             InvoiceLine(
               title:
@@ -256,48 +280,83 @@ Widget? getSuffixIcon({
   required UiState couponValidationState,
   required TextEditingController textContorller,
   required ServiceDetailsModel service,
+  required List<ServiceDetailsModel> services,
   required num price,
 }) {
-  return couponValidationState == UiState.success
-      ? Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              SolarIconsOutline.checkCircle,
-              color: Colors.green,
-            ),
-            SizedBox(width: 8.w),
-            IconButton(
-              icon: Icon(
-                SolarIconsOutline.closeCircle,
-                color: context.colorScheme.error,
-              ),
-              onPressed: () {
-                getIt<AppEventsLogger>()
-                    .logEvent(event: AppEvents.confirmationBookingRemoveCoupon);
-                textContorller.clear();
-                context.read<ServiceInvoiceCubit>().clearCoupon();
-              },
-            ),
-          ],
-        )
-      : TextButton(
-          onPressed: () {
-            if (textContorller.text.isNotEmpty) {
-              getIt<AppEventsLogger>()
-                  .logEvent(event: AppEvents.confirmationBookingAddCoupon);
-              FocusManager.instance.primaryFocus?.unfocus();
-              context
-                  .read<ServiceInvoiceCubit>()
-                  .validateCouponAndUpdateInvoice(
-                    service: service,
-                    price: price,
-                    code: textContorller.text,
-                  );
-            }
-          },
-          child: DText(
-            context.tr.apply,
+  if (couponValidationState == UiState.success) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: TextButton(
+        onPressed: () {
+          getIt<AppEventsLogger>()
+              .logEvent(event: AppEvents.confirmationBookingRemoveCoupon);
+          textContorller.clear();
+          context.read<ServiceInvoiceCubit>().clearCoupon();
+        },
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        child: DText(
+          context.tr.delete,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colorScheme.error,
           ),
-        );
+        ),
+      ),
+    );
+  } else if (couponValidationState == UiState.failure) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: TextButton(
+        onPressed: () {
+          getIt<AppEventsLogger>()
+              .logEvent(event: AppEvents.confirmationBookingRemoveCoupon);
+          textContorller.clear();
+          context.read<ServiceInvoiceCubit>().clearCoupon();
+        },
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        child: DText(
+          context.tr.cancel,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colorScheme.error,
+          ),
+        ),
+      ),
+    );
+  } else {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: TextButton(
+        onPressed: () {
+          if (textContorller.text.isNotEmpty) {
+            getIt<AppEventsLogger>()
+                .logEvent(event: AppEvents.confirmationBookingAddCoupon);
+            FocusManager.instance.primaryFocus?.unfocus();
+            context
+                .read<ServiceInvoiceCubit>()
+                .validateCouponAndUpdateInvoice(
+                  service: service,
+                  services: services,
+                  price: price,
+                  code: textContorller.text,
+                );
+          }
+        },
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        child: DText(
+          context.tr.apply,
+        ),
+      ),
+    );
+  }
 }

@@ -5,12 +5,14 @@ class CategoryState extends Equatable {
   final String errorMessage;
   final bool hasReachedMax;
   final List<BrandModel> brands;
+  final bool isLoadingMore;
 
   const CategoryState({
     this.blocState = UiState.initial,
     this.errorMessage = '',
     this.hasReachedMax = false,
     this.brands = const [],
+    this.isLoadingMore = false,
   });
 
   CategoryState copyWith({
@@ -18,6 +20,7 @@ class CategoryState extends Equatable {
     String? errorMessage,
     bool? hasReachedMax,
     List<BrandModel>? brands,
+    bool? isLoadingMore,
   }) {
     // Sort the brands by points if a new list is provided
     final sortedBrands = brands != null
@@ -29,7 +32,8 @@ class CategoryState extends Equatable {
       blocState: blocState ?? this.blocState,
       errorMessage: errorMessage ?? this.errorMessage,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      brands: sortedBrands
+      brands: sortedBrands,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       // brands: brands ?? this.brands,
     );
   }
@@ -40,5 +44,6 @@ class CategoryState extends Equatable {
         errorMessage,
         hasReachedMax,
         brands,
+        isLoadingMore,
       ];
 }

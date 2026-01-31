@@ -80,9 +80,9 @@ abstract class FeaturesModule {
 
   @LazySingleton(as: AuthRepository)
   AuthRepositoryImpl get authRepository => AuthRepositoryImpl(
-        authRemoteDatasource,
-        authLocalDatasource,
-      );
+    authRemoteDatasource,
+    authLocalDatasource,
+  );
 
   @LazySingleton(as: NotificationsRemoteDatasource)
   NotificationsRemoteDatasourceImpl get notificationsRemoteDataSource =>
@@ -96,15 +96,15 @@ abstract class FeaturesModule {
 
   @singleton
   AppNotificationsCubit get appNotificationsCubit => AppNotificationsCubit(
-        notificationsRepository,
-        authRepository,
-      );
+    notificationsRepository,
+    authRepository,
+  );
 
   @singleton
   TokensCubit get tokensCubit => TokensCubit(
-        authRepository,
-        appNotificationsCubit,
-      );
+    authRepository,
+    appNotificationsCubit,
+  );
 
   @lazySingleton
   InternetConnection get internetConnection => InternetConnection();

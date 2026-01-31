@@ -57,9 +57,16 @@ class _PopularServicesScreenState extends State<PopularServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.popularClickServicesBack);
+        }
+      },
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
         body: Stack(
           children: [
             Column(
@@ -176,6 +183,7 @@ class _PopularServicesScreenState extends State<PopularServicesScreen> {
               ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -61,8 +61,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         }
       },
-      child: Scaffold(
-        body: ValueListenableBuilder(
+      child: PopScope(
+        canPop: true,
+        onPopInvoked: (didPop) {
+          // Handle back button if needed
+        },
+        child: Scaffold(
+          body: ValueListenableBuilder(
           valueListenable: isLoading,
           builder: (context, value, child) => DazzifyOverlayLoading(
             isLoading: value,
@@ -71,9 +76,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const ProfileHeaderComponent(),
                 SizedBox(height: 30.h),
                 const ProfileBodyComponent(),
+                SizedBox(height: 15.h),
+
               ],
             ),
           ),
+        ),
         ),
       ),
     );

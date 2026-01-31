@@ -10,6 +10,7 @@ import 'package:dazzify/features/booking/data/models/delivery_info_model.dart';
 import 'package:dazzify/features/booking/data/models/service_invoice_model.dart';
 import 'package:dazzify/features/booking/data/repositories/booking_repository.dart';
 import 'package:dazzify/features/booking/data/requests/create_booking_request.dart';
+import 'package:dazzify/features/booking/data/requests/service_item_request.dart';
 import 'package:dazzify/features/booking/data/requests/validate_coupon_request.dart';
 import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
@@ -56,16 +57,26 @@ class ServiceInvoiceCubit extends Cubit<ServiceInvoiceState> {
 
   Future<void> validateCouponAndUpdateInvoice({
     required ServiceDetailsModel service,
+    required List<ServiceDetailsModel> services,
     required String code,
     required num price,
   }) async {
     emit(state.copyWith(couponValidationState: UiState.loading));
+
+    // Convert services to ServiceItemRequest list
+    final servicesList = (services.isEmpty ? [service] : services)
+        .map((s) => ServiceItemRequest(
+              serviceId: s.id,
+              quantity: s.quantity,
+            ))
+        .toList();
 
     final result = await _repository.validateCoupon(
       brandId: service.brand.id,
       request: ValidateCouponRequest(
         code: code,
         purchaseAmount: price,
+        services: servicesList,
       ),
     );
 

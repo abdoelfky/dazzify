@@ -282,7 +282,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                   ),
                 ),
                 PositionedDirectional(
-                  bottom: hasBottomNavBar ? 70.h : 40.h,
+                  bottom: hasBottomNavBar ? 90.h : 80.h,
                   end: 10.w,
                   child: ReelsButtonComponent(
                     reel: widget.reel,
@@ -327,7 +327,7 @@ class _ReelPlayerState extends State<ReelPlayer>
                   ),
                 ),
                 PositionedDirectional(
-                  bottom: hasBottomNavBar ? 70.h : 40.h,
+                  bottom: hasBottomNavBar ? 90.h : 80.h,
                   start: 10.w,
                   child: ReelInfoComponent(
                     reel: widget.reel,

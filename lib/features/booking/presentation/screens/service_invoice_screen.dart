@@ -189,7 +189,8 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
       // }
       FocusManager.instance.primaryFocus?.unfocus();
       context.read<ServiceInvoiceCubit>().validateCouponAndUpdateInvoice(
-            service: widget.services.first,
+            service: widget.services.isEmpty ? widget.service : widget.services.first,
+            services: widget.services,
             price: totalPrice,
             code: _textController.text,
           );
@@ -328,15 +329,10 @@ class _ServiceInvoiceScreenState extends State<ServiceInvoiceScreen> {
                     _isCodeValidatingLoading.value = true;
                   } else if (state.couponValidationState == UiState.failure) {
                     _isCodeValidatingLoading.value = false;
-                    DazzifyToastBar.showError(
-                      message: context.tr.couponNotValidated,
-                    );
+                    // Error message will be displayed in the invoice widget
                   } else if (state.couponValidationState == UiState.success) {
-                    DazzifyToastBar.showSuccess(
-                      message: context.tr.couponValidated,
-                    );
-
                     _isCodeValidatingLoading.value = false;
+                    // Success message will be displayed in the invoice widget
                   }
                 },
                 child: InvoiceWidget(

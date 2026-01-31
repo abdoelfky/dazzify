@@ -58,7 +58,14 @@ class _ServiceAvailabilityScreenState extends State<ServiceAvailabilityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.calendarClickBack);
+        }
+      },
+      child: Scaffold(
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.only(),
@@ -113,6 +120,7 @@ class _ServiceAvailabilityScreenState extends State<ServiceAvailabilityScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -43,8 +43,15 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          _logger.logEvent(event: AppEvents.favouritesClickBack);
+        }
+      },
+      child: Scaffold(
+        body: BlocConsumer<BookingFromMediaCubit, BookingFromMediaState>(
         listener: (context, state) =>
             bookingFromMediaCubitListener(state, context),
         builder: (context, state) {
@@ -79,8 +86,12 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                             crossAxisSpacing: 10.h,
                             mainAxisSpacing: 10.h,
                           ),
-                          padding: const EdgeInsets.all(12).r,
-                          itemCount: state.favoriteServiceList.length,
+                          padding:  EdgeInsets.only(
+                            top: 12,
+                            bottom: 80.h,
+                            right: 12,
+                            left: 12,
+                          ).r,                          itemCount: state.favoriteServiceList.length,
                           itemBuilder: (context, index) {
                             final item = state.favoriteServiceList[index];
                             return FavoriteCard(
@@ -122,6 +133,7 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
             ),
           );
         },
+      ),
       ),
     );
   }

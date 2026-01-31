@@ -44,7 +44,12 @@ class _ReelViewerScreenState extends State<ReelViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        // Handle back button if needed
+      },
+      child: Scaffold(
       body: Stack(
         children: [
           BlocProvider.value(
@@ -68,6 +73,7 @@ class _ReelViewerScreenState extends State<ReelViewerScreen> {
             child: const DazzifyAppBar(isLeading: true),
           ),
         ],
+      ),
       ),
     );
   }
