@@ -98,6 +98,17 @@ class BrandRemoteDataSourcesImpl implements BrandRemoteDataSources {
   }
 
   @override
+  Future<List<ServiceDetailsModel>> getBrandExtraServices({
+    required String brandId,
+  }) async {
+    return await _apiConsumer.get<ServiceDetailsModel>(
+      ApiConstants.getBrandExtraServices(brandId: brandId),
+      responseReturnType: ResponseReturnType.fromJsonList,
+      fromJsonMethod: ServiceDetailsModel.fromJson,
+    );
+  }
+
+  @override
   Future<List<ServiceDetailsModel>> getBrandServicesWithCategoryAndBranch({
     required String categoryId,
     required GetBrandServicesRequest request,

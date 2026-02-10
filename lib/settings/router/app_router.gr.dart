@@ -1202,6 +1202,25 @@ class ReelsTabRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [SearchInputScreen]
+class SearchInputRoute extends PageRouteInfo<void> {
+  const SearchInputRoute({List<PageRouteInfo>? children})
+      : super(
+          SearchInputRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SearchInputRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SearchInputScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [SearchPostScreen]
 class SearchPostRoute extends PageRouteInfo<SearchPostRouteArgs> {
   SearchPostRoute({

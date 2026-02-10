@@ -18,6 +18,8 @@
   "welcome": "مرحباً",
   "categories": "الفئات",
   "services": "الخدمات",
+  "extras": "إضافات",
+  "noExtraServices": "لا توجد خدمات إضافية متاحة",
   "topRated": "مقدمى الخدمة الأكثر تقييما",
   "popularServices": "الخدمات الأكثر شهرة",
   "allServices": "جميع الخدمات",
@@ -215,6 +217,7 @@
   "noSessions": "لا توجد جلسات متاحة لهذا البائع حتى الآن، حاول مرة أخرى لاحقًا",
   "noMonthSessions": "لا توجد جلسات متاحة لهذا البائع فى هذا الشهر ، اختر وقتا اخر",
   "noSessionsToday": "لا توجد جلسات في هذا اليوم، حدد يومًا آخر",
+  "cantBookExtraAlone": "لا يمكن حجز خدمة إضافية بمفردها، اختر خدمة أساسية أولاً",
   "pickTime": "انقر لاختيار الوقت المناسب لك",
   "noBrandTerms": "لا توجد شروط وأحكام لهذه العلامة التجارية",
   "serviceBookedSuccessfully": "تم حجز الخدمة بنجاح",
@@ -434,6 +437,10 @@
   "openToScratch": "افتح وامسح للحصول على كوبونك",
   "showServices": "اظهر الخدمات",
   "viewBrand": "عرض العلامة التجارية",
-  "serviceExistsButNotAvailable": "هذه الخدمة موجودة ولكنها غير متاحة لك"
+  "serviceExistsButNotAvailable": "هذه الخدمة موجودة ولكنها غير متاحة لك",
+  "recentSearches": "عمليات البحث الأخيرة",
+  "clear": "مسح",
+  "brand": "العلامة التجارية",
+  "service": "الخدمة"
 
 }

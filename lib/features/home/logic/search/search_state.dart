@@ -9,6 +9,8 @@ class SearchState extends Equatable {
   final bool hasMediaReachMax;
   final List<BrandModel> brands;
   final bool hasBrandsReachMax;
+  final List<ServiceDetailsModel> services;
+  final bool hasServicesReachMax;
 
   const SearchState({
     this.blocState = UiState.initial,
@@ -18,6 +20,8 @@ class SearchState extends Equatable {
     this.hasMediaReachMax = false,
     this.brands = const [],
     this.hasBrandsReachMax = false,
+    this.services = const [],
+    this.hasServicesReachMax = false,
   });
 
   SearchState copyWith({
@@ -28,6 +32,8 @@ class SearchState extends Equatable {
     bool? hasMediaReachMax,
     List<BrandModel>? brands,
     bool? hasBrandsReachMax,
+    List<ServiceDetailsModel>? services,
+    bool? hasServicesReachMax,
   }) {
     return SearchState(
       blocState: blocState ?? this.blocState,
@@ -37,6 +43,8 @@ class SearchState extends Equatable {
       hasMediaReachMax: hasMediaReachMax ?? this.hasMediaReachMax,
       brands: brands ?? this.brands,
       hasBrandsReachMax: hasBrandsReachMax ?? this.hasBrandsReachMax,
+      services: services ?? this.services,
+      hasServicesReachMax: hasServicesReachMax ?? this.hasServicesReachMax,
     );
   }
 
@@ -49,5 +57,7 @@ class SearchState extends Equatable {
         hasMediaReachMax,
         brands,
         hasBrandsReachMax,
+        services,
+        hasServicesReachMax,
       ];
 }

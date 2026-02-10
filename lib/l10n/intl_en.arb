@@ -18,6 +18,8 @@
   "welcome": "Welcome",
   "categories": "Categories",
   "services": "Services",
+  "extras": "Extras",
+  "noExtraServices": "No extra services available",
   "topRated": "Top Rated Brands",
   "popularServices": "Popular Services",
   "allServices": "All Services",
@@ -220,6 +222,7 @@
   "proceed": "Proceed",
   "noSessions": "There are no available sessions for this vender yet, try again later",
   "noMonthSessions": "There are no available sessions for this vender in this month, select another time.",
+  "cantBookExtraAlone": "You can't book an extra service alone. Please select a main service as well.",
   "@Notifications": {},
   "notificationsTitle": "Notifications",
   "notificationPermissionDialog": "You have to re-enable Notifications\n permissions from settings",
@@ -433,7 +436,11 @@
   "openToScratch": "Open to Scratch your Coupon",
   "showServices": "Show Services",
   "viewBrand": "View Brand",
-  "serviceExistsButNotAvailable": "This service exists but is not available for you"
+  "serviceExistsButNotAvailable": "This service exists but is not available for you",
+  "recentSearches": "Recent Searches",
+  "clear": "Clear",
+  "brand": "Brand",
+  "service": "Service"
 
 
 }

@@ -44,6 +44,10 @@ class _SearchScreenState extends State<SearchScreen> {
     searchBloc = context.read<SearchBloc>();
     _mediaScrollController.addListener(_onMediaScroll);
     _brandsScrollController.addListener(_onBrandsScroll);
+    // Load media items on screen init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      searchBloc.add(GetMediaItemsEvent());
+    });
     super.initState();
   }
 
@@ -80,22 +84,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      onPopInvoked: (didPop) {
-        if (didPop) {
-          _logger.logEvent(event: AppEvents.searchClickBack);
-        }
-      },
-      child: SafeArea(
-        bottom: false,
-        child: RefreshIndicator(
-          onRefresh: () async {
-            _textController.clear();
-            searchBloc.add(const RefreshEvent());
-            await Future.delayed(const Duration(seconds: 2));
-          },
-          child: Scaffold(
+    return SafeArea(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          _textController.clear();
+          searchBloc.add(const RefreshEvent());
+          await Future.delayed(const Duration(seconds: 2));
+        },
+        child: Scaffold(
           body: Column(
             children: [
               Padding(
@@ -105,7 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   isLeading: true,
                   onBackTap: () {
                     _logger.logEvent(event: AppEvents.searchClickBack);
-                    context.router.navigate(const HomeTabRoute());
+                    context.maybePop();
                   },
                 ),
               ),
@@ -121,17 +117,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   controller: _textController,
                   validator: (value) => null,
                   textInputType: TextInputType.text,
-                  onChanged: (keyWord) {
-                    if (keyWord.isNotEmpty) {
-                      _logger.logEvent(
-                        event: AppEvents.searchSearch,
-                        searchText: keyWord,
-                      );
-                    }
-                    searchBloc.add(GetSearchResultsEvent(keyWord: keyWord));
-                  },
-                  onSubmit: (keyWord) {
-                    _logger.logEvent(event: AppEvents.searchClickSearch);
+                  readOnly: true,
+                  onTap: () {
+                    context.pushRoute(const SearchInputRoute());
                   },
                 ),
               ),
@@ -161,7 +149,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       );
                     case UiState.success:
-                      if (state.showMediaItems) {
+                      // Always show media items in SearchScreen (default view)
+                      if (state.showMediaItems || state.media.isNotEmpty) {
                         if (state.media.isEmpty) {
                           return Expanded(
                             child: EmptyDataWidget(
@@ -173,9 +162,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             child: CustomFadeAnimation(
                               child: MasonryGridView.builder(
                                 controller: _mediaScrollController,
-                                padding:  EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                   top: 0,
-                                  bottom: 90.h,
+                                  bottom: 30,
                                   right: 16,
                                   left: 16,
                                 ).r,
@@ -263,56 +252,50 @@ class _SearchScreenState extends State<SearchScreen> {
                           );
                         } else {
                           return Expanded(
-                            child: Column(
-                              children: [
-                                ListView.separated(
-                                  itemCount: state.brands.length + 1,
-                                  padding: const EdgeInsets.only(
-                                    top: 0,
-                                    bottom: 90,
-                                    right: 16,
-                                    left: 16,
-                                  ).r,
-                                  controller: _brandsScrollController,
-                                  itemBuilder: (context, index) {
-                                    if (index >= state.brands.length) {
-                                      if (state.hasBrandsReachMax) {
-                                        return const SizedBox.shrink();
-                                      } else {
-                                        return SizedBox(
-                                          height: 25.r,
-                                          width: context.screenWidth,
-                                          child: LoadingAnimation(
-                                            height: 25.r,
-                                            width: 25.r,
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      return BrandCard(
-                                        brand: state.brands[index],
-                                        onTap: () {
-                                          _logger.logEvent(
-                                            event: AppEvents.searchClickBrand,
-                                            brandId: state.brands[index].id,
-                                          );
-                                          navigateToBrandProfile(
-                                            context: context,
-                                            brand: state.brands[index],
-                                            index: index,
-                                          );
-                                        },
+                            child: ListView.separated(
+                              itemCount: state.brands.length + 1,
+                              padding: const EdgeInsets.only(
+                                top: 0,
+                                bottom: 90,
+                                right: 16,
+                                left: 16,
+                              ).r,
+                              controller: _brandsScrollController,
+                              itemBuilder: (context, index) {
+                                if (index >= state.brands.length) {
+                                  if (state.hasBrandsReachMax) {
+                                    return const SizedBox.shrink();
+                                  } else {
+                                    return SizedBox(
+                                      height: 25.r,
+                                      width: context.screenWidth,
+                                      child: LoadingAnimation(
+                                        height: 25.r,
+                                        width: 25.r,
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  return BrandCard(
+                                    brand: state.brands[index],
+                                    onTap: () {
+                                      _logger.logEvent(
+                                        event: AppEvents.searchClickBrand,
+                                        brandId: state.brands[index].id,
                                       );
-                                    }
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) =>
-                                          SizedBox(
-                                    height: 16.h,
-                                  ),
-                                ),
-                               
-                              ],
+                                      navigateToBrandProfile(
+                                        context: context,
+                                        brand: state.brands[index],
+                                        index: index,
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) => SizedBox(
+                                height: 16.h,
+                              ),
                             ),
                           );
                         }
@@ -323,7 +306,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
         ),
-      ),
       ),
     );
   }

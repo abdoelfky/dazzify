@@ -159,6 +159,21 @@ class S {
     return Intl.message('Services', name: 'services', desc: '', args: []);
   }
 
+  /// `Extras`
+  String get extras {
+    return Intl.message('Extras', name: 'extras', desc: '', args: []);
+  }
+
+  /// `No extra services available`
+  String get noExtraServices {
+    return Intl.message(
+      'No extra services available',
+      name: 'noExtraServices',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Top Rated Brands`
   String get topRated {
     return Intl.message(
@@ -1609,6 +1624,16 @@ class S {
     );
   }
 
+  /// `You can't book an extra service alone. Please select a main service as well.`
+  String get cantBookExtraAlone {
+    return Intl.message(
+      'You can\'t book an extra service alone. Please select a main service as well.',
+      name: 'cantBookExtraAlone',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Notifications`
   String get notificationsTitle {
     return Intl.message(
@@ -2943,9 +2968,9 @@ class S {
     return Intl.message('In Progress', name: 'inProgress', desc: '', args: []);
   }
 
-  /// `Service `
+  /// `Service`
   String get service {
-    return Intl.message('Service ', name: 'service', desc: '', args: []);
+    return Intl.message('Service', name: 'service', desc: '', args: []);
   }
 
   /// `On`
@@ -3216,6 +3241,26 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Recent Searches`
+  String get recentSearches {
+    return Intl.message(
+      'Recent Searches',
+      name: 'recentSearches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear`
+  String get clear {
+    return Intl.message('Clear', name: 'clear', desc: '', args: []);
+  }
+
+  /// `Brand`
+  String get brand {
+    return Intl.message('Brand', name: 'brand', desc: '', args: []);
   }
 }
 

@@ -140,4 +140,3 @@ class HomeAppBarComponent extends StatelessWidget {
     );
   }
 }
-

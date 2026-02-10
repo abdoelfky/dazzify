@@ -10,6 +10,7 @@ import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
 import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
 import 'package:dazzify/features/home/data/requests/get_service_review_request.dart';
 import 'package:dazzify/features/home/data/requests/get_services_request.dart';
+import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/data/models/reviews_model.dart';
@@ -178,6 +179,21 @@ class HomeRepositoryImpl extends HomeRepository {
       );
 
       return Right(service);
+    } on ServerException catch (exception) {
+      return Left(ApiFailure(message: exception.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<dynamic>>> search({
+    required SearchRequest request,
+  }) async {
+    try {
+      List<dynamic> results = await _remoteDatasource.search(
+        request: request,
+      );
+
+      return Right(results);
     } on ServerException catch (exception) {
       return Left(ApiFailure(message: exception.message!));
     }

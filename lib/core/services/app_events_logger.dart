@@ -1,7 +1,6 @@
 import 'package:dazzify/core/api/api_consumer.dart';
 import 'package:dazzify/core/constants/api_constants.dart';
 import 'package:dazzify/core/constants/app_events.dart';
-import 'package:injectable/injectable.dart';
 
 /// Simple wrapper around `/api/v1/log/event`.
 ///
@@ -12,8 +11,7 @@ import 'package:injectable/injectable.dart';
 ///   in the backend file you were sent.
 ///
 /// This service **never throws** – failures are silently ignored so logging
-/// can’t break the app flow.
-@LazySingleton()
+/// can't break the app flow.
 class AppEventsLogger {
   final ApiConsumer _apiConsumer;
 

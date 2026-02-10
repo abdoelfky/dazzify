@@ -105,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bookings": MessageLookupByLibrary.simpleMessage("Bookings"),
     "bookingsHistory": MessageLookupByLibrary.simpleMessage("Bookings History"),
     "branches": MessageLookupByLibrary.simpleMessage("Branches"),
+    "brand": MessageLookupByLibrary.simpleMessage("Brand"),
     "brandCategories": MessageLookupByLibrary.simpleMessage("Categories"),
     "brandServices": MessageLookupByLibrary.simpleMessage("Services"),
     "brandTermsSheetTitle": MessageLookupByLibrary.simpleMessage(
@@ -121,6 +122,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "canceled": MessageLookupByLibrary.simpleMessage("Canceled"),
     "cancelled": MessageLookupByLibrary.simpleMessage("Cancelled"),
+    "cantBookExtraAlone": MessageLookupByLibrary.simpleMessage(
+      "You can\'t book an extra service alone. Please select a main service as well.",
+    ),
     "card": MessageLookupByLibrary.simpleMessage("Card"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("card Holder Name"),
     "categories": MessageLookupByLibrary.simpleMessage("Categories"),
@@ -137,6 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chooseServiceLocationError": MessageLookupByLibrary.simpleMessage(
       "You cannot select both in-branch and out-of-branch services Together.",
     ),
+    "clear": MessageLookupByLibrary.simpleMessage("Clear"),
     "clients": MessageLookupByLibrary.simpleMessage("Clients"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "collectionsTab": MessageLookupByLibrary.simpleMessage("Collections"),
@@ -227,6 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "etisalatCash": MessageLookupByLibrary.simpleMessage("Etisalat Cash"),
     "expirationDate": MessageLookupByLibrary.simpleMessage("Expiration Date"),
     "expire": MessageLookupByLibrary.simpleMessage("MM/YY"),
+    "extras": MessageLookupByLibrary.simpleMessage("Extras"),
     "fayoum": MessageLookupByLibrary.simpleMessage("Fayoum"),
     "fees": MessageLookupByLibrary.simpleMessage("Fees"),
     "female": MessageLookupByLibrary.simpleMessage("Female"),
@@ -352,6 +358,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No coupons available",
     ),
     "noData": MessageLookupByLibrary.simpleMessage("No Data, try again later"),
+    "noExtraServices": MessageLookupByLibrary.simpleMessage(
+      "No extra services available",
+    ),
     "noFavorites": MessageLookupByLibrary.simpleMessage(
       "Favorite Services Will Appear Here",
     ),
@@ -504,6 +513,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "readyForService": MessageLookupByLibrary.simpleMessage(
       "Ready For This Service",
     ),
+    "recentSearches": MessageLookupByLibrary.simpleMessage("Recent Searches"),
     "redSea": MessageLookupByLibrary.simpleMessage("RedSea"),
     "redeemIt": MessageLookupByLibrary.simpleMessage("Redeem it"),
     "redeemPoints": MessageLookupByLibrary.simpleMessage("Redeem\nPoints"),
@@ -562,7 +572,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendOtpSuccess": MessageLookupByLibrary.simpleMessage(
       "OTP Code Sent Successfully.",
     ),
-    "service": MessageLookupByLibrary.simpleMessage("Service "),
+    "service": MessageLookupByLibrary.simpleMessage("Service"),
     "serviceAdded": MessageLookupByLibrary.simpleMessage(
       "Service added to your wallet",
     ),

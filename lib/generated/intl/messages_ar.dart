@@ -103,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bookings": MessageLookupByLibrary.simpleMessage("حجوزات"),
     "bookingsHistory": MessageLookupByLibrary.simpleMessage("تاريخ الحجز"),
     "branches": MessageLookupByLibrary.simpleMessage("الفروع"),
+    "brand": MessageLookupByLibrary.simpleMessage("العلامة التجارية"),
     "brandCategories": MessageLookupByLibrary.simpleMessage("الفئات"),
     "brandServices": MessageLookupByLibrary.simpleMessage("الخدمات"),
     "brandTermsSheetTitle": MessageLookupByLibrary.simpleMessage(
@@ -119,6 +120,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "canceled": MessageLookupByLibrary.simpleMessage("تم إلغاءه"),
     "cancelled": MessageLookupByLibrary.simpleMessage("تم إلغاءه"),
+    "cantBookExtraAlone": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن حجز خدمة إضافية بمفردها، اختر خدمة أساسية أولاً",
+    ),
     "card": MessageLookupByLibrary.simpleMessage("كارت"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("إسم صاحب البطاقة"),
     "categories": MessageLookupByLibrary.simpleMessage("الفئات"),
@@ -131,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chooseServiceLocationError": MessageLookupByLibrary.simpleMessage(
       "لا يمكنك اختيار خدمات من داخل الفرع ومن خارجه معًا.",
     ),
+    "clear": MessageLookupByLibrary.simpleMessage("مسح"),
     "clients": MessageLookupByLibrary.simpleMessage("عميل"),
     "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
     "collectionsTab": MessageLookupByLibrary.simpleMessage("المجموعات"),
@@ -221,6 +226,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تاريخ انتهاء الصلاحية",
     ),
     "expire": MessageLookupByLibrary.simpleMessage("MM/YY"),
+    "extras": MessageLookupByLibrary.simpleMessage("إضافات"),
     "fayoum": MessageLookupByLibrary.simpleMessage("الفيوم"),
     "fees": MessageLookupByLibrary.simpleMessage("الرسوم"),
     "female": MessageLookupByLibrary.simpleMessage("انثى"),
@@ -349,6 +355,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noData": MessageLookupByLibrary.simpleMessage(
       "لا توجد بيانات، حاول مرة أخرى لاحقًا",
+    ),
+    "noExtraServices": MessageLookupByLibrary.simpleMessage(
+      "لا توجد خدمات إضافية متاحة",
     ),
     "noFavorites": MessageLookupByLibrary.simpleMessage(
       "الخدمات المفضلة ستظهر هنا",
@@ -512,6 +521,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "التقييم والمراجعات",
     ),
     "readyForService": MessageLookupByLibrary.simpleMessage("استعد للخدمة"),
+    "recentSearches": MessageLookupByLibrary.simpleMessage(
+      "عمليات البحث الأخيرة",
+    ),
     "redSea": MessageLookupByLibrary.simpleMessage("البحر الأحمر"),
     "redeemIt": MessageLookupByLibrary.simpleMessage("استبدل النقاط"),
     "redeemPoints": MessageLookupByLibrary.simpleMessage("استبدال\nالنقاط"),
@@ -568,7 +580,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendOtpSuccess": MessageLookupByLibrary.simpleMessage(
       "تم ارسال رمز التحقق.",
     ),
-    "service": MessageLookupByLibrary.simpleMessage("الخدمة "),
+    "service": MessageLookupByLibrary.simpleMessage("الخدمة"),
     "serviceAdded": MessageLookupByLibrary.simpleMessage(
       "تمت إضافة الخدمة إلى محفظتك",
     ),

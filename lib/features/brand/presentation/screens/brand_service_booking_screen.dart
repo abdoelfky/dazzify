@@ -5,6 +5,7 @@ import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
 import 'package:dazzify/features/brand/presentation/widgets/brand_category_item.dart';
+import 'package:dazzify/features/brand/presentation/bottom_sheets/extra_services_bottom_sheet.dart';
 import 'package:dazzify/features/brand/presentation/widgets/service_widget.dart';
 import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_app_bar.dart';
@@ -123,41 +124,120 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
             case UiState.failure:
               return SizedBox.shrink();
             case UiState.success:
-              if (state.brandCategories.isEmpty) {
-                return SizedBox(width: 8.w);
-              } else {
-                return ListView.separated(
-                  padding: EdgeInsetsDirectional.only(start: 16, bottom: 8),
-                  itemCount: state.brandCategories.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return BlocBuilder<ServiceSelectionCubit,
-                        ServiceSelectionState>(
-                      buildWhen: (previous, current) =>
-                          previous.selectedCategoryId !=
-                          current.selectedCategoryId,
-                      builder: (context, state) {
-                        final category = state.brandCategories[index];
-                        return BrandCategoryItem(
-                          key: ValueKey(category.id),
-                          image: category.image,
-                          name: category.name,
-                          isSelected: category.id == state.selectedCategoryId,
-                          onTap: () {
-                            _logger.logEvent(
-                              event: AppEvents.servicesClickCategory,
-                              categoryId: category.id,
-                            );
-                            _serviceSelectionCubit.selectCategory(
-                                brandCategory: category);
-                          },
+              final hasCategories = state.brandCategories.isNotEmpty;
+
+              // Always show Extras as first item, then a divider, then categories (if any)
+              final totalItems = hasCategories
+                  ? state.brandCategories.length + 2
+                  : 1; // Extras only when no categories
+
+              return ListView.separated(
+                padding: EdgeInsetsDirectional.only(start: 16, bottom: 8),
+                itemCount: totalItems,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  // First item: Extras (زر الإضافات دائماً موجود)
+                  if (index == 0) {
+                    return GestureDetector(
+                      onTap: () {
+                        showExtraServicesBottomSheet(
+                          context: context,
+                          brandId: widget.brandId,
+                          serviceSelectionCubit: _serviceSelectionCubit,
+                          branch: _serviceSelectionCubit.state.selectedBranch,
+                          isMultipleBooking: widget.isMultipleBooking,
                         );
                       },
+                      child: Container(
+                        height: 50.h,
+                        padding: EdgeInsets.symmetric(horizontal: 8.w),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  SolarIconsOutline.shieldPlus,
+                                  size: 18.r,
+                                  color: context.colorScheme.primary,
+                                ),
+                                SizedBox(width: 4.h),
+                                DText(
+                                  context.tr.extras,
+                                  style: context.textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5.h),
+                            Container(
+                              height: 2.h,
+                              width: 70.w,
+                              color: context.colorScheme.primary,
+                            ),
+                          ],
+                        ),
+                      ),
                     );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(width: 8.w),
-                );
-              }
+                  }
+
+                  // Second item: Divider (if there are real categories)
+                  if (index == 1 && hasCategories) {
+                    return Container(
+                      width: 1.w,
+                      height: 30.h,
+                      margin: EdgeInsets.symmetric(horizontal: 4.w),
+                      color: context.colorScheme.outlineVariant,
+                    );
+                  }
+
+                  // Remaining items: real categories
+                  if (!hasCategories) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final categoryIndex = index - 2;
+                  if (categoryIndex < 0 ||
+                      categoryIndex >= state.brandCategories.length) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return BlocBuilder<ServiceSelectionCubit, ServiceSelectionState>(
+                    buildWhen: (previous, current) =>
+                        previous.selectedCategoryId != current.selectedCategoryId,
+                    builder: (context, state) {
+                      final category = state.brandCategories[categoryIndex];
+                      return BrandCategoryItem(
+                        key: ValueKey(category.id),
+                        image: category.image,
+                        name: category.name,
+                        isSelected: category.id == state.selectedCategoryId,
+                        onTap: () {
+                          _logger.logEvent(
+                            event: AppEvents.servicesClickCategory,
+                            categoryId: category.id,
+                          );
+                          _serviceSelectionCubit.selectCategory(
+                            brandCategory: category,
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  // Between Extras and divider
+                  if (index == 0) {
+                    return SizedBox(width: 4.w);
+                  }
+                  // Between divider and first category
+                  if (hasCategories && index == 1) {
+                    return SizedBox(width: 4.w);
+                  }
+                  // Normal spacing between categories
+                  return SizedBox(width: 8.w);
+                },
+              );
           }
         },
       ),
@@ -262,6 +342,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                 description: service.description,
                                 price: service.price,
                                 serviceStatus: ServiceStatus.booking,
+                                brandId: widget.brandId, // For Option 2
                               );
                             },
                           );
@@ -434,6 +515,17 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                   bottomStart: Radius.circular(38),
                 ),
                 onTap: () {
+                  // يمنع حجز خدمات إضافية فقط بدون أي خدمة أساسية
+                  final hasMainService = state.selectedBrandServices
+                      .any((service) => service.type != 'extra');
+
+                  if (!hasMainService) {
+                    DazzifyToastBar.showError(
+                      message: context.tr.cantBookExtraAlone,
+                    );
+                    return;
+                  }
+
                   // Get all service locations from the selected services
                   final selectedServiceLocations = state.selectedBrandServices
                       .map((service) => service.serviceLocation)

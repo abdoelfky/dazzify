@@ -115,3 +115,30 @@ enum CommentType {
   parentComment,
   replyComment,
 }
+
+enum SearchType {
+  brand,
+  service,
+}
+
+extension SearchTypeExtension on SearchType {
+  String get value {
+    switch (this) {
+      case SearchType.brand:
+        return 'brand';
+      case SearchType.service:
+        return 'service';
+    }
+  }
+
+  static SearchType fromString(String value) {
+    switch (value) {
+      case 'brand':
+        return SearchType.brand;
+      case 'service':
+        return SearchType.service;
+      default:
+        return SearchType.brand;
+    }
+  }
+}

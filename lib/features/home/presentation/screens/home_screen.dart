@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen>
                             right: 0,
                             child: const BannersComponent(),
                           ),
-                          // App Bar on top
+                          // App Bar on to
                           const HomeAppBarComponent(),
 
                           Positioned(

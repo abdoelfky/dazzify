@@ -3,9 +3,10 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/features/home/data/repositories/home_repository.dart';
 import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
-import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
+import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
+import 'package:dazzify/features/shared/data/models/service_details_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/transformers.dart';
@@ -18,8 +19,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final HomeRepository _homeRepository;
   final int _mediaLimit = 20;
   final int _brandsLimit = 20;
+  final int _servicesLimit = 20;
   int _mediaPage = 1;
   int _brandsPage = 1;
+  int _servicesPage = 1;
 
   SearchBloc(
     this._homeRepository,
@@ -35,6 +38,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     on<GetMoreBrandsEvent>(
       onGetMoreBrandsEvent,
+      transformer: droppable(),
+    );
+
+    on<GetMoreServicesEvent>(
+      onGetMoreServicesEvent,
       transformer: droppable(),
     );
   }
@@ -88,56 +96,24 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> onGetSearchResultsEvent(
       GetSearchResultsEvent event, Emitter<SearchState> emit) async {
-    if (event.keyWord!.isEmpty) {
+    if (event.keyWord == null || event.keyWord!.isEmpty) {
       emit(state.copyWith(
         showMediaItems: true,
         brands: [],
+        services: [],
       ));
     } else {
       emit(state.copyWith(blocState: UiState.loading));
+      _brandsPage = 1;
+      _servicesPage = 1;
 
-      final result = await _homeRepository.getPopularBrands(
-        request: GetBrandsRequest(
+      final searchType = event.searchType ?? 'brand';
+      final result = await _homeRepository.search(
+        request: SearchRequest(
+          searchType: searchType,
+          searchKeyWord: event.keyWord!,
           page: 1,
-          limit: _brandsLimit,
-          keyword: event.keyWord,
-        ),
-      );
-
-      result.fold(
-          (failure) => emit(
-                state.copyWith(
-                  blocState: UiState.failure,
-                  errorMessage: failure.message,
-                ),
-              ), (brands) {
-        final hasBrandsReachMax =
-            brands.isEmpty || brands.length < _brandsLimit;
-
-        emit(
-          state.copyWith(
-            brands: brands,
-            blocState: UiState.success,
-            showMediaItems: false,
-            hasBrandsReachMax: hasBrandsReachMax,
-          ),
-        );
-        _brandsPage++;
-      });
-    }
-  }
-
-  Future<void> onGetMoreBrandsEvent(
-      GetMoreBrandsEvent event, Emitter<SearchState> emit) async {
-    if (!state.hasBrandsReachMax) {
-      if (state.media.isEmpty) {
-        emit(state.copyWith(blocState: UiState.loading));
-      }
-      final result = await _homeRepository.getPopularBrands(
-        request: GetBrandsRequest(
-          page: _brandsPage,
-          limit: _brandsLimit,
-          keyword: event.keyWord,
+          limit: searchType == 'brand' ? _brandsLimit : _servicesLimit,
         ),
       );
 
@@ -148,7 +124,66 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             errorMessage: failure.message,
           ),
         ),
-        (brands) {
+        (results) {
+          if (searchType == 'brand') {
+            final brands = results.cast<BrandModel>();
+            final hasBrandsReachMax =
+                brands.isEmpty || brands.length < _brandsLimit;
+
+            emit(
+              state.copyWith(
+                brands: brands,
+                services: [],
+                blocState: UiState.success,
+                showMediaItems: false,
+                hasBrandsReachMax: hasBrandsReachMax,
+                hasServicesReachMax: false,
+              ),
+            );
+            _brandsPage++;
+          } else {
+            final services = results.cast<ServiceDetailsModel>();
+            final hasServicesReachMax =
+                services.isEmpty || services.length < _servicesLimit;
+
+            emit(
+              state.copyWith(
+                services: services,
+                brands: [],
+                blocState: UiState.success,
+                showMediaItems: false,
+                hasServicesReachMax: hasServicesReachMax,
+                hasBrandsReachMax: false,
+              ),
+            );
+            _servicesPage++;
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> onGetMoreBrandsEvent(
+      GetMoreBrandsEvent event, Emitter<SearchState> emit) async {
+    if (!state.hasBrandsReachMax) {
+      final result = await _homeRepository.search(
+        request: SearchRequest(
+          searchType: 'brand',
+          searchKeyWord: event.keyWord ?? '',
+          page: _brandsPage,
+          limit: _brandsLimit,
+        ),
+      );
+
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            blocState: UiState.failure,
+            errorMessage: failure.message,
+          ),
+        ),
+        (results) {
+          final brands = results.cast<BrandModel>();
           final hasBrandsReachMax =
               brands.isEmpty || brands.length < _brandsLimit;
           emit(
@@ -164,9 +199,46 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
+  Future<void> onGetMoreServicesEvent(
+      GetMoreServicesEvent event, Emitter<SearchState> emit) async {
+    if (!state.hasServicesReachMax) {
+      final result = await _homeRepository.search(
+        request: SearchRequest(
+          searchType: 'service',
+          searchKeyWord: event.keyWord ?? '',
+          page: _servicesPage,
+          limit: _servicesLimit,
+        ),
+      );
+
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            blocState: UiState.failure,
+            errorMessage: failure.message,
+          ),
+        ),
+        (results) {
+          final services = results.cast<ServiceDetailsModel>();
+          final hasServicesReachMax =
+              services.isEmpty || services.length < _servicesLimit;
+          emit(
+            state.copyWith(
+              services: List.of(state.services)..addAll(services),
+              blocState: UiState.success,
+              hasServicesReachMax: hasServicesReachMax,
+            ),
+          );
+          _servicesPage++;
+        },
+      );
+    }
+  }
+
   Future<void> onRefreshEvent(RefreshEvent event, Emitter<SearchState> emit) async {
     _mediaPage = 1;
     _brandsPage = 1;
+    _servicesPage = 1;
     emit(const SearchState());
     // Fetch media items after refresh
     add(GetMediaItemsEvent());

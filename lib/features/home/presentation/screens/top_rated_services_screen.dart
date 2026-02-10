@@ -158,6 +158,8 @@ class _SearchScreenState extends State<TopRatedServicesScreen>
                                   return TopRatedServiceCard(
                                     image: state.topRatedServices[index].image,
                                     title: state.topRatedServices[index].title,
+                                    price: state.topRatedServices[index].price,
+                                    originalPrice: state.topRatedServices[index].originalPrice,
                                     onTap: () {
                                       _logger.logEvent(
                                         event: AppEvents
@@ -188,7 +190,6 @@ class _SearchScreenState extends State<TopRatedServicesScreen>
                                         .contains(
                                           state.topRatedServices[index].id,
                                         ),
-                                    price: state.topRatedServices[index].price,
                                   );
                                 }
                               },

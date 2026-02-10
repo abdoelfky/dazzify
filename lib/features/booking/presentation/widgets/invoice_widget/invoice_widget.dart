@@ -62,11 +62,12 @@ class InvoiceWidget extends StatelessWidget {
               ),
               prefixIconData: SolarIconsOutline.ticketSale,
               validator: (value) => null,
+              readOnly: state.couponValidationState == UiState.success,
               onChanged: (value) {
-                // Reset coupon validation state if user changes text after applying
-                if (state.couponValidationState == UiState.success) {
-                  getIt<AppEventsLogger>().logEvent(
-                      event: AppEvents.confirmationBookingRemoveCoupon);
+                // Reset coupon validation state if user changes or deletes text
+                // Only allow changes if coupon is not successfully applied
+                if (state.couponValidationState == UiState.failure) {
+                  // Reset state to allow new validation or clear
                   context.read<ServiceInvoiceCubit>().clearCoupon();
                 }
               },
@@ -80,7 +81,7 @@ class InvoiceWidget extends StatelessWidget {
               ),
             ),
             // Display message from backend (success or error)
-            if (state.couponModel.message.isNotEmpty ||
+            if (state.couponValidationState == UiState.success ||
                 (state.couponValidationState == UiState.failure &&
                     state.errorMessage.isNotEmpty))
               Padding(
@@ -92,7 +93,9 @@ class InvoiceWidget extends StatelessWidget {
                         ? (state.errorMessage.isNotEmpty
                             ? state.errorMessage
                             : context.tr.couponNotValidated)
-                        : state.couponModel.message,
+                        : (state.couponModel.message.isNotEmpty
+                            ? state.couponModel.message
+                            : context.tr.couponValidated),
                     style: context.textTheme.bodySmall!.copyWith(
                       color: state.couponValidationState == UiState.success
                           ? Colors.green

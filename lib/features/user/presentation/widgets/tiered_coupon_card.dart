@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/user/data/models/tiered_coupon/tiered_coupon_model.dart';
+import 'package:dazzify/features/user/presentation/widgets/scratch_overlay_widget.dart'
+    show ScratchOverlayWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -167,14 +169,63 @@ class TieredCouponCard extends StatelessWidget {
                             //   )
                             // Coupon code or locked message
                             if (coupon.code == null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 6.0).h,
-                                child: Image(
-                                  image:
-                                      AssetImage('assets/images/scratcher.png'),
-                                  fit: BoxFit.cover,
-                                ),
+                              Stack(
+                                children: [
+                                  ScratchOverlayWidget(
+                                    key: ValueKey('scratch_${couponIndex}_'),
+                                    onScratchStart: () {
+                                      // getIt<AppEventsLogger>().logEvent(
+                                      //     event: AppEvents.couponQrCodeScratch);
+                                      // // Fetch real code immediately when scratch starts
+                                      // context
+                                      //     .read<TieredCouponCubit>()
+                                      //     .fetchCouponCodeOnScratchStart(couponIndex);
+                                    },
+                                    onThresholdReached: () {
+                                      // Mark as opened when threshold reached
+                                      // context
+                                      //     .read<TieredCouponCubit>()
+                                      //     .markCouponAsOpenedOnThreshold(couponIndex);
+                                    },
+                                    overlayColor: Colors.white,
+                                    width: 200.w,
+                                    height: 38.h,
+                                    child: Container(
+                                      width: 200.w,
+                                      height: 38.h,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 32.w,
+                                        vertical: 6.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(8.r),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'XXXXX',
+                                          style: context.textTheme.bodyLarge
+                                              ?.copyWith(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.sp,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: SizedBox(
+                                      child: Container(
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
+
                             if (coupon.code != null)
                               Container(
                                 constraints: BoxConstraints(

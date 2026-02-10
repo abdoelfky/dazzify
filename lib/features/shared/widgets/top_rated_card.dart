@@ -14,6 +14,7 @@ class TopRatedServiceCard extends StatelessWidget {
   final double? height;
   final double? width;
   final num price;
+  final num? originalPrice;
 
   const TopRatedServiceCard({
     super.key,
@@ -21,6 +22,7 @@ class TopRatedServiceCard extends StatelessWidget {
     required this.image,
     required this.onTap,
     required this.price,
+    this.originalPrice,
     this.onFavoriteTap,
     this.isFavorite,
     this.borderRadius,
@@ -81,13 +83,7 @@ class TopRatedServiceCard extends StatelessWidget {
                                 color: Colors.white,
                               ),
                             ),
-                            DText(
-
-                              '${reformatPriceWithCommas(price)} ${context.tr.egp}',
-                              style: context.textTheme.bodySmall!.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
+                            _buildPriceWidget(context),
                           ],
                         ),
                       ),
@@ -114,5 +110,41 @@ class TopRatedServiceCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildPriceWidget(BuildContext context) {
+    final hasOffer = originalPrice != null && 
+                     originalPrice! > 0 && 
+                     originalPrice! > price;
+
+    if (hasOffer) {
+      // Case 2: There's an offer - show price and originalPrice with strikethrough
+      return Row(
+        children: [
+          DText(
+            '${reformatPriceWithCommas(price)} ${context.tr.egp}',
+            style: context.textTheme.bodySmall!.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(width: 4.w),
+          DText(
+            '${reformatPriceWithCommas(originalPrice!)} ${context.tr.egp}',
+            style: context.textTheme.bodySmall!.copyWith(
+              color: Colors.white.withValues(alpha: 0.6),
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Case 1: No offer - show only price
+      return DText(
+        '${reformatPriceWithCommas(price)} ${context.tr.egp}',
+        style: context.textTheme.bodySmall!.copyWith(
+          color: Colors.white,
+        ),
+      );
+    }
   }
 }

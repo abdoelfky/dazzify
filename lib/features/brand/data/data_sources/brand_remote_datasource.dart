@@ -30,6 +30,10 @@ abstract class BrandRemoteDataSources {
     required String brandId,
   });
 
+  Future<List<ServiceDetailsModel>> getBrandExtraServices({
+    required String brandId,
+  });
+
   Future<List<ServiceDetailsModel>> getBrandServicesWithCategoryAndBranch({
     required String categoryId,
     required GetBrandServicesRequest request,

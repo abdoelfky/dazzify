@@ -27,6 +27,9 @@ class ServiceDetailsModel {
   final num price;
 
   @JsonKey(defaultValue: 0)
+  final num originalPrice;
+
+  @JsonKey(defaultValue: 0)
   final int fees;
 
   @JsonKey(defaultValue: 0)
@@ -77,6 +80,7 @@ class ServiceDetailsModel {
     required this.description,
     required this.image,
     required this.price,
+    required this.originalPrice,
     required this.fees,
     required this.duration,
     required this.bookingCount,
@@ -100,6 +104,7 @@ class ServiceDetailsModel {
     this.description = '',
     this.image = '',
     this.price = 0,
+    this.originalPrice = 0,
     this.fees = 0,
     this.quantity = 0,
     this.duration = 0,
@@ -124,6 +129,7 @@ class ServiceDetailsModel {
     String? description,
     String? image,
     num? price,
+    num? originalPrice,
     int? fees,
     int? duration,
     int? bookingCount,
@@ -147,6 +153,7 @@ class ServiceDetailsModel {
       description: description ?? this.description,
       image: image ?? this.image,
       price: price ?? this.price,
+      originalPrice: originalPrice ?? this.originalPrice,
       fees: fees ?? this.fees,
       duration: duration ?? this.duration,
       bookingCount: bookingCount ?? this.bookingCount,

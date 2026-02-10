@@ -121,6 +121,7 @@ class _DazzifyTextFormFieldState extends State<DazzifyTextFormField> {
             autovalidateMode:
                 widget.autoValidationMode ?? AutovalidateMode.onUserInteraction,
             obscureText: value ?? false,
+            readOnly: widget.readOnly,
             onTapOutside: (event) =>
                 FocusManager.instance.primaryFocus?.unfocus(),
             onSaved: widget.onSaved,

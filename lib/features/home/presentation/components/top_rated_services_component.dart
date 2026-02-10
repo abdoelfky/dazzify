@@ -75,6 +75,7 @@ class TopServicesComponent extends StatelessWidget {
                             title: service.title,
                             image: service.image,
                             price: service.price,
+                            originalPrice: service.originalPrice,
                             onTap: () {
                               _logger.logEvent(
                                 event: AppEvents.homeClickService,

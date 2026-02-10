@@ -32,6 +32,10 @@ abstract class BrandRepository {
     required String brandId,
   });
 
+  Future<Either<Failure, List<ServiceDetailsModel>>> getBrandExtraServices({
+    required String brandId,
+  });
+
   Future<Either<Failure, List<ServiceDetailsModel>>>
       getBrandServicesWithCategoryAndBranch({
     required String categoryId,

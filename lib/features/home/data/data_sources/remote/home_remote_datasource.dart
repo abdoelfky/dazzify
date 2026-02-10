@@ -5,6 +5,7 @@ import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
 import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
 import 'package:dazzify/features/home/data/requests/get_service_review_request.dart';
 import 'package:dazzify/features/home/data/requests/get_services_request.dart';
+import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/data/models/reviews_model.dart';
@@ -51,5 +52,9 @@ abstract class HomeRemoteDatasource {
 
   Future<ServiceDetailsModel?> getSingleServiceDetails({
     required String serviceId,
+  });
+
+  Future<List<dynamic>> search({
+    required SearchRequest request,
   });
 }

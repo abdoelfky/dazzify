@@ -97,6 +97,21 @@ class BrandRepositoryImpl implements BrandRepository {
   }
 
   @override
+  Future<Either<Failure, List<ServiceDetailsModel>>> getBrandExtraServices({
+    required String brandId,
+  }) async {
+    try {
+      List<ServiceDetailsModel> extraServices =
+          await _brandRemoteDataSource.getBrandExtraServices(
+        brandId: brandId,
+      );
+      return Right(extraServices);
+    } on ServerException catch (exception) {
+      return Left(ApiFailure(message: exception.message!));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<ServiceDetailsModel>>>
       getBrandServicesWithCategoryAndBranch({
     required String categoryId,

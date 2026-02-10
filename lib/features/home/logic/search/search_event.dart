@@ -11,11 +11,12 @@ final class GetMediaItemsEvent extends SearchEvent {}
 
 final class GetSearchResultsEvent extends SearchEvent {
   final String? keyWord;
+  final String? searchType;
 
-  const GetSearchResultsEvent({this.keyWord});
+  const GetSearchResultsEvent({this.keyWord, this.searchType});
 
   @override
-  List<Object?> get props => [keyWord];
+  List<Object?> get props => [keyWord, searchType];
 }
 
 final class SwitchScreenViewEvent extends SearchEvent {
@@ -35,6 +36,15 @@ final class GetMoreBrandsEvent extends SearchEvent {
   final String? keyWord;
 
   const GetMoreBrandsEvent({this.keyWord});
+
+  @override
+  List<Object?> get props => [keyWord];
+}
+
+final class GetMoreServicesEvent extends SearchEvent {
+  final String? keyWord;
+
+  const GetMoreServicesEvent({this.keyWord});
 
   @override
   List<Object?> get props => [keyWord];

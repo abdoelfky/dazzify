@@ -11,6 +11,10 @@ abstract class LocalDataSource {
   String checkAppLocale();
 
   Future<String> changeAppLocale({required String languageCode});
+
+  String getSearchType();
+
+  Future<String> saveSearchType({required String searchType});
 }
 
 @LazySingleton(as: LocalDataSource)
@@ -58,5 +62,22 @@ class LocalDataSourceImpl extends LocalDataSource {
     } else {
       throw const CacheException('There Was an error');
     }
+  }
+
+  @override
+  String getSearchType() {
+    if (settingsDataBase.containsKey(AppConstants.searchTypeKey)) {
+      final String searchType = settingsDataBase.get(AppConstants.searchTypeKey);
+      return searchType;
+    } else {
+      settingsDataBase.put(AppConstants.searchTypeKey, 'brand');
+      return 'brand';
+    }
+  }
+
+  @override
+  Future<String> saveSearchType({required String searchType}) async {
+    await settingsDataBase.put(AppConstants.searchTypeKey, searchType);
+    return getSearchType();
   }
 }

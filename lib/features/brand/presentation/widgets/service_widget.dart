@@ -1,8 +1,14 @@
 import 'dart:ui';
 import 'package:dazzify/core/framework/export.dart';
+import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/features/brand/logic/extra_services/extra_services_cubit.dart';
+import 'package:dazzify/features/brand/logic/service_selection/service_selection_cubit.dart';
+import 'package:dazzify/features/brand/presentation/bottom_sheets/extra_services_bottom_sheet.dart';
 import 'package:dazzify/features/brand/presentation/widgets/service_booking_button.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_cached_network_image.dart';
 import 'package:dazzify/features/shared/widgets/primary_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class ServiceWidget extends StatefulWidget {
   final String imageUrl;
@@ -17,6 +23,7 @@ class ServiceWidget extends StatefulWidget {
   final bool isBooked;
   final void Function()? onBookingSelectTap;
   final void Function()? onCardTap;
+  final String? brandId; // For Option 2: Extras button
 
   /// Optional: callback to update quantity in parent
   final Function(int)? onQuantityChanged;
@@ -36,6 +43,7 @@ class ServiceWidget extends StatefulWidget {
     this.onBookingSelectTap,
     this.onCardTap,
     this.onQuantityChanged,
+    this.brandId,
   });
 
   @override
@@ -123,12 +131,82 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DText(
-                                widget.title,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.textTheme.bodyLarge!.copyWith(
-                                  height: 0.9.h,
-                                ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DText(
+                                      widget.title,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: context.textTheme.bodyLarge!.copyWith(
+                                        height: 0.9.h,
+                                      ),
+                                    ),
+                                  ),
+                                  // Extras button at the end of service name row
+                                  if (widget.brandId != null)
+                                    BlocProvider(
+                                      create: (context) => getIt<ExtraServicesCubit>()
+                                        ..getBrandExtraServices(brandId: widget.brandId!),
+                                      child: BlocBuilder<ExtraServicesCubit, ExtraServicesState>(
+                                        builder: (context, state) {
+                                          // if (state.extraServicesState == UiState.success &&
+                                          //     state.extraServices.isNotEmpty) {
+                                            return
+                                              GestureDetector(
+                                              onTap: () {
+                                                final serviceSelectionCubit =
+                                                    context.read<ServiceSelectionCubit>();
+                                                final state =
+                                                    serviceSelectionCubit.state;
+                                                showExtraServicesBottomSheet(
+                                                  context: context,
+                                                  brandId: widget.brandId!,
+                                                  serviceSelectionCubit:
+                                                      serviceSelectionCubit,
+                                                  branch: state.selectedBranch,
+                                                  isMultipleBooking:
+                                                      widget.isMultipleService,
+                                                );
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 8.w,
+                                                  vertical: 3.h,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(6).r,
+                                                  border: Border.all(
+                                                    color: context.colorScheme.primary,
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    DText(
+                                                      context.tr.extras,
+                                                      style: context.textTheme.labelSmall!
+                                                          .copyWith(
+                                                        color: context.colorScheme.primary,
+                                                        fontSize: 13.sp,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 4.w),
+                                                    Icon(
+                                                      SolarIconsOutline.shieldPlus,
+                                                      size: 16.r,
+                                                      color: context.colorScheme.primary,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          // }
+                                          // return const SizedBox.shrink();
+                                        },
+                                      ),
+                                    ),
+                                ],
                               ),
                               SizedBox(height: 5.h),
                               Expanded(

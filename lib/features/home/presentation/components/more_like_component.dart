@@ -61,6 +61,7 @@ class MoreLikeComponent extends StatelessWidget {
                                   image: service.image,
                                   height: 180.h,
                                   price: service.price,
+                                  originalPrice: service.originalPrice,
                                   onTap: () {
                                     getIt<AppEventsLogger>().logEvent(
                                       event:

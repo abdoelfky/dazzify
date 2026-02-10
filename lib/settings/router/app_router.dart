@@ -36,6 +36,7 @@ import 'package:dazzify/features/home/presentation/screens/popular_brands_screen
 import 'package:dazzify/features/home/presentation/screens/popular_services_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/reel_viewer_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/search_post_screen.dart';
+import 'package:dazzify/features/home/presentation/screens/search_input_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/search_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/see_all_reviews_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/service_details_screen.dart';
@@ -148,6 +149,9 @@ class AppRouter extends RootStackRouter {
                   children: [
                     AutoRoute(
                       page: SearchRoute.page,
+                    ),
+                    AutoRoute(
+                      page: SearchInputRoute.page,
                     ),
                     AutoRoute(
                       page: ReelViewerRoute.page,

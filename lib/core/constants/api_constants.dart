@@ -71,6 +71,9 @@ class ApiConstants {
   static String getVendorBrandCategories({required String brandId}) =>
       "/brand/$brandId/categories";
 
+  static String getBrandExtraServices({required String brandId}) =>
+      "/brand/$brandId/extra-services";
+
   static String getBrandServicesWithCategoryAndBranch(
           {required String categoryId}) =>
       "/category/$categoryId/services-with-branch";
@@ -138,6 +141,8 @@ class ApiConstants {
 
   static const String getTieredCouponRewards = "/user/tiered-coupon-rewards";
   static const String openNewRewardLevel = "/user/open-new-reward-level";
+
+  static const String userSearch = "/user/search";
 
   /// App tracking / analytics
   ///

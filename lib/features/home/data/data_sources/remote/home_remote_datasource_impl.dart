@@ -10,6 +10,7 @@ import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
 import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
 import 'package:dazzify/features/home/data/requests/get_service_review_request.dart';
 import 'package:dazzify/features/home/data/requests/get_services_request.dart';
+import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
 import 'package:dazzify/features/shared/data/models/reviews_model.dart';
@@ -187,5 +188,34 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
       responseReturnType: ResponseReturnType.fromJson,
       fromJsonMethod: ServiceDetailsModel.fromJson,
     );
+  }
+
+  @override
+  Future<List<dynamic>> search({
+    required SearchRequest request,
+  }) async {
+    try {
+      final queryParameters = request.toJson();
+      
+      // The API returns different types based on searchType
+      // We'll handle both BrandModel and ServiceDetailsModel
+      if (request.searchType == 'brand') {
+        return await _apiConsumer.get<BrandModel>(
+          ApiConstants.userSearch,
+          queryParameters: queryParameters,
+          responseReturnType: ResponseReturnType.fromJsonList,
+          fromJsonMethod: BrandModel.fromJson,
+        );
+      } else {
+        return await _apiConsumer.get<ServiceDetailsModel>(
+          ApiConstants.userSearch,
+          queryParameters: queryParameters,
+          responseReturnType: ResponseReturnType.fromJsonList,
+          fromJsonMethod: ServiceDetailsModel.fromJson,
+        );
+      }
+    } on SessionCancelledException {
+      return [];
+    }
   }
 }
