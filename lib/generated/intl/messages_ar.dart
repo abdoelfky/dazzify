@@ -552,6 +552,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "التقييمات عامة وتشمل معلومات حسابك",
     ),
     "reviewCreated": MessageLookupByLibrary.simpleMessage("نحن نقدّر تقييمك"),
+    "pleaseSelectRating": MessageLookupByLibrary.simpleMessage("الرجاء اختيار تقييم"),
     "reviewCreatedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "تم التقييم بنجاح",
     ),

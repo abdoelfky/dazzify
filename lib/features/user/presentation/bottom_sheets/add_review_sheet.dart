@@ -176,6 +176,12 @@ class _AddReviewSheetState extends State<AddReviewSheet> {
                           child: PrimaryButton(
                             isLoading: isLoading,
                             onTap: () {
+                              if (rating == 0) {
+                                DazzifyToastBar.showError(
+                                  message: context.tr.pleaseSelectRating,
+                                );
+                                return;
+                              }
                               if (formKey.currentState!.validate()) {
                                 bookingCubit.createReview(
                                   comment: _reviewController.text,

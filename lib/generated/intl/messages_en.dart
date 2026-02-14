@@ -546,6 +546,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reviewCreated": MessageLookupByLibrary.simpleMessage(
       "We Appreciate Your Review",
     ),
+    "pleaseSelectRating": MessageLookupByLibrary.simpleMessage(
+      "Please select a rating",
+    ),
     "reviewCreatedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Review Created Successfully",
     ),
