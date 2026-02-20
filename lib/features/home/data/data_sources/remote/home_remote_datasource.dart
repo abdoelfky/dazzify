@@ -1,10 +1,13 @@
 import 'package:dazzify/features/brand/data/models/brand_branches_model.dart';
 import 'package:dazzify/features/home/data/models/banner_model.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_history_model.dart';
 import 'package:dazzify/features/home/data/models/category_model.dart';
 import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
 import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
 import 'package:dazzify/features/home/data/requests/get_service_review_request.dart';
 import 'package:dazzify/features/home/data/requests/get_services_request.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_model.dart';
+import 'package:dazzify/features/home/data/requests/generate_brand_recommendation_request.dart';
 import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
@@ -56,5 +59,18 @@ abstract class HomeRemoteDatasource {
 
   Future<List<dynamic>> search({
     required SearchRequest request,
+  });
+
+  Future<BrandRecommendationModel> generateBrandRecommendation({
+    required GenerateBrandRecommendationRequest request,
+  });
+
+  Future<List<BrandRecommendationHistoryModel>> getBrandRecommendationHistory({
+    required int page,
+    required int limit,
+  });
+
+  Future<BrandRecommendationModel> getBrandRecommendationDetails({
+    required String brId,
   });
 }

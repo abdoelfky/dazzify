@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "allPackagesTab": MessageLookupByLibrary.simpleMessage("All Packages"),
     "allReviews": MessageLookupByLibrary.simpleMessage("All Reviews"),
     "allServices": MessageLookupByLibrary.simpleMessage("All Services"),
+    "allocatedBudget": MessageLookupByLibrary.simpleMessage("Allocated Budget"),
     "amanInstallment": MessageLookupByLibrary.simpleMessage("Aman"),
     "amount": MessageLookupByLibrary.simpleMessage("Amount"),
     "and": MessageLookupByLibrary.simpleMessage("And"),
@@ -107,10 +108,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "branches": MessageLookupByLibrary.simpleMessage("Branches"),
     "brand": MessageLookupByLibrary.simpleMessage("Brand"),
     "brandCategories": MessageLookupByLibrary.simpleMessage("Categories"),
+    "brandRecommendations": MessageLookupByLibrary.simpleMessage(
+      "Brand Recommendations",
+    ),
     "brandServices": MessageLookupByLibrary.simpleMessage("Services"),
     "brandTermsSheetTitle": MessageLookupByLibrary.simpleMessage(
       "Brand Terms & Conditions",
     ),
+    "brands": MessageLookupByLibrary.simpleMessage("Brands"),
+    "budgetRange": MessageLookupByLibrary.simpleMessage("Budget Range"),
     "cairo": MessageLookupByLibrary.simpleMessage("Cairo"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelBooking": MessageLookupByLibrary.simpleMessage("Cancel Booking"),
@@ -128,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "card": MessageLookupByLibrary.simpleMessage("Card"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("card Holder Name"),
     "categories": MessageLookupByLibrary.simpleMessage("Categories"),
+    "categoryWeight": MessageLookupByLibrary.simpleMessage("Category Weight"),
     "changePhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Change Phone Number",
     ),
@@ -181,6 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coupons": MessageLookupByLibrary.simpleMessage("Coupons"),
     "createIssue": MessageLookupByLibrary.simpleMessage("Create Issue"),
     "createReview": MessageLookupByLibrary.simpleMessage("Create Review"),
+    "createdAt": MessageLookupByLibrary.simpleMessage("Created At"),
     "creditCard": MessageLookupByLibrary.simpleMessage("Credit card"),
     "cropImage": MessageLookupByLibrary.simpleMessage("Crop Image"),
     "currency": MessageLookupByLibrary.simpleMessage("ُEGP"),
@@ -188,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dakahlia": MessageLookupByLibrary.simpleMessage("Dakahlia"),
     "damietta": MessageLookupByLibrary.simpleMessage("Damietta"),
     "dataUpdated": MessageLookupByLibrary.simpleMessage("Your Data Updated"),
+    "dateCannotBeInPast": MessageLookupByLibrary.simpleMessage(
+      "Date and time cannot be in the past",
+    ),
     "days": MessageLookupByLibrary.simpleMessage("Days"),
     "daysShortcut": MessageLookupByLibrary.simpleMessage("D"),
     "dazzifyInstallment": MessageLookupByLibrary.simpleMessage(
@@ -226,10 +237,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Didn\'t Share Any Reels Yet.",
     ),
     "english": MessageLookupByLibrary.simpleMessage("English"),
+    "enterBudget": MessageLookupByLibrary.simpleMessage("Enter budget"),
     "enterNewPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Enter New Phone Number",
     ),
     "etisalatCash": MessageLookupByLibrary.simpleMessage("Etisalat Cash"),
+    "eventDate": MessageLookupByLibrary.simpleMessage("Event Date"),
     "expirationDate": MessageLookupByLibrary.simpleMessage("Expiration Date"),
     "expire": MessageLookupByLibrary.simpleMessage("MM/YY"),
     "extras": MessageLookupByLibrary.simpleMessage("Extras"),
@@ -248,6 +261,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "You have to re-enable Gallery\n permissions from settings",
     ),
     "gender": MessageLookupByLibrary.simpleMessage("Gender"),
+    "generateRecommendations": MessageLookupByLibrary.simpleMessage(
+      "Generate Recommendations",
+    ),
     "getReadyForService": MessageLookupByLibrary.simpleMessage(
       "\"Get Ready! This Button Will Unlock\n1 Hour Before We Start.\"",
     ),
@@ -274,6 +290,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "installment": MessageLookupByLibrary.simpleMessage("Installment"),
     "installmentDetails": MessageLookupByLibrary.simpleMessage(
       "Installment Details",
+    ),
+    "invalidBudget": MessageLookupByLibrary.simpleMessage(
+      "Invalid budget (1 - 1,000,000,000)",
     ),
     "invalidDateFormat": MessageLookupByLibrary.simpleMessage(
       "Invalid date format",
@@ -302,6 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "less": MessageLookupByLibrary.simpleMessage("Show Less"),
     "like": MessageLookupByLibrary.simpleMessage("Like"),
     "likes": MessageLookupByLibrary.simpleMessage("Likes"),
+    "loading": MessageLookupByLibrary.simpleMessage("Loading"),
     "location": MessageLookupByLibrary.simpleMessage("Location"),
     "locationPermissionDialog": MessageLookupByLibrary.simpleMessage(
       "You have to re-enable Location\n permissions from settings",
@@ -321,8 +341,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "male": MessageLookupByLibrary.simpleMessage("Male"),
     "masterCard": MessageLookupByLibrary.simpleMessage("Master Card"),
     "matruh": MessageLookupByLibrary.simpleMessage("Matruh"),
+    "maxBudget": MessageLookupByLibrary.simpleMessage("Max"),
     "message": MessageLookupByLibrary.simpleMessage("Message"),
     "min": MessageLookupByLibrary.simpleMessage("Mins"),
+    "minBudget": MessageLookupByLibrary.simpleMessage("Min"),
     "minShortcut": MessageLookupByLibrary.simpleMessage("M"),
     "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
     "minya": MessageLookupByLibrary.simpleMessage("Minya"),
@@ -350,6 +372,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noBrandTerms": MessageLookupByLibrary.simpleMessage(
       "There are no terms and conditions for this brand",
     ),
+    "noBrandsFound": MessageLookupByLibrary.simpleMessage("No brands found"),
     "noCategories": MessageLookupByLibrary.simpleMessage("No Categories Found"),
     "noConversations": MessageLookupByLibrary.simpleMessage(
       "There are no conversations yet, select any vendor to start chatting with",
@@ -382,6 +405,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "There are no notifications for you right now",
     ),
     "noOtpCode": MessageLookupByLibrary.simpleMessage("Didn\'t receive OTP ?"),
+    "noRecommendationsYet": MessageLookupByLibrary.simpleMessage(
+      "No recommendations yet",
+    ),
     "noReels": MessageLookupByLibrary.simpleMessage(
       "No Reels, try again later",
     ),
@@ -460,10 +486,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseApplyCoupon": MessageLookupByLibrary.simpleMessage(
       "Please apply the coupon code before confirming",
     ),
+    "pleaseEnterBudget": MessageLookupByLibrary.simpleMessage(
+      "Please enter budget",
+    ),
     "pleaseLoginToFreelyAccessAppFeatures":
         MessageLookupByLibrary.simpleMessage(
           "Please log in to freely access app features.",
         ),
+    "pleaseSelectCategories": MessageLookupByLibrary.simpleMessage(
+      "Please select at least one category",
+    ),
+    "pleaseSelectDate": MessageLookupByLibrary.simpleMessage(
+      "Please select date",
+    ),
     "plusTransportation": MessageLookupByLibrary.simpleMessage(
       "+ Transportation Fees",
     ),
@@ -514,6 +549,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ready For This Service",
     ),
     "recentSearches": MessageLookupByLibrary.simpleMessage("Recent Searches"),
+    "recommendations": MessageLookupByLibrary.simpleMessage("Recommendations"),
+    "recommendationsHistory": MessageLookupByLibrary.simpleMessage(
+      "Recommendations History",
+    ),
     "redSea": MessageLookupByLibrary.simpleMessage("RedSea"),
     "redeemIt": MessageLookupByLibrary.simpleMessage("Redeem it"),
     "redeemPoints": MessageLookupByLibrary.simpleMessage("Redeem\nPoints"),
@@ -558,6 +597,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectAndAddComment": MessageLookupByLibrary.simpleMessage(
       "Select Your Booking Then Add\nA Comment About It",
     ),
+    "selectCategories": MessageLookupByLibrary.simpleMessage(
+      "Select Categories",
+    ),
     "selectDate": MessageLookupByLibrary.simpleMessage("Select Date"),
     "selectGovernorate": MessageLookupByLibrary.simpleMessage(
       "Select your governorate",
@@ -565,6 +607,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectLocation": MessageLookupByLibrary.simpleMessage("Select Location"),
     "selectYourLocation": MessageLookupByLibrary.simpleMessage(
       "Please Select Your Location",
+    ),
+    "selectedCategories": MessageLookupByLibrary.simpleMessage(
+      "Selected Categories",
     ),
     "sendOtpError": MessageLookupByLibrary.simpleMessage(
       "Couldn\'t Send OTP Code.",
@@ -637,7 +682,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "topRatedServices": MessageLookupByLibrary.simpleMessage(
       "Top Rated Services",
     ),
+    "totalBudget": MessageLookupByLibrary.simpleMessage("Total Budget"),
     "totalPrice": MessageLookupByLibrary.simpleMessage("Total price"),
+    "totalWeight": MessageLookupByLibrary.simpleMessage("Total Weight"),
     "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
     "unableToConnect": MessageLookupByLibrary.simpleMessage(
       "Unable to Connect to the Server Check\nYour Internet Connection.",
@@ -671,6 +718,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Waiting For response",
     ),
     "wePay": MessageLookupByLibrary.simpleMessage("We Pay"),
+    "weight": MessageLookupByLibrary.simpleMessage("Weight"),
+    "weightsMustSumTo100": MessageLookupByLibrary.simpleMessage(
+      "Weights must sum to 100%",
+    ),
     "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
     "willBeCalculated": MessageLookupByLibrary.simpleMessage(
       "Will be calculated",

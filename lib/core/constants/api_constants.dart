@@ -144,6 +144,13 @@ class ApiConstants {
 
   static const String userSearch = "/user/search";
 
+  static const String generateBrandRecommendation =
+      "/brand-recommendation/generate";
+  static const String brandRecommendationHistory =
+      "/brand-recommendation/history";
+  static String brandRecommendationDetails(String brId) =>
+      "/brand-recommendation/$brId";
+
   /// App tracking / analytics
   ///
   /// POST /api/v1/log/event

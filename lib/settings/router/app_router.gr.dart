@@ -270,6 +270,91 @@ class BrandProfileRouteArgs {
 }
 
 /// generated route for
+/// [BrandRecommendationHistoryScreen]
+class BrandRecommendationHistoryRoute extends PageRouteInfo<void> {
+  const BrandRecommendationHistoryRoute({List<PageRouteInfo>? children})
+      : super(
+          BrandRecommendationHistoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BrandRecommendationHistoryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const BrandRecommendationHistoryScreen());
+    },
+  );
+}
+
+/// generated route for
+/// [BrandRecommendationInputScreen]
+class BrandRecommendationInputRoute extends PageRouteInfo<void> {
+  const BrandRecommendationInputRoute({List<PageRouteInfo>? children})
+      : super(
+          BrandRecommendationInputRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BrandRecommendationInputRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const BrandRecommendationInputScreen());
+    },
+  );
+}
+
+/// generated route for
+/// [BrandRecommendationResultsScreen]
+class BrandRecommendationResultsRoute
+    extends PageRouteInfo<BrandRecommendationResultsRouteArgs> {
+  BrandRecommendationResultsRoute({
+    Key? key,
+    required BrandRecommendationModel recommendation,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BrandRecommendationResultsRoute.name,
+          args: BrandRecommendationResultsRouteArgs(
+            key: key,
+            recommendation: recommendation,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BrandRecommendationResultsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<BrandRecommendationResultsRouteArgs>();
+      return BrandRecommendationResultsScreen(
+        key: args.key,
+        recommendation: args.recommendation,
+      );
+    },
+  );
+}
+
+class BrandRecommendationResultsRouteArgs {
+  const BrandRecommendationResultsRouteArgs({
+    this.key,
+    required this.recommendation,
+  });
+
+  final Key? key;
+
+  final BrandRecommendationModel recommendation;
+
+  @override
+  String toString() {
+    return 'BrandRecommendationResultsRouteArgs{key: $key, recommendation: $recommendation}';
+  }
+}
+
+/// generated route for
 /// [BrandReelsScreen]
 class BrandReelsRoute extends PageRouteInfo<BrandReelsRouteArgs> {
   BrandReelsRoute({

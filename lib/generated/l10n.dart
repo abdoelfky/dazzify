@@ -3262,6 +3262,241 @@ class S {
   String get brand {
     return Intl.message('Brand', name: 'brand', desc: '', args: []);
   }
+
+  /// `Brand Recommendations`
+  String get brandRecommendations {
+    return Intl.message(
+      'Brand Recommendations',
+      name: 'brandRecommendations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Budget`
+  String get totalBudget {
+    return Intl.message(
+      'Total Budget',
+      name: 'totalBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter budget`
+  String get enterBudget {
+    return Intl.message(
+      'Enter budget',
+      name: 'enterBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event Date`
+  String get eventDate {
+    return Intl.message('Event Date', name: 'eventDate', desc: '', args: []);
+  }
+
+  /// `Select Categories`
+  String get selectCategories {
+    return Intl.message(
+      'Select Categories',
+      name: 'selectCategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weight`
+  String get weight {
+    return Intl.message('Weight', name: 'weight', desc: '', args: []);
+  }
+
+  /// `Total Weight`
+  String get totalWeight {
+    return Intl.message(
+      'Total Weight',
+      name: 'totalWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generate Recommendations`
+  String get generateRecommendations {
+    return Intl.message(
+      'Generate Recommendations',
+      name: 'generateRecommendations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommendations`
+  String get recommendations {
+    return Intl.message(
+      'Recommendations',
+      name: 'recommendations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allocated Budget`
+  String get allocatedBudget {
+    return Intl.message(
+      'Allocated Budget',
+      name: 'allocatedBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter budget`
+  String get pleaseEnterBudget {
+    return Intl.message(
+      'Please enter budget',
+      name: 'pleaseEnterBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid budget (1 - 1,000,000,000)`
+  String get invalidBudget {
+    return Intl.message(
+      'Invalid budget (1 - 1,000,000,000)',
+      name: 'invalidBudget',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select date`
+  String get pleaseSelectDate {
+    return Intl.message(
+      'Please select date',
+      name: 'pleaseSelectDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select at least one category`
+  String get pleaseSelectCategories {
+    return Intl.message(
+      'Please select at least one category',
+      name: 'pleaseSelectCategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weights must sum to 100%`
+  String get weightsMustSumTo100 {
+    return Intl.message(
+      'Weights must sum to 100%',
+      name: 'weightsMustSumTo100',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No brands found`
+  String get noBrandsFound {
+    return Intl.message(
+      'No brands found',
+      name: 'noBrandsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading`
+  String get loading {
+    return Intl.message('Loading', name: 'loading', desc: '', args: []);
+  }
+
+  /// `Min`
+  String get minBudget {
+    return Intl.message('Min', name: 'minBudget', desc: '', args: []);
+  }
+
+  /// `Max`
+  String get maxBudget {
+    return Intl.message('Max', name: 'maxBudget', desc: '', args: []);
+  }
+
+  /// `Budget Range`
+  String get budgetRange {
+    return Intl.message(
+      'Budget Range',
+      name: 'budgetRange',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected Categories`
+  String get selectedCategories {
+    return Intl.message(
+      'Selected Categories',
+      name: 'selectedCategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category Weight`
+  String get categoryWeight {
+    return Intl.message(
+      'Category Weight',
+      name: 'categoryWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommendations History`
+  String get recommendationsHistory {
+    return Intl.message(
+      'Recommendations History',
+      name: 'recommendationsHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No recommendations yet`
+  String get noRecommendationsYet {
+    return Intl.message(
+      'No recommendations yet',
+      name: 'noRecommendationsYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Created At`
+  String get createdAt {
+    return Intl.message('Created At', name: 'createdAt', desc: '', args: []);
+  }
+
+  /// `Brands`
+  String get brands {
+    return Intl.message('Brands', name: 'brands', desc: '', args: []);
+  }
+
+  /// `Date and time cannot be in the past`
+  String get dateCannotBeInPast {
+    return Intl.message(
+      'Date and time cannot be in the past',
+      name: 'dateCannotBeInPast',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

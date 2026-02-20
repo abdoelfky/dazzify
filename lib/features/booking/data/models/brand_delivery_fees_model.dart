@@ -24,6 +24,13 @@ class BrandDeliveryFeesModel {
   @JsonKey(name: '_id', defaultValue: "")
   final String id;
 
+  // Location coordinates (optional)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final double? longitude;
+  
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final double? latitude;
+
   // Backward compatibility getter
   num get deliveryFees => transportationFees ?? minTransportationFees ?? 0;
 
@@ -35,6 +42,8 @@ class BrandDeliveryFeesModel {
     this.minTransportationFees,
     this.maxTransportationFees,
     required this.id,
+    this.longitude,
+    this.latitude,
   });
 
   const BrandDeliveryFeesModel.empty({
@@ -45,13 +54,34 @@ class BrandDeliveryFeesModel {
     this.minTransportationFees,
     this.maxTransportationFees,
     this.id = "",
+    this.longitude,
+    this.latitude,
   });
 
   bool get isFixedType => transportationFeesType == 'fixed';
   bool get isRangeType => transportationFeesType == 'range';
 
-  factory BrandDeliveryFeesModel.fromJson(Map<String, dynamic> json) =>
-      _$BrandDeliveryFeesModelFromJson(json);
+  factory BrandDeliveryFeesModel.fromJson(Map<String, dynamic> json) {
+    final model = _$BrandDeliveryFeesModelFromJson(json);
+    
+    // Extract location coordinates from nested location object
+    final location = json['location'] as Map<String, dynamic>?;
+    if (location != null) {
+      return BrandDeliveryFeesModel(
+        gov: model.gov,
+        name: model.name,
+        transportationFeesType: model.transportationFeesType,
+        transportationFees: model.transportationFees,
+        minTransportationFees: model.minTransportationFees,
+        maxTransportationFees: model.maxTransportationFees,
+        id: model.id,
+        longitude: (location['longitude'] as num?)?.toDouble(),
+        latitude: (location['latitude'] as num?)?.toDouble(),
+      );
+    }
+    
+    return model;
+  }
 
   Map<String, dynamic> toJson() => _$BrandDeliveryFeesModelToJson(this);
 }

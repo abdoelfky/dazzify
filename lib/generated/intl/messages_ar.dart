@@ -43,6 +43,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "allPackagesTab": MessageLookupByLibrary.simpleMessage("جميع الباقات"),
     "allReviews": MessageLookupByLibrary.simpleMessage("جميع التقييمات"),
     "allServices": MessageLookupByLibrary.simpleMessage("جميع الخدمات"),
+    "allocatedBudget": MessageLookupByLibrary.simpleMessage(
+      "الميزانية المخصصة",
+    ),
     "amanInstallment": MessageLookupByLibrary.simpleMessage("Aman"),
     "amount": MessageLookupByLibrary.simpleMessage("المبلغ"),
     "and": MessageLookupByLibrary.simpleMessage("و"),
@@ -105,10 +108,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "branches": MessageLookupByLibrary.simpleMessage("الفروع"),
     "brand": MessageLookupByLibrary.simpleMessage("العلامة التجارية"),
     "brandCategories": MessageLookupByLibrary.simpleMessage("الفئات"),
+    "brandRecommendations": MessageLookupByLibrary.simpleMessage(
+      "توصيات العلامات التجارية",
+    ),
     "brandServices": MessageLookupByLibrary.simpleMessage("الخدمات"),
     "brandTermsSheetTitle": MessageLookupByLibrary.simpleMessage(
       "شروط وأحكام العلامة التجارية",
     ),
+    "brands": MessageLookupByLibrary.simpleMessage("العلامات التجارية"),
+    "budgetRange": MessageLookupByLibrary.simpleMessage("نطاق الميزانية"),
     "cairo": MessageLookupByLibrary.simpleMessage("القاهرة"),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "cancelBooking": MessageLookupByLibrary.simpleMessage("إلغاء الحجز"),
@@ -126,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "card": MessageLookupByLibrary.simpleMessage("كارت"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("إسم صاحب البطاقة"),
     "categories": MessageLookupByLibrary.simpleMessage("الفئات"),
+    "categoryWeight": MessageLookupByLibrary.simpleMessage("نسب الفئة"),
     "changePhoneNumber": MessageLookupByLibrary.simpleMessage(
       "تغيير رقم الهاتف",
     ),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coupons": MessageLookupByLibrary.simpleMessage("الكوبونات"),
     "createIssue": MessageLookupByLibrary.simpleMessage("إنشاء المشكلة"),
     "createReview": MessageLookupByLibrary.simpleMessage("اضف تقييمك"),
+    "createdAt": MessageLookupByLibrary.simpleMessage("تاريخ الإنشاء"),
     "creditCard": MessageLookupByLibrary.simpleMessage("بطاقة إئتمان"),
     "cropImage": MessageLookupByLibrary.simpleMessage("اقتصاص الصورة"),
     "currency": MessageLookupByLibrary.simpleMessage("جنيه"),
@@ -182,6 +192,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dakahlia": MessageLookupByLibrary.simpleMessage("الدقهلية"),
     "damietta": MessageLookupByLibrary.simpleMessage("دمياط"),
     "dataUpdated": MessageLookupByLibrary.simpleMessage("تم تحديث بياناتك"),
+    "dateCannotBeInPast": MessageLookupByLibrary.simpleMessage(
+      "التاريخ والوقت لا يمكن أن يكونا في الماضي",
+    ),
     "days": MessageLookupByLibrary.simpleMessage("يوم"),
     "daysShortcut": MessageLookupByLibrary.simpleMessage("ي"),
     "dazzifyInstallment": MessageLookupByLibrary.simpleMessage("تقسيط Dazzify"),
@@ -218,10 +231,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "لم يتم نشر فيديوهات حتي الأن.",
     ),
     "english": MessageLookupByLibrary.simpleMessage("English"),
+    "enterBudget": MessageLookupByLibrary.simpleMessage("أدخل الميزانية"),
     "enterNewPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "ادخل رقم هاتف جديد",
     ),
     "etisalatCash": MessageLookupByLibrary.simpleMessage("اتصالات كاش"),
+    "eventDate": MessageLookupByLibrary.simpleMessage("تاريخ الحدث"),
     "expirationDate": MessageLookupByLibrary.simpleMessage(
       "تاريخ انتهاء الصلاحية",
     ),
@@ -242,6 +257,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "يجب ان تمنحنا صلاحيات الصور\n من خلال الإعدادات.",
     ),
     "gender": MessageLookupByLibrary.simpleMessage("الجنس"),
+    "generateRecommendations": MessageLookupByLibrary.simpleMessage(
+      "إنشاء التوصيات",
+    ),
     "getReadyForService": MessageLookupByLibrary.simpleMessage(
       "\"استعد! هذا الزر سيفتح قبل ساعة من البدء.\"",
     ),
@@ -269,6 +287,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "infoUpdate": MessageLookupByLibrary.simpleMessage("تحديث المعلومات"),
     "installment": MessageLookupByLibrary.simpleMessage("تقسيط"),
     "installmentDetails": MessageLookupByLibrary.simpleMessage("تفاصيل القسط"),
+    "invalidBudget": MessageLookupByLibrary.simpleMessage(
+      "ميزانية غير صالحة (1 - 1,000,000,000)",
+    ),
     "invalidDateFormat": MessageLookupByLibrary.simpleMessage(
       "تنسيق التاريخ غير صالح",
     ),
@@ -298,6 +319,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "less": MessageLookupByLibrary.simpleMessage("اقل"),
     "like": MessageLookupByLibrary.simpleMessage("إعجاب"),
     "likes": MessageLookupByLibrary.simpleMessage("إعجاب"),
+    "loading": MessageLookupByLibrary.simpleMessage("جاري التحميل"),
     "location": MessageLookupByLibrary.simpleMessage("الموقع"),
     "locationPermissionDialog": MessageLookupByLibrary.simpleMessage(
       "يجب ان تمنحنا صلاحيات الموقع\n من خلال الإعدادات.",
@@ -315,8 +337,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "male": MessageLookupByLibrary.simpleMessage("ذكر"),
     "masterCard": MessageLookupByLibrary.simpleMessage("كارت الماستر"),
     "matruh": MessageLookupByLibrary.simpleMessage("مطروح"),
+    "maxBudget": MessageLookupByLibrary.simpleMessage("الحد الأقصى"),
     "message": MessageLookupByLibrary.simpleMessage("الرسالة"),
     "min": MessageLookupByLibrary.simpleMessage("دقيقة"),
+    "minBudget": MessageLookupByLibrary.simpleMessage("الحد الأدنى"),
     "minShortcut": MessageLookupByLibrary.simpleMessage("د"),
     "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
     "minya": MessageLookupByLibrary.simpleMessage("المنيا"),
@@ -345,6 +369,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noBrandTerms": MessageLookupByLibrary.simpleMessage(
       "لا توجد شروط وأحكام لهذه العلامة التجارية",
+    ),
+    "noBrandsFound": MessageLookupByLibrary.simpleMessage(
+      "لم يتم العثور على علامات تجارية",
     ),
     "noCategories": MessageLookupByLibrary.simpleMessage("لا يوجد فئات متاحة"),
     "noConversations": MessageLookupByLibrary.simpleMessage(
@@ -382,6 +409,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا توجد إشعارات لك الآن",
     ),
     "noOtpCode": MessageLookupByLibrary.simpleMessage("لم يصلك رمز التحقق؟"),
+    "noRecommendationsYet": MessageLookupByLibrary.simpleMessage(
+      "لا توجد توصيات بعد",
+    ),
     "noReels": MessageLookupByLibrary.simpleMessage(
       "لا يوجد فيديوهات حاليًا، حاول لاحقًا",
     ),
@@ -464,10 +494,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseApplyCoupon": MessageLookupByLibrary.simpleMessage(
       "يرجى تطبيق رمز الكوبون قبل التأكيد",
     ),
+    "pleaseEnterBudget": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال الميزانية",
+    ),
     "pleaseLoginToFreelyAccessAppFeatures":
         MessageLookupByLibrary.simpleMessage(
           "يرجى تسجيل الدخول للوصول إلى ميزات التطبيق بحرية.",
         ),
+    "pleaseSelectCategories": MessageLookupByLibrary.simpleMessage(
+      "يرجى اختيار فئة واحدة على الأقل",
+    ),
+    "pleaseSelectDate": MessageLookupByLibrary.simpleMessage(
+      "يرجى اختيار التاريخ",
+    ),
     "plusTransportation": MessageLookupByLibrary.simpleMessage("+ رسوم النقل"),
     "plusTransportationAndFees": MessageLookupByLibrary.simpleMessage(
       "+ رسوم النقل ورسوم الخدمة",
@@ -524,6 +563,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "recentSearches": MessageLookupByLibrary.simpleMessage(
       "عمليات البحث الأخيرة",
     ),
+    "recommendations": MessageLookupByLibrary.simpleMessage("التوصيات"),
+    "recommendationsHistory": MessageLookupByLibrary.simpleMessage(
+      "تاريخ التوصيات",
+    ),
     "redSea": MessageLookupByLibrary.simpleMessage("البحر الأحمر"),
     "redeemIt": MessageLookupByLibrary.simpleMessage("استبدل النقاط"),
     "redeemPoints": MessageLookupByLibrary.simpleMessage("استبدال\nالنقاط"),
@@ -568,11 +611,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectAndAddComment": MessageLookupByLibrary.simpleMessage(
       "اختر الحجز\nواكتب مشكلتك",
     ),
-    "selectDate": MessageLookupByLibrary.simpleMessage("اختيار التاريخ"),
+    "selectCategories": MessageLookupByLibrary.simpleMessage("اختر الفئات"),
+    "selectDate": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
     "selectGovernorate": MessageLookupByLibrary.simpleMessage("اختر محافظتك"),
     "selectLocation": MessageLookupByLibrary.simpleMessage("حدد موقعك"),
     "selectYourLocation": MessageLookupByLibrary.simpleMessage(
       "لم يتم تحديد موقعك",
+    ),
+    "selectedCategories": MessageLookupByLibrary.simpleMessage(
+      "الفئات المختارة",
     ),
     "sendOtpError": MessageLookupByLibrary.simpleMessage(
       "لم نتمكن من ارسال رمز التحقق.",
@@ -647,7 +694,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "topRatedServices": MessageLookupByLibrary.simpleMessage(
       "الخدمات الأكثر تقييما",
     ),
+    "totalBudget": MessageLookupByLibrary.simpleMessage("الميزانية الإجمالية"),
     "totalPrice": MessageLookupByLibrary.simpleMessage("السعر الإجمالي"),
+    "totalWeight": MessageLookupByLibrary.simpleMessage("النسب الإجمالي"),
     "transaction": MessageLookupByLibrary.simpleMessage("التحويل"),
     "unableToConnect": MessageLookupByLibrary.simpleMessage(
       "تعذر الاتصال بالخادم\nيرجى التحقق من اتصالك بالإنترنت.",
@@ -681,6 +730,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "في إنتظار الرد",
     ),
     "wePay": MessageLookupByLibrary.simpleMessage("وي باي"),
+    "weight": MessageLookupByLibrary.simpleMessage("النسب"),
+    "weightsMustSumTo100": MessageLookupByLibrary.simpleMessage(
+      "يجب أن يكون مجموع النسب 100%",
+    ),
     "welcome": MessageLookupByLibrary.simpleMessage("مرحباً"),
     "willBeCalculated": MessageLookupByLibrary.simpleMessage("سيتم الحساب"),
     "writeNotes": MessageLookupByLibrary.simpleMessage(

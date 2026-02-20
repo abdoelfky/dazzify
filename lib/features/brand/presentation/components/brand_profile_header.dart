@@ -26,10 +26,14 @@ class BrandProfileHeader extends StatelessWidget {
             child: SizedBox(
               width: context.screenWidth,
               height: 263.h,
-              child: DazzifyCachedNetworkImage(
-                imageUrl: brand.bannerUrl!,
-                fit: BoxFit.cover,
-              ),
+              child: brand.bannerUrl != null && brand.bannerUrl!.isNotEmpty
+                  ? DazzifyCachedNetworkImage(
+                      imageUrl: brand.bannerUrl!,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      color: context.colorScheme.surfaceVariant,
+                    ),
             ),
           ),
           BrandInfo(

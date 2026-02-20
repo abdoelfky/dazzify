@@ -6,6 +6,8 @@ class DeliveryInfoModel extends Equatable {
   final bool isRangeType;
   final num? minDeliveryFees;
   final num? maxDeliveryFees;
+  final double? longitude;
+  final double? latitude;
 
   const DeliveryInfoModel({
     required this.selectedDeliveryFees,
@@ -13,6 +15,8 @@ class DeliveryInfoModel extends Equatable {
     this.isRangeType = false,
     this.minDeliveryFees,
     this.maxDeliveryFees,
+    this.longitude,
+    this.latitude,
   });
 
   const DeliveryInfoModel.empty([
@@ -21,6 +25,8 @@ class DeliveryInfoModel extends Equatable {
     this.isRangeType = false,
     this.minDeliveryFees,
     this.maxDeliveryFees,
+    this.longitude,
+    this.latitude,
   ]);
 
   @override
@@ -30,5 +36,7 @@ class DeliveryInfoModel extends Equatable {
         isRangeType,
         minDeliveryFees,
         maxDeliveryFees,
+        longitude,
+        latitude,
       ];
 }

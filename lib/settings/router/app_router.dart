@@ -27,9 +27,11 @@ import 'package:dazzify/features/brand/presentation/screens/brand_service_bookin
 import 'package:dazzify/features/chat/logic/conversations_cubit.dart';
 import 'package:dazzify/features/chat/presentation/screens/chat_screen.dart';
 import 'package:dazzify/features/chat/presentation/screens/conversations_screen.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_model.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/home/logic/search/search_bloc.dart';
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart';
+import 'package:dazzify/features/home/presentation/screens/brand_recommendation_history_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/category_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/home_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/popular_brands_screen.dart';
@@ -42,6 +44,8 @@ import 'package:dazzify/features/home/presentation/screens/see_all_reviews_scree
 import 'package:dazzify/features/home/presentation/screens/service_details_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/top_rated_brands_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/top_rated_services_screen.dart';
+import 'package:dazzify/features/home/presentation/screens/brand_recommendation_input_screen.dart';
+import 'package:dazzify/features/home/presentation/screens/brand_recommendation_results_screen.dart';
 import 'package:dazzify/features/notifications/presentation/notfications_screen.dart';
 import 'package:dazzify/features/payment/logic/payment_methods/payment_methods_cubit.dart';
 import 'package:dazzify/features/payment/logic/transactions/transaction_bloc.dart';
@@ -133,6 +137,9 @@ class AppRouter extends RootStackRouter {
                     AutoRoute(page: NotificationsRoute.page),
                     AutoRoute(page: TopRatedServicesRoute.page),
                     AutoRoute(page: TransactionRoute.page),
+                    AutoRoute(page: BrandRecommendationInputRoute.page),
+                    AutoRoute(page: BrandRecommendationResultsRoute.page),
+                    AutoRoute(page: BrandRecommendationHistoryRoute.page),
                   ],
                 ),
                 AutoRoute(
@@ -193,6 +200,15 @@ class AppRouter extends RootStackRouter {
                     AutoRoute(
                       page: BookingStatusRoute.page,
 
+                    ),
+                    AutoRoute(
+                      page: BrandRecommendationInputRoute.page,
+                    ),
+                    AutoRoute(
+                      page: BrandRecommendationResultsRoute.page,
+                    ),
+                    AutoRoute(
+                      page: BrandRecommendationHistoryRoute.page,
                     ),
                     AutoRoute(
                       page: IssueRoutes.page,

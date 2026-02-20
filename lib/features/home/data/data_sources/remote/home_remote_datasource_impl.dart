@@ -10,6 +10,9 @@ import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
 import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
 import 'package:dazzify/features/home/data/requests/get_service_review_request.dart';
 import 'package:dazzify/features/home/data/requests/get_services_request.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_model.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_history_model.dart';
+import 'package:dazzify/features/home/data/requests/generate_brand_recommendation_request.dart';
 import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
@@ -217,5 +220,44 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
     } on SessionCancelledException {
       return [];
     }
+  }
+
+  @override
+  Future<BrandRecommendationModel> generateBrandRecommendation({
+    required GenerateBrandRecommendationRequest request,
+  }) async {
+    return await _apiConsumer.post<BrandRecommendationModel>(
+      ApiConstants.generateBrandRecommendation,
+      body: request.toJson(),
+      responseReturnType: ResponseReturnType.fromJson,
+      fromJsonMethod: BrandRecommendationModel.fromJson,
+    );
+  }
+
+  @override
+  Future<List<BrandRecommendationHistoryModel>> getBrandRecommendationHistory({
+    required int page,
+    required int limit,
+  }) async {
+    return await _apiConsumer.get<BrandRecommendationHistoryModel>(
+      ApiConstants.brandRecommendationHistory,
+      queryParameters: {
+        'page': page,
+        'limit': limit,
+      },
+      responseReturnType: ResponseReturnType.fromJsonList,
+      fromJsonMethod: BrandRecommendationHistoryModel.fromJson,
+    );
+  }
+
+  @override
+  Future<BrandRecommendationModel> getBrandRecommendationDetails({
+    required String brId,
+  }) async {
+    return await _apiConsumer.get<BrandRecommendationModel>(
+      ApiConstants.brandRecommendationDetails(brId),
+      responseReturnType: ResponseReturnType.fromJson,
+      fromJsonMethod: BrandRecommendationModel.fromJson,
+    );
   }
 }

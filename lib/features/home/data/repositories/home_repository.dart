@@ -7,6 +7,9 @@ import 'package:dazzify/features/home/data/requests/get_all_media_request.dart';
 import 'package:dazzify/features/home/data/requests/get_brands_request.dart';
 import 'package:dazzify/features/home/data/requests/get_service_review_request.dart';
 import 'package:dazzify/features/home/data/requests/get_services_request.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_model.dart';
+import 'package:dazzify/features/home/data/models/brand_recommendation_history_model.dart';
+import 'package:dazzify/features/home/data/requests/generate_brand_recommendation_request.dart';
 import 'package:dazzify/features/home/data/requests/search_request.dart';
 import 'package:dazzify/features/shared/data/models/brand_model.dart';
 import 'package:dazzify/features/shared/data/models/media_model.dart';
@@ -58,5 +61,18 @@ abstract class HomeRepository {
 
   Future<Either<Failure, List<dynamic>>> search({
     required SearchRequest request,
+  });
+
+  Future<Either<Failure, BrandRecommendationModel>> generateBrandRecommendation({
+    required GenerateBrandRecommendationRequest request,
+  });
+
+  Future<Either<Failure, List<BrandRecommendationHistoryModel>>> getBrandRecommendationHistory({
+    required int page,
+    required int limit,
+  });
+
+  Future<Either<Failure, BrandRecommendationModel>> getBrandRecommendationDetails({
+    required String brId,
   });
 }

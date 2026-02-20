@@ -50,6 +50,23 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> getMainCategories() async {
+    // If state already has categories, don't fetch again
+    if (state.mainCategories.isNotEmpty) {
+      return;
+    }
+
+    // If global variable has categories but state doesn't, update state
+    if (mainCategories.isNotEmpty && state.mainCategories.isEmpty) {
+      emit(
+        state.copyWith(
+          mainCategories: mainCategories,
+          categoriesState: UiState.success,
+        ),
+      );
+      return;
+    }
+
+    // Otherwise, fetch from API
     if (mainCategories.isEmpty) {
       emit(state.copyWith(categoriesState: UiState.loading));
 

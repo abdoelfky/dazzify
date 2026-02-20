@@ -141,11 +141,14 @@ class _ViewLocationScreenState extends State<ViewLocationScreen> {
                     start: 8.w,
                     child: Material(
                       color: Colors.transparent,
-                      child: DazzifyAppBar(
-                          isLeading: true,
-                          onBackTap: () {
-                            context.maybePop();
-                          }),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: DazzifyAppBar(
+                            isLeading: true,
+                            onBackTap: () {
+                              context.maybePop();
+                            }),
+                      ),
                     )),
                 Container(
                   alignment: Alignment.bottomCenter,

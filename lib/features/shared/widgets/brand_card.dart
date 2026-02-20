@@ -27,21 +27,20 @@ class BrandCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: 8.w),
-          SizedBox(
-            width: context.screenWidth * 0.6,
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   children: [
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 180.w),
-                      child: IntrinsicWidth(
-                          child: DText(
-                        maxLines: 1,
+                    Flexible(
+                      child: DText(
                         brand.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: context.textTheme.bodyMedium,
-                      )),
+                      ),
                     ),
                     SizedBox(width: 8.w),
                     if (brand.verified)
@@ -52,27 +51,33 @@ class BrandCard extends StatelessWidget {
                       )
                   ],
                 ),
-                DText(
-                  brand.description!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
+                if (brand.description != null && brand.description!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4).r,
+                    child: DText(
+                      brand.description!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
-                ),
-                DText(
-
-                  '${context.tr.priceRange} : ${reformatPriceWithCommas(brand.minPrice!)} ${context.tr.egp} - ${reformatPriceWithCommas(brand.maxPrice!)} ${context.tr.egp}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.textTheme.labelSmall!.copyWith(
-                    color: context.colorScheme.primaryContainer,
+                Padding(
+                  padding: const EdgeInsets.only(top: 4).r,
+                  child: DText(
+                    '${context.tr.priceRange} : ${reformatPriceWithCommas(brand.minPrice!)} ${context.tr.egp} - ${reformatPriceWithCommas(brand.maxPrice!)} ${context.tr.egp}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.labelSmall!.copyWith(
+                      color: context.colorScheme.primaryContainer,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const Spacer(),
+          SizedBox(width: 8.w),
           if ((brand.totalBookingsCount != null && brand.totalBookingsCount! > 0) || (brand.rating != null && !(brand.rating == 0 && (brand.ratingCount ?? 0) == 0)))
             SizedBox(
               width: context.screenWidth * 0.11,

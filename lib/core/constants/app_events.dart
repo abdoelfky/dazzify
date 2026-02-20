@@ -93,6 +93,14 @@ class AppEvents {
   static const String profileSubmitEditPhoto = 'profile-submit-edit-photo';
   static const String profileSubmitEditPhone = 'profile-submit-edit-phone';
   static const String profileClickFavourites = 'profile-click-favourites';
+  static const String profileClickBrandRecommendations =
+      'profile-click-brand-recommendations';
+  static const String profileClickBrandRecommendationsHistory =
+      'profile-click-brand-recommendations-history';
+  static const String brandRecommendationHistoryBack =
+      'brand-recommendation-history-back';
+  static const String brandRecommendationHistoryClickItem =
+      'brand-recommendation-history-click-item';
   static const String profileClickQrCode = 'profile-click-qrcode';
   static const String profileClickBookingHistory =
       'profile-click-bookinghistory';
@@ -249,4 +257,12 @@ class AppEvents {
       'bookingstatus-click-agree-cancel';
   static const String bookingStatusSwipeArrive = 'bookingstatus-swipe-arrive';
   static const String bookingStatusClickPay = 'bookingstatus-click-pay';
+
+  // Brand Recommendation Page
+  static const String brandRecommendationBack =
+      'brand-recommendation-click-back';
+  static const String brandRecommendationGenerate =
+      'brand-recommendation-generate';
+  static const String brandRecommendationClickBrand =
+      'brand-recommendation-click-brand';
 }

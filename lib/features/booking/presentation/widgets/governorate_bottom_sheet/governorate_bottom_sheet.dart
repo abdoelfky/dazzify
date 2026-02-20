@@ -6,6 +6,7 @@ import 'package:dazzify/features/booking/data/models/brand_delivery_fees_model.d
 import 'package:dazzify/features/booking/data/models/delivery_info_model.dart';
 import 'package:dazzify/features/booking/data/models/service_invoice_model.dart';
 import 'package:dazzify/features/booking/logic/service_invoice_cubit/service_invoice_cubit.dart';
+import 'package:dazzify/features/brand/data/models/location_model.dart';
 import 'package:dazzify/features/booking/presentation/widgets/governorate_bottom_sheet/governorate_item.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_loading_shimmer.dart';
 import 'package:dazzify/features/shared/widgets/dazzify_sheet_body.dart';
@@ -119,6 +120,8 @@ class _GovernorateBottomSheetState extends State<GovernoratesBottomSheet> {
       isRangeType: isRange,
       minDeliveryFees: isRange ? deliveryModel.minTransportationFees : null,
       maxDeliveryFees: isRange ? deliveryModel.maxTransportationFees : null,
+      longitude: deliveryModel.longitude,
+      latitude: deliveryModel.latitude,
     ));
 
     if (isRange) {
@@ -135,8 +138,18 @@ class _GovernorateBottomSheetState extends State<GovernoratesBottomSheet> {
 
     context.maybePop();
 
+    // Create LocationModel if coordinates are available
+    LocationModel? locationModel;
+    if (deliveryModel.longitude != null && deliveryModel.latitude != null) {
+      locationModel = LocationModel(
+        longitude: deliveryModel.longitude!,
+        latitude: deliveryModel.latitude!,
+      );
+    }
+
     context.pushRoute(
       ViewLocationRoute(
+        locationModel: locationModel,
         invoiceCubit: _invoiceCubit,
         isDisplayOnly: false,
       ),
