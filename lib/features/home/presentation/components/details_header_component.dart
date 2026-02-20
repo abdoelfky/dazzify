@@ -180,18 +180,7 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: 4.h),
-        RichText(
-          text: TextSpan(
-            text: '${reformatPriceWithCommas(widget.service.price)} ',
-            style: context.textTheme.titleMedium!,
-            children: [
-              TextSpan(
-                text: context.tr.currency,
-                style: context.textTheme.titleSmall,
-              ),
-            ],
-          ),
-        ),
+        _buildPriceWidget(context),
       ],
     );
   }
@@ -426,5 +415,63 @@ class _DetailsHeaderComponentState extends State<DetailsHeaderComponent> {
         ],
       ),
     );
+  }
+
+  Widget _buildPriceWidget(BuildContext context) {
+    final hasOffer = widget.service.originalPrice > 0 && 
+                     widget.service.originalPrice > widget.service.price;
+
+    if (hasOffer) {
+      // Case 2: There's an offer - show price and originalPrice with italic
+      return Row(
+        children: [
+          RichText(
+            text: TextSpan(
+              text: '${reformatPriceWithCommas(widget.service.price)} ',
+              style: context.textTheme.titleMedium!,
+              children: [
+                TextSpan(
+                  text: context.tr.currency,
+                  style: context.textTheme.titleSmall,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 8.w),
+          RichText(
+            text: TextSpan(
+              text: '${reformatPriceWithCommas(widget.service.originalPrice)} ',
+              style: context.textTheme.titleMedium!.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+                decoration: TextDecoration.lineThrough,
+              ),
+              children: [
+                TextSpan(
+                  text: context.tr.currency,
+                  style: context.textTheme.titleSmall!.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Case 1: No offer - show only price
+      return RichText(
+        text: TextSpan(
+          text: '${reformatPriceWithCommas(widget.service.price)} ',
+          style: context.textTheme.titleMedium!,
+          children: [
+            TextSpan(
+              text: context.tr.currency,
+              style: context.textTheme.titleSmall,
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

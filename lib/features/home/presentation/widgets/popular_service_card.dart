@@ -83,12 +83,7 @@ class PopularServiceCard extends StatelessWidget {
                           color: Colors.white,
                         ),
                   ),
-                  DText(
-                    '${reformatPriceWithCommas(service.price)} ${context.tr.egp}',
-                    style: context.textTheme.bodySmall!.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
+                  _buildPriceWidget(context),
                 ],
               ),
             ),
@@ -131,5 +126,40 @@ class PopularServiceCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildPriceWidget(BuildContext context) {
+    final hasOffer = service.originalPrice > 0 && 
+                     service.originalPrice > service.price;
+
+    if (hasOffer) {
+      // Case 2: There's an offer - show price and originalPrice with italic
+      return Row(
+        children: [
+          DText(
+            '${reformatPriceWithCommas(service.price)} ${context.tr.egp}',
+            style: context.textTheme.bodySmall!.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(width: 4.w),
+          DText(
+            '${reformatPriceWithCommas(service.originalPrice)} ${context.tr.egp}',
+            style: context.textTheme.bodySmall!.copyWith(
+              color: Colors.white.withValues(alpha: 0.6),
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Case 1: No offer - show only price
+      return DText(
+        '${reformatPriceWithCommas(service.price)} ${context.tr.egp}',
+        style: context.textTheme.bodySmall!.copyWith(
+          color: Colors.white,
+        ),
+      );
+    }
   }
 }

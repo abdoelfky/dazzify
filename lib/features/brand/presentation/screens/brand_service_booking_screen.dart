@@ -341,6 +341,7 @@ class _BrandServiceBookingScreenState extends State<BrandServiceBookingScreen> {
                                 title: service.title,
                                 description: service.description,
                                 price: service.price,
+                                originalPrice: service.originalPrice,
                                 serviceStatus: ServiceStatus.booking,
                                 brandId: widget.brandId, // For Option 2
                               );

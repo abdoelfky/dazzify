@@ -130,6 +130,7 @@ class ExtraServicesBottomSheet extends StatelessWidget {
                                   title: service.title,
                                   description: service.description,
                                   price: service.price,
+                                  originalPrice: service.originalPrice,
                                   serviceStatus: ServiceStatus.booking,
                                   // لا نريد زر Extras داخل قائمة الـ Extras نفسها
                                   brandId: null,

@@ -15,6 +15,7 @@ class ServiceWidget extends StatefulWidget {
   final String title;
   final String description;
   final num price;
+  final num? originalPrice;
   final int quantity;
   final void Function()? onSingleBookingTap;
   final ServiceStatus serviceStatus;
@@ -34,6 +35,7 @@ class ServiceWidget extends StatefulWidget {
     required this.title,
     required this.description,
     required this.price,
+    this.originalPrice,
     required this.serviceStatus,
     required this.quantity,
     this.onSingleBookingTap,
@@ -111,11 +113,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                         Column(
                           children: [
                             SizedBox(height: 8.w),
-                            DText(
-                              '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
-                              style: context.textTheme.labelLarge!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
+                            _buildPriceWidget(context, isSmall: true),
                           ],
                         ),
                     ],
@@ -234,14 +232,10 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                 !widget.isBooked)||!widget.isAllowMultipleServicesCount)
                               SizedBox(
                                 width: 62.r,
-                                height: 16.r,
+                                height: 35.r,
                                 child: FittedBox(
                                   alignment: AlignmentDirectional.centerStart,
-                                  child: DText(
-                                    '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
-                                    style: context.textTheme.labelLarge!
-                                        .copyWith(fontWeight: FontWeight.bold),
-                                  ),
+                                  child: _buildPriceWidget(context, isSmall: true),
                                 ),
                               ),
                             if ((widget.isAllowMultipleServicesCount &&
@@ -339,6 +333,42 @@ class _ServiceWidgetState extends State<ServiceWidget> {
         ),
       ),
     );
+  }
+
+  Widget _buildPriceWidget(BuildContext context, {bool isSmall = false}) {
+    final hasOffer = widget.originalPrice != null && 
+                     widget.originalPrice! > 0 && 
+                     widget.originalPrice! > widget.price;
+
+    final textStyle = isSmall
+        ? context.textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold)
+        : context.textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold);
+
+    if (hasOffer) {
+      // Case 2: There's an offer - show price and originalPrice with italic
+      return Column(
+        children: [
+          DText(
+            '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+            style: textStyle,
+          ),
+          SizedBox(height: 4.h),
+          DText(
+            '${reformatPriceWithCommas(widget.originalPrice!)} ${context.tr.egp}',
+            style: textStyle.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Case 1: No offer - show only price
+      return DText(
+        '${reformatPriceWithCommas(widget.price)} ${context.tr.egp}',
+        style: textStyle,
+      );
+    }
   }
 }
 
