@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/brand/logic/booking_from_media/booking_from_media_cubit.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
 import 'package:dazzify/features/shared/enums/banners_action_enum.dart';
@@ -49,6 +50,11 @@ class BannerHelper {
         );
       case BannersAction.coupon:
         return _takeCouponCopy(context, homeState, index);
+      case BannersAction.brandRecommendation:
+        if (AppConfigManager.allowBrandRecommendation) {
+          return _navigateToRoute(context, const BrandRecommendationInputRoute());
+        }
+        return;
       case BannersAction.none:
         return;
     }

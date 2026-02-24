@@ -67,7 +67,7 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16).r,
           child: SizedBox(
-            height: 280.h,
+            height: 250.h,
             child: BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
                 if (state is AppTermsLoadingState) {
@@ -77,6 +77,7 @@ class _AppTermsBottomSheetState extends State<AppTermsBottomSheet> {
                   );
                 } else if (state is AppTermsSuccessState) {
                   return Scrollbar(
+                    controller: _scrollController,
                     radius: const Radius.circular(20).r,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,

@@ -6,6 +6,7 @@ enum BannersAction {
   service,
   transaction,
   coupon,
+  brandRecommendation,
   none,
 }
 
@@ -25,6 +26,8 @@ BannersAction getBannersAction(String? value) {
       return BannersAction.transaction;
     case 'coupon':
       return BannersAction.coupon;
+    case 'brand-recommendation':
+      return BannersAction.brandRecommendation;
     case 'none':
       return BannersAction.none;
     default:

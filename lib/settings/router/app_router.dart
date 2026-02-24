@@ -45,6 +45,7 @@ import 'package:dazzify/features/home/presentation/screens/service_details_scree
 import 'package:dazzify/features/home/presentation/screens/top_rated_brands_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/top_rated_services_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/brand_recommendation_input_screen.dart';
+import 'package:dazzify/features/home/presentation/screens/brand_recommendation_details_screen.dart';
 import 'package:dazzify/features/home/presentation/screens/brand_recommendation_results_screen.dart';
 import 'package:dazzify/features/notifications/presentation/notfications_screen.dart';
 import 'package:dazzify/features/payment/logic/payment_methods/payment_methods_cubit.dart';
@@ -139,6 +140,7 @@ class AppRouter extends RootStackRouter {
                     AutoRoute(page: TransactionRoute.page),
                     AutoRoute(page: BrandRecommendationInputRoute.page),
                     AutoRoute(page: BrandRecommendationResultsRoute.page),
+                    AutoRoute(page: BrandRecommendationDetailsRoute.page),
                     AutoRoute(page: BrandRecommendationHistoryRoute.page),
                   ],
                 ),
@@ -206,6 +208,9 @@ class AppRouter extends RootStackRouter {
                     ),
                     AutoRoute(
                       page: BrandRecommendationResultsRoute.page,
+                    ),
+                    AutoRoute(
+                      page: BrandRecommendationDetailsRoute.page,
                     ),
                     AutoRoute(
                       page: BrandRecommendationHistoryRoute.page,

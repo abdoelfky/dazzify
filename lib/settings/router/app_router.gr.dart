@@ -270,6 +270,54 @@ class BrandProfileRouteArgs {
 }
 
 /// generated route for
+/// [BrandRecommendationDetailsScreen]
+class BrandRecommendationDetailsRoute
+    extends PageRouteInfo<BrandRecommendationDetailsRouteArgs> {
+  BrandRecommendationDetailsRoute({
+    Key? key,
+    required String brId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BrandRecommendationDetailsRoute.name,
+          args: BrandRecommendationDetailsRouteArgs(
+            key: key,
+            brId: brId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BrandRecommendationDetailsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<BrandRecommendationDetailsRouteArgs>();
+      return WrappedRoute(
+          child: BrandRecommendationDetailsScreen(
+        key: args.key,
+        brId: args.brId,
+      ));
+    },
+  );
+}
+
+class BrandRecommendationDetailsRouteArgs {
+  const BrandRecommendationDetailsRouteArgs({
+    this.key,
+    required this.brId,
+  });
+
+  final Key? key;
+
+  final String brId;
+
+  @override
+  String toString() {
+    return 'BrandRecommendationDetailsRouteArgs{key: $key, brId: $brId}';
+  }
+}
+
+/// generated route for
 /// [BrandRecommendationHistoryScreen]
 class BrandRecommendationHistoryRoute extends PageRouteInfo<void> {
   const BrandRecommendationHistoryRoute({List<PageRouteInfo>? children})

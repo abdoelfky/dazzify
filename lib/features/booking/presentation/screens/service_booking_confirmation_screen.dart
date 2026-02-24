@@ -28,6 +28,13 @@ class _ServiceBookingConfirmationScreenState
       bottom: false,
       child: PopScope(
         canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) {
+            _logger.logEvent(
+                event: AppEvents.confirmationBookingClick12hGoToHome);
+            context.navigateTo(const HomeRoute());
+          }
+        },
         child: Scaffold(
           body: Center(
             child: Column(

@@ -3313,11 +3313,26 @@ class S {
     return Intl.message('Weight', name: 'weight', desc: '', args: []);
   }
 
-  /// `Total Weight`
+  /// `Percentage`
+  String get percentage {
+    return Intl.message('Percentage', name: 'percentage', desc: '', args: []);
+  }
+
+  /// `Total Percentage`
   String get totalWeight {
     return Intl.message(
-      'Total Weight',
+      'Total Percentage',
       name: 'totalWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Percentage`
+  String get totalPercentage {
+    return Intl.message(
+      'Total Percentage',
+      name: 'totalPercentage',
       desc: '',
       args: [],
     );
@@ -3393,21 +3408,41 @@ class S {
     );
   }
 
-  /// `Weights must sum to 100%`
+  /// `Percentages must sum to 100%`
   String get weightsMustSumTo100 {
     return Intl.message(
-      'Weights must sum to 100%',
+      'Percentages must sum to 100%',
       name: 'weightsMustSumTo100',
       desc: '',
       args: [],
     );
   }
 
-  /// `No brands found`
+  /// `Percentages must sum to 100%`
+  String get percentagesMustSumTo100 {
+    return Intl.message(
+      'Percentages must sum to 100%',
+      name: 'percentagesMustSumTo100',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No brands match your criteria for this category.`
   String get noBrandsFound {
     return Intl.message(
-      'No brands found',
+      'No brands match your criteria for this category.',
       name: 'noBrandsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try increasing the budget or category percentage to see more options.`
+  String get noBrandsFoundHint {
+    return Intl.message(
+      'Try increasing the budget or category percentage to see more options.',
+      name: 'noBrandsFoundHint',
       desc: '',
       args: [],
     );
@@ -3458,6 +3493,16 @@ class S {
     );
   }
 
+  /// `Category Percentage`
+  String get categoryPercentage {
+    return Intl.message(
+      'Category Percentage',
+      name: 'categoryPercentage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Recommendations History`
   String get recommendationsHistory {
     return Intl.message(
@@ -3493,6 +3538,26 @@ class S {
     return Intl.message(
       'Date and time cannot be in the past',
       name: 'dateCannotBeInPast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available at your selected time`
+  String get brandAvailableAtSelectedTime {
+    return Intl.message(
+      'Available at your selected time',
+      name: 'brandAvailableAtSelectedTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get Brand Recommendations`
+  String get getBrandRecommendations {
+    return Intl.message(
+      'Get Brand Recommendations',
+      name: 'getBrandRecommendations',
       desc: '',
       args: [],
     );

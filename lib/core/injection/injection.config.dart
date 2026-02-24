@@ -101,6 +101,8 @@ import 'package:dazzify/features/home/logic/home_brands/home_brands_bloc.dart'
     as _i222;
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart'
     as _i218;
+import 'package:dazzify/features/home/logic/recommendation_details/recommendation_details_cubit.dart'
+    as _i637;
 import 'package:dazzify/features/home/logic/search/search_bloc.dart' as _i316;
 import 'package:dazzify/features/home/logic/service_details/service_details_bloc.dart'
     as _i199;
@@ -304,12 +306,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i180.BookingFromMediaCubit(gh<_i447.BrandRepository>()));
     gh.factory<_i798.BrandBloc>(
         () => _i798.BrandBloc(gh<_i447.BrandRepository>()));
+    gh.factory<_i887.ExtraServicesCubit>(
+        () => _i887.ExtraServicesCubit(gh<_i447.BrandRepository>()));
     gh.factory<_i968.ServiceSelectionCubit>(
         () => _i968.ServiceSelectionCubit(gh<_i447.BrandRepository>()));
     gh.factory<_i299.BrandBranchesCubit>(
         () => _i299.BrandBranchesCubit(gh<_i447.BrandRepository>()));
-    gh.factory<_i887.ExtraServicesCubit>(
-        () => _i887.ExtraServicesCubit(gh<_i447.BrandRepository>()));
     gh.factory<_i291.BookingCubit>(() => _i291.BookingCubit(
           gh<_i626.BookingRepository>(),
           gh<_i160.WebSocketRepository>(),
@@ -373,14 +375,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i149.BookingHistoryBloc(gh<_i626.BookingRepository>()));
     gh.factory<_i303.IssueBloc>(
         () => _i303.IssueBloc(gh<_i499.UserRepository>()));
+    gh.factory<_i1048.BrandRecommendationHistoryCubit>(() =>
+        _i1048.BrandRecommendationHistoryCubit(gh<_i660.HomeRepository>()));
     gh.factory<_i199.ServiceDetailsBloc>(
         () => _i199.ServiceDetailsBloc(gh<_i660.HomeRepository>()));
     gh.factory<_i218.HomeCubit>(
         () => _i218.HomeCubit(gh<_i660.HomeRepository>()));
     gh.factory<_i114.BrandRecommendationCubit>(
         () => _i114.BrandRecommendationCubit(gh<_i660.HomeRepository>()));
-    gh.factory<_i1048.BrandRecommendationHistoryCubit>(() =>
-        _i1048.BrandRecommendationHistoryCubit(gh<_i660.HomeRepository>()));
+    gh.factory<_i637.RecommendationDetailsCubit>(
+        () => _i637.RecommendationDetailsCubit(gh<_i660.HomeRepository>()));
     gh.factory<_i683.LocationCubit>(
         () => _i683.LocationCubit(gh<_i499.UserRepository>()));
     gh.factory<_i468.ReelsBloc>(

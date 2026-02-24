@@ -9,8 +9,12 @@ class SearchState extends Equatable {
   final bool hasMediaReachMax;
   final List<BrandModel> brands;
   final bool hasBrandsReachMax;
+  final bool isLoadingBrandsMore;
   final List<ServiceDetailsModel> services;
   final bool hasServicesReachMax;
+  final bool isLoadingServicesMore;
+  final String? lastBrandsKeyword;
+  final String? lastServicesKeyword;
 
   const SearchState({
     this.blocState = UiState.initial,
@@ -20,8 +24,12 @@ class SearchState extends Equatable {
     this.hasMediaReachMax = false,
     this.brands = const [],
     this.hasBrandsReachMax = false,
+    this.isLoadingBrandsMore = false,
     this.services = const [],
     this.hasServicesReachMax = false,
+    this.isLoadingServicesMore = false,
+    this.lastBrandsKeyword,
+    this.lastServicesKeyword,
   });
 
   SearchState copyWith({
@@ -32,8 +40,12 @@ class SearchState extends Equatable {
     bool? hasMediaReachMax,
     List<BrandModel>? brands,
     bool? hasBrandsReachMax,
+    bool? isLoadingBrandsMore,
     List<ServiceDetailsModel>? services,
     bool? hasServicesReachMax,
+    bool? isLoadingServicesMore,
+    String? lastBrandsKeyword,
+    String? lastServicesKeyword,
   }) {
     return SearchState(
       blocState: blocState ?? this.blocState,
@@ -43,8 +55,12 @@ class SearchState extends Equatable {
       hasMediaReachMax: hasMediaReachMax ?? this.hasMediaReachMax,
       brands: brands ?? this.brands,
       hasBrandsReachMax: hasBrandsReachMax ?? this.hasBrandsReachMax,
+      isLoadingBrandsMore: isLoadingBrandsMore ?? this.isLoadingBrandsMore,
       services: services ?? this.services,
       hasServicesReachMax: hasServicesReachMax ?? this.hasServicesReachMax,
+      isLoadingServicesMore: isLoadingServicesMore ?? this.isLoadingServicesMore,
+      lastBrandsKeyword: lastBrandsKeyword ?? this.lastBrandsKeyword,
+      lastServicesKeyword: lastServicesKeyword ?? this.lastServicesKeyword,
     );
   }
 
@@ -57,7 +73,11 @@ class SearchState extends Equatable {
         hasMediaReachMax,
         brands,
         hasBrandsReachMax,
+        isLoadingBrandsMore,
         services,
         hasServicesReachMax,
+        isLoadingServicesMore,
+        lastBrandsKeyword,
+        lastServicesKeyword,
       ];
 }

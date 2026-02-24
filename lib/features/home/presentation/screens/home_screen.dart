@@ -3,7 +3,9 @@ import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/home/presentation/components/banners_component.dart';
+import 'package:dazzify/features/home/presentation/components/brand_recommendation_component.dart';
 import 'package:dazzify/features/home/presentation/components/categories_component.dart';
 import 'package:dazzify/features/home/presentation/components/home_app_bar_component.dart';
 import 'package:dazzify/features/home/presentation/components/last_active_booking_component.dart';
@@ -187,6 +189,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   children: [
                                     const CategoriesComponent(),
                                     const LastActiveBookingComponent(),
+                                    if (AppConfigManager.allowBrandRecommendation)
+                                      const BrandRecommendationComponent(),
                                     const PopularBrandsComponent(),
                                     const TopRatedBrandsComponent(),
                                     const PopularServiceComponent(),
@@ -205,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen>
                       //     // Bottom padding
                       //   ]),
                       // ),
-                      SizedBox(height: 30.h,)
+                      SizedBox(height: 180.h,)
                     ],
                   ),
                 ));

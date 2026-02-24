@@ -49,3 +49,20 @@ final class GetMoreServicesEvent extends SearchEvent {
   @override
   List<Object?> get props => [keyWord];
 }
+
+/// Emits loading state immediately (no debounce) so UI shows skeleton
+/// before the debounced search runs. Use when switching brand/service or on search.
+/// [searchType] when set clears only that list so the other tab keeps its results.
+final class EmitSearchLoadingEvent extends SearchEvent {
+  final String? searchType;
+
+  const EmitSearchLoadingEvent({this.searchType});
+
+  @override
+  List<Object?> get props => [searchType];
+}
+
+/// Clears search results and shows media view immediately (no debounce).
+final class ClearSearchEvent extends SearchEvent {
+  const ClearSearchEvent();
+}

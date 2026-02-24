@@ -226,15 +226,18 @@ class DioApiConsumer extends ApiConsumer {
         case ResponseReturnType.fromJson:
           return fromJson!(baseResponse.data);
         case ResponseReturnType.fromJsonList:
-          return toModelList<T>(baseResponse.data, fromJson!);
+          final rawList = baseResponse.data;
+          final list = rawList is List<dynamic> ? rawList : <dynamic>[];
+          return toModelList<T>(list, fromJson!);
         case ResponseReturnType.primitive:
           return baseResponse.data;
         case ResponseReturnType.primitiveWithKey:
           return baseResponse.data[primitiveKey!];
         case ResponseReturnType.primitiveList:
-          return List<T>.from(baseResponse.data);
+          return List<T>.from(baseResponse.data is List ? baseResponse.data : []);
         case ResponseReturnType.primitiveListWithKey:
-          return List<T>.from(baseResponse.data[primitiveKey!]);
+          final keyData = baseResponse.data?[primitiveKey!];
+          return List<T>.from(keyData is List ? keyData : []);
         case ResponseReturnType.unit:
           return unit;
       }

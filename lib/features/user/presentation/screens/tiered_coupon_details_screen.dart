@@ -319,7 +319,7 @@ class TieredCouponDetailsScreen extends StatelessWidget {
                     SizedBox(height: 6.h),
 
                     // Coupon code with scratch overlay
-                    // if (currentCoupon.code != null)
+                    // if (currentCoupon.code == null)
                     shouldShowScratch
                         ? ScratchOverlayWidget(
                             key: ValueKey(

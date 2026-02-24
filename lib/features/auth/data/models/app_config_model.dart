@@ -15,6 +15,8 @@ class AppConfigModel {
   final AppFees appFees;
   final AppVersion appVersion;
   final bool appInMaintenance;
+  @JsonKey(name: 'allowBrandRecommendation', defaultValue: true)
+  final bool allowBrandRecommendation;
 
   const AppConfigModel({
     required this.guestMode,
@@ -23,6 +25,7 @@ class AppConfigModel {
     required this.appFees,
     required this.appVersion,
     required this.appInMaintenance,
+    this.allowBrandRecommendation = true,
   });
 
   factory AppConfigModel.fromJson(Map<String, dynamic> json) =>

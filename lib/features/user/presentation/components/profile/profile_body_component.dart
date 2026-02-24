@@ -96,25 +96,6 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                   },
                 ),
                 ProfileCustomListTile(
-                  iconData: SolarIconsOutline.star,
-                  title: context.tr.brandRecommendations,
-                  onTap: () {
-                    _logger.logEvent(
-                        event: AppEvents.profileClickBrandRecommendations);
-                    context.pushRoute(
-                        const BrandRecommendationInputRoute());
-                  },
-                ),
-                ProfileCustomListTile(
-                  iconData: SolarIconsOutline.clockCircle,
-                  title: context.tr.recommendationsHistory,
-                  onTap: () {
-                    _logger.logEvent(
-                        event: AppEvents.profileClickBrandRecommendationsHistory);
-                    context.pushRoute(const BrandRecommendationHistoryRoute());
-                  },
-                ),
-                ProfileCustomListTile(
                   iconData: SolarIconsOutline.qrCode,
                   title: context.tr.qrCodeScanner,
                   onTap: () {
@@ -129,7 +110,7 @@ class _ProfileBodyComponentState extends State<ProfileBodyComponent> {
                       );
                     } else {
                       context.pushRoute(const QrScannerRoute());
-                      // QrScannerRoute
+                      // QrScannerRoutee
                       // TieredCouponRewardsWrapperRoute
                     }
                   },

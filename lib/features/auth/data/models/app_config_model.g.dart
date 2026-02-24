@@ -16,6 +16,8 @@ AppConfigModel _$AppConfigModelFromJson(Map<String, dynamic> json) =>
       appVersion:
           AppVersion.fromJson(json['appVersion'] as Map<String, dynamic>),
       appInMaintenance: json['appInMaintenance'] as bool,
+      allowBrandRecommendation:
+          json['allowBrandRecommendation'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$AppConfigModelToJson(AppConfigModel instance) =>
@@ -27,4 +29,5 @@ Map<String, dynamic> _$AppConfigModelToJson(AppConfigModel instance) =>
       'appFees': instance.appFees,
       'appVersion': instance.appVersion,
       'appInMaintenance': instance.appInMaintenance,
+      'allowBrandRecommendation': instance.allowBrandRecommendation,
     };

@@ -151,6 +151,7 @@ class _BrandTermsSheetState extends State<BrandTermsSheet> {
                         children: [
                           Expanded(
                             child: Scrollbar(
+                              controller: _scrollController,
                               child: ListView.builder(
                                 controller: _scrollController,
                                 itemCount: state.brandTerms.length,

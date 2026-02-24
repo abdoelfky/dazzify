@@ -22,6 +22,7 @@ class AppConfigManager {
   // App State
   static bool get isAppInMaintenance => config.appInMaintenance;
   static bool get isGuestMode => config.guestMode;
+  static bool get allowBrandRecommendation => config.allowBrandRecommendation;
 
   // Guest Token
   static String get guestToken => config.guestToken ?? '';

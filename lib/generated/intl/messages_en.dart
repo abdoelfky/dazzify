@@ -107,6 +107,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bookingsHistory": MessageLookupByLibrary.simpleMessage("Bookings History"),
     "branches": MessageLookupByLibrary.simpleMessage("Branches"),
     "brand": MessageLookupByLibrary.simpleMessage("Brand"),
+    "brandAvailableAtSelectedTime": MessageLookupByLibrary.simpleMessage(
+      "Available at your selected time",
+    ),
     "brandCategories": MessageLookupByLibrary.simpleMessage("Categories"),
     "brandRecommendations": MessageLookupByLibrary.simpleMessage(
       "Brand Recommendations",
@@ -134,6 +137,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "card": MessageLookupByLibrary.simpleMessage("Card"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("card Holder Name"),
     "categories": MessageLookupByLibrary.simpleMessage("Categories"),
+    "categoryPercentage": MessageLookupByLibrary.simpleMessage(
+      "Category Percentage",
+    ),
     "categoryWeight": MessageLookupByLibrary.simpleMessage("Category Weight"),
     "changePhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Change Phone Number",
@@ -264,6 +270,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "generateRecommendations": MessageLookupByLibrary.simpleMessage(
       "Generate Recommendations",
     ),
+    "getBrandRecommendations": MessageLookupByLibrary.simpleMessage(
+      "Get Brand Recommendations",
+    ),
     "getReadyForService": MessageLookupByLibrary.simpleMessage(
       "\"Get Ready! This Button Will Unlock\n1 Hour Before We Start.\"",
     ),
@@ -372,7 +381,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "noBrandTerms": MessageLookupByLibrary.simpleMessage(
       "There are no terms and conditions for this brand",
     ),
-    "noBrandsFound": MessageLookupByLibrary.simpleMessage("No brands found"),
+    "noBrandsFound": MessageLookupByLibrary.simpleMessage(
+      "No brands match your criteria for this category.",
+    ),
+    "noBrandsFoundHint": MessageLookupByLibrary.simpleMessage(
+      "Try increasing the budget or category percentage to see more options.",
+    ),
     "noCategories": MessageLookupByLibrary.simpleMessage("No Categories Found"),
     "noConversations": MessageLookupByLibrary.simpleMessage(
       "There are no conversations yet, select any vendor to start chatting with",
@@ -474,6 +488,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "pendingRefund": MessageLookupByLibrary.simpleMessage("Pending Refund"),
+    "percentage": MessageLookupByLibrary.simpleMessage("Percentage"),
+    "percentagesMustSumTo100": MessageLookupByLibrary.simpleMessage(
+      "Percentages must sum to 100%",
+    ),
     "phone": MessageLookupByLibrary.simpleMessage("Phone Number"),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
     "phoneNumberChangedSuccessfully": MessageLookupByLibrary.simpleMessage(
@@ -683,8 +701,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Top Rated Services",
     ),
     "totalBudget": MessageLookupByLibrary.simpleMessage("Total Budget"),
+    "totalPercentage": MessageLookupByLibrary.simpleMessage("Total Percentage"),
     "totalPrice": MessageLookupByLibrary.simpleMessage("Total price"),
-    "totalWeight": MessageLookupByLibrary.simpleMessage("Total Weight"),
+    "totalWeight": MessageLookupByLibrary.simpleMessage("Total Percentage"),
     "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
     "unableToConnect": MessageLookupByLibrary.simpleMessage(
       "Unable to Connect to the Server Check\nYour Internet Connection.",
@@ -720,7 +739,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wePay": MessageLookupByLibrary.simpleMessage("We Pay"),
     "weight": MessageLookupByLibrary.simpleMessage("Weight"),
     "weightsMustSumTo100": MessageLookupByLibrary.simpleMessage(
-      "Weights must sum to 100%",
+      "Percentages must sum to 100%",
     ),
     "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
     "willBeCalculated": MessageLookupByLibrary.simpleMessage(

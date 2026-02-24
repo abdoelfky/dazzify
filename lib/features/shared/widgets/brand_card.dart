@@ -7,10 +7,16 @@ class BrandCard extends StatelessWidget {
     super.key,
     required this.brand,
     required this.onTap,
+    this.hasAvailability,
+    this.availabilityLabel,
   });
 
   final BrandModel brand;
   final void Function() onTap;
+  /// When true, show that the brand is available at the user's selected time (e.g. recommendation results).
+  final bool? hasAvailability;
+  /// Label to show when [hasAvailability] is true (e.g. "Available at your selected time").
+  final String? availabilityLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +57,25 @@ class BrandCard extends StatelessWidget {
                       )
                   ],
                 ),
+                if (hasAvailability == true && (availabilityLabel != null && availabilityLabel!.isNotEmpty))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4).r,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2).r,
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(6).r,
+                      ),
+                      child: DText(
+                        availabilityLabel!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.labelSmall!.copyWith(
+                          color: context.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ),
+                  ),
                 if (brand.description != null && brand.description!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4).r,

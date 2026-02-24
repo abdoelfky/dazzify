@@ -156,7 +156,7 @@ class _BottomNavBarState extends State<BottomNavBar>
             final tabsRouter = context.tabsRouter;
             return PopScope(
               canPop: tabsRouter.activeIndex == 0,
-              onPopInvoked: (didPop) {
+              onPopInvokedWithResult: (didPop, _) {
                 if (!didPop && tabsRouter.activeIndex != 0) {
                   // Log back button event based on current tab before navigating to home
                   final currentIndex = tabsRouter.activeIndex;

@@ -101,6 +101,8 @@ class AppEvents {
       'brand-recommendation-history-back';
   static const String brandRecommendationHistoryClickItem =
       'brand-recommendation-history-click-item';
+  static const String brandRecommendationInputClickHistory =
+      'brand-recommendation-input-click-history';
   static const String profileClickQrCode = 'profile-click-qrcode';
   static const String profileClickBookingHistory =
       'profile-click-bookinghistory';

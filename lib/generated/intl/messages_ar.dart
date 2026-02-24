@@ -107,6 +107,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bookingsHistory": MessageLookupByLibrary.simpleMessage("تاريخ الحجز"),
     "branches": MessageLookupByLibrary.simpleMessage("الفروع"),
     "brand": MessageLookupByLibrary.simpleMessage("العلامة التجارية"),
+    "brandAvailableAtSelectedTime": MessageLookupByLibrary.simpleMessage(
+      "متاح في الوقت الذي اخترته",
+    ),
     "brandCategories": MessageLookupByLibrary.simpleMessage("الفئات"),
     "brandRecommendations": MessageLookupByLibrary.simpleMessage(
       "توصيات العلامات التجارية",
@@ -134,7 +137,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "card": MessageLookupByLibrary.simpleMessage("كارت"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("إسم صاحب البطاقة"),
     "categories": MessageLookupByLibrary.simpleMessage("الفئات"),
-    "categoryWeight": MessageLookupByLibrary.simpleMessage("نسب الفئة"),
+    "categoryPercentage": MessageLookupByLibrary.simpleMessage(
+      "النسبة المئوية للفئة",
+    ),
+    "categoryWeight": MessageLookupByLibrary.simpleMessage("نسبة الفئة"),
     "changePhoneNumber": MessageLookupByLibrary.simpleMessage(
       "تغيير رقم الهاتف",
     ),
@@ -260,6 +266,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "generateRecommendations": MessageLookupByLibrary.simpleMessage(
       "إنشاء التوصيات",
     ),
+    "getBrandRecommendations": MessageLookupByLibrary.simpleMessage(
+      "احصل على توصيات العلامات التجارية",
+    ),
     "getReadyForService": MessageLookupByLibrary.simpleMessage(
       "\"استعد! هذا الزر سيفتح قبل ساعة من البدء.\"",
     ),
@@ -371,7 +380,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا توجد شروط وأحكام لهذه العلامة التجارية",
     ),
     "noBrandsFound": MessageLookupByLibrary.simpleMessage(
-      "لم يتم العثور على علامات تجارية",
+      "لا توجد علامات تجارية تنطبق على معاييرك لهذه الفئة.",
+    ),
+    "noBrandsFoundHint": MessageLookupByLibrary.simpleMessage(
+      "حاول زيادة الميزانية أو نسبة الفئة لعرض خيارات أكثر.",
     ),
     "noCategories": MessageLookupByLibrary.simpleMessage("لا يوجد فئات متاحة"),
     "noConversations": MessageLookupByLibrary.simpleMessage(
@@ -479,6 +491,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "pending": MessageLookupByLibrary.simpleMessage("قيد الانتظار"),
     "pendingRefund": MessageLookupByLibrary.simpleMessage(
       "في انتظار الاسترداد",
+    ),
+    "percentage": MessageLookupByLibrary.simpleMessage("النسبة المئوية"),
+    "percentagesMustSumTo100": MessageLookupByLibrary.simpleMessage(
+      "يجب أن يكون مجموع النسب المئوية 100%",
     ),
     "phone": MessageLookupByLibrary.simpleMessage("رقم التليفون"),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
@@ -695,8 +711,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "الخدمات الأكثر تقييما",
     ),
     "totalBudget": MessageLookupByLibrary.simpleMessage("الميزانية الإجمالية"),
+    "totalPercentage": MessageLookupByLibrary.simpleMessage("النسبة الإجمالية"),
     "totalPrice": MessageLookupByLibrary.simpleMessage("السعر الإجمالي"),
-    "totalWeight": MessageLookupByLibrary.simpleMessage("النسب الإجمالي"),
+    "totalWeight": MessageLookupByLibrary.simpleMessage("النسبة الإجمالية"),
     "transaction": MessageLookupByLibrary.simpleMessage("التحويل"),
     "unableToConnect": MessageLookupByLibrary.simpleMessage(
       "تعذر الاتصال بالخادم\nيرجى التحقق من اتصالك بالإنترنت.",
@@ -730,9 +747,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "في إنتظار الرد",
     ),
     "wePay": MessageLookupByLibrary.simpleMessage("وي باي"),
-    "weight": MessageLookupByLibrary.simpleMessage("النسب"),
+    "weight": MessageLookupByLibrary.simpleMessage("النسبة"),
     "weightsMustSumTo100": MessageLookupByLibrary.simpleMessage(
-      "يجب أن يكون مجموع النسب 100%",
+      "يجب أن يكون مجموع النسب المئوية 100%",
     ),
     "welcome": MessageLookupByLibrary.simpleMessage("مرحباً"),
     "willBeCalculated": MessageLookupByLibrary.simpleMessage("سيتم الحساب"),

@@ -22,6 +22,8 @@ extension BuildContextExtension on BuildContext {
     }
   }
 
+  bool get isRtl => currentTextDirection == TextDirection.rtl;
+
   bool get isEnglishLanguage => localization.Intl.getCurrentLocale() == 'en';
 
   bool get hasFocus => FocusScope.of(this).hasPrimaryFocus;

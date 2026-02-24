@@ -30,10 +30,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<GetMediaItemsEvent>(onGetMediaItemsEvent, transformer: droppable());
     on<SwitchScreenViewEvent>(onSwitchScreenViewEvent);
     on<RefreshEvent>(onRefreshEvent);
+    on<EmitSearchLoadingEvent>(onEmitSearchLoadingEvent);
+    on<ClearSearchEvent>(onClearSearchEvent);
     on<GetSearchResultsEvent>(onGetSearchResultsEvent,
         transformer: (events, mapper) => events
             .distinct()
-            .debounceTime(const Duration(milliseconds: 700))
+            .debounceTime(const Duration(seconds: 2))
             .switchMap(mapper));
 
     on<GetMoreBrandsEvent>(
@@ -56,6 +58,42 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       showMedia = true;
     }
     emit(state.copyWith(showMediaItems: showMedia));
+  }
+
+  void onClearSearchEvent(
+    ClearSearchEvent event,
+    Emitter<SearchState> emit,
+  ) {
+    emit(state.copyWith(
+      blocState: UiState.success,
+      errorMessage: '',
+      showMediaItems: true,
+      brands: [],
+      services: [],
+    ));
+  }
+
+  void onEmitSearchLoadingEvent(
+    EmitSearchLoadingEvent event,
+    Emitter<SearchState> emit,
+  ) {
+    // Only clear the list we're about to fetch so the other tab keeps its results
+    final type = event.searchType ?? 'brand';
+    if (type == 'brand') {
+      emit(state.copyWith(
+        blocState: UiState.loading,
+        errorMessage: '',
+        brands: [],
+        showMediaItems: false,
+      ));
+    } else {
+      emit(state.copyWith(
+        blocState: UiState.loading,
+        errorMessage: '',
+        services: [],
+        showMediaItems: false,
+      ));
+    }
   }
 
   Future<void> onGetMediaItemsEvent(
@@ -98,16 +136,31 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       GetSearchResultsEvent event, Emitter<SearchState> emit) async {
     if (event.keyWord == null || event.keyWord!.isEmpty) {
       emit(state.copyWith(
+        blocState: UiState.success,
+        errorMessage: '',
         showMediaItems: true,
         brands: [],
         services: [],
       ));
     } else {
-      emit(state.copyWith(blocState: UiState.loading));
-      _brandsPage = 1;
-      _servicesPage = 1;
-
       final searchType = event.searchType ?? 'brand';
+      // Only clear the list we're about to fetch so the other tab keeps its results
+      if (searchType == 'brand') {
+        _brandsPage = 1;
+        emit(state.copyWith(
+          blocState: UiState.loading,
+          errorMessage: '',
+          brands: [],
+        ));
+      } else {
+        _servicesPage = 1;
+        emit(state.copyWith(
+          blocState: UiState.loading,
+          errorMessage: '',
+          services: [],
+        ));
+      }
+
       final result = await _homeRepository.search(
         request: SearchRequest(
           searchType: searchType,
@@ -133,11 +186,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             emit(
               state.copyWith(
                 brands: brands,
-                services: [],
                 blocState: UiState.success,
                 showMediaItems: false,
                 hasBrandsReachMax: hasBrandsReachMax,
-                hasServicesReachMax: false,
+                isLoadingBrandsMore: false,
+                lastBrandsKeyword: event.keyWord ?? '',
               ),
             );
             _brandsPage++;
@@ -149,11 +202,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             emit(
               state.copyWith(
                 services: services,
-                brands: [],
                 blocState: UiState.success,
                 showMediaItems: false,
                 hasServicesReachMax: hasServicesReachMax,
-                hasBrandsReachMax: false,
+                isLoadingServicesMore: false,
+                lastServicesKeyword: event.keyWord ?? '',
               ),
             );
             _servicesPage++;
@@ -165,74 +218,88 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> onGetMoreBrandsEvent(
       GetMoreBrandsEvent event, Emitter<SearchState> emit) async {
-    if (!state.hasBrandsReachMax) {
-      final result = await _homeRepository.search(
-        request: SearchRequest(
-          searchType: 'brand',
-          searchKeyWord: event.keyWord ?? '',
-          page: _brandsPage,
-          limit: _brandsLimit,
-        ),
-      );
+    if (state.blocState == UiState.loading ||
+        state.hasBrandsReachMax ||
+        state.isLoadingBrandsMore) return;
 
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            blocState: UiState.failure,
-            errorMessage: failure.message,
-          ),
+    emit(state.copyWith(isLoadingBrandsMore: true));
+
+    final pageToFetch = _brandsPage;
+    final result = await _homeRepository.search(
+      request: SearchRequest(
+        searchType: 'brand',
+        searchKeyWord: event.keyWord ?? '',
+        page: pageToFetch,
+        limit: _brandsLimit,
+      ),
+    );
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          blocState: UiState.failure,
+          errorMessage: failure.message,
+          isLoadingBrandsMore: false,
         ),
-        (results) {
-          final brands = results.cast<BrandModel>();
-          final hasBrandsReachMax =
-              brands.isEmpty || brands.length < _brandsLimit;
-          emit(
-            state.copyWith(
-              brands: List.of(state.brands)..addAll(brands),
-              blocState: UiState.success,
-              hasBrandsReachMax: hasBrandsReachMax,
-            ),
-          );
-          _brandsPage++;
-        },
-      );
-    }
+      ),
+      (results) {
+        final brands = results.cast<BrandModel>();
+        final hasBrandsReachMax =
+            brands.isEmpty || brands.length < _brandsLimit;
+        emit(
+          state.copyWith(
+            brands: List.of(state.brands)..addAll(brands),
+            blocState: UiState.success,
+            hasBrandsReachMax: hasBrandsReachMax,
+            isLoadingBrandsMore: false,
+          ),
+        );
+        _brandsPage++;
+      },
+    );
   }
 
   Future<void> onGetMoreServicesEvent(
       GetMoreServicesEvent event, Emitter<SearchState> emit) async {
-    if (!state.hasServicesReachMax) {
-      final result = await _homeRepository.search(
-        request: SearchRequest(
-          searchType: 'service',
-          searchKeyWord: event.keyWord ?? '',
-          page: _servicesPage,
-          limit: _servicesLimit,
-        ),
-      );
+    if (state.blocState == UiState.loading ||
+        state.hasServicesReachMax ||
+        state.isLoadingServicesMore) return;
 
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            blocState: UiState.failure,
-            errorMessage: failure.message,
-          ),
+    emit(state.copyWith(isLoadingServicesMore: true));
+
+    final pageToFetch = _servicesPage;
+    final result = await _homeRepository.search(
+      request: SearchRequest(
+        searchType: 'service',
+        searchKeyWord: event.keyWord ?? '',
+        page: pageToFetch,
+        limit: _servicesLimit,
+      ),
+    );
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          blocState: UiState.failure,
+          errorMessage: failure.message,
+          isLoadingServicesMore: false,
         ),
-        (results) {
-          final services = results.cast<ServiceDetailsModel>();
-          final hasServicesReachMax =
-              services.isEmpty || services.length < _servicesLimit;
-          emit(
-            state.copyWith(
-              services: List.of(state.services)..addAll(services),
-              blocState: UiState.success,
-              hasServicesReachMax: hasServicesReachMax,
-            ),
-          );
-          _servicesPage++;
-        },
-      );
-    }
+      ),
+      (results) {
+        final services = results.cast<ServiceDetailsModel>();
+        final hasServicesReachMax =
+            services.isEmpty || services.length < _servicesLimit;
+        emit(
+          state.copyWith(
+            services: List.of(state.services)..addAll(services),
+            blocState: UiState.success,
+            hasServicesReachMax: hasServicesReachMax,
+            isLoadingServicesMore: false,
+          ),
+        );
+        _servicesPage++;
+      },
+    );
   }
 
   Future<void> onRefreshEvent(RefreshEvent event, Emitter<SearchState> emit) async {

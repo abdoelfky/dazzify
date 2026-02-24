@@ -141,69 +141,69 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                                     ),
                                   ),
                                   // Extras button at the end of service name row
-                                  if (widget.brandId != null)
-                                    BlocProvider(
-                                      create: (context) => getIt<ExtraServicesCubit>()
-                                        ..getBrandExtraServices(brandId: widget.brandId!),
-                                      child: BlocBuilder<ExtraServicesCubit, ExtraServicesState>(
-                                        builder: (context, state) {
-                                          // if (state.extraServicesState == UiState.success &&
-                                          //     state.extraServices.isNotEmpty) {
-                                            return
-                                              GestureDetector(
-                                              onTap: () {
-                                                final serviceSelectionCubit =
-                                                    context.read<ServiceSelectionCubit>();
-                                                final state =
-                                                    serviceSelectionCubit.state;
-                                                showExtraServicesBottomSheet(
-                                                  context: context,
-                                                  brandId: widget.brandId!,
-                                                  serviceSelectionCubit:
-                                                      serviceSelectionCubit,
-                                                  branch: state.selectedBranch,
-                                                  isMultipleBooking:
-                                                      widget.isMultipleService,
-                                                );
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 8.w,
-                                                  vertical: 3.h,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(6).r,
-                                                  border: Border.all(
-                                                    color: context.colorScheme.primary,
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    DText(
-                                                      context.tr.extras,
-                                                      style: context.textTheme.labelSmall!
-                                                          .copyWith(
-                                                        color: context.colorScheme.primary,
-                                                        fontSize: 13.sp,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 4.w),
-                                                    Icon(
-                                                      SolarIconsOutline.shieldPlus,
-                                                      size: 16.r,
-                                                      color: context.colorScheme.primary,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          // }
-                                          // return const SizedBox.shrink();
-                                        },
-                                      ),
-                                    ),
+                                  // if (widget.brandId != null)
+                                  //   BlocProvider(
+                                  //     create: (context) => getIt<ExtraServicesCubit>()
+                                  //       ..getBrandExtraServices(brandId: widget.brandId!),
+                                  //     child: BlocBuilder<ExtraServicesCubit, ExtraServicesState>(
+                                  //       builder: (context, state) {
+                                  //         // if (state.extraServicesState == UiState.success &&
+                                  //         //     state.extraServices.isNotEmpty) {
+                                  //           return
+                                  //             GestureDetector(
+                                  //             onTap: () {
+                                  //               final serviceSelectionCubit =
+                                  //                   context.read<ServiceSelectionCubit>();
+                                  //               final state =
+                                  //                   serviceSelectionCubit.state;
+                                  //               showExtraServicesBottomSheet(
+                                  //                 context: context,
+                                  //                 brandId: widget.brandId!,
+                                  //                 serviceSelectionCubit:
+                                  //                     serviceSelectionCubit,
+                                  //                 branch: state.selectedBranch,
+                                  //                 isMultipleBooking:
+                                  //                     widget.isMultipleService,
+                                  //               );
+                                  //             },
+                                  //             child: Container(
+                                  //               padding: EdgeInsets.symmetric(
+                                  //                 horizontal: 8.w,
+                                  //                 vertical: 3.h,
+                                  //               ),
+                                  //               decoration: BoxDecoration(
+                                  //                 borderRadius: BorderRadius.circular(6).r,
+                                  //                 border: Border.all(
+                                  //                   color: context.colorScheme.primary,
+                                  //                   width: 1,
+                                  //                 ),
+                                  //               ),
+                                  //               child: Row(
+                                  //                 mainAxisSize: MainAxisSize.min,
+                                  //                 children: [
+                                  //                   DText(
+                                  //                     context.tr.extras,
+                                  //                     style: context.textTheme.labelSmall!
+                                  //                         .copyWith(
+                                  //                       color: context.colorScheme.primary,
+                                  //                       fontSize: 13.sp,
+                                  //                     ),
+                                  //                   ),
+                                  //                   SizedBox(width: 4.w),
+                                  //                   Icon(
+                                  //                     SolarIconsOutline.shieldPlus,
+                                  //                     size: 16.r,
+                                  //                     color: context.colorScheme.primary,
+                                  //                   ),
+                                  //                 ],
+                                  //               ),
+                                  //             ),
+                                  //           );
+                                  //         // }
+                                  //         // return const SizedBox.shrink();
+                                  //       },
+                                  //     ),
+                                  //   ),
                                 ],
                               ),
                               SizedBox(height: 5.h),

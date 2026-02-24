@@ -66,6 +66,7 @@ class _CancelTermsBottomSheetState extends State<CancelTermsBottomSheet> {
                     width: 70.w,
                   )
                 : Scrollbar(
+                    controller: _scrollController,
                     radius: const Radius.circular(20).r,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,

@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 class MyRouteObserver extends AutoRouterObserver {
   final AppEventsLogger _logger = getIt<AppEventsLogger>();
 
-  // Mapping from route names to back button events
+  // Mapping from route names to back button events.
+  // Include both path-style names and AutoRoute-generated names (e.g. NotificationsRoute)
+  // so back events are logged when system back is used on Android.
   static final Map<String, String> _routeToBackEvent = {
     '/notifications': AppEvents.notificationsClickBack,
     '/favourites': AppEvents.favouritesClickBack,
@@ -36,6 +38,34 @@ class MyRouteObserver extends AutoRouterObserver {
     '/popular-services': AppEvents.popularClickServicesBack,
     '/toprated-brands': AppEvents.topratedClickBrandsBack,
     '/toprated-services': AppEvents.topratedClickServicesBack,
+    // AutoRoute-generated route names (route.settings.name from AutoRoute)
+    'NotificationsRoute': AppEvents.notificationsClickBack,
+    'MyFavoriteRoute': AppEvents.favouritesClickBack,
+    'CategoryRoute': AppEvents.maincategoryClickBack,
+    'ReelsRoute': AppEvents.reelsClickBack,
+    'ReelsTabRoute': AppEvents.reelsClickBack,
+    'SearchRoute': AppEvents.searchClickBack,
+    'SearchTabRoute': AppEvents.searchClickBack,
+    'SearchInputRoute': AppEvents.searchClickBack,
+    'SearchPostRoute': AppEvents.searchMediaClickBack,
+    'ReelViewerRoute': AppEvents.searchMediaClickBack,
+    'ConversationsRoute': AppEvents.chatClickBack,
+    'ChatTabRoute': AppEvents.chatClickBack,
+    'ProfileRoute': AppEvents.profileClickBack,
+    'ProfileTabRoute': AppEvents.profileClickBack,
+    'QrScannerRoute': AppEvents.qrCodeClickBack,
+    'BookingsHistoryRoute': AppEvents.bookingHistoryClickBack,
+    'BookingStatusRoute': AppEvents.bookingStatusClickBack,
+    'SeeAllReviewsRoute': AppEvents.allReviewsClickBack,
+    'ServiceAvailabilityRoute': AppEvents.calendarClickBack,
+    'PopularBrandsRoute': AppEvents.popularClickBrandsBack,
+    'PopularServicesRoute': AppEvents.popularClickServicesBack,
+    'TopRatedBrandsRoute': AppEvents.topratedClickBrandsBack,
+    'TopRatedServicesRoute': AppEvents.topratedClickServicesBack,
+    'BrandRecommendationInputRoute': AppEvents.brandRecommendationBack,
+    'BrandRecommendationResultsRoute': AppEvents.brandRecommendationBack,
+    'BrandRecommendationDetailsRoute': AppEvents.brandRecommendationBack,
+    'BrandRecommendationHistoryRoute': AppEvents.brandRecommendationHistoryBack,
   };
 
   @override
@@ -102,7 +132,8 @@ class MyRouteObserver extends AutoRouterObserver {
       } else if (normalizedName.contains('brand')) {
         if (normalizedName.contains('media')) {
           _logger.logEvent(event: AppEvents.brandMediaClickBack);
-        } else {
+        } else if (!normalizedName.contains('term')) {
+          // Don't log brand-click-back when closing BrandTermsSheet (e.g. navigating to ServiceInvoiceRoute)
           _logger.logEvent(event: AppEvents.brandClickBack);
         }
       } else if (normalizedName.contains('service')) {

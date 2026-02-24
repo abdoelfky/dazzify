@@ -124,6 +124,8 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
         _hasSearched = true;
       });
 
+      searchBloc.add(EmitSearchLoadingEvent(
+          searchType: _selectedSearchType.value));
       searchBloc.add(GetSearchResultsEvent(
         keyWord: keyword.trim(),
         searchType: _selectedSearchType.value,
@@ -137,13 +139,25 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
     });
     _saveSearchType(type);
 
-    // If there's a search keyword, re-search with new type
-    if (_textController.text.trim().isNotEmpty && _hasSearched) {
-      searchBloc.add(GetSearchResultsEvent(
-        keyWord: _textController.text.trim(),
-        searchType: type.value,
-      ));
-    }
+    // Only re-search if we have a keyword and don't already have results for this tab with same keyword
+    final keyword = _textController.text.trim();
+    if (keyword.isEmpty || !_hasSearched) return;
+
+    final state = searchBloc.state;
+    final alreadyHasBrands = type == SearchType.brand &&
+        state.brands.isNotEmpty &&
+        (state.lastBrandsKeyword ?? '') == keyword;
+    final alreadyHasServices = type == SearchType.service &&
+        state.services.isNotEmpty &&
+        (state.lastServicesKeyword ?? '') == keyword;
+
+    if (alreadyHasBrands || alreadyHasServices) return;
+
+    searchBloc.add(EmitSearchLoadingEvent(searchType: type.value));
+    searchBloc.add(GetSearchResultsEvent(
+      keyWord: keyword,
+      searchType: type.value,
+    ));
   }
 
   void _onHistoryItemTap(String searchTerm) {
@@ -214,6 +228,15 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                         setState(() {
                           _hasSearched = false;
                         });
+                        searchBloc.add(const ClearSearchEvent());
+                      } else {
+                        setState(() => _hasSearched = true);
+                        searchBloc.add(EmitSearchLoadingEvent(
+                            searchType: _selectedSearchType.value));
+                        searchBloc.add(GetSearchResultsEvent(
+                          keyWord: keyWord.trim(),
+                          searchType: _selectedSearchType.value,
+                        ));
                       }
                     },
                     onSubmit: (keyWord) {
@@ -314,17 +337,39 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                         switch (state.blocState) {
                           case UiState.initial:
                           case UiState.loading:
-                            return DazzifyLoadingShimmer(
-                              dazzifyLoadingType: DazzifyLoadingType.gridView,
-                              cardWidth: 104.w,
-                              cardHeight: 100.h,
-                            );
+                            return _selectedSearchType == SearchType.brand
+                                ? const DazzifyLoadingShimmer(
+                                    dazzifyLoadingType:
+                                        DazzifyLoadingType.brands,
+                                  )
+                                : DazzifyLoadingShimmer(
+                                    dazzifyLoadingType:
+                                        DazzifyLoadingType.gridView,
+                                    cardWidth: 104.w,
+                                    cardHeight: 100.h,
+                                  );
                           case UiState.failure:
                             return ErrorDataWidget(
                               errorDataType: DazzifyErrorDataType.screen,
                               message: state.errorMessage,
                               onTap: () {
-                                searchBloc.add(GetMediaItemsEvent());
+                                if (state.showMediaItems) {
+                                  searchBloc.add(GetMediaItemsEvent());
+                                } else {
+                                  final keyword =
+                                      _textController.text.trim();
+                                  if (keyword.isNotEmpty) {
+                                    searchBloc.add(EmitSearchLoadingEvent(
+                                        searchType:
+                                            _selectedSearchType.value));
+                                    searchBloc.add(GetSearchResultsEvent(
+                                      keyWord: keyword,
+                                      searchType: _selectedSearchType.value,
+                                    ));
+                                  } else {
+                                    searchBloc.add(GetMediaItemsEvent());
+                                  }
+                                }
                               },
                             );
                           case UiState.success:
@@ -423,7 +468,7 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                                 );
                               }
                             } else {
-                              // Check if we're showing brands or services
+                              // Search results: success with empty list = no results (don't show loading)
                               if (_selectedSearchType == SearchType.brand) {
                                 if (state.brands.isEmpty) {
                                   return EmptyDataWidget(
@@ -478,7 +523,7 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                                   );
                                 }
                               } else {
-                                // Show services
+                                // Show services: success with empty list = no results (don't show loading)
                                 if (state.services.isEmpty) {
                                   return EmptyDataWidget(
                                     message: context.tr.noSearchResult,

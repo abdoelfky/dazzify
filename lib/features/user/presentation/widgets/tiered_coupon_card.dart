@@ -200,7 +200,7 @@ class TieredCouponCard extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
-                                            BorderRadius.circular(8.r),
+                                            BorderRadius.circular(25.r),
                                       ),
                                       child: Center(
                                         child: Text(
