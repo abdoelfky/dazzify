@@ -19,6 +19,7 @@ import 'package:dazzify/features/user/data/requests/update_comment_request.dart'
 import 'package:dazzify/features/user/data/requests/update_profile_info_request.dart';
 import 'package:dazzify/features/user/data/requests/update_profile_location_request.dart';
 import 'package:dazzify/features/user/data/requests/verify_update_phone_number_request.dart';
+import 'package:dazzify/features/user/data/responses/open_reward_level_response.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart' as parser;
 import 'package:image_picker/image_picker.dart';
@@ -326,11 +327,11 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
   }
 
   @override
-  Future<TieredCouponModel> openNewRewardLevel() async {
-    return await _apiConsumer.post<TieredCouponModel>(
+  Future<OpenRewardLevelResponse> openNewRewardLevel() async {
+    return await _apiConsumer.post<OpenRewardLevelResponse>(
       ApiConstants.openNewRewardLevel,
       responseReturnType: ResponseReturnType.fromJson,
-      fromJsonMethod: TieredCouponModel.fromJson,
+      fromJsonMethod: OpenRewardLevelResponse.fromJson,
     );
   }
 }
