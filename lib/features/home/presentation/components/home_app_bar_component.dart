@@ -16,26 +16,22 @@ class HomeAppBarComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+
       bottom: false,
       child: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
-          color: context.colorScheme.surface,
-          borderRadius: const BorderRadius.only(
-            bottomRight: Radius.circular(40),
-          ).r,
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black.withValues(alpha: 0.05),
-          //     blurRadius: 10,
-          //     offset: const Offset(0, 2),
-          //   ),
-          // ],
+          color: context.colorScheme.primary.withOpacity(.2),
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(40.r),
+            // bottomLeft: Radius.circular(40.r),
+          ),
         ),
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          ).r,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20.r),
+            bottomRight: Radius.circular(20.r),
+          ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             child: Row(
@@ -68,7 +64,8 @@ class HomeAppBarComponent extends StatelessWidget {
                                   context.tr.welcome,
                                   style: context.textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    color: context.colorScheme.onSurface.withValues(alpha: 0.7),
+                                    color: context.colorScheme.onSurface
+                                        .withValues(alpha: 0.7),
                                   ),
                                 ),
                                 DText(
@@ -80,10 +77,10 @@ class HomeAppBarComponent extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                              ],
-                            );
-                          },
-                        ),
+                            ],
+                          );
+                        },
+                      ),
                       ),
                     ],
                   ),
@@ -110,7 +107,7 @@ class HomeAppBarComponent extends StatelessWidget {
                         }
                       },
                     ),
-                    SizedBox(width: 8.w),
+                SizedBox(width: 8.w),
                     GlassIconButton(
                       icon: SolarIconsOutline.bell,
                       onPressed: () {
@@ -132,11 +129,11 @@ class HomeAppBarComponent extends StatelessWidget {
                     ),
                   ],
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

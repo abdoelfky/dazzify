@@ -78,64 +78,22 @@ class _BrandRecommendationInputScreenState
 
   Future<void> _selectDate() async {
     final now = DateTime.now();
-    
-    // First, select the date
+    final today = DateTime(now.year, now.month, now.day);
+
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: _selectedDate != null && _selectedDate!.isAfter(now)
-          ? _selectedDate!
-          : now,
-      firstDate: now,
+      initialDate: _selectedDate ?? now,
+      firstDate: today,
       lastDate: now.add(const Duration(days: 365 * 2)),
       initialEntryMode: DatePickerEntryMode.calendar,
     );
 
     if (pickedDate == null) return;
 
-    // Determine initial time for time picker
-    TimeOfDay initialTime;
-    if (_selectedDate != null && 
-        _selectedDate!.year == pickedDate.year &&
-        _selectedDate!.month == pickedDate.month &&
-        _selectedDate!.day == pickedDate.day &&
-        _selectedDate!.isAfter(now)) {
-      initialTime = TimeOfDay.fromDateTime(_selectedDate!);
-    } else {
-      initialTime = TimeOfDay.now();
-    }
-
-    // Then, select the time
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-    );
-
-    if (pickedTime == null) return;
-
-    // Combine date and time
-    final DateTime combinedDateTime = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      pickedTime.hour,
-      pickedTime.minute,
-    );
-
-    // Validate that the selected date and time is not in the past
-    if (combinedDateTime.isBefore(now)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.tr.dateCannotBeInPast),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
+    final dateOnly = DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
     setState(() {
-      _selectedDate = combinedDateTime;
-      // Display formatted date and time for user
-      _dateController.text = DateFormat('yyyy-MM-dd HH:mm').format(combinedDateTime);
+      _selectedDate = dateOnly;
+      _dateController.text = DateFormat('MMM dd, yyyy').format(dateOnly);
     });
   }
 
@@ -222,9 +180,12 @@ class _BrandRecommendationInputScreenState
       return false;
     }
 
-    // Validate that the selected date and time is not in the past
+    // Validate that the selected date is not in the past
     final now = DateTime.now();
-    if (_selectedDate!.isBefore(now)) {
+    final selectedDateOnly = DateTime(
+        _selectedDate!.year, _selectedDate!.month, _selectedDate!.day);
+    final today = DateTime(now.year, now.month, now.day);
+    if (selectedDateOnly.isBefore(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(context.tr.dateCannotBeInPast),
@@ -264,8 +225,9 @@ class _BrandRecommendationInputScreenState
             ))
         .toList();
 
-    // Format date as ISO 8601 with time
-    final String formattedDate = _selectedDate!.toIso8601String();
+    // Format date only (yyyy-MM-dd)
+    final String formattedDate =
+        DateFormat('yyyy-MM-dd').format(_selectedDate!);
 
     context.read<BrandRecommendationCubit>().generateRecommendation(
           totalBudget: int.parse(_budgetController.text),

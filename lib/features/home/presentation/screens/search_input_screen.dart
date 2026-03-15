@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
@@ -49,6 +51,8 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
   List<String> _searchHistory = [];
   bool _hasSearched = false;
   SearchType _selectedSearchType = SearchType.brand;
+  Timer? _historyDebounceTimer;
+  static const Duration _historyDebounceDuration = Duration(milliseconds: 800);
 
   @override
   void initState() {
@@ -110,9 +114,20 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
     });
   }
 
-  void _onSearch(String keyword) {
+  void _scheduleAddToHistory(String keyword) {
+    final trimmed = keyword.trim();
+    if (trimmed.isEmpty) return;
+    _historyDebounceTimer?.cancel();
+    _historyDebounceTimer = Timer(_historyDebounceDuration, () async {
+      await _searchHistoryService.addToHistory(trimmed);
+      if (mounted) _loadSearchHistory();
+    });
+  }
+
+  Future<void> _onSearch(String keyword) async {
     if (keyword.trim().isNotEmpty) {
-      _searchHistoryService.addToHistory(keyword.trim());
+      _historyDebounceTimer?.cancel();
+      await _searchHistoryService.addToHistory(keyword.trim());
       _loadSearchHistory();
 
       _logger.logEvent(
@@ -165,18 +180,19 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
     _onSearch(searchTerm);
   }
 
-  void _onClearHistory() {
-    _searchHistoryService.clearHistory();
+  Future<void> _onClearHistory() async {
+    await _searchHistoryService.clearHistory();
     _loadSearchHistory();
   }
 
-  void _onRemoveHistoryItem(String searchTerm) {
-    _searchHistoryService.removeFromHistory(searchTerm);
+  Future<void> _onRemoveHistoryItem(String searchTerm) async {
+    await _searchHistoryService.removeFromHistory(searchTerm);
     _loadSearchHistory();
   }
 
   @override
   void dispose() {
+    _historyDebounceTimer?.cancel();
     _textController.dispose();
     _focusNode.dispose();
     _mediaScrollController
@@ -225,6 +241,7 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                     textInputType: TextInputType.text,
                     onChanged: (keyWord) {
                       if (keyWord.isEmpty) {
+                        _historyDebounceTimer?.cancel();
                         setState(() {
                           _hasSearched = false;
                         });
@@ -237,6 +254,7 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                           keyWord: keyWord.trim(),
                           searchType: _selectedSearchType.value,
                         ));
+                        _scheduleAddToHistory(keyWord);
                       }
                     },
                     onSubmit: (keyWord) {
@@ -616,73 +634,65 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
                         }
                       },
                     )
-                  : _searchHistory.isEmpty
-                      ? const SizedBox.shrink()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16).r,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    context.tr.recentSearches,
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 16).r,
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                context.tr.recentSearches,
+                                style:
+                                    context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (_searchHistory.isNotEmpty)
+                                TextButton(
+                                  onPressed: _onClearHistory,
+                                  child: Text(
+                                    context.tr.clear,
                                     style:
-                                        context.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
+                                        context.textTheme.bodySmall?.copyWith(
+                                      color: context.colorScheme.error,
                                     ),
                                   ),
-                                  TextButton(
-                                    onPressed: _onClearHistory,
-                                    child: Text(
-                                      context.tr.clear,
-                                      style:
-                                          context.textTheme.bodySmall?.copyWith(
-                                        color: context.colorScheme.error,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16)
-                                        .r,
-                                itemCount: _searchHistory.length,
-                                itemBuilder: (context, index) {
-                                  final searchTerm = _searchHistory[index];
-                                  return ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Icon(
-                                      SolarIconsOutline.clockCircle,
-                                      size: 20.r,
-                                      color: context.colorScheme.outline,
-                                    ),
-                                    title: Text(
-                                      searchTerm,
-                                      style: context.textTheme.bodyMedium,
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        SolarIconsOutline.closeCircle,
-                                        size: 20.r,
-                                        color: context.colorScheme.outline,
-                                      ),
-                                      onPressed: () =>
-                                          _onRemoveHistoryItem(searchTerm),
-                                    ),
-                                    onTap: () => _onHistoryItemTap(searchTerm),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                                ),
+                            ],
+                          ),
                         ),
+                        SizedBox(height: 12.h),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 16).r,
+                          child: _searchHistory.isEmpty
+                              ? Text(
+                                  context.tr.noRecentSearches,
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                                )
+                              : Wrap(
+                                  spacing: 10.w,
+                                  runSpacing: 10.h,
+                                  children: _searchHistory
+                                      .take(8)
+                                      .map((searchTerm) => _HistoryChip(
+                                            searchTerm: searchTerm,
+                                            onTap: () =>
+                                                _onHistoryItemTap(searchTerm),
+                                            onRemove: () =>
+                                                _onRemoveHistoryItem(searchTerm),
+                                          ))
+                                      .toList(),
+                                ),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -703,6 +713,73 @@ class _SearchInputScreenState extends State<SearchInputScreen> {
   void _showPhotoScreen(MediaModel photo) {
     context.pushRoute(
       SearchPostRoute(photo: photo),
+    );
+  }
+}
+
+class _HistoryChip extends StatelessWidget {
+  final String searchTerm;
+  final VoidCallback onTap;
+  final VoidCallback onRemove;
+
+  const _HistoryChip({
+    required this.searchTerm,
+    required this.onTap,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20).r,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            color: context.colorScheme.surfaceContainerHighest
+                .withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(20).r,
+            border: Border.all(
+              color: context.colorScheme.outline.withValues(alpha: 0.2),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                SolarIconsOutline.clockCircle,
+                size: 18.r,
+                color: context.colorScheme.primary,
+              ),
+              SizedBox(width: 8.w),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 160.w),
+                child: Text(
+                  searchTerm,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: context.colorScheme.onSurface,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              SizedBox(width: 4.w),
+              GestureDetector(
+                onTap: onRemove,
+                child: Icon(
+                  SolarIconsOutline.closeCircle,
+                  size: 18.r,
+                  color: context.colorScheme.outline,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

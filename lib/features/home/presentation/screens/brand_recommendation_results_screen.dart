@@ -54,7 +54,7 @@ class BrandRecommendationResultsScreen extends StatelessWidget {
   static String formatDate(String dateString) {
     try {
       final date = DateTime.parse(dateString);
-      return DateFormat('MMM dd, yyyy • HH:mm').format(date);
+      return DateFormat('MMM dd, yyyy').format(date);
     } catch (e) {
       return dateString;
     }

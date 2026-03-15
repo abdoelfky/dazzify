@@ -419,6 +419,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "There are no notifications for you right now",
     ),
     "noOtpCode": MessageLookupByLibrary.simpleMessage("Didn\'t receive OTP ?"),
+    "noRecentSearches": MessageLookupByLibrary.simpleMessage(
+      "No recent searches",
+    ),
     "noRecommendationsYet": MessageLookupByLibrary.simpleMessage(
       "No recommendations yet",
     ),

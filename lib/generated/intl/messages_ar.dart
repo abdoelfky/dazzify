@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "card": MessageLookupByLibrary.simpleMessage("كارت"),
     "cardHolderName": MessageLookupByLibrary.simpleMessage("إسم صاحب البطاقة"),
-    "categories": MessageLookupByLibrary.simpleMessage("الفئات"),
+    "categories": MessageLookupByLibrary.simpleMessage("الأقسام"),
     "categoryPercentage": MessageLookupByLibrary.simpleMessage(
       "النسبة المئوية للفئة",
     ),
@@ -421,6 +421,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا توجد إشعارات لك الآن",
     ),
     "noOtpCode": MessageLookupByLibrary.simpleMessage("لم يصلك رمز التحقق؟"),
+    "noRecentSearches": MessageLookupByLibrary.simpleMessage(
+      "لا توجد عمليات بحث حديثة",
+    ),
     "noRecommendationsYet": MessageLookupByLibrary.simpleMessage(
       "لا توجد توصيات بعد",
     ),

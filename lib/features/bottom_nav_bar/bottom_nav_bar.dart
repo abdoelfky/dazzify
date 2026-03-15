@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:dazzify/core/constants/app_events.dart';
 import 'package:dazzify/core/injection/injection.dart';
+import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/core/services/app_events_logger.dart';
 import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
@@ -35,6 +36,11 @@ class _BottomNavBarState extends State<BottomNavBar>
     with WidgetsBindingObserver {
   late DateTime timeNow;
   late AppNotificationsCubit notificationsCubit;
+  bool _isNavBarVisible = true;
+  double _lastScrollPosition = 0;
+  double _accumulatedScrollDelta = 0;
+  int? _previousTabIndex;
+  static const double _scrollThreshold = 20;
   late TokensCubit tokensCubit;
   late SettingsCubit settingsCubit;
   late UserCubit userCubit;
@@ -154,6 +160,18 @@ class _BottomNavBarState extends State<BottomNavBar>
           routes: routes,
           builder: (context, child) {
             final tabsRouter = context.tabsRouter;
+            if (_previousTabIndex != null &&
+                _previousTabIndex != tabsRouter.activeIndex) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  setState(() {
+                    _isNavBarVisible = true;
+                    _accumulatedScrollDelta = 0;
+                  });
+                }
+              });
+            }
+            _previousTabIndex = tabsRouter.activeIndex;
             return PopScope(
               canPop: tabsRouter.activeIndex == 0,
               onPopInvokedWithResult: (didPop, _) {
@@ -181,113 +199,180 @@ class _BottomNavBarState extends State<BottomNavBar>
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 extendBody: true,
-                body: child,
-                bottomNavigationBar: Padding(
-                  padding: EdgeInsets.only(
-                    left: 16.w,
-                    right: 16.w,
-                    bottom: 10.h,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50.r),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 20,
-                        sigmaY: 20,
-                      ),
-                      child: Container(
-                        height: 60.h,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              _getActiveColor(context, tabsRouter.activeIndex)
-                                  .withValues(alpha: 0.12),
-                              _getActiveColor(context, tabsRouter.activeIndex)
-                                  .withValues(alpha: 0.12),
-                              _getActiveColor(context, tabsRouter.activeIndex)
-                                  .withValues(alpha: 0.12),
-                            ],
-                            stops: const [0.0, 0.3, 1.0],
+                body: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    // لا نخفي الـ nav bar في صفحة الريلز
+                    if (tabsRouter.activeIndex == 1) return false;
+                    // نستجيب للتمرير العمودي فقط (أعلى/أسفل) ونتجاهل التمرير الأفقي مثل الـ banners
+                    if (notification.metrics.axis != Axis.vertical) return false;
+                    if (notification is ScrollStartNotification) {
+                      _lastScrollPosition = notification.metrics.pixels;
+                      _accumulatedScrollDelta = 0;
+                    } else if (notification is ScrollUpdateNotification) {
+                      final current = notification.metrics.pixels;
+                      final delta = current - _lastScrollPosition;
+                      _lastScrollPosition = current;
+                      _accumulatedScrollDelta += delta;
+                      if (_accumulatedScrollDelta > _scrollThreshold &&
+                          _isNavBarVisible) {
+                        setState(() {
+                          _isNavBarVisible = false;
+                          _accumulatedScrollDelta = 0;
+                        });
+                      } else if (_accumulatedScrollDelta < -_scrollThreshold &&
+                          !_isNavBarVisible) {
+                        setState(() {
+                          _isNavBarVisible = true;
+                          _accumulatedScrollDelta = 0;
+                        });
+                      }
+                    }
+                    return false;
+                  },
+                  child: Stack(
+                    children: [
+                      child,
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: IgnorePointer(
+                          ignoring: !_isNavBarVisible,
+                          child: AnimatedOpacity(
+                            opacity: _isNavBarVisible ? 1 : 0,
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeInOut,
+                            child: SafeArea(
+                            top: false,
+                            bottom: true,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 16.w,
+                                right: 16.w,
+                                bottom: 10.h,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50.r),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 20,
+                                    sigmaY: 20,
+                                  ),
+                                  child: Container(
+                                    height: 60.h,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          _getActiveColor(context,
+                                                  tabsRouter.activeIndex)
+                                              .withValues(alpha: 0.12),
+                                          _getActiveColor(context,
+                                                  tabsRouter.activeIndex)
+                                              .withValues(alpha: 0.12),
+                                          _getActiveColor(context,
+                                                  tabsRouter.activeIndex)
+                                              .withValues(alpha: 0.12),
+                                        ],
+                                        stops: const [0.0, 0.3, 1.0],
+                                      ),
+                                      border: Border.all(
+                                        color: context.isDarkTheme
+                                            ? Colors.white
+                                                .withValues(alpha: 0.15)
+                                            : Colors.black
+                                                .withValues(alpha: 0.1),
+                                        width: 1,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.circular(50.r),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        _buildNavItem(
+                                          context: context,
+                                          isActive:
+                                              tabsRouter.activeIndex == 0,
+                                          icon: SolarIconsOutline.home,
+                                          onTap: () {
+                                            handleNavbarItemTap(
+                                              value: 0,
+                                              tabsRouter: tabsRouter,
+                                            );
+                                          },
+                                        ),
+                                        _buildNavItem(
+                                          context: context,
+                                          isActive:
+                                              tabsRouter.activeIndex == 1,
+                                          icon: SolarIconsOutline.videoLibrary,
+                                          onTap: () {
+                                            handleNavbarItemTap(
+                                              value: 1,
+                                              tabsRouter: tabsRouter,
+                                            );
+                                          },
+                                        ),
+                                        _buildNavItem(
+                                          context: context,
+                                          isActive:
+                                              tabsRouter.activeIndex == 2,
+                                          icon: SolarIconsOutline.magnifier,
+                                          onTap: () {
+                                            handleNavbarItemTap(
+                                              value: 2,
+                                              tabsRouter: tabsRouter,
+                                            );
+                                          },
+                                        ),
+                                        _buildNavItem(
+                                          context: context,
+                                          isActive:
+                                              tabsRouter.activeIndex == 3,
+                                          icon: SolarIconsOutline.chatRoundLine,
+                                          onTap: () {
+                                            handleNavbarItemTap(
+                                              value: 3,
+                                              tabsRouter: tabsRouter,
+                                            );
+                                          },
+                                        ),
+                                        _buildProfileNavItem(
+                                          context: context,
+                                          isActive:
+                                              tabsRouter.activeIndex == 4,
+                                          onTap: () {
+                                            handleNavbarItemTap(
+                                              value: 4,
+                                              tabsRouter: tabsRouter,
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          border: Border.all(
-                            color: context.isDarkTheme
-                                ? Colors.white.withValues(alpha: 0.15)
-                                : Colors.black.withValues(alpha: 0.1),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(50.r),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // Home Icon
-                            _buildNavItem(
-                              context: context,
-                              isActive: tabsRouter.activeIndex == 0,
-                              icon: SolarIconsOutline.home,
-                              onTap: () {
-                                handleNavbarItemTap(
-                                  value: 0,
-                                  tabsRouter: tabsRouter,
-                                );
-                              },
-                            ),
-                            // Video Library Icon
-                            _buildNavItem(
-                              context: context,
-                              isActive: tabsRouter.activeIndex == 1,
-                              icon: SolarIconsOutline.videoLibrary,
-                              onTap: () {
-                                handleNavbarItemTap(
-                                  value: 1,
-                                  tabsRouter: tabsRouter,
-                                );
-                              },
-                            ),
-                            // Search Icon
-                            _buildNavItem(
-                              context: context,
-                              isActive: tabsRouter.activeIndex == 2,
-                              icon: SolarIconsOutline.magnifier,
-                              onTap: () {
-                                handleNavbarItemTap(
-                                  value: 2,
-                                  tabsRouter: tabsRouter,
-                                );
-                              },
-                            ),
-                            // Chat Icon
-                            _buildNavItem(
-                              context: context,
-                              isActive: tabsRouter.activeIndex == 3,
-                              icon: SolarIconsOutline.chatRoundLine,
-                              onTap: () {
-                                handleNavbarItemTap(
-                                  value: 3,
-                                  tabsRouter: tabsRouter,
-                                );
-                              },
-                            ),
-                            // Profile Icon
-                            _buildProfileNavItem(
-                              context: context,
-                              isActive: tabsRouter.activeIndex == 4,
-                              onTap: () {
-                                handleNavbarItemTap(
-                                  value: 4,
-                                  tabsRouter: tabsRouter,
-                                );
-                              },
-                            ),
-                          ],
                         ),
                       ),
                     ),
+                  ],
                   ),
                 ),
+                floatingActionButton:
+                    AppConfigManager.allowBrandRecommendation &&
+                            tabsRouter.activeIndex == 0
+                        ? _buildBrandRecommendationFab(context)
+                        : null,
+                floatingActionButtonLocation:
+                    _BrandRecommendationFabLocation(offsetBottom: 76.h),
               ),
             );
           },
@@ -393,5 +478,34 @@ class _BottomNavBarState extends State<BottomNavBar>
   Color _getActiveColor(BuildContext context, int activeIndex) {
     // Return primary color (green) for all active icons
     return context.colorScheme.primary;
+  }
+
+  Widget _buildBrandRecommendationFab(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        _logger.logEvent(event: AppEvents.profileClickBrandRecommendations);
+        context.pushRoute(const BrandRecommendationInputRoute());
+      },
+      backgroundColor: context.colorScheme.primary,
+      foregroundColor: Colors.white,
+      elevation: 4,
+      child: Icon(SolarIconsOutline.cardSearch, size: 26.r),
+    );
+  }
+}
+
+/// Positions the Brand Recommendation FAB just above the bottom nav bar.
+class _BrandRecommendationFabLocation extends FloatingActionButtonLocation {
+  const _BrandRecommendationFabLocation({required this.offsetBottom});
+
+  final double offsetBottom;
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    final Size size = scaffoldGeometry.floatingActionButtonSize;
+    final double end =
+        scaffoldGeometry.scaffoldSize.width - size.width - 16.0;
+    return Offset(end,
+        scaffoldGeometry.scaffoldSize.height - size.height - offsetBottom);
   }
 }

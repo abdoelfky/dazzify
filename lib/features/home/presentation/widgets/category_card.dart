@@ -15,30 +15,42 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ClipOval(
-            child: DazzifyCachedNetworkImage(
-              imageUrl: imageUrl,
-              width: 45.r,
-              height: 45.r,
-              fit: BoxFit.cover,
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = constraints.maxWidth;
+        return GestureDetector(
+          onTap: onTap,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12).r,
+                child: SizedBox(
+                  width: size,
+                  height: size,
+                  child: DazzifyCachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 6.h),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: DText(
+                  title,
+                  textDirection: context.currentTextDirection,
+                  style: context.textTheme.labelMedium!
+                      .copyWith(fontWeight: FontWeight.w400),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 4.w),
-          FittedBox(
-            child: DText(
-              title,
-              textDirection: context.currentTextDirection,
-              style: context.textTheme.labelMedium!
-                  .copyWith(fontWeight: FontWeight.w400),
-            ),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }

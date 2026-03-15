@@ -438,6 +438,7 @@
   "viewBrand": "View Brand",
   "serviceExistsButNotAvailable": "This service exists but is not available for you",
   "recentSearches": "Recent Searches",
+  "noRecentSearches": "No recent searches",
   "clear": "Clear",
   "brand": "Brand",
   "service": "Service",

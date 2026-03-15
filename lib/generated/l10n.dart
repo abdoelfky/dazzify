@@ -3253,6 +3253,16 @@ class S {
     );
   }
 
+  /// `No recent searches`
+  String get noRecentSearches {
+    return Intl.message(
+      'No recent searches',
+      name: 'noRecentSearches',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clear`
   String get clear {
     return Intl.message('Clear', name: 'clear', desc: '', args: []);

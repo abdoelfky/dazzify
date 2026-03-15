@@ -3,9 +3,7 @@ import 'package:dazzify/core/util/enums.dart';
 import 'package:dazzify/core/util/extensions.dart';
 import 'package:dazzify/features/booking/logic/booking_cubit/booking_cubit.dart';
 import 'package:dazzify/features/home/logic/home_screen/home_cubit.dart';
-import 'package:dazzify/core/util/app_config_manager.dart';
 import 'package:dazzify/features/home/presentation/components/banners_component.dart';
-import 'package:dazzify/features/home/presentation/components/brand_recommendation_component.dart';
 import 'package:dazzify/features/home/presentation/components/categories_component.dart';
 import 'package:dazzify/features/home/presentation/components/home_app_bar_component.dart';
 import 'package:dazzify/features/home/presentation/components/last_active_booking_component.dart';
@@ -52,173 +50,188 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final surfaceColor = context.colorScheme.surface;
-    final primaryColor = context.colorScheme.primary;
-    final secondaryColor = context.colorScheme.secondary;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Create the same gradient as HomeAppBarComponent for status bar
-    final gradientStart = Color.lerp(
-      surfaceColor,
-      primaryColor,
-      isDark ? 0.03 : 0.02,
-    ) ?? surfaceColor;
-
-    final gradientEnd = Color.lerp(
-      surfaceColor,
-      secondaryColor,
-      isDark ? 0.02 : 0.015,
-    ) ?? surfaceColor;
+    final statusBarColor = context.colorScheme.primary.withOpacity(.2);
 
     return SafeArea(
       top: false,
       bottom: false,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
+          statusBarColor: statusBarColor,
           statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
           statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
           systemNavigationBarColor: Colors.transparent,
-          systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          systemNavigationBarIconBrightness:
+              isDark ? Brightness.light : Brightness.dark,
         ),
         child: Stack(
           children: [
-            // Gradient background for status bar area
+            Scaffold(
+              extendBody: true,
+              body: RefreshIndicator(
+                onRefresh: () async {
+                  mainCategories.clear();
+                  await Future.wait([
+                    bookingCubit.getLastActiveBookings(),
+                    homeCubit.getBanners(),
+                    homeCubit.getMainCategories(),
+                    homeCubit.getPopularBrands(),
+                    homeCubit.getTopRatedBrands(),
+                    homeCubit.getPopularServices(),
+                    homeCubit.getTopRatedServices(),
+                  ]);
+                },
+                color: context.colorScheme.primary,
+                backgroundColor: context.colorScheme.surface,
+                child: BlocConsumer<HomeCubit, HomeState>(
+                  listener: (context, state) {
+                    homeCubitListener(state, context);
+                  },
+                  builder: (context, state) {
+                    if (state.bannersState == UiState.failure ||
+                        state.categoriesState == UiState.failure ||
+                        state.popularBrandsState == UiState.failure ||
+                        state.topRatedBrandsState == UiState.failure ||
+                        state.popularServicesState == UiState.failure ||
+                        state.topRatedServicesState == UiState.failure ||
+                        bookingCubit.state.lastActiveBookingState ==
+                            UiState.failure) {
+                      return ErrorDataWidget(
+                        errorDataType: DazzifyErrorDataType.screen,
+                        message: state.errorMessage,
+                        onTap: () {
+                          homeCubit
+                            ..getBanners()
+                            ..getMainCategories()
+                            ..getPopularBrands()
+                            ..getTopRatedBrands()
+                            ..getPopularServices()
+                            ..getTopRatedServices()
+                            ..getPopularServices();
+
+                          bookingCubit.getLastActiveBookings();
+                          userCubit.getUser();
+                        },
+                      );
+                    } else {
+                      return DazzifyOverlayLoading(
+                          isLoading: isLoading,
+                          child: SingleChildScrollView(
+                            // physics: const ScrollPhysics(),
+                            child: Column(children:
+                                    // [
+                                    [
+                              // App Bar on to
+                              const HomeAppBarComponent(),
+                              SizedBox(height: 12.r),
+                              // Banner with negative margin to show above App Bar
+                              const BannersComponent(),
+
+                              Positioned(
+                                top: 350.h,
+                                left: 0,
+                                right: 0,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(40),
+                                  ).r,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: context.colorScheme.surface,
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                      ).r,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const CategoriesComponent(),
+                                        const LastActiveBookingComponent(),
+                                        const PopularBrandsComponent(),
+                                        const TopRatedBrandsComponent(),
+                                        // const PopularServiceComponent(),
+                                        const TopServicesComponent(),
+                                        // SizedBox(height: 70.h),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ]
+                                // Stack(
+                                //   clipBehavior: Clip.none,
+                                //   children: [
+                                //     SizedBox(
+                                //       height: 1310.h,
+                                //     ),
+                                //     // Banner with negative margin to show above App Bar
+                                //     Positioned(
+                                //       top: 131.h,
+                                //       left: 0,
+                                //       right: 0,
+                                //       child: const BannersComponent(),
+                                //     ),
+                                //     // App Bar on to
+                                //     const HomeAppBarComponent(),
+                                //
+                                //     Positioned(
+                                //       top: 350.h,
+                                //       left: 0,
+                                //       right: 0,
+                                //       child: ClipRRect(
+                                //         borderRadius: const BorderRadius.only(
+                                //           topLeft: Radius.circular(40),
+                                //         ).r,
+                                //         child: Container(
+                                //           decoration: BoxDecoration(
+                                //             color: context.colorScheme.surface,
+                                //             borderRadius:
+                                //                 const BorderRadius.only(
+                                //               topLeft: Radius.circular(20),
+                                //             ).r,
+                                //           ),
+                                //           child: Column(
+                                //             children: [
+                                //               const CategoriesComponent(),
+                                //               const LastActiveBookingComponent(),
+                                //               const PopularBrandsComponent(),
+                                //               const TopRatedBrandsComponent(),
+                                //               const PopularServiceComponent(),
+                                //               const TopServicesComponent(),
+                                //               // SizedBox(height: 70.h),
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     )
+                                //   ],
+                                // ),
+
+                                // SliverList(
+                                //   delegate: SliverChildListDelegate([
+                                //     // Bottom padding
+                                //   ]),
+                                // ),
+                                // ],
+                                ),
+                          ));
+                    }
+                  },
+                ),
+              ),
+            ),
+            // Status bar overlay (drawn on top so it's not covered)
             Positioned(
               top: 0,
               left: 0,
               right: 0,
-              child: Container(
-                height: MediaQuery.of(context).padding.top,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      gradientStart,
-                      gradientEnd,
-                    ],
-                  ),
+              child: IgnorePointer(
+                child: Container(
+                  height: MediaQuery.of(context).padding.top,
+                  color: statusBarColor,
                 ),
               ),
             ),
-            Scaffold(
-              extendBody: true,
-              body: RefreshIndicator(
-          onRefresh: () async {
-            mainCategories.clear();
-            await Future.wait([
-              bookingCubit.getLastActiveBookings(),
-              homeCubit.getBanners(),
-              homeCubit.getMainCategories(),
-              homeCubit.getPopularBrands(),
-              homeCubit.getTopRatedBrands(),
-              homeCubit.getPopularServices(),
-              homeCubit.getTopRatedServices(),
-            ]);
-          },
-          color: context.colorScheme.primary,
-          backgroundColor: context.colorScheme.surface,
-          child: BlocConsumer<HomeCubit, HomeState>(
-            listener: (context, state) {
-              homeCubitListener(state, context);
-            },
-            builder: (context, state) {
-              if (state.bannersState == UiState.failure ||
-                  state.categoriesState == UiState.failure ||
-                  state.popularBrandsState == UiState.failure ||
-                  state.topRatedBrandsState == UiState.failure ||
-                  state.popularServicesState == UiState.failure ||
-                  state.topRatedServicesState == UiState.failure ||
-                  bookingCubit.state.lastActiveBookingState == UiState.failure) {
-                return ErrorDataWidget(
-                  errorDataType: DazzifyErrorDataType.screen,
-                  message: state.errorMessage,
-                  onTap: () {
-                    homeCubit
-                      ..getBanners()
-                      ..getMainCategories()
-                      ..getPopularBrands()
-                      ..getTopRatedBrands()
-                      ..getPopularServices()
-                      ..getTopRatedServices()
-                      ..getPopularServices();
-
-                    bookingCubit.getLastActiveBookings();
-                    userCubit.getUser();
-                  },
-                );
-              } else {
-                return DazzifyOverlayLoading(
-                  isLoading: isLoading,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          SizedBox(
-                            height: 1310.h,
-                          ),
-                          // Banner with negative margin to show above App Bar
-                          Positioned(
-                            top: 70.h,
-                            left: 0,
-                            right: 0,
-                            child: const BannersComponent(),
-                          ),
-                          // App Bar on to
-                          const HomeAppBarComponent(),
-
-                          Positioned(
-                            top: 310.h,
-                            left: 0,
-                            right: 0,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                              ).r,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: context.colorScheme.surface,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                  ).r,
-                                ),
-                                child: Column(
-                                  children: [
-                                    const CategoriesComponent(),
-                                    const LastActiveBookingComponent(),
-                                    if (AppConfigManager.allowBrandRecommendation)
-                                      const BrandRecommendationComponent(),
-                                    const PopularBrandsComponent(),
-                                    const TopRatedBrandsComponent(),
-                                    const PopularServiceComponent(),
-                                    const TopServicesComponent(),
-                                    SizedBox(height: 70.h),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-
-                      // SliverList(
-                      //   delegate: SliverChildListDelegate([
-                      //     // Bottom padding
-                      //   ]),
-                      // ),
-                      SizedBox(height: 180.h,)
-                    ],
-                  ),
-                ));
-              }
-            },
-          ),
-        ),
-            ),
-
           ],
         ),
       ),

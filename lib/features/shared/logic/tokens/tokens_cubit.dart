@@ -85,7 +85,11 @@ class TokensCubit extends Cubit<TokensState> {
     } else if (change.currentState is TokensLoadingState &&
         change.nextState is UnAuthenticatedState) {
       Future.delayed(const Duration(seconds: 4), () {
-        getIt<AppRouter>().replace(const AuthRoute());
+        // Only navigate to Auth if user is still not authenticated (e.g. they
+        // didn't complete phone+OTP during the splash delay).
+        if (!_authRepository.isUserAuthenticated()) {
+          getIt<AppRouter>().replace(const AuthRoute());
+        }
       });
     } else if (change.currentState is TokensLoadingState &&
         change.nextState is SessionExpiredState) {

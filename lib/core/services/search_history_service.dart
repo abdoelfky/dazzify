@@ -7,7 +7,7 @@ class SearchHistoryService {
   final Box<dynamic> _settingsDatabase =
       Hive.box(AppConstants.appSettingsDatabase);
   static const String _searchHistoryKey = 'searchHistory';
-  static const int _maxHistoryItems = 20;
+  static const int _maxHistoryItems = 8;
 
   /// Get search history list
   List<String> getSearchHistory() {
