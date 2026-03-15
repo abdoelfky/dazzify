@@ -324,6 +324,7 @@
   "writeReview": "Write a review",
   "createReview": "Create Review",
   "reviewCreated": "We Appreciate Your Review",
+  "pleaseSelectRating": "Please select a rating",
   "waitingForResponse": "Waiting For response",
   "oops": "Oooops",
   "unableToConnect": "Unable to Connect to the Server Check\nYour Internet Connection.",

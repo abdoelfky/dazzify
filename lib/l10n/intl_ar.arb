@@ -323,6 +323,7 @@
   "reviewComment": "صف رأيك",
   "createReview": "اضف تقييمك",
   "reviewCreated": "نحن نقدّر تقييمك",
+  "pleaseSelectRating": "الرجاء اختيار تقييم",
   "waitingForResponse": "في إنتظار الرد",
   "oops": "عذرًا",
   "unableToConnect": "تعذر الاتصال بالخادم\nيرجى التحقق من اتصالك بالإنترنت.",
